@@ -1,0 +1,37 @@
+---
+description: Правила для HTML файлов проектов
+globs: "**/*.html"
+alwaysApply: false
+---
+
+# HTML проекты — правила
+
+## Обязательные элементы каждого .html файла
+- `<!DOCTYPE html>`, `<html lang="ru">`, мета-теги charset и viewport
+- Навигационный блок (← Назад + ⌂ Домой) сразу после `<body>`
+- Адаптивная вёрстка: корректное отображение на iPhone Safari
+
+## Навигация
+- Кнопка «Назад»: `onclick` с `history.back()` и fallback на `../index.html`
+- Кнопка «Домой»: обычная ссылка `href="../index.html"`
+- Ссылки только относительные (`../index.html`), не абсолютные
+
+## Стили навигации
+- `position: fixed`, `top: 14px`, `left: 14px`, `z-index: 9999`
+- Круглые кнопки 40×40px с `border-radius: 50%`
+- Цвет фона: `var(--blue, #2563eb)` — адаптируется к теме страницы
+
+## meta.json
+При добавлении файла обновить `meta.json` в той же папке:
+```json
+{
+  "files": {
+    "filename.html": {
+      "title": "Название",
+      "description": "Описание",
+      "tags": ["QMS", "doc"]
+    }
+  }
+}
+```
+Доступные теги: ML, data, viz, QMS, doc

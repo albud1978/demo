@@ -1,0 +1,36 @@
+---
+description: Основные конвенции проекта demo (GitHub Pages)
+alwaysApply: true
+---
+
+# Проект demo — конвенции
+
+## Общее
+- Репозиторий: `albud1978/demo`, сайт: `https://albud1978.github.io/demo/`
+- Чистый HTML/CSS/JS, без фреймворков и сборщиков
+- Git user: `Alexey Budnik <albud1978@yahoo.com>`
+- Язык общения: русский
+
+## Структура
+- `index.html` — главная, автоматически подтягивает проекты через GitHub API
+- Каждый проект — `.html` файл в подпапке (например `QMS/`, `mnist/`)
+- `meta.json` в каждой папке — метаданные для карточек на главной
+
+## При добавлении нового .html файла
+1. Добавить навигационные кнопки сразу после `<body>` (← Назад + ⌂ Домой)
+2. Обновить `meta.json` в соответствующей папке (title, description, tags)
+3. Если папка новая — создать `meta.json` с полями name, description, tags, files
+4. Закоммитить с осмысленным сообщением
+
+## Навигация — обязательный блок в каждом проекте
+Вставлять сразу после `<body>`:
+```html
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+```
+
+## Ссылки — только относительные
+- Из подпапок на главную: `../index.html` (НЕ `/demo/`, НЕ абсолютные URL)
+- Карточки на главной открываются в той же вкладке (без `target="_blank"`)
