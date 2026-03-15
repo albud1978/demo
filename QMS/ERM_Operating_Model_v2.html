@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERM Operating Model — Baseline для авиакомпании</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=JetBrains+Mono:wght@400;500&display=swap');
+  :root{--bg:#fafaf8;--bg2:#f2f1ed;--bg3:#eae9e4;--card:#fff;--text:#1a1a18;--text2:#6b6a65;--text3:#9c9a92;--border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.14);--blue:#2563eb;--blue-bg:#eff5ff;--blue-t:#1e40af;--teal:#0d9488;--teal-bg:#ecfdf5;--teal-t:#065f46;--purple:#7c3aed;--purple-bg:#f3f0ff;--purple-t:#4c1d95;--coral:#dc5328;--coral-bg:#fff5f2;--coral-t:#9a3412;--amber:#d97706;--amber-bg:#fffbeb;--amber-t:#78350f;--green:#16a34a;--green-bg:#f0fdf4;--green-t:#14532d;--red:#dc2626;--red-bg:#fef2f2;--red-t:#7f1d1d;--r:10px;--rl:14px;--font:'DM Sans',-apple-system,sans-serif;--mono:'JetBrains Mono',monospace}
+  @media(prefers-color-scheme:dark){:root{--bg:#141413;--bg2:#1e1e1c;--bg3:#282825;--card:#1e1e1c;--text:#e8e6df;--text2:#a3a19a;--text3:#6b6a65;--border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.14);--blue-bg:#172554;--blue-t:#93c5fd;--teal-bg:#042f2e;--teal-t:#5eead4;--purple-bg:#2e1065;--purple-t:#c4b5fd;--coral-bg:#431407;--coral-t:#fdba74;--amber-bg:#451a03;--amber-t:#fcd34d;--green-bg:#052e16;--green-t:#86efac;--red-bg:#450a0a;--red-t:#fca5a5}}
+  *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+  body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;font-size:13px}
+  .hdr{background:var(--card);border-bottom:1px solid var(--border);padding:18px 0 14px;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+  .c{max-width:1140px;margin:0 auto;padding:0 20px}
+  .ht h1{font-size:15px;font-weight:600;letter-spacing:-.3px}
+  .ht .sub{font-size:11.5px;color:var(--text2);margin-top:2px}
+  .ht .meta{font-size:10px;color:var(--text3);font-family:var(--mono);float:right;margin-top:2px}
+  .tabs{display:flex;gap:2px;margin-top:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:5px 10px;font-size:10.5px;font-weight:500;border-radius:6px;cursor:pointer;background:0;color:var(--text2);border:none;font-family:inherit;white-space:nowrap;transition:all .15s}
+  .tab:hover{background:var(--bg2);color:var(--text)}
+  .tab.a{background:var(--blue-bg);color:var(--blue-t)}
+  .cnt{padding:16px 0 50px}.p{display:none;animation:fi .2s ease}.p.a{display:block}
+  @keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  h2{font-size:14px;font-weight:600;margin:0 0 6px}
+  h3{font-size:12.5px;font-weight:600;margin:16px 0 6px}
+  h4{font-size:11.5px;font-weight:600;margin:12px 0 4px}
+  .d{font-size:12px;color:var(--text2);margin:0 0 12px;line-height:1.65}
+  .sr{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:5px;margin:0 0 14px}
+  .st{background:var(--bg2);border-radius:var(--r);padding:8px 10px}
+  .st .sl{font-size:8.5px;color:var(--text3);font-weight:600;letter-spacing:.3px;text-transform:uppercase}
+  .st .sv{font-size:18px;font-weight:600;margin-top:1px;letter-spacing:-.5px}
+  .fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px;margin:0 0 12px}
+  .fc{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:11px 13px}
+  .fc .n{font-size:9px;font-weight:600;font-family:var(--mono);letter-spacing:.8px;margin:0 0 3px}
+  .fc .ft{font-size:12px;font-weight:600;margin:0 0 3px}
+  .fc .fb{font-size:11px;color:var(--text2);line-height:1.55}
+  .mw{overflow-x:auto;margin:8px 0;border-radius:var(--rl);border:1px solid var(--border)}
+  .mt{width:100%;border-collapse:collapse;font-size:11px}
+  .mt th{text-align:left;padding:5px 6px;background:var(--bg2);font-weight:600;font-size:9.5px;letter-spacing:.2px;border-bottom:1px solid var(--border2);white-space:nowrap}
+  .mt td{padding:5px 6px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text2)}
+  .mt td:first-child{font-weight:500;color:var(--text);white-space:nowrap;font-size:10.5px}
+  .mt tr:last-child td{border-bottom:none}
+  .b{display:inline-block;font-size:8.5px;padding:1px 5px;border-radius:4px;font-weight:600;font-family:var(--mono)}
+  .bp{background:var(--blue-bg);color:var(--blue-t)}.bs{background:var(--amber-bg);color:var(--amber-t)}.be{background:var(--red-bg);color:var(--red-t)}
+  .bh{background:var(--green-bg);color:var(--green-t)}.bm{background:var(--amber-bg);color:var(--amber-t)}.bl{background:var(--red-bg);color:var(--red-t)}.bi{background:var(--blue-bg);color:var(--blue-t)}
+  .note{background:var(--blue-bg);border-radius:var(--r);padding:9px 11px;font-size:11px;color:var(--blue-t);margin:10px 0;line-height:1.55}
+  .warn{background:var(--amber-bg);color:var(--amber-t);border-radius:var(--r);padding:9px 11px;font-size:11px;margin:10px 0;line-height:1.55}
+  .crit{background:var(--red-bg);color:var(--red-t);border-radius:var(--r);padding:9px 11px;font-size:11px;margin:10px 0;line-height:1.55}
+  .ok{background:var(--green-bg);color:var(--green-t);border-radius:var(--r);padding:9px 11px;font-size:11px;margin:10px 0;line-height:1.55}
+  .formula{background:var(--bg2);border-radius:var(--r);padding:9px 12px;font-family:var(--mono);font-size:11.5px;margin:6px 0;line-height:1.8;overflow-x:auto}
+  .formula .v{color:var(--blue)}.formula .cm{color:var(--text3);font-size:10px}
+  .tag{display:inline-block;font-size:8.5px;padding:1px 5px;border-radius:4px;font-weight:600;margin:0 2px 2px 0}
+  .tq{background:var(--purple-bg);color:var(--purple-t)}.ts2{background:var(--coral-bg);color:var(--coral-t)}.tf{background:var(--green-bg);color:var(--green-t)}.to{background:var(--blue-bg);color:var(--blue-t)}.tg{background:var(--amber-bg);color:var(--amber-t)}.ti{background:var(--teal-bg);color:var(--teal-t)}.th2{background:var(--red-bg);color:var(--red-t)}
+  .cg{margin:0 0 5px}.ch{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg2);border-radius:var(--r);cursor:pointer;font-size:11.5px;font-weight:500;user-select:none;transition:background .1s}.ch:hover{background:var(--bg3)}.ch .arr{font-size:9px;transition:transform .2s;display:inline-block}.ch .arr.open{transform:rotate(90deg)}.ciw{display:none;padding:4px 0 4px 20px}.ciw.open{display:block}.ci{font-size:11px;color:var(--text2);padding:3px 0 3px 10px;border-left:2px solid var(--border2);margin:2px 0;line-height:1.55}.ci strong{color:var(--text);font-weight:600}
+  @media print{.hdr{position:static}.p{display:block!important;page-break-inside:avoid;margin-bottom:14px;border-top:2px solid var(--border2);padding-top:8px}.tabs{display:none}}
+</style>
+</head>
+<body>
+
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="hdr"><div class="c">
+  <div class="ht">
+    <h1>ERM Operating Model — Baseline для авиакомпании <span class="meta">v2 / март 2026</span></h1>
+    <div class="sub">Enterprise-wide risk portfolio × Misiura (2015) × COSO IC/ERM × Safety-II × Resilience Engineering × DMDU</div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab a" data-t="arch">Архитектура</button>
+    <button class="tab" data-t="register">Реестр рисков</button>
+    <button class="tab" data-t="events">Журнал событий</button>
+    <button class="tab" data-t="controls">Контроли</button>
+    <button class="tab" data-t="actions">Действия / CAPA</button>
+    <button class="tab" data-t="gov">Governance</button>
+    <button class="tab" data-t="metrics">Метрики</button>
+    <button class="tab" data-t="formulas">Формулы</button>
+    <button class="tab" data-t="flows">Потоки данных</button>
+    <button class="tab" data-t="subjectivity">Субъективность</button>
+    <button class="tab" data-t="resilience">Resilience & DMDU</button>
+    <button class="tab" data-t="cycle">Рабочий цикл</button>
+  </div>
+</div></div>
+<div class="cnt"><div class="c">
+
+<!-- ===== 1. ARCHITECTURE ===== -->
+<div class="p a" id="p-arch">
+<h2>Архитектура operating model</h2>
+<div class="d">Первый полный верхнеуровневый baseline-набор для авиакомпании. Не «абсолютная истина для всех», а минимальная operating model для старта. Совместим с QMS, SMS, compliance и ERM. Принцип: enterprise-wide portfolio view (Misiura, 2015), а не разрозненные silos. Дизайн учитывает требования COSO IC/ERM, RAG-потенциалы Hollnagel (Safety-II), адаптивные траектории DMDU и принцип антихрупкости.</div>
+
+<div class="sr">
+  <div class="st"><div class="sl">Верхних рисков</div><div class="sv">26</div></div>
+  <div class="st"><div class="sl">Preventable</div><div class="sv">8</div></div>
+  <div class="st"><div class="sl">Strategy</div><div class="sv">10</div></div>
+  <div class="st"><div class="sl">External</div><div class="sv">8</div></div>
+  <div class="st"><div class="sl">Таблиц</div><div class="sv">6</div></div>
+  <div class="st"><div class="sl">Метрик</div><div class="sv">11</div></div>
+  <div class="st"><div class="sl">Signposts</div><div class="sv">5</div></div>
+</div>
+
+<h3>Шесть связанных таблиц</h3>
+<div class="fg">
+  <div class="fc" style="border-left:3px solid var(--blue)"><div class="n" style="color:var(--blue)">TABLE A</div><div class="ft">Risk register</div><div class="fb">24 поля на риск. Включает Linked_Risks (interdependencies), RAG_Potential, Speed как escalation qualifier (не множитель), Dynamic_Residual с event pressure.</div></div>
+  <div class="fc" style="border-left:3px solid var(--teal)"><div class="n" style="color:var(--teal)">TABLE B</div><div class="ft">Event & finding log</div><div class="fb">Все сигналы: audit findings, safety reports, incidents, deviations, positive observations (Safety-II). С полями Data_Quality и Detection_Lag (COSO IC P13).</div></div>
+  <div class="fc" style="border-left:3px solid var(--purple)"><div class="n" style="color:var(--purple)">TABLE C</div><div class="ft">Controls & barriers</div><div class="fb">5 типов: preventive, detective, corrective, recovery, adaptive (RE). Two-dimensional effectiveness: Design_Eff × Operating_Eff, итог = min(D,O). Three lines of defence.</div></div>
+</div>
+<div class="fg">
+  <div class="fc" style="border-left:3px solid var(--coral)"><div class="n" style="color:var(--coral)">TABLE D</div><div class="ft">Actions & CAPA</div><div class="fb">11 полей. Correction, corrective action, preventive action, mitigation. Effectiveness_Criteria + Verification_Owner для закрытия цикла обучения.</div></div>
+  <div class="fc" style="border-left:3px solid var(--amber)"><div class="n" style="color:var(--amber)">TABLE E</div><div class="ft">Governance (3 lines)</div><div class="fb">Three lines of defence по Misiura/COSO: 1-я (operational owners), 2-я (RM/compliance coordination), 3-я (independent internal audit). Executive sponsor + review forum.</div></div>
+  <div class="fc" style="border-left:3px solid var(--green)"><div class="n" style="color:var(--green)">TABLE F</div><div class="ft">Metrics & thresholds</div><div class="fb">11 метрик с разделением leading/lagging. Системные метрики: Detection Lag (RAG Monitor), Anticipation Index (RAG Anticipate). Калибруемые пороги.</div></div>
+</div>
+
+<h3>Покрытие доменов</h3>
+<div class="mw"><table class="mt" style="min-width:500px">
+<thead><tr><th>Домен</th><th>Покрыт</th><th>Коды рисков</th></tr></thead>
+<tbody>
+<tr><td>QMS</td><td><span class="b bh">да</span></td><td>P1, P2, P3, P8</td></tr>
+<tr><td>SMS</td><td><span class="b bh">да</span></td><td>P5, S4, S6, E5</td></tr>
+<tr><td>Compliance</td><td><span class="b bh">да</span></td><td>P6, E1</td></tr>
+<tr><td>CAMO / ТО</td><td><span class="b bh">да</span></td><td>P7, S2, E8</td></tr>
+<tr><td>Флот / availability</td><td><span class="b bh">да</span></td><td>S3, E8</td></tr>
+<tr><td>Финансы</td><td><span class="b bh">да</span></td><td>S1, E3</td></tr>
+<tr><td>Операции</td><td><span class="b bh">да</span></td><td>S2, S3, S10, E5</td></tr>
+<tr><td>Data / IT</td><td><span class="b bh">да</span></td><td>P8, S7, E4</td></tr>
+<tr><td>Governance / integration</td><td><span class="b bh">да</span></td><td>S4, S6, S9</td></tr>
+<tr><td>HR / competence</td><td><span class="b bh">да</span></td><td>P4, S8, E7</td></tr>
+<tr><td>Suppliers</td><td><span class="b bh">да</span></td><td>P7, E2</td></tr>
+<tr><td>External environment</td><td><span class="b bh">да</span></td><td>E1–E8</td></tr>
+</tbody></table></div>
+
+<h3>Теоретический каркас</h3>
+<div class="fg">
+  <div class="fc"><div class="ft">Kaplan & Mikes (2012, 2014)</div><div class="fb">Трёхклассовая типология: Preventable (eliminate), Strategy-execution (manage cost-effectively), External (reduce impact). Portfolio view.</div></div>
+  <div class="fc"><div class="ft">Misiura (2015)</div><div class="fb">ERM framework: 5 компонентов (governance, process, portfolio, architecture, internal environment). Three lines of defence. Interdependencies. Context-sensitive design.</div></div>
+</div>
+<div class="fg">
+  <div class="fc"><div class="ft">COSO IC (2013) / ERM (2017)</div><div class="fb">Principle 13: relevant quality information. Principle 16: design vs operating effectiveness. Entity-level portfolio view. Risk appetite → risk tolerances.</div></div>
+  <div class="fc"><div class="ft">Safety-II / RE (Hollnagel)</div><div class="fb">4 RAG-потенциала: Respond, Monitor, Learn, Anticipate. Positive observations. Leading indicators. «Things that go right» как объект изучения.</div></div>
+</div>
+<div class="fg">
+  <div class="fc"><div class="ft">DMDU / Adaptive pathways</div><div class="fb">Signposts = заранее определённые триггеры смены стратегии. Pre-committed responses. Optionality вместо предсказания.</div></div>
+  <div class="fc"><div class="ft">Антихрупкость (Taleb)</div><div class="fb">Система усиливается от стрессоров: быстрая обратная связь, обучение, избыточность. Signposts = опционы. Event_Pressure = чувствительность к повторяемости.</div></div>
+</div>
+
+<div class="warn"><strong>Принцип иерархии рисков:</strong> верхний риск (Level 1) ≠ один уровень. Каждый декомпозируется на подриски (Level 2). Пример: S2 «Срыв программы ТО» ← P1, P3, P7, S8, E2. Верхний риск — управленческая проблема, подриски — причинная структура.</div>
+</div>
+
+<!-- ===== 2. RISK REGISTER ===== -->
+<div class="p" id="p-register">
+<h2>Table A — Risk register</h2>
+<div class="d">24 поля. 26 верхнеуровневых рисков: 8 preventable, 10 strategy-execution, 8 external. Каждый риск содержит Linked_Risks (interdependencies) и RAG_Potential (primary mode of management по Hollnagel).</div>
+
+<h3>Структура записи</h3>
+<div class="mw"><table class="mt" style="min-width:650px">
+<thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead>
+<tbody>
+<tr><td>Risk_ID</td><td>код</td><td>P1..P8 / S1..S10 / E1..E8</td></tr>
+<tr><td>Risk_Name</td><td>текст</td><td>Краткое название</td></tr>
+<tr><td>Risk_Class</td><td>enum</td><td>Preventable / Strategy-execution / External</td></tr>
+<tr><td>Domain</td><td>tags</td><td>QMS / SMS / Compliance / CAMO / Finance / Fleet / IT / Governance / HR</td></tr>
+<tr><td>Objective</td><td>текст</td><td>Какая организационная цель под угрозой</td></tr>
+<tr><td>Description</td><td>текст</td><td>Суть риска</td></tr>
+<tr><td>Causes</td><td>текст</td><td>Ключевые причины (Level 2 sub-risks)</td></tr>
+<tr><td>Consequences</td><td>текст</td><td>Последствия при реализации</td></tr>
+<tr><td>Linked_Risks</td><td>ссылки</td><td>Связанные риски — interdependencies. При пересмотре одного → cascade check всех linked</td></tr>
+<tr><td>RAG_Potential</td><td>enum</td><td>Primary mode: Respond / Monitor / Learn / Anticipate (по Hollnagel RAG)</td></tr>
+<tr><td>Owner</td><td>роль</td><td>Risk owner (1-я линия защиты)</td></tr>
+<tr><td>Co_Owners</td><td>роли</td><td>Со-владельцы</td></tr>
+<tr><td>Indicators</td><td>ссылки</td><td>Метрики из Table F</td></tr>
+<tr><td>Impact</td><td>1–5</td><td>Тяжесть последствий (по severity matrix с примерами)</td></tr>
+<tr><td>Likelihood</td><td>1–5</td><td>Вероятность (по historical frequency из event log)</td></tr>
+<tr><td>Speed</td><td>1–5</td><td>Velocity of onset. Определяет escalation priority, НЕ входит в Inherent_Score</td></tr>
+<tr><td>Control_Strength</td><td>расчёт</td><td>min(Design_Eff, Operating_Eff) по всем связанным контролям из Table C</td></tr>
+<tr><td>Inherent_Score</td><td>расчёт</td><td>Impact × Likelihood (max 25)</td></tr>
+<tr><td>Residual_Score</td><td>расчёт</td><td>Inherent_Score × Control_Factor</td></tr>
+<tr><td>Dynamic_Residual</td><td>расчёт</td><td>Residual_Score × Event_Pressure (чувствительность к повторяемости событий)</td></tr>
+<tr><td>Appetite_Status</td><td>enum</td><td>Within / Near / Exceeded. Стартовые пороги, калибруются после 3 мес. (percentile-based)</td></tr>
+<tr><td>Escalation_Priority</td><td>расчёт</td><td>Speed × Dynamic_Residual. Сортировка рисков по очерёдности реагирования</td></tr>
+<tr><td>Review_Cycle</td><td>enum</td><td>Weekly / Monthly / Quarterly</td></tr>
+<tr><td>Status</td><td>enum</td><td>Open / Monitor / Closed</td></tr>
+</tbody></table></div>
+
+<h3>Полный реестр</h3>
+<div class="cg"><div class="ch" style="border-left:3px solid var(--blue)" onclick="toggleCode(this)"><span class="arr open">▸</span>Preventable (P1–P8) — primary RAG: Respond + Monitor</div>
+<div class="ciw open">
+<div class="mw"><table class="mt"><thead><tr><th>ID</th><th>Риск</th><th>Домен</th><th>Linked_Risks</th><th>RAG</th></tr></thead><tbody>
+<tr><td>P1</td><td>Нарушение процессов и процедур</td><td><span class="tag tq">QMS</span><span class="tag to">Ops</span></td><td>→ P2, P5, S2, S10</td><td><span class="b bi">Monitor</span></td></tr>
+<tr><td>P2</td><td>Дефекты качества исполнения</td><td><span class="tag tq">QMS</span></td><td>→ P1, P3, S10</td><td><span class="b bi">Monitor</span></td></tr>
+<tr><td>P3</td><td>Неэффективные CAPA</td><td><span class="tag tq">QMS</span><span class="tag tg">Compl</span></td><td>→ P1, P2, P5, P6</td><td><span class="b bm">Learn</span></td></tr>
+<tr><td>P4</td><td>Недостаточная компетентность</td><td><span class="tag th2">HR</span><span class="tag tq">QMS</span><span class="tag ts2">SMS</span></td><td>→ P1, P5, S8, E7</td><td><span class="b bi">Monitor</span></td></tr>
+<tr><td>P5</td><td>Слабая safety assurance</td><td><span class="tag ts2">SMS</span></td><td>→ P1, P4, P6, S4</td><td><span class="b be">Respond</span></td></tr>
+<tr><td>P6</td><td>Слабый compliance monitoring</td><td><span class="tag tg">Compl</span></td><td>→ P3, P5, E1, S9</td><td><span class="b bi">Monitor</span></td></tr>
+<tr><td>P7</td><td>Слабый supplier oversight</td><td><span class="tag to">Suppl</span><span class="tag tq">QMS</span></td><td>→ S2, E2, E8</td><td><span class="b bi">Monitor</span></td></tr>
+<tr><td>P8</td><td>Слабое качество данных</td><td><span class="tag ti">IT</span><span class="tag tq">QMS</span></td><td>→ S7, S6, все scoring</td><td><span class="b bi">Monitor</span></td></tr>
+</tbody></table></div></div></div>
+
+<div class="cg"><div class="ch" style="border-left:3px solid var(--amber)" onclick="toggleCode(this)"><span class="arr open">▸</span>Strategy-execution (S1–S10) — primary RAG: Monitor + Learn</div>
+<div class="ciw open">
+<div class="mw"><table class="mt"><thead><tr><th>ID</th><th>Риск</th><th>Домен</th><th>Linked_Risks</th><th>RAG</th></tr></thead><tbody>
+<tr><td>S1</td><td>Невыполнение бюджета</td><td><span class="tag tf">Fin</span></td><td>→ S2, S3, S8, S10, E3</td><td><span class="b bi">Monitor</span></td></tr>
+<tr><td>S2</td><td>Срыв программы ТО</td><td><span class="tag to">CAMO</span></td><td>→ P1, P3, P7, S3, S8, E2, E8</td><td><span class="b bi">Monitor</span></td></tr>
+<tr><td>S3</td><td>Нехватка самолётов</td><td><span class="tag to">Fleet</span></td><td>→ S1, S2, S10, E5, E8</td><td><span class="b bi">Monitor</span></td></tr>
+<tr><td>S4</td><td>Провал межфункциональной координации</td><td><span class="tag tg">Gov</span></td><td>→ P5, P6, S6, S7, S9</td><td><span class="b bm">Learn</span></td></tr>
+<tr><td>S5</td><td>Неудачное управление изменениями</td><td><span class="tag tg">Gov</span></td><td>→ S4, S9, P1, P4</td><td><span class="b bm">Learn</span></td></tr>
+<tr><td>S6</td><td>Низкая встроенность RM в решения</td><td><span class="tag tg">ERM</span></td><td>→ S4, S9, P8</td><td><span class="b bm">Learn</span></td></tr>
+<tr><td>S7</td><td>Слабая data integration</td><td><span class="tag ti">IT</span><span class="tag tg">Gov</span></td><td>→ P8, S4, S6</td><td><span class="b bi">Monitor</span></td></tr>
+<tr><td>S8</td><td>Нехватка ресурсов и capability</td><td><span class="tag th2">HR</span><span class="tag to">Ops</span></td><td>→ S1, S2, P4, E7</td><td><span class="b bi">Monitor</span></td></tr>
+<tr><td>S9</td><td>Неэффективная governance architecture</td><td><span class="tag tg">Gov</span></td><td>→ S4, S5, S6, P6</td><td><span class="b bm">Learn</span></td></tr>
+<tr><td>S10</td><td>Невыполнение коммерческой программы</td><td><span class="tag to">Ops</span></td><td>→ S1, S3, E3, E5</td><td><span class="b bi">Monitor</span></td></tr>
+</tbody></table></div></div></div>
+
+<div class="cg"><div class="ch" style="border-left:3px solid var(--red)" onclick="toggleCode(this)"><span class="arr open">▸</span>External (E1–E8) — primary RAG: Anticipate + Respond</div>
+<div class="ciw open">
+<div class="mw"><table class="mt"><thead><tr><th>ID</th><th>Риск</th><th>Домен</th><th>Linked_Risks</th><th>RAG</th></tr></thead><tbody>
+<tr><td>E1</td><td>Регуляторные изменения и oversight pressure</td><td><span class="tag tg">Compl</span></td><td>→ P6, S5, S9</td><td><span class="b bp">Anticipate</span></td></tr>
+<tr><td>E2</td><td>Supply chain disruption</td><td><span class="tag to">Suppl</span></td><td>→ P7, S2, E8</td><td><span class="b bp">Anticipate</span></td></tr>
+<tr><td>E3</td><td>Экономические и рыночные шоки</td><td><span class="tag tf">Fin</span></td><td>→ S1, S10, E7</td><td><span class="b bp">Anticipate</span></td></tr>
+<tr><td>E4</td><td>Технологические и cyber disruptions</td><td><span class="tag ti">IT</span></td><td>→ P8, S7</td><td><span class="b be">Respond</span></td></tr>
+<tr><td>E5</td><td>Крупные operational disruptions</td><td><span class="tag to">Ops</span></td><td>→ S3, S10, E3</td><td><span class="b be">Respond</span></td></tr>
+<tr><td>E6</td><td>Репутационные и stakeholder shocks</td><td><span class="tag tg">Exec</span></td><td>→ E5, P5, S10</td><td><span class="b be">Respond</span></td></tr>
+<tr><td>E7</td><td>Внешний дефицит персонала</td><td><span class="tag th2">HR</span></td><td>→ P4, S8, E3</td><td><span class="b bp">Anticipate</span></td></tr>
+<tr><td>E8</td><td>Внешние ограничения по флоту</td><td><span class="tag to">Fleet</span></td><td>→ S2, S3, E2</td><td><span class="b bp">Anticipate</span></td></tr>
+</tbody></table></div></div></div>
+</div>
+
+<!-- ===== 3. EVENTS ===== -->
+<div class="p" id="p-events">
+<h2>Table B — Event & finding log</h2>
+<div class="d">Все сигналы, которые кормят Risk register данными. Включает positive observations (Safety-II: фиксация ситуаций, где система сработала правильно в нестандартных условиях). Поля Data_Quality и Detection_Lag обеспечивают оценку качества данных (COSO IC P13) и скорости обнаружения (RAG Monitor).</div>
+<div class="mw"><table class="mt" style="min-width:750px">
+<thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead><tbody>
+<tr><td>Event_ID</td><td>код</td><td>Уникальный</td></tr>
+<tr><td>Event_Date</td><td>дата</td><td>Дата события</td></tr>
+<tr><td>Event_Type</td><td>enum</td><td>audit finding / safety report / deviation / budget overrun / delay / supplier issue / incident / near miss / <strong>positive observation</strong></td></tr>
+<tr><td>Domain</td><td>tag</td><td>Где возникло</td></tr>
+<tr><td>Severity</td><td>1–5</td><td>По severity matrix с конкретными примерами для каждого уровня и домена</td></tr>
+<tr><td>Frequency_Flag</td><td>enum</td><td>first / repeat / systemic</td></tr>
+<tr><td>Related_Risk_ID</td><td>ссылки</td><td>Связанные верхние риски (может быть &gt;1)</td></tr>
+<tr><td>Immediate_Cause</td><td>текст</td><td>Первичная причина</td></tr>
+<tr><td>Root_Cause</td><td>текст</td><td>Корневая причина (если известна)</td></tr>
+<tr><td>Detection_Source</td><td>enum</td><td>audit / report / dashboard / incident / review / voluntary report / observation</td></tr>
+<tr><td>Data_Quality</td><td>enum</td><td>structured (ИС) / semi-structured (чек-лист) / unstructured (email, устно)</td></tr>
+<tr><td>Detection_Lag</td><td>enum</td><td>real-time / &lt;24h / &lt;7d / &gt;7d / unknown</td></tr>
+<tr><td>CAPA_ID</td><td>ссылка</td><td>Действие из Table D</td></tr>
+<tr><td>Status</td><td>enum</td><td>Open / Investigating / Closed</td></tr>
+</tbody></table></div>
+<div class="note"><strong>Правило эскалации:</strong> events &gt; threshold за период → обязательный risk review; repeat/systemic pattern → пересмотр risk score; severity ≥ 4 → немедленная эскалация; новый тип событий → возможен Level 2 sub-risk.</div>
+<div class="ok"><strong>Safety-II:</strong> positive observation — фиксация ситуаций, где система сработала правильно в нестандартных условиях. Hollnagel (2014): «things that go right happen far more often than things that go wrong». Это RAG «Учиться» из позитивного опыта.</div>
+</div>
+
+<!-- ===== 4. CONTROLS ===== -->
+<div class="p" id="p-controls">
+<h2>Table C — Controls & barriers register</h2>
+<div class="d">Без этой таблицы risk register превращается в «список страхов». 5 типов контролей, включая adaptive (Resilience Engineering). Двумерная оценка effectiveness: Design × Operating, итог = min(D,O). Привязка к three lines of defence.</div>
+<div class="mw"><table class="mt" style="min-width:700px">
+<thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead><tbody>
+<tr><td>Control_ID</td><td>код</td><td>Уникальный</td></tr>
+<tr><td>Control_Name</td><td>текст</td><td>Название</td></tr>
+<tr><td>Related_Risk_ID</td><td>ссылки</td><td>Покрываемые риски (может быть &gt;1)</td></tr>
+<tr><td>Control_Type</td><td>enum</td><td><strong>preventive</strong> (до события), <strong>detective</strong> (обнаружение), <strong>corrective</strong> (устранение), <strong>recovery</strong> (восстановление), <strong>adaptive</strong> (перестройка системы при изменении условий)</td></tr>
+<tr><td>Defence_Line</td><td>enum</td><td>1st (operational management), 2nd (RM/compliance), 3rd (internal audit)</td></tr>
+<tr><td>Description</td><td>текст</td><td>Как работает</td></tr>
+<tr><td>Owner</td><td>роль</td><td>Владелец контроля</td></tr>
+<tr><td>Evidence</td><td>текст</td><td>Как доказать, что работает (minutes, screenshots, KPI, test results)</td></tr>
+<tr><td>Frequency</td><td>enum</td><td>continuous / daily / weekly / monthly / event-triggered</td></tr>
+<tr><td>Design_Eff</td><td>1–5</td><td>Эффективность дизайна контроля</td></tr>
+<tr><td>Operating_Eff</td><td>1–5</td><td>Эффективность реального исполнения</td></tr>
+<tr><td>Weakness_Flag</td><td>bool</td><td>Выявлена слабость? → если да, инициировать action в Table D</td></tr>
+</tbody></table></div>
+<div class="crit"><strong>Control_Strength = min(Design_Eff, Operating_Eff).</strong> Контроль, спроектированный на 5, но исполняемый на 2 → Control_Strength = 2. Один сильный дизайн не компенсирует слабое исполнение. COSO IC Principle 16 различает design vs operating effectiveness.</div>
+<div class="ok"><strong>Adaptive controls:</strong> contingency plans, scenario-based fallback modes, seasonal adjustments, dynamic capacity re-allocation. Не «предотвратить» и не «обнаружить», а «перестроить систему при изменении условий». Resilience Engineering: «ability to adjust functioning prior to, during, or following changes and disturbances».</div>
+</div>
+
+<!-- ===== 5. ACTIONS ===== -->
+<div class="p" id="p-actions">
+<h2>Table D — Actions & CAPA register</h2>
+<div class="mw"><table class="mt" style="min-width:700px">
+<thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead><tbody>
+<tr><td>Action_ID</td><td>код</td><td>Уникальный</td></tr>
+<tr><td>Related_Risk_ID</td><td>ссылка</td><td>Связанный верхний риск</td></tr>
+<tr><td>Related_Event_ID</td><td>ссылка</td><td>Связанное событие из Table B</td></tr>
+<tr><td>Action_Type</td><td>enum</td><td>correction (немедленное устранение) / corrective action (устранение root cause) / preventive action (предупреждение) / mitigation (снижение impact)</td></tr>
+<tr><td>Description</td><td>текст</td><td>Что делаем</td></tr>
+<tr><td>Owner</td><td>роль</td><td>Кто отвечает за исполнение</td></tr>
+<tr><td>Due_Date</td><td>дата</td><td>Крайний срок</td></tr>
+<tr><td>Effectiveness_Criteria</td><td>текст</td><td>Как поймём, что сработало (конкретные измеримые условия)</td></tr>
+<tr><td>Status</td><td>enum</td><td>Open / In progress / Done / Overdue</td></tr>
+<tr><td>Verification_Owner</td><td>роль</td><td>Кто проверяет результат (не тот, кто исполнял)</td></tr>
+<tr><td>Verification_Date</td><td>дата</td><td>Когда проверка эффективности</td></tr>
+</tbody></table></div>
+</div>
+
+<!-- ===== 6. GOVERNANCE ===== -->
+<div class="p" id="p-gov">
+<h2>Table E — Governance: three lines of defence</h2>
+<div class="d">Структура по Misiura Table 8-1 и COSO. Три линии защиты + executive oversight. Ключевой принцип: 3-я линия (internal audit) НЕ координирует ERM — только независимая оценка (Fraser & Henry, 2007; Misiura Beta case study).</div>
+
+<div class="fg">
+<div class="fc" style="border-left:3px solid var(--blue)"><div class="ft">1-я линия: Operational management</div><div class="fb">Risk owners в бизнес-единицах. Day-to-day идентификация, оценка и управление рисками. Исполнение контролей. Отчётность вверх.</div></div>
+<div class="fc" style="border-left:3px solid var(--amber)"><div class="ft">2-я линия: RM / Compliance</div><div class="fb">ERM coordinator, Quality manager, Compliance manager. Координация enterprise-wide. Методологии, политики, consolidated reporting, portfolio view.</div></div>
+<div class="fc" style="border-left:3px solid var(--red)"><div class="ft">3-я линия: Internal audit</div><div class="fb">Независимая оценка design, adequacy и effectiveness контролей и RM-процессов. НЕ вовлечён в RM-функцию — separation of duties.</div></div>
+</div>
+
+<h3>Governance matrix (стартовый шаблон)</h3>
+<div class="mw"><table class="mt" style="min-width:900px">
+<thead><tr><th>Risk</th><th>1-я линия (owner)</th><th>2-я линия (coord)</th><th>3-я линия (audit)</th><th>Exec sponsor</th><th>Review forum</th><th>Cycle</th></tr></thead><tbody>
+<tr><td>P3 CAPA</td><td>Quality manager</td><td>Compliance mgr</td><td>Internal audit</td><td>COO</td><td>Mgmt review</td><td>Monthly</td></tr>
+<tr><td>P5 Safety</td><td>Safety manager</td><td>Quality mgr</td><td>Internal audit</td><td>COO</td><td>Safety board</td><td>Weekly</td></tr>
+<tr><td>S1 Budget</td><td>CFO</td><td>ERM coordinator</td><td>Internal audit</td><td>CEO</td><td>Exec review</td><td>Monthly</td></tr>
+<tr><td>S2 ТО</td><td>CAMO head</td><td>Quality mgr</td><td>Internal audit</td><td>COO</td><td>Ops review</td><td>Weekly</td></tr>
+<tr><td>S3 Fleet</td><td>Fleet manager</td><td>CAMO head</td><td>Internal audit</td><td>COO</td><td>Peak board</td><td>Daily (peak)</td></tr>
+<tr><td>S4 Coord</td><td>Accountable mgr</td><td>ERM coordinator</td><td>Internal audit</td><td>CEO</td><td>Exec gov board</td><td>Quarterly</td></tr>
+<tr><td>E1 Regs</td><td>Compliance mgr</td><td>Quality mgr</td><td>Internal audit</td><td>CEO</td><td>Reg review</td><td>Quarterly</td></tr>
+<tr><td>E2 Supply</td><td>Procurement</td><td>Quality mgr</td><td>Internal audit</td><td>COO</td><td>Ops review</td><td>Monthly</td></tr>
+<tr><td>E5 Crisis</td><td>COO</td><td>ERM coordinator</td><td>Internal audit</td><td>CEO / Board</td><td>Crisis committee</td><td>Event-triggered</td></tr>
+</tbody></table></div>
+</div>
+
+<!-- ===== 7. METRICS ===== -->
+<div class="p" id="p-metrics">
+<h2>Table F — Metrics & thresholds</h2>
+<div class="d">11 метрик. Разделение: leading (предиктивные, позволяют действовать до реализации) / lagging (ретроспективные). Две системные метрики: Detection Lag (RAG Monitor) и Anticipation Index (RAG Anticipate). Пороги стартовые, калибруются после 3 мес. на percentile-distribution.</div>
+
+<div class="mw"><table class="mt" style="min-width:950px">
+<thead><tr><th>ID</th><th>Метрика</th><th>Риск</th><th>Тип</th><th>Формула</th><th style="color:var(--green)">G</th><th style="color:var(--amber)">Y</th><th style="color:var(--red)">R</th><th>Частота</th></tr></thead><tbody>
+<tr><td>M-01</td><td>Repeat findings rate</td><td>P3</td><td><span class="b bl">lagging</span></td><td>repeat / total findings</td><td>&lt;10%</td><td>10–20%</td><td>&gt;20%</td><td>Monthly</td></tr>
+<tr><td>M-02</td><td>Overdue safety actions</td><td>P5</td><td><span class="b bl">lagging</span></td><td>count overdue</td><td>0–2</td><td>3–5</td><td>&gt;5</td><td>Weekly</td></tr>
+<tr><td>M-03</td><td>Budget variance</td><td>S1</td><td><span class="b bl">lagging</span></td><td>(actual-plan)/plan</td><td>&lt;3%</td><td>3–7%</td><td>&gt;7%</td><td>Monthly</td></tr>
+<tr><td>M-04</td><td>Maintenance backlog</td><td>S2</td><td><span class="b bh">leading</span></td><td>open overdue maint. tasks</td><td>&lt;5</td><td>5–15</td><td>&gt;15</td><td>Weekly</td></tr>
+<tr><td>M-05</td><td>Aircraft availability gap</td><td>S3</td><td><span class="b bh">leading</span></td><td>required − available</td><td>0</td><td>1</td><td>&gt;1</td><td>Daily</td></tr>
+<tr><td>M-06</td><td>Cross-functional escalations</td><td>S4</td><td><span class="b bl">lagging</span></td><td>count per period</td><td>&lt;2</td><td>2–4</td><td>&gt;4</td><td>Monthly</td></tr>
+<tr><td>M-07</td><td>Data mismatch count</td><td>S7</td><td><span class="b bh">leading</span></td><td>count cross-system mismatches</td><td>&lt;3</td><td>3–10</td><td>&gt;10</td><td>Monthly</td></tr>
+<tr><td>M-08</td><td>Supplier disruption count</td><td>E2</td><td><span class="b bh">leading</span></td><td>material supplier failures</td><td>0</td><td>1–2</td><td>&gt;2</td><td>Monthly</td></tr>
+<tr><td>M-09</td><td>Regulatory change exposure</td><td>E1</td><td><span class="b bh">leading</span></td><td>active NPA/CRD affecting ops</td><td>0–1</td><td>2–3</td><td>&gt;3</td><td>Quarterly</td></tr>
+<tr><td>M-10</td><td>Detection lag (median)</td><td>all</td><td><span class="b bi">system</span></td><td>median(Detection_Lag) across events in period</td><td>&lt;24h</td><td>1–7d</td><td>&gt;7d</td><td>Monthly</td></tr>
+<tr><td>M-11</td><td>Anticipation index</td><td>E1–E8</td><td><span class="b bi">system</span></td><td>% external risks с leading indicator + scenario + contingency</td><td>≥60%</td><td>30–59%</td><td>&lt;30%</td><td>Quarterly</td></tr>
+</tbody></table></div>
+<div class="note"><strong>M-10</strong> измеряет, как быстро система обнаруживает события (RAG «Наблюдать»). <strong>M-11</strong> измеряет, для какой доли external risks есть проактивное покрытие (RAG «Предвидеть»). Если M-11 &lt; 30% — система слепа к внешним шокам.</div>
+</div>
+
+<!-- ===== 8. FORMULAS ===== -->
+<div class="p" id="p-formulas">
+<h2>Формулы скоринга</h2>
+
+<h3>1. Inherent risk score</h3>
+<div class="formula"><span class="v">Inherent_Score</span> = Impact × Likelihood<br><span class="cm">// Impact = 1..5, Likelihood = 1..5, max = 25</span><br><span class="cm">// Speed НЕ входит в произведение — используется отдельно для Escalation_Priority</span><br><span class="cm">// Обоснование: COSO/ISO 31000 velocity of onset — квалификатор приоритизации, не magnitude</span></div>
+
+<h3>2. Control factor</h3>
+<div class="formula"><span class="v">Control_Strength</span> = min(Design_Eff, Operating_Eff) <span class="cm">// по ВСЕМ контролям риска из Table C</span><br><br>Strength | Factor<br>  1 (отсутствует/не работает) → 1.00<br>  2 (слабый)                  → 0.80<br>  3 (средний)                 → 0.60<br>  4 (сильный)                 → 0.40<br>  5 (очень сильный)           → 0.20</div>
+
+<h3>3. Residual score</h3>
+<div class="formula"><span class="v">Residual_Score</span> = Inherent_Score × Control_Factor</div>
+
+<h3>4. Event pressure modifier</h3>
+<div class="formula"><span class="v">Event_Pressure</span> = 1 + min(Repeat_Events / Threshold_Events × 0.25, 0.50)<br><span class="cm">// Ограничение сверху: max 1.50</span><br><span class="cm">// Если событий нет → Event_Pressure = 1.0 (нейтрально)</span><br><span class="cm">// Если события частые → до 1.5× от Residual</span></div>
+
+<h3>5. Dynamic residual score</h3>
+<div class="formula"><span class="v">Dynamic_Residual</span> = Residual_Score × Event_Pressure<br><span class="cm">// Риск чувствителен к повторяемости событий — антихрупкость наоборот:</span><br><span class="cm">// система «слышит» нарастающее давление через event stream</span></div>
+
+<h3>6. Escalation priority</h3>
+<div class="formula"><span class="v">Escalation_Priority</span> = Speed × Dynamic_Residual<br><span class="cm">// Speed = 1..5 (velocity of onset)</span><br><span class="cm">// Два риска с одинаковым Dynamic_Residual, но разным Speed →</span><br><span class="cm">// быстрый риск обрабатывается первым</span><br><span class="cm">// Используется для СОРТИРОВКИ, не для оценки magnitude</span></div>
+
+<h3>7. Appetite status</h3>
+<div class="formula"><span class="cm">// Стартовые пороги (калибруются после 3 мес.):</span><br>Dynamic_Residual 0–5   → <strong style="color:var(--green)">Within appetite</strong><br>Dynamic_Residual 6–12  → <strong style="color:var(--amber)">Near appetite</strong><br>Dynamic_Residual &gt;12   → <strong style="color:var(--red)">Exceeded appetite</strong><br><br><span class="cm">// После 3 месяцев с реальными данными:</span><br><span class="cm">// P75 от распределения Dynamic_Residual = граница yellow</span><br><span class="cm">// P95 = граница red</span><br><span class="cm">// Это устраняет произвольность стартовых порогов</span></div>
+
+<h3>Полный пример расчёта: S2 — Срыв программы ТО</h3>
+<div class="formula">Impact = 4, Likelihood = 4<br><span class="v">Inherent</span> = 4 × 4 = <strong>16</strong><br><br>Controls: CTRL-21 (weekly review): Design=4, Operating=2 → min=2<br><span class="v">Control_Strength</span> = 2 → Factor = 0.80<br><span class="v">Residual</span> = 16 × 0.80 = <strong>12.8</strong><br><br>Repeat_Events=4, Threshold=8<br><span class="v">Event_Pressure</span> = 1 + min(4/8 × 0.25, 0.50) = 1 + 0.125 = <strong>1.125</strong><br><span class="v">Dynamic_Residual</span> = 12.8 × 1.125 = <strong>14.4</strong> → <strong style="color:var(--red)">Exceeded</strong><br><br>Speed = 3<br><span class="v">Escalation_Priority</span> = 3 × 14.4 = <strong>43.2</strong></div>
+</div>
+
+<!-- ===== 9. FLOWS ===== -->
+<div class="p" id="p-flows">
+<h2>Потоки данных между таблицами</h2>
+<div class="d">Пять связанных потоков. Таблицы не автономны — они образуют замкнутую систему обратной связи.</div>
+
+<div class="fg">
+<div class="fc" style="border-left:3px solid var(--teal)"><div class="ft">Поток 1: Events → Risks (снизу вверх)</div><div class="fb">Table B → Table A. Каждое событие привязывается к ≥1 риску. Events &gt; threshold → risk review. Repeat/systemic → пересмотр score. Severity ≥4 → немедленная эскалация. Новый тип → возможен Level 2 sub-risk.</div></div>
+<div class="fc" style="border-left:3px solid var(--coral)"><div class="ft">Поток 2: Risks → Actions (сверху вниз)</div><div class="fb">Table A → Table D. Exceeded и Near appetite → обязательная mitigation/CAPA. Каждый top risk: owner + indicators + controls + review cycle. Risk без actions = governance weakness.</div></div>
+</div>
+<div class="fg">
+<div class="fc" style="border-left:3px solid var(--purple)"><div class="ft">Поток 3: Controls → Residual score</div><div class="fb">Table C → Table A. Control_Strength = min(D,O). Weakness_Flag → action в Table D. Control failed → немедленный пересмотр risk score.</div></div>
+<div class="fc" style="border-left:3px solid var(--green)"><div class="ft">Поток 4: Metrics → Escalation</div><div class="fb">Table F → Table E. Green → 1-я линия. Yellow → 2-я линия. Red → executive + review forum. Speed определяет приоритет внутри каждого уровня.</div></div>
+</div>
+<div class="fc" style="border-left:3px solid var(--blue);margin-bottom:10px"><div class="ft">Поток 5: Interdependencies → Cascade assessment</div><div class="fb">Table A (Linked_Risks). При пересмотре любого риска → проверить ВСЕ linked risks. Если S2 ухудшился → проверить S3, S1, E8, P7, P1. Реализация «combined effects of multiple scenarios» (Misiura, Alpha FRM framework). Каскадный пересмотр — не опция, а обязательный шаг.</div></div>
+</div>
+
+<!-- ===== 10. SUBJECTIVITY ===== -->
+<div class="p" id="p-subjectivity">
+<h2>Карта субъективности в скоринге</h2>
+<div class="d">Каждая точка принятия решений — либо data-driven, либо expert judgment. Цель: не устранить экспертизу, а сузить коридор произвольности через данные. Стартовая система неизбежно субъективна. За 6–12 месяцев — перевод ключевых компонентов из «субъективных» в «полу-субъективные».</div>
+
+<div class="mw"><table class="mt" style="min-width:800px">
+<thead><tr><th>Компонент</th><th>Старт</th><th>Источник субъективности</th><th>Data-driven альтернатива</th><th>Что нужно собрать</th></tr></thead><tbody>
+<tr><td>Impact (1–5)</td><td><span class="b bl">субъект.</span></td><td>Эксперт ставит балл «из головы»; два человека → разные оценки</td><td>Severity matrix с конкретными примерами для каждого уровня и домена</td><td>Утверждённая severity matrix</td></tr>
+<tr><td>Likelihood (1–5)</td><td><span class="b bl">субъект.</span></td><td>«Редко / часто» без данных; cognitive biases (availability, recency)</td><td>Frequency = N events / period из event log; статистическое распределение</td><td>Event log с timestamps ≥ 6 мес.</td></tr>
+<tr><td>Speed (1–5)</td><td><span class="b bm">полу</span></td><td>Оценка по природе риска (cyber = fast, regulatory = slow)</td><td>Исторические данные о detection lag и time-to-impact</td><td>Detection_Lag в Table B</td></tr>
+<tr><td>Control eff.</td><td><span class="b bl">субъект.</span></td><td>«Работает / не работает» без evidence</td><td>% compliance + test results + weakness flags</td><td>Evidence в Table C + audit</td></tr>
+<tr><td>Event_Pressure</td><td><span class="b bh">data</span></td><td>—</td><td>Автоматически из event log: count(repeat) / threshold</td><td>Structured event log</td></tr>
+<tr><td>Thresholds</td><td><span class="b bl">субъект.</span></td><td>Произвольные пороги</td><td>Percentile-based: P75 = yellow, P95 = red</td><td>3+ мес. данных</td></tr>
+<tr><td>Interdependencies</td><td><span class="b bm">полу</span></td><td>Эксперт определяет связи; может пропустить неочевидные</td><td>Co-occurrence analysis из event log: какие риски co-trigger</td><td>Event log с multiple Related_Risk_ID</td></tr>
+</tbody></table></div>
+
+<div class="warn"><strong>Правило:</strong> данные не заменяют экспертизу — они ограничивают пространство для произвольных оценок. Чем больше data-driven компонентов, тем у́же коридор субъективности. Event_Pressure — единственный полностью data-driven компонент на старте. Цель за 6–12 месяцев: перевести Impact, Likelihood и Control effectiveness из «субъективных» в «полу-субъективные».</div>
+</div>
+
+<!-- ===== 11. RESILIENCE ===== -->
+<div class="p" id="p-resilience">
+<h2>RAG-потенциалы и фарватер выживания</h2>
+<div class="d">Маппинг всех компонентов operating model на 4 потенциала Hollnagel (RAG). Signposts для adaptive pathways (DMDU). Связь с антихрупкостью Taleb.</div>
+
+<h3>Маппинг таблиц → RAG-потенциалы</h3>
+<div class="mw"><table class="mt" style="min-width:700px">
+<thead><tr><th>RAG-потенциал</th><th>Компоненты модели</th><th>Покрытие</th></tr></thead><tbody>
+<tr><td><strong>Реагировать</strong></td><td>Table B (events) → Table D (CAPA) → Table E (escalation). Corrective и recovery controls. Speed как escalation priority.</td><td><span class="b bh">strong</span></td></tr>
+<tr><td><strong>Наблюдать</strong></td><td>Table F: leading indicators M-04, M-05, M-07, M-08. Table B: Detection_Lag. Table C: Operating_Eff. Preventive и detective controls. M-10: detection lag median.</td><td><span class="b bh">strong</span></td></tr>
+<tr><td><strong>Учиться</strong></td><td>Table B: Frequency_Flag (first/repeat/systemic) — trend detection. Positive observations (Safety-II). Table D: Effectiveness_Criteria. M-01: repeat findings rate.</td><td><span class="b bm">medium</span></td></tr>
+<tr><td><strong>Предвидеть</strong></td><td>M-09: regulatory change exposure. M-11: anticipation index. RAG_Potential = Anticipate для E1–E8. Adaptive controls. Signposts SP-1..SP-5.</td><td><span class="b bm">medium</span></td></tr>
+</tbody></table></div>
+
+<h3>Signposts для adaptive pathways (DMDU)</h3>
+<div class="d">Signpost = заранее определённый триггер, при котором меняется стратегия управления. Не «реагируем когда случилось», а «если X достигнет Y — переключаемся на план B». Каждый signpost = опцион по Taleb: стоимость мониторинга триггера минимальна, выигрыш при срабатывании — быстрое переключение вместо паники.</div>
+
+<div class="mw"><table class="mt" style="min-width:700px">
+<thead><tr><th>SP</th><th>Риск</th><th>Триггер</th><th>Pre-committed response</th></tr></thead><tbody>
+<tr><td>SP-1</td><td>E3</td><td>Цена jet fuel &gt; X% от бюджетного уровня в течение 30 дней</td><td>Активация hedging contingency; пересмотр route profitability</td></tr>
+<tr><td>SP-2</td><td>E2, E8</td><td>≥2 ключевых поставщика с delivery delay &gt;14 дней одновременно</td><td>Активация альтернативных MRO; пересмотр maintenance programme</td></tr>
+<tr><td>SP-3</td><td>E7, S8</td><td>Vacancy rate для критических позиций &gt; X% в течение 60 дней</td><td>Ускоренный рекрутинг; пересмотр training pipeline; temporary sourcing</td></tr>
+<tr><td>SP-4</td><td>E1</td><td>Публикация NPA, затрагивающего ≥3 operational domains</td><td>Impact assessment за 30 дней; compliance roadmap; бюджетирование</td></tr>
+<tr><td>SP-5</td><td>E5</td><td>Крупное disruption event в отрасли (пандемия, geopolitical crisis)</td><td>Активация crisis committee; scenario-based schedule reduction</td></tr>
+</tbody></table></div>
+</div>
+
+<!-- ===== 12. CYCLE ===== -->
+<div class="p" id="p-cycle">
+<h2>Рабочий цикл</h2>
+<div class="fg">
+<div class="fc" style="border-left:3px solid var(--red)"><div class="ft">Еженедельно</div><div class="fb">☐ Critical events (severity ≥4) из Table B<br>☐ Red risks (Exceeded appetite) из Table A<br>☐ Overdue actions из Table D<br>☐ Leading indicators: M-04 (backlog), M-05 (availability), M-02 (safety actions)<br>☐ Signposts SP-1 — SP-5: проверить триггеры</div></div>
+<div class="fc" style="border-left:3px solid var(--amber)"><div class="ft">Ежемесячно</div><div class="fb">☐ Dynamic_Residual для всех 26 рисков<br>☐ Cascade check: Linked_Risks для ухудшившихся рисков<br>☐ Lagging indicators: M-01 (repeat findings), M-03 (budget), M-06 (escalations)<br>☐ M-10 (detection lag median): система наблюдения работает?<br>☐ Weakness_Flag в Table C → инициировать actions<br>☐ Positive observations review (Safety-II learning)</div></div>
+<div class="fc" style="border-left:3px solid var(--green)"><div class="ft">Ежеквартально</div><div class="fb">☐ Калибровка thresholds (percentile-based после 3 мес.)<br>☐ Control effectiveness re-assessment (Design_Eff + Operating_Eff по всем контролям)<br>☐ Portfolio актуализация: новые / закрытые / переклассифицированные риски<br>☐ M-11 (anticipation index): ≥60% external risks с полным покрытием?<br>☐ Signposts review: добавить / удалить триггеры; скорректировать thresholds<br>☐ Maturity self-assessment по Misiura: comprehensiveness, embeddedness, integration, roles & uses</div></div>
+</div>
+
+<h3>Рекомендация по старту</h3>
+<div class="note"><strong>Не строить огромную систему сразу.</strong> Минимальный стартовый комплект:<br>
+• 12–15 top risks (самые критичные из 26)<br>
+• 8 ключевых метрик (M-01..M-08)<br>
+• 1 единый event log (все типы событий в одной таблице)<br>
+• 1 таблица actions/CAPA<br>
+• 1 таблица controls с Design_Eff + Operating_Eff<br>
+• 3 signposts (SP-1, SP-2, SP-5)<br>
+• Ежемесячный review<br><br>
+Этого достаточно, чтобы система начала жить. Системные метрики (M-10, M-11) добавляются после первого квартала. Расширение — после 2–3 циклов с реальными данными и калибровки thresholds.</div>
+</div>
+
+</div></div>
+<script>
+document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('a'));document.querySelectorAll('.p').forEach(x=>x.classList.remove('a'));t.classList.add('a');document.getElementById('p-'+t.dataset.t).classList.add('a')})});
+function toggleCode(el){const w=el.nextElementSibling,a=el.querySelector('.arr');w.classList.toggle('open');a.classList.toggle('open')}
+</script>
+</body>
+</html>

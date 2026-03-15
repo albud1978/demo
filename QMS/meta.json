@@ -17,6 +17,11 @@
       "title": "ДОНО — Анализ матрицы данных",
       "description": "Критический анализ источников данных ДОНО × ERM × Resilience",
       "tags": ["QMS", "data"]
+    },
+    "ERM_Operating_Model_v2.html": {
+      "title": "ERM Operating Model v2",
+      "description": "Baseline операционной модели ERM для авиакомпании",
+      "tags": ["QMS", "doc"]
     }
   }
 }
