@@ -144,6 +144,25 @@
   <div class="fc"><div class="ft">Антихрупкость (Taleb)</div><div class="fb">Система усиливается от стрессоров: быстрая обратная связь, обучение, избыточность. Signposts = опционы. Event_Pressure = чувствительность к повторяемости.</div></div>
 </div>
 
+<h3>Принципы дизайна: Alpha governance + Beta routines</h3>
+<div class="d">Формула выведена из сравнительного анализа двух case studies Misiura (2015). Alpha Airlines (high maturity ERM) даёт governance каркас. Beta Airline (advanced system без декларации ERM) даёт операционный стиль: effectiveness over bureaucratic trails, open information sharing, встроенность risk logic в business planning.</div>
+
+<div class="fg">
+<div class="fc" style="border-left:3px solid var(--blue)"><div class="ft">Оставить от Alpha (каркас)</div><div class="fb">Executive accountability и board oversight. Единый top risk portfolio. Формальные owners, thresholds, escalation logic. CRO или эквивалент для enterprise-wide координации. Three lines of defence. Связка risk review с strategic planning.</div></div>
+<div class="fc" style="border-left:3px solid var(--teal)"><div class="ft">Взять от Beta (рутины)</div><div class="fb">Встраивать risk discussion в существующие review cycles (budget, maintenance, seasonal readiness), а не создавать параллельную бюрократию. Минимум обязательных документов, максимум полезности. Open information sharing. Risk maps — поддержка разговора, а не самоцель. Effectiveness over paperwork.</div></div>
+<div class="fc" style="border-left:3px solid var(--red)"><div class="ft">Убрать как бюрократию</div><div class="fb">Дублирующиеся комитеты с одними темами. Параллельные реестры в разных silos. Narrative reports без решений. Формализация каждого шага на нижнем уровне. Сбор данных «на всякий случай». Risk maps, которые никто не использует в работе.</div></div>
+</div>
+
+<h4>Антибюрократический фильтр</h4>
+<div class="d">Каждый новый элемент системы (отчёт, поле, форум, шаблон) проверяется через три вопроса. Если хотя бы на один ответ «нет» — элемент не внедряется или удаляется при квартальном review.</div>
+<div class="mw"><table class="mt" style="min-width:400px">
+<thead><tr><th>Вопрос</th><th>Если «нет»</th></tr></thead>
+<tbody>
+<tr><td>Это усиливает ownership?</td><td>Не внедрять</td></tr>
+<tr><td>Это помогает принять решение?</td><td>Не внедрять</td></tr>
+<tr><td>Это снижает риск или ускоряет реакцию?</td><td>Не внедрять</td></tr>
+</tbody></table></div>
+
 <div class="warn"><strong>Принцип иерархии рисков:</strong> верхний риск (Level 1) ≠ один уровень. Каждый декомпозируется на подриски (Level 2). Пример: S2 «Срыв программы ТО» ← P1, P3, P7, S8, E2. Верхний риск — управленческая проблема, подриски — причинная структура.</div>
 </div>
 
@@ -316,6 +335,25 @@
 <tr><td>E2 Supply</td><td>Procurement</td><td>Quality mgr</td><td>Internal audit</td><td>COO</td><td>Ops review</td><td>Monthly</td></tr>
 <tr><td>E5 Crisis</td><td>COO</td><td>ERM coordinator</td><td>Internal audit</td><td>CEO / Board</td><td>Crisis committee</td><td>Event-triggered</td></tr>
 </tbody></table></div>
+
+<h3>Executive view: 8 полей из 24</h3>
+<div class="d">Table A содержит 24 рабочих поля — это working layer для risk owners и 2-й линии. Для executive level и review forums — фильтрованная проекция с 8 полями. Не отдельный реестр, а view поверх того же реестра. На executive review обсуждаются только yellow и red risks — green risks НЕ выносятся на executive level.</div>
+<div class="mw"><table class="mt" style="min-width:500px">
+<thead><tr><th>Поле</th><th>Источник</th><th>Назначение</th></tr></thead>
+<tbody>
+<tr><td>Risk_ID</td><td>Table A</td><td>Идентификация</td></tr>
+<tr><td>Risk_Name</td><td>Table A</td><td>Быстрое распознавание</td></tr>
+<tr><td>Owner</td><td>Table A</td><td>Кто отвечает</td></tr>
+<tr><td>Dynamic_Residual</td><td>Table A (расчёт)</td><td>Текущий уровень риска с учётом event pressure</td></tr>
+<tr><td>Appetite_Status</td><td>Table A (расчёт)</td><td>Within / Near / Exceeded — цветовой сигнал</td></tr>
+<tr><td>Top Indicator</td><td>Table F</td><td>Главная метрика с текущим значением и зоной</td></tr>
+<tr><td>Escalation_Priority</td><td>Table A (расчёт)</td><td>Порядок обсуждения: быстрые и тяжёлые — первыми</td></tr>
+<tr><td>Top Action</td><td>Table D</td><td>Ключевое действие, его статус и срок</td></tr>
+</tbody></table></div>
+<div class="note"><strong>Правило executive review:</strong> обсуждать только yellow и red risks. Green risks не выносятся — по ним достаточно function-level мониторинга 1-й линией. Это экономит время руководства и концентрирует внимание на том, что требует решений. Если все риски green — executive review сокращается до подтверждения статуса (5 минут).</div>
+
+<h3>Регуляторные ограничения</h3>
+<div class="crit"><strong>Safety review boards и compliance monitoring forums нельзя устранить</strong> — это регуляторные требования (EASA ORO.GEN.200, ICAO Annex 19, Doc 9859). Их можно оптимизировать: единый data feed из Table B (event log) в каждый специализированный форум, вместо параллельных реестров. Safety board берёт свой срез из общего event log (Event_Type = safety report / incident). QMS review берёт свой срез (Event_Type = audit finding / deviation). Но сами форумы существуют по закону.</div>
 </div>
 
 <!-- ===== 7. METRICS ===== -->
@@ -435,9 +473,9 @@
 <div class="p" id="p-cycle">
 <h2>Рабочий цикл</h2>
 <div class="fg">
-<div class="fc" style="border-left:3px solid var(--red)"><div class="ft">Еженедельно</div><div class="fb">☐ Critical events (severity ≥4) из Table B<br>☐ Red risks (Exceeded appetite) из Table A<br>☐ Overdue actions из Table D<br>☐ Leading indicators: M-04 (backlog), M-05 (availability), M-02 (safety actions)<br>☐ Signposts SP-1 — SP-5: проверить триггеры</div></div>
-<div class="fc" style="border-left:3px solid var(--amber)"><div class="ft">Ежемесячно</div><div class="fb">☐ Dynamic_Residual для всех 26 рисков<br>☐ Cascade check: Linked_Risks для ухудшившихся рисков<br>☐ Lagging indicators: M-01 (repeat findings), M-03 (budget), M-06 (escalations)<br>☐ M-10 (detection lag median): система наблюдения работает?<br>☐ Weakness_Flag в Table C → инициировать actions<br>☐ Positive observations review (Safety-II learning)</div></div>
-<div class="fc" style="border-left:3px solid var(--green)"><div class="ft">Ежеквартально</div><div class="fb">☐ Калибровка thresholds (percentile-based после 3 мес.)<br>☐ Control effectiveness re-assessment (Design_Eff + Operating_Eff по всем контролям)<br>☐ Portfolio актуализация: новые / закрытые / переклассифицированные риски<br>☐ M-11 (anticipation index): ≥60% external risks с полным покрытием?<br>☐ Signposts review: добавить / удалить триггеры; скорректировать thresholds<br>☐ Maturity self-assessment по Misiura: comprehensiveness, embeddedness, integration, roles & uses</div></div>
+<div class="fc" style="border-left:3px solid var(--red)"><div class="ft">Еженедельно</div><div class="fb">☐ Critical events (severity ≥4) из Table B<br>☐ Red risks (Exceeded appetite) из Table A — только они выносятся на обсуждение<br>☐ Overdue actions из Table D<br>☐ Leading indicators: M-04 (backlog), M-05 (availability), M-02 (safety actions)<br>☐ Signposts SP-1 — SP-5: проверить триггеры<br>☐ Green risks НЕ обсуждаются — достаточно мониторинга 1-й линией</div></div>
+<div class="fc" style="border-left:3px solid var(--amber)"><div class="ft">Ежемесячно</div><div class="fb">☐ Dynamic_Residual для всех 26 рисков<br>☐ Cascade check: Linked_Risks для ухудшившихся рисков<br>☐ Executive review: только yellow + red risks (executive view, 8 полей)<br>☐ Lagging indicators: M-01 (repeat findings), M-03 (budget), M-06 (escalations)<br>☐ M-10 (detection lag median): система наблюдения работает?<br>☐ Weakness_Flag в Table C → инициировать actions<br>☐ Positive observations review (Safety-II learning)</div></div>
+<div class="fc" style="border-left:3px solid var(--green)"><div class="ft">Ежеквартально</div><div class="fb">☐ Калибровка thresholds (percentile-based после 3 мес.)<br>☐ Control effectiveness re-assessment (Design_Eff + Operating_Eff по всем контролям)<br>☐ Portfolio актуализация: новые / закрытые / переклассифицированные риски<br>☐ M-11 (anticipation index): ≥60% external risks с полным покрытием?<br>☐ Signposts review: добавить / удалить триггеры; скорректировать thresholds<br>☐ Maturity self-assessment по Misiura: comprehensiveness, embeddedness, integration, roles & uses<br>☐ <strong>Антибюрократический фильтр:</strong> каждый отчёт, поле, форум проверить — усиливает ownership? помогает принять решение? снижает риск? Если нет → кандидат на удаление</div></div>
 </div>
 
 <h3>Рекомендация по старту</h3>
