@@ -1,0 +1,12 @@
+{
+  "name": "MNIST",
+  "description": "Визуализация и объяснение классификации рукописных цифр",
+  "tags": ["ML", "viz"],
+  "files": {
+    "mnist_explainer.html": {
+      "title": "MNIST Explainer",
+      "description": "Интерактивное объяснение работы нейросети на датасете MNIST",
+      "tags": ["ML", "viz"]
+    }
+  }
+}
