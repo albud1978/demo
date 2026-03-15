@@ -240,7 +240,7 @@ async function main() {
       const style = categoryStyle(tags);
       const href = `${BASE_URL}/${f.path}`;
 
-      return `<a class="card" href="${href}" target="_blank" rel="noopener">
+      return `<a class="card" href="${href}">
         <div class="card-icon" style="background:${style.color}22;color:${style.color}">${style.icon}</div>
         <div class="card-folder">${escHTML(folderName)}</div>
         <div class="card-title">${escHTML(title)}</div>
