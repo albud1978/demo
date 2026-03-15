@@ -12,6 +12,11 @@
       "title": "Research Methodology Handbook v2",
       "description": "Справочник по методологии исследований Misiura, версия 2",
       "tags": ["QMS", "doc"]
+    },
+    "DONO_DataSources_Analysis_v1.html": {
+      "title": "ДОНО — Анализ матрицы данных",
+      "description": "Критический анализ источников данных ДОНО × ERM × Resilience",
+      "tags": ["QMS", "data"]
     }
   }
 }

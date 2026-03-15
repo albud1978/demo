@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Анализ матрицы данных ДОНО × ERM × Resilience</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=JetBrains+Mono:wght@400;500&display=swap');
+  :root{--bg:#fafaf8;--bg2:#f2f1ed;--bg3:#eae9e4;--card:#fff;--text:#1a1a18;--text2:#6b6a65;--text3:#9c9a92;--border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.14);--blue:#2563eb;--blue-bg:#eff5ff;--blue-t:#1e40af;--teal:#0d9488;--teal-bg:#ecfdf5;--teal-t:#065f46;--purple:#7c3aed;--purple-bg:#f3f0ff;--purple-t:#4c1d95;--coral:#dc5328;--coral-bg:#fff5f2;--coral-t:#9a3412;--amber:#d97706;--amber-bg:#fffbeb;--amber-t:#78350f;--green:#16a34a;--green-bg:#f0fdf4;--green-t:#14532d;--red:#dc2626;--red-bg:#fef2f2;--red-t:#7f1d1d;--r:10px;--rl:14px;--font:'DM Sans',-apple-system,sans-serif;--mono:'JetBrains Mono',monospace}
+  @media(prefers-color-scheme:dark){:root{--bg:#141413;--bg2:#1e1e1c;--bg3:#282825;--card:#1e1e1c;--text:#e8e6df;--text2:#a3a19a;--text3:#6b6a65;--border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.14);--blue-bg:#172554;--blue-t:#93c5fd;--teal-bg:#042f2e;--teal-t:#5eead4;--purple-bg:#2e1065;--purple-t:#c4b5fd;--coral-bg:#431407;--coral-t:#fdba74;--amber-bg:#451a03;--amber-t:#fcd34d;--green-bg:#052e16;--green-t:#86efac;--red-bg:#450a0a;--red-t:#fca5a5}}
+  *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+  body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+  .hdr{background:var(--card);border-bottom:1px solid var(--border);padding:20px 0 16px;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+  .c{max-width:1140px;margin:0 auto;padding:0 20px}
+  .ht h1{font-size:16px;font-weight:600;letter-spacing:-.3px}
+  .ht .sub{font-size:12px;color:var(--text2);margin-top:2px}
+  .tabs{display:flex;gap:2px;margin-top:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:5px 11px;font-size:11px;font-weight:500;border-radius:7px;cursor:pointer;background:0;color:var(--text2);border:none;font-family:inherit;white-space:nowrap;transition:all .15s}
+  .tab:hover{background:var(--bg2);color:var(--text)}
+  .tab.a{background:var(--blue-bg);color:var(--blue-t)}
+  .cnt{padding:18px 0 50px}.p{display:none;animation:fi .2s ease}.p.a{display:block}
+  @keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  h2{font-size:15px;font-weight:600;margin:0 0 6px}
+  h3{font-size:13px;font-weight:600;margin:18px 0 6px}
+  .d{font-size:12.5px;color:var(--text2);margin:0 0 14px;line-height:1.65}
+  .sr{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin:0 0 16px}
+  .st{background:var(--bg2);border-radius:var(--r);padding:10px 12px}
+  .st .sl{font-size:9px;color:var(--text3);font-weight:600;letter-spacing:.3px;text-transform:uppercase}
+  .st .sv{font-size:18px;font-weight:600;margin-top:1px;letter-spacing:-.5px}
+  .mw{overflow-x:auto;margin:10px 0;border-radius:var(--rl);border:1px solid var(--border)}
+  .mt{width:100%;border-collapse:collapse;font-size:11px;min-width:700px}
+  .mt th{text-align:left;padding:6px 7px;background:var(--bg2);font-weight:600;font-size:9.5px;letter-spacing:.2px;border-bottom:1px solid var(--border2);white-space:nowrap}
+  .mt th.rot{writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);height:140px;max-width:28px;padding:6px 3px;font-size:9px;white-space:normal;line-height:1.3}
+  .mt td{padding:5px 7px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text2)}
+  .mt td:first-child{font-weight:500;color:var(--text);font-size:10.5px;max-width:200px}
+  .mt tr:last-child td{border-bottom:none}
+  .mt .ce{text-align:center}
+  .dot{display:inline-block;width:16px;height:16px;border-radius:50%;line-height:16px;text-align:center;font-size:10px;font-weight:700;color:#fff}
+  .dot-y{background:var(--green)}
+  .dot-n{background:var(--bg3)}
+  .cnt-num{font-family:var(--mono);font-size:11px;font-weight:600}
+  .cnt-hi{color:var(--green)}.cnt-med{color:var(--amber)}.cnt-lo{color:var(--red)}
+  .note{background:var(--blue-bg);border-radius:var(--r);padding:10px 12px;font-size:11.5px;color:var(--blue-t);margin:12px 0;line-height:1.55}
+  .note strong{font-weight:600}
+  .warn{background:var(--amber-bg);color:var(--amber-t);border-radius:var(--r);padding:10px 12px;font-size:11.5px;margin:12px 0;line-height:1.55}
+  .crit{background:var(--red-bg);color:var(--red-t);border-radius:var(--r);padding:10px 12px;font-size:11.5px;margin:12px 0;line-height:1.55}
+  .ok{background:var(--green-bg);color:var(--green-t);border-radius:var(--r);padding:10px 12px;font-size:11.5px;margin:12px 0;line-height:1.55}
+  .fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin:0 0 14px}
+  .fc{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:12px 14px}
+  .fc .ft{font-size:12.5px;font-weight:600;margin:0 0 4px}
+  .fc .fb{font-size:11.5px;color:var(--text2);line-height:1.55}
+  .tag{display:inline-block;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:600;margin:0 2px 2px 0}
+  .tag-src{background:var(--blue-bg);color:var(--blue-t)}
+  .tag-gap{background:var(--red-bg);color:var(--red-t)}
+  .tag-ok{background:var(--green-bg);color:var(--green-t)}
+  .tag-ref{background:var(--purple-bg);color:var(--purple-t)}
+  .b{display:inline-block;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:600;font-family:var(--mono)}
+  .bh{background:var(--green-bg);color:var(--green-t)}.bm{background:var(--amber-bg);color:var(--amber-t)}.bl{background:var(--red-bg);color:var(--red-t)}
+  .quote{font-size:11.5px;color:var(--text2);font-style:italic;border-left:3px solid var(--border2);padding:7px 12px;margin:8px 0;line-height:1.55;background:var(--bg2);border-radius:0 var(--r) var(--r) 0}
+  .quote .src{font-style:normal;font-weight:600;color:var(--text3);font-size:10px;display:block;margin-top:3px}
+  @media print{.hdr{position:static}.p{display:block!important;page-break-inside:avoid;margin-bottom:16px;border-top:2px solid var(--border2);padding-top:10px}.tabs{display:none}}
+</style>
+</head>
+<body>
+
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="hdr"><div class="c">
+  <div class="ht">
+    <h1>Матрица данных ДОНО × ERM × Resilience: критический анализ</h1>
+    <div class="sub">Источники информации ДОНО → стыковка с Misiura (2015), COSO IC/ERM, Safety-II, Resilience Engineering</div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab a" data-t="matrix">Матрица ДОНО</button>
+    <button class="tab" data-t="gaps">Диагностика</button>
+    <button class="tab" data-t="misiura">× Misiura</button>
+    <button class="tab" data-t="coso">× COSO</button>
+    <button class="tab" data-t="resilience">× Resilience</button>
+    <button class="tab" data-t="scoring">Скоринг и данные</button>
+    <button class="tab" data-t="recom">Рекомендации</button>
+  </div>
+</div></div>
+<div class="cnt"><div class="c">
+
+<!-- ===== MATRIX ===== -->
+<div class="p a" id="p-matrix">
+<h2>Исходная матрица: источники данных ДОНО</h2>
+<div class="d">Матрица «направления работ × источники информации» для Департамента организации наземного обслуживания (ДОНО). 10 направлений работ, 13 источников данных, 7 информационных систем. Бинарная разметка (+/пусто).</div>
+
+<div class="sr">
+  <div class="st"><div class="sl">Направлений</div><div class="sv">10</div></div>
+  <div class="st"><div class="sl">Источников</div><div class="sv">13</div></div>
+  <div class="st"><div class="sl">Инф. систем</div><div class="sv">7</div></div>
+  <div class="st"><div class="sl">Связей (+)</div><div class="sv">53</div></div>
+  <div class="st"><div class="sl">Покрытие</div><div class="sv">41%</div></div>
+  <div class="st"><div class="sl">Max на строку</div><div class="sv">9</div></div>
+  <div class="st"><div class="sl">Min на строку</div><div class="sv">2</div></div>
+</div>
+
+<div class="mw">
+<table class="mt" style="min-width:1050px">
+<thead><tr>
+<th style="min-width:170px">Направление ДОНО</th>
+<th class="rot">Решения коллег. органов</th>
+<th class="rot">Письма надзорных</th>
+<th class="rot">Акты проверок КРС</th>
+<th class="rot">Отчёт представителя а/к</th>
+<th class="rot">Чек-листы аэродромной</th>
+<th class="rot">Safety report</th>
+<th class="rot">Отчёт бортпроводника</th>
+<th class="rot">Сообщения тех. директората</th>
+<th class="rot">Отчёты по аудитам</th>
+<th class="rot">Мониторинг клиент. сервиса</th>
+<th class="rot">Обращения пассажиров</th>
+<th class="rot">Обязат./добров. сообщения</th>
+<th class="rot">Карточки событий</th>
+<th>N</th>
+</tr></thead>
+<tbody>
+<tr><td>Доклады руководящему составу</td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td><span class="cnt-num cnt-hi">6</span></td></tr>
+<tr><td>Обслуживание пассажиров и багажа</td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td><span class="cnt-num cnt-hi">6</span></td></tr>
+<tr><td>Состояние аэродрома, перрона, МС</td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td><span class="cnt-num cnt-hi">9</span></td></tr>
+<tr><td>Несоответствия в НО ВС</td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td><span class="cnt-num cnt-hi">9</span></td></tr>
+<tr><td>Сбои в подготовке ВС к вылету</td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td><span class="cnt-num cnt-lo">3</span></td></tr>
+<tr><td>Замечания к системам ВС при НО</td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td><span class="cnt-num cnt-lo">3</span></td></tr>
+<tr><td>Проверки агентов по НО</td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td><span class="cnt-num cnt-lo">2</span></td></tr>
+<tr><td>Проверки поставщиков ПОО</td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td><span class="cnt-num cnt-lo">3</span></td></tr>
+<tr><td>Выборочные проверки агентов/ПОО</td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-y">✓</span></td><td><span class="cnt-num cnt-lo">3</span></td></tr>
+<tr><td>Мониторинг ПОО/ПОЗ в ОЗП</td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-n"></span></td><td class="ce"><span class="dot dot-y">✓</span></td><td><span class="cnt-num cnt-lo">2</span></td></tr>
+</tbody>
+</table></div>
+
+<h3>Ландшафт информационных систем</h3>
+<div class="fg">
+<div class="fc"><div class="ft">Meridian.Web</div><div class="fb">Отчёт представителя а/к, чек-листы аэродромной проверки</div></div>
+<div class="fc"><div class="ft">ИС СУБП </div><div class="fb">Обязательные/добровольные сообщения, карточки событий</div></div>
+<div class="fc"><div class="ft">ИС «Аудиты Авиакомпании»</div><div class="fb">Отчёты по аудитам</div></div>
+<div class="fc"><div class="ft">JIRA</div><div class="fb">Мониторинг клиентского сервиса, обратная связь</div></div>
+<div class="fc"><div class="ft">Lotus</div><div class="fb">Электронная почта, отчёты бортпроводника</div></div>
+<div class="fc"><div class="ft">ИС АМОС</div><div class="fb">Сообщения от технического директората</div></div>
+<div class="fc"><div class="ft">ИС «Делопроизводство»</div><div class="fb">Письма надзорных, акты проверок КРС</div></div>
+</div>
+</div>
+
+<!-- ===== GAPS ===== -->
+<div class="p" id="p-gaps">
+<h2>Диагностика: что видно и чего не хватает</h2>
+
+<h3>Сильные стороны матрицы</h3>
+<div class="ok"><strong>Множественность источников:</strong> для ключевых направлений (аэродром, несоответствия НО) — 9 источников. Это фактически реализация триангуляции по Misiura: данные проверяются из разных каналов. Направления «состояние аэродрома» и «несоответствия НО» хорошо покрыты.</div>
+<div class="ok"><strong>Смешение реактивных и проактивных каналов:</strong> safety reports (реактивный) + чек-листы аэродромных проверок (проактивный) + добровольные сообщения (проактивный) — зачатки balance между Safety-I и Safety-II подходами.</div>
+
+<h3>Критические разрывы</h3>
+<div class="crit"><strong>Тонкое покрытие (2–3 источника):</strong> 6 из 10 направлений покрыты только 2–3 источниками. Особенно тонко: «Проверки агентов по НО» (2), «Мониторинг ПОО/ПОЗ в ОЗП» (2). При отказе одного источника — потеря видимости. Это прямое противоречие принципу триангуляции Misiura и portfolio view COSO.</div>
+
+<div class="crit"><strong>Бинарная разметка (+/пусто):</strong> матрица показывает НАЛИЧИЕ связи, но не показывает: (1) надёжность источника, (2) частоту поступления данных, (3) задержку (latency), (4) качество данных, (5) полноту. Это фундаментальная проблема — бинарная матрица создаёт иллюзию покрытия.</div>
+
+<div class="warn"><strong>Нет весов и приоритетов:</strong> все источники равнозначны в матрице. Но safety report ≠ обращение пассажира по тяжести сигнала. COSO IC Principle 13 требует «relevant, quality information» — не просто наличие данных, а их релевантность и качество.</div>
+
+<div class="warn"><strong>Фрагментированный ИС-ландшафт:</strong> 7 систем, ни одна не интегрирована с другой. Lotus (email) как канал данных — ненадёжен, не индексируется, не поддаётся автоматическому анализу. АМОС ↔ СУБП ↔ JIRA ↔ Meridian — нет единого data lake. Misiura код C7 «Mechanisms for reporting and integration of enterprise-wide risk data» — здесь integration отсутствует.</div>
+
+<h3>Матрица покрытия по источникам</h3>
+<div class="mw"><table class="mt" style="min-width:600px">
+<thead><tr><th>Источник</th><th>Система</th><th>N направлений</th><th>Тип</th><th>Оценка</th></tr></thead>
+<tbody>
+<tr><td>Обязат./добров. сообщения</td><td>ИС СУБП</td><td><span class="cnt-num cnt-hi">8</span></td><td><span class="tag tag-ok">проактивный</span></td><td><span class="b bh">strong</span></td></tr>
+<tr><td>Карточки событий</td><td>ИС СУБП</td><td><span class="cnt-num cnt-hi">8</span></td><td><span class="tag tag-src">реактивный</span></td><td><span class="b bh">strong</span></td></tr>
+<tr><td>Отчёты по аудитам</td><td>ИС Аудиты</td><td><span class="cnt-num cnt-hi">7</span></td><td><span class="tag tag-ok">проактивный</span></td><td><span class="b bh">strong</span></td></tr>
+<tr><td>Акты проверок КРС</td><td>Делопроизводство</td><td><span class="cnt-num cnt-med">3</span></td><td><span class="tag tag-ok">проактивный</span></td><td><span class="b bm">medium</span></td></tr>
+<tr><td>Отчёт представителя а/к</td><td>Meridian.Web</td><td><span class="cnt-num cnt-med">4</span></td><td><span class="tag tag-src">реактивный</span></td><td><span class="b bm">medium</span></td></tr>
+<tr><td>Safety report</td><td>Meridian.Web</td><td><span class="cnt-num cnt-lo">3</span></td><td><span class="tag tag-src">реактивный</span></td><td><span class="b bm">medium</span></td></tr>
+<tr><td>Чек-листы аэродромной</td><td>Meridian.Web</td><td><span class="cnt-num cnt-lo">2</span></td><td><span class="tag tag-ok">проактивный</span></td><td><span class="b bl">thin</span></td></tr>
+<tr><td>Сообщения тех. директората</td><td>Lotus + АМОС</td><td><span class="cnt-num cnt-lo">3</span></td><td><span class="tag tag-src">реактивный</span></td><td><span class="b bl">thin</span></td></tr>
+<tr><td>Мониторинг клиент. сервиса</td><td>JIRA</td><td><span class="cnt-num cnt-med">4</span></td><td><span class="tag tag-ok">ongoing</span></td><td><span class="b bm">medium</span></td></tr>
+<tr><td>Обращения пассажиров</td><td>JIRA</td><td><span class="cnt-num cnt-med">4</span></td><td><span class="tag tag-src">реактивный</span></td><td><span class="b bm">medium</span></td></tr>
+<tr><td>Решения коллег. органов</td><td>Совещания</td><td><span class="cnt-num cnt-lo">1</span></td><td><span class="tag tag-ref">governance</span></td><td><span class="b bl">thin</span></td></tr>
+<tr><td>Письма надзорных</td><td>Делопроизводство</td><td><span class="cnt-num cnt-lo">2</span></td><td><span class="tag tag-gap">coercive</span></td><td><span class="b bl">thin</span></td></tr>
+<tr><td>Отчёт бортпроводника</td><td>Lotus</td><td><span class="cnt-num cnt-lo">3</span></td><td><span class="tag tag-src">реактивный</span></td><td><span class="b bl">thin</span></td></tr>
+</tbody></table></div>
+</div>
+
+<!-- ===== MISIURA ===== -->
+<div class="p" id="p-misiura">
+<h2>Стыковка с Misiura (2015)</h2>
+
+<h3>Прямые пересечения с coding scheme</h3>
+<div class="fg">
+<div class="fc" style="border-left:3px solid var(--coral)"><div class="ft">C7: Reporting & integration</div><div class="fb">Матрица ДОНО — это фактически карта reporting mechanisms. Но Misiura требует <strong>integration</strong> enterprise-wide risk data. Здесь integration нет: 7 систем не связаны, данные не агрегируются в единый portfolio view.</div></div>
+<div class="fc" style="border-left:3px solid var(--coral)"><div class="ft">C8: Tools & technologies</div><div class="fb">ИС-ландшафт (Meridian, СУБП, JIRA, АМОС, Lotus) — это набор tools. Misiura различает: dedicated RM-software vs. «Word/Excel/PPT». Авиакомпания ближе к Beta (medium formalisation) — есть специализированные ИС, но нет единого risk management software.</div></div>
+</div>
+<div class="fg">
+<div class="fc" style="border-left:3px solid var(--purple)"><div class="ft">Table 4-4: Triangulation</div><div class="fb">Матрица ДОНО — это зачаток триангуляции источников данных для одного функционального домена. Для направлений с 6–9 источниками — хорошая множественность. Для 2–3 источников — триангуляция невозможна: нет третьей точки для верификации.</div></div>
+<div class="fc" style="border-left:3px solid var(--purple)"><div class="ft">Table 5-4: Formalisation</div><div class="fb">Матрица документирует связи между источниками и направлениями работ. Это признак средней формализации (Misiura: «formalized management of selected types of risks»). Полная формализация потребовала бы: частоту, порядок обработки, эскалационные правила.</div></div>
+</div>
+
+<div class="warn"><strong>Ключевой вывод из Misiura для ДОНО:</strong> в Alpha Airlines (high maturity) risk data собирается из ВСЕХ business units и компилируется CRO в portfolio view для Risk Committee. В матрице ДОНО данные остаются ВНУТРИ одного департамента. Нет механизма подъёма агрегированной картины на executive level. Это паттерн Gamma/Delta — «local separate units responsible for segmental risks, lack of a central coordinating unit».</div>
+
+<div class="quote">Separate functional departments lack the capacity to perform comprehensive risk management single-handedly, without coordination with other departments. Therefore, this study suggests that the risk management function in airlines should be integrated at the enterprise-level.<span class="src">— Misiura (2015), Chapter 8, p.207</span></div>
+</div>
+
+<!-- ===== COSO ===== -->
+<div class="p" id="p-coso">
+<h2>Стыковка с COSO IC (2013) и ERM (2017)</h2>
+
+<h3>COSO IC — Information & Communication</h3>
+<div class="fg">
+<div class="fc" style="border-left:3px solid var(--blue)"><div class="ft">Principle 13: Uses relevant information</div><div class="fb">Матрица показывает КАКИЕ данные есть. Но COSO требует: данные должны быть <strong>relevant, quality, timely</strong>. Бинарная разметка не оценивает ни одно из этих свойств. «+» ≠ «данные приходят вовремя, полные и достоверные».</div></div>
+<div class="fc" style="border-left:3px solid var(--blue)"><div class="ft">Principle 14: Communicates internally</div><div class="fb">7 ИС без интеграции = communication silos. COSO IC требует, чтобы информация flows freely между уровнями и функциями. Lotus email как канал передачи safety-critical данных — это vulnerability, не communication infrastructure.</div></div>
+</div>
+
+<h3>COSO ERM (2017) — Information, Communication & Reporting</h3>
+<div class="fc" style="border-left:3px solid var(--amber);margin-bottom:10px"><div class="ft">Principle 18: Leverages information and technology</div><div class="fb">COSO ERM 2017 подчёркивает: «information infrastructure sources and captures data in a timeframe and at a depth of detail consistent with the entity's need to identify events and assess risks». Матрица ДОНО показывает sources, но не timeframe и не depth of detail.</div></div>
+
+<h3>COSO Fraud Risk Management Guide (2023)</h3>
+<div class="fc" style="border-left:3px solid var(--coral);margin-bottom:10px"><div class="ft">Transaction risk scoring vs. single-test approach</div><div class="fb">COSO Fraud Guide прямо критикует подход «один тест в изоляции» — аналогично тому, как матрица ДОНО даёт бинарный «+» без контекста. Рекомендация: <strong>multiple risk factors considered simultaneously</strong> для risk-score каждой транзакции/события. Roll-up от транзакций к business units → fraud risk heat map.</div></div>
+
+<div class="crit"><strong>Фундаментальная проблема:</strong> матрица ДОНО — это инвентаризация источников, а не система обработки данных. COSO (и IC, и ERM, и Fraud Guide) требует не просто наличия данных, а: (1) quality assessment, (2) timeliness, (3) integration, (4) analysis, (5) escalation to decision-makers. Ни одно из этих свойств в матрице не отражено.</div>
+</div>
+
+<!-- ===== RESILIENCE ===== -->
+<div class="p" id="p-resilience">
+<h2>Стыковка с Safety-II, Resilience Engineering и фарватером выживания</h2>
+
+<h3>Safety-I vs Safety-II (Hollnagel)</h3>
+<div class="fg">
+<div class="fc" style="border-left:3px solid var(--red)"><div class="ft">Safety-I: things that go wrong</div><div class="fb">Бо́льшая часть источников ДОНО — реактивные: safety reports, карточки событий, несоответствия, сбои, замечания. Это классический Safety-I: регистрация отклонений и событий после их возникновения.</div></div>
+<div class="fc" style="border-left:3px solid var(--green)"><div class="ft">Safety-II: things that go right</div><div class="fb">Зачатки Safety-II: добровольные сообщения (proactive hazard reporting), чек-листы аэродромных проверок (мониторинг нормального состояния), мониторинг клиентского сервиса (ongoing performance). Но <strong>нет систематического наблюдения за тем, что работает правильно</strong>.</div></div>
+</div>
+
+<h3>RAG потенциалы (Hollnagel) — куда попадают источники ДОНО</h3>
+<div class="mw"><table class="mt" style="min-width:600px">
+<thead><tr><th>RAG потенциал</th><th>Покрытие в ДОНО</th><th>Оценка</th></tr></thead>
+<tbody>
+<tr><td><strong>Реагировать</strong> (respond)</td><td>Safety reports, карточки событий, сообщения тех. директората — реакция на уже случившееся</td><td><span class="b bh">покрыто</span></td></tr>
+<tr><td><strong>Наблюдать</strong> (monitor)</td><td>Чек-листы аэродромных, мониторинг клиент. сервиса, видео-мониторинг ОЗП — текущее наблюдение</td><td><span class="b bm">частично</span></td></tr>
+<tr><td><strong>Учиться</strong> (learn)</td><td>Отчёты по аудитам, решения коллег. органов — анализ прошлого. Но нет систематического analysis of patterns, repeat events, trend detection</td><td><span class="b bl">слабо</span></td></tr>
+<tr><td><strong>Предвидеть</strong> (anticipate)</td><td>Нет ни одного источника, направленного на сканирование горизонта, emerging risks, scenario analysis, weak signals</td><td><span class="b bl">нет</span></td></tr>
+</tbody></table></div>
+
+<h3>Антихрупкость и фарватер выживания</h3>
+<div class="fc" style="border-left:3px solid var(--purple);margin-bottom:10px"><div class="ft">Антихрупкость (Taleb): система, которая усиливается от стрессов</div><div class="fb">Для антихрупкости нужно: (1) быстрая обратная связь от stressors, (2) механизм обучения, (3) избыточность и optionality. Матрица ДОНО покрывает (1) частично — сигналы поступают, но с неизвестной latency. (2) отсутствует — нет feedback loop от events к системным изменениям. (3) для направлений с 2–3 источниками — избыточности нет.</div></div>
+
+<div class="fc" style="border-left:3px solid var(--amber);margin-bottom:10px"><div class="ft">Фарватер выживания (DMDU / adaptive pathways)</div><div class="fb">Фарватер выживания требует: (1) мониторинг signposts — триггеров, при которых нужно менять стратегию, (2) contingency actions заготовлены заранее, (3) решения принимаются на основе данных, а не субъективных оценок. В матрице ДОНО <strong>нет ни одного signpost, ни одного threshold, ни одного trigger для смены режима</strong>. Это карта входов, а не система принятия решений.</div></div>
+
+<div class="warn"><strong>Диагноз по шкале Resilience Engineering:</strong> матрица ДОНО обслуживает потенциал «Реагировать» и частично «Наблюдать». Потенциалы «Учиться» и «Предвидеть» не обеспечены ни одним из 13 источников. Для перехода к устойчивости нужны: trend analysis, pattern detection, leading indicators, scenario-based horizon scanning.</div>
+</div>
+
+<!-- ===== SCORING ===== -->
+<div class="p" id="p-scoring">
+<h2>Проблема субъективного скоринга и роль данных</h2>
+<div class="d">Центральная проблема: любая система risk scoring (Impact × Likelihood × Speed) опирается либо на данные, либо на экспертные оценки. Матрица ДОНО показывает, откуда данные МОГУТ прийти, но не показывает, в каком виде они придут и кто их будет интерпретировать.</div>
+
+<h3>Где в цепочке скоринга прячется субъективность</h3>
+<div class="fg">
+<div class="fc" style="border-left:3px solid var(--red)"><div class="ft">1. Severity / Impact оценки</div><div class="fb">Событие «сбой в подготовке ВС к вылету» — какой Impact: 3 или 5? Зависит от: задержка 10 мин vs. cancellation, один рейс vs. серия, hub vs. outstation. <strong>Без структурированных критериев</strong> (severity matrix с примерами для каждого уровня) — оценка субъективна. Два разных CAMO manager поставят разные баллы.</div></div>
+<div class="fc" style="border-left:3px solid var(--red)"><div class="ft">2. Likelihood оценки</div><div class="fb">«Какова вероятность повторения?» — если нет исторических данных о частоте событий (event log с timestamps), ответ будет gut feeling. Именно event log ДОНО (Table B в baseline) должен давать объективную базу: N events за period → frequency → likelihood. Но если лог неполный или не ведётся — likelihood субъективна.</div></div>
+</div>
+<div class="fg">
+<div class="fc" style="border-left:3px solid var(--red)"><div class="ft">3. Control effectiveness</div><div class="fb">«Насколько хорошо работает еженедельный review backlog?» — матрица ДОНО показывает, что аудиты ЕСТЬ (колонка 9). Но Design_Eff vs Operating_Eff из Table C baseline — это ДВЕ РАЗНЫЕ оценки. Контроль может быть хорошо спроектирован, но плохо исполняться. Без evidence (minutes, screenshots, KPI) — оценка субъективна.</div></div>
+<div class="fc" style="border-left:3px solid var(--red)"><div class="ft">4. Risk appetite thresholds</div><div class="fb">«При каком уровне backlog эскалировать?» — если thresholds не калиброваны на исторических данных, они arbitrary. Первые 2–3 месяца работы любой новой системы — это период калибровки, когда thresholds корректируются по реальным распределениям.</div></div>
+</div>
+
+<h3>Как данные заменяют субъективность</h3>
+<div class="mw"><table class="mt" style="min-width:700px">
+<thead><tr><th>Компонент скоринга</th><th>Субъективный подход</th><th>Data-driven подход</th><th>Что нужно из ДОНО</th></tr></thead>
+<tbody>
+<tr><td>Impact</td><td>Эксперт ставит 1–5</td><td>Severity matrix с конкретными примерами для каждого уровня + исторические данные о последствиях</td><td>Карточки событий с полем Severity + описание последствий</td></tr>
+<tr><td>Likelihood</td><td>Эксперт оценивает «редко / часто»</td><td>Frequency = N events / period из event log; статистическое распределение</td><td>Event log с timestamps + Related_Risk_ID</td></tr>
+<tr><td>Control effectiveness</td><td>Эксперт ставит «работает / не работает»</td><td>% выполнения контроля + evidence + test results + weakness flags</td><td>Чек-листы + аудиты + данные из Meridian.Web с timestamps</td></tr>
+<tr><td>Thresholds</td><td>Произвольные: «backlog > 15 = red»</td><td>Percentile-based: P75 = yellow, P95 = red на основе исторических распределений</td><td>Timeseries данных из CAMO / JIRA / СУБП за 6+ месяцев</td></tr>
+<tr><td>Trend / pattern</td><td>«Мне кажется, проблема усиливается»</td><td>Moving average, repeat rate, control chart (SPC), change detection</td><td>Структурированный event log с Frequency_Flag (first / repeat / systemic)</td></tr>
+</tbody></table></div>
+
+<div class="quote">In the corporate planning process considering strategic risks is a must. We cannot quantify them as they are extremely difficult to quantify, but you need to keep in mind many 'what if' scenarios… It sounds very obvious, thinking of risks when you define strategies, but it helps to have it on paper.<span class="src">— RMC-Iota, в Misiura (2015), Appendix C</span></div>
+
+<div class="note"><strong>Ключевой вывод:</strong> матрица ДОНО — это карта ВХОДОВ в систему скоринга, а не сама система. Без структурированного event log, без severity matrix, без timestamps — любой скоринг (Impact × Likelihood × Speed) будет опираться на субъективные экспертные оценки. Данные не заменяют экспертизу, но они ОГРАНИЧИВАЮТ пространство для произвольных оценок. Чем больше data-driven компонентов — тем у́же коридор субъективности.</div>
+</div>
+
+<!-- ===== RECOMMENDATIONS ===== -->
+<div class="p" id="p-recom">
+<h2>Рекомендации по усилению</h2>
+
+<h3>Приоритет 1: Обогатить матрицу атрибутами качества</h3>
+<div class="fc" style="border-left:3px solid var(--blue);margin-bottom:8px"><div class="ft">От бинарной (+/пусто) к многомерной</div><div class="fb">Для каждой связи «направление × источник» добавить:
+<br>• <strong>Частота</strong>: daily / weekly / monthly / ad-hoc
+<br>• <strong>Latency</strong>: real-time / &lt;24h / &lt;7d / &gt;7d
+<br>• <strong>Надёжность</strong>: structured data / semi-structured / unstructured (email)
+<br>• <strong>Полнота</strong>: high / medium / low
+<br>Это превратит инвентаризацию в quality assessment.</div></div>
+
+<h3>Приоритет 2: Устранить тонкие покрытия</h3>
+<div class="fc" style="border-left:3px solid var(--red);margin-bottom:8px"><div class="ft">Направления с 2–3 источниками — зона риска</div><div class="fb">
+• «Проверки агентов по НО» (2 источника) → добавить: чек-листы, feedback от а/к-представителя, SLA-метрики
+<br>• «Мониторинг ПОО/ПОЗ в ОЗП» (2 источника) → добавить: temperature/de-icing data, shift logs, weather correlation
+<br>• «Сбои в подготовке ВС» (3 источника) → добавить: CAMO data (АМОС), delay reports, OTP metrics</div></div>
+
+<h3>Приоритет 3: Добавить потенциал «Предвидеть»</h3>
+<div class="fc" style="border-left:3px solid var(--purple);margin-bottom:8px"><div class="ft">Новые источники для horizon scanning</div><div class="fb">
+• <strong>Regulatory change tracker</strong>: мониторинг NPA/CRD EASA, ICAO amendments → E1
+<br>• <strong>Supplier health monitoring</strong>: финансовое состояние ключевых агентов НО → E2
+<br>• <strong>Seasonal demand forecast</strong>: прогноз пиковых нагрузок → S3, S8
+<br>• <strong>Weather pattern analysis</strong>: сезонные тренды для ПОО/ПОЗ → «Мониторинг ОЗП»
+<br>• <strong>Industry incident database</strong>: events у других а/к → weak signals</div></div>
+
+<h3>Приоритет 4: Интеграция ИС-ландшафта</h3>
+<div class="fc" style="border-left:3px solid var(--teal);margin-bottom:8px"><div class="ft">От 7 silos к unified data layer</div><div class="fb">Минимальный шаг: ETL-pipeline из Meridian + СУБП + JIRA + АМОС → единый event store с общей таксономией (Event_Type, Severity, Domain, Related_Risk_ID). Это позволит: (1) автоматический trend analysis, (2) cross-source pattern detection, (3) data-driven scoring вместо субъективного.</div></div>
+
+<h3>Приоритет 5: Связать с ERM baseline</h3>
+<div class="mw"><table class="mt" style="min-width:700px">
+<thead><tr><th>Направление ДОНО</th><th>→ Risk ID baseline</th><th>→ Table</th><th>Действие</th></tr></thead>
+<tbody>
+<tr><td>Несоответствия в НО ВС</td><td>P1, P2, P7</td><td>Table B events</td><td>Каждое несоответствие → EVT с Related_Risk_ID</td></tr>
+<tr><td>Сбои в подготовке ВС</td><td>S2, S3</td><td>Table B events</td><td>Каждый сбой → EVT, linked to maintenance backlog metric M-04</td></tr>
+<tr><td>Проверки агентов/поставщиков</td><td>P7, E2</td><td>Table C controls</td><td>Результат проверки → Control_ID с Design_Eff / Operating_Eff</td></tr>
+<tr><td>Обращения пассажиров</td><td>P2, S10</td><td>Table B events</td><td>Систематические обращения → EVT с Frequency_Flag = systemic</td></tr>
+<tr><td>Safety reports</td><td>P5</td><td>Table B events</td><td>Каждый safety report → EVT, linked to M-02 (overdue safety actions)</td></tr>
+<tr><td>Мониторинг ПОО/ПОЗ в ОЗП</td><td>E5, P1</td><td>Table F metrics</td><td>Seasonal metric: de-icing compliance rate, delay due to ground handling</td></tr>
+</tbody></table></div>
+
+<div class="note"><strong>Итоговая формула:</strong> матрица ДОНО → обогащённая атрибутами качества → связанная с ERM risk register через event log → data-driven scoring вместо субъективного → потенциал «Предвидеть» через leading indicators и horizon scanning. Это путь от инвентаризации источников к операционной системе управления рисками.</div>
+</div>
+
+</div></div>
+<script>
+document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('a'));document.querySelectorAll('.p').forEach(x=>x.classList.remove('a'));t.classList.add('a');document.getElementById('p-'+t.dataset.t).classList.add('a')})});
+</script>
+</body>
+</html>
