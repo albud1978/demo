@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MNIST — интерактивный объяснитель</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f7; color: #1a1a18; padding: 24px 16px; max-width: 700px; margin: 0 auto; }
+:root {
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f1efe8;
+  --color-background-info: #e6f1fb;
+  --color-text-primary: #1a1a18;
+  --color-text-secondary: #5f5e5a;
+  --color-border-tertiary: rgba(0,0,0,0.1);
+  --color-border-secondary: rgba(0,0,0,0.2);
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+}
+.page { display: none; padding: 1rem 0; }
+.page.active { display: block; }
+.nav { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.nav-btn { padding: 6px 14px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); font-size: 12px; cursor: pointer; background: transparent; color: var(--color-text-secondary); transition: all 0.15s; }
+.nav-btn.active { background: #185FA5; color: #fff; border-color: #185FA5; font-weight: 500; }
+.big-title { font-size: 20px; font-weight: 500; margin-bottom: 6px; color: var(--color-text-primary); }
+.sub { font-size: 14px; color: var(--color-text-secondary); margin-bottom: 20px; line-height: 1.6; }
+.card { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 16px 20px; margin-bottom: 14px; }
+.card-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+.card-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+canvas { display: block; }
+.grid-wrap { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+.pixel-legend { display: flex; flex-direction: column; gap: 6px; }
+.legend-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-text-secondary); }
+.legend-box { width: 18px; height: 18px; border-radius: 3px; }
+.next-btn { display: inline-block; margin-top: 16px; padding: 8px 20px; background: #185FA5; color: #fff; border: none; border-radius: var(--border-radius-md); font-size: 13px; cursor: pointer; }
+.next-btn:hover { background: #0C447C; }
+.row-between { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.stat { text-align: center; }
+.stat-num { font-size: 28px; font-weight: 500; color: #185FA5; }
+.stat-lbl { font-size: 12px; color: var(--color-text-secondary); }
+</style>
+</head>
+<body>
+
+<div class="nav" id="nav"></div>
+<div id="pages"></div>
+
+<script>
+const pages = [
+  { id:'p0', label:'1. Задача' },
+  { id:'p1', label:'2. Пиксели' },
+  { id:'p2', label:'3. Датасет' },
+  { id:'p3', label:'4. Сеть' },
+  { id:'p4', label:'5. Обучение' },
+  { id:'p5', label:'6. Итог' },
+];
+
+const nav = document.getElementById('nav');
+const pagesEl = document.getElementById('pages');
+
+pages.forEach((p,i) => {
+  const btn = document.createElement('button');
+  btn.className = 'nav-btn' + (i===0?' active':'');
+  btn.textContent = p.label;
+  btn.onclick = () => goTo(i);
+  nav.appendChild(btn);
+  const div = document.createElement('div');
+  div.className = 'page' + (i===0?' active':'');
+  div.id = p.id;
+  pagesEl.appendChild(div);
+});
+
+function goTo(i) {
+  document.querySelectorAll('.page').forEach((p,j) => p.classList.toggle('active', j===i));
+  document.querySelectorAll('.nav-btn').forEach((b,j) => b.classList.toggle('active', j===i));
+  if(i===1) buildPixelPage();
+  if(i===2) buildDatasetPage();
+  if(i===3) buildNetworkPage();
+  if(i===4) buildTrainingPage();
+  if(i===5) buildResultPage();
+}
+
+// PAGE 0
+document.getElementById('p0').innerHTML = `
+  <div class="big-title">Что такое MNIST?</div>
+  <p class="sub">Представь, что ты хочешь научить компьютер читать рукописные цифры от 0 до 9. Именно это и делает задача MNIST!</p>
+  <div class="card"><div class="card-title">🖊️ Человек пишет цифру</div><div class="card-body">Кто-то от руки пишет, скажем, «7». Разные люди пишут «7» по-разному — некоторые с чёрточкой, некоторые без.</div></div>
+  <div class="card"><div class="card-title">📷 Компьютер видит картинку</div><div class="card-body">Картинка — это просто сетка из 28×28 = 784 маленьких квадратиков (пикселей). Каждый квадратик имеет яркость от 0 (чёрный) до 255 (белый).</div></div>
+  <div class="card"><div class="card-title">🤔 Задача: угадать цифру</div><div class="card-body">Нейросеть смотрит на 784 числа — и должна сказать: «Это семёрка!». Причём правильно для любого человека, с любым почерком.</div></div>
+  <div class="row-between" style="margin-top:20px;">
+    <div class="stat"><div class="stat-num">70 000</div><div class="stat-lbl">рукописных цифр</div></div>
+    <div class="stat"><div class="stat-num">28×28</div><div class="stat-lbl">пикселей каждая</div></div>
+    <div class="stat"><div class="stat-num">10</div><div class="stat-lbl">классов (0–9)</div></div>
+    <div class="stat"><div class="stat-num">99%+</div><div class="stat-lbl">точность лучших моделей</div></div>
+  </div>
+`;
+
+// PAGE 1
+function buildPixelPage() {
+  const el = document.getElementById('p1');
+  if(el.dataset.built) return;
+  el.dataset.built = '1';
+  el.innerHTML = `
+    <div class="big-title">Цифра = матрица чисел</div>
+    <p class="sub">Нарисуй цифру мышкой — и посмотри, во что она превращается для компьютера.</p>
+    <div class="grid-wrap">
+      <div>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:6px;">Рисуй здесь ✏️</p>
+        <canvas id="draw-canvas" width="196" height="196" style="border:0.5px solid var(--color-border-secondary);border-radius:8px;cursor:crosshair;background:#fff;touch-action:none;"></canvas>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button class="next-btn" style="background:#888780;" onclick="clearDraw()">Очистить</button>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:6px;">Пиксели 14×14 (упрощено)</p>
+        <canvas id="pixel-canvas" width="196" height="196" style="border-radius:8px;"></canvas>
+        <div class="pixel-legend" style="margin-top:10px;">
+          <div class="legend-row"><div class="legend-box" style="background:#000;"></div>255 — чёрный (перо)</div>
+          <div class="legend-row"><div class="legend-box" style="background:#888;border:0.5px solid #ccc;"></div>128 — серый</div>
+          <div class="legend-row"><div class="legend-box" style="background:#eee;border:0.5px solid #ccc;"></div>0 — белый (фон)</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">Что видит нейросеть</div>
+      <div class="card-body">Не картинку — а просто длинный список чисел: [0, 0, 12, 87, 255, 243, 10, 0, …] из 784 штук. Никаких «форм» или «линий» — только числа!</div>
+    </div>
+  `;
+
+  const dc = document.getElementById('draw-canvas');
+  const pc = document.getElementById('pixel-canvas');
+  const dctx = dc.getContext('2d');
+  const pctx = pc.getContext('2d');
+  dctx.fillStyle = '#fff'; dctx.fillRect(0,0,196,196);
+  let drawing = false;
+
+  function getPos(e) {
+    const r = dc.getBoundingClientRect();
+    const src = e.touches ? e.touches[0] : e;
+    return [src.clientX - r.left, src.clientY - r.top];
+  }
+
+  dc.addEventListener('mousedown', e => { drawing=true; const [x,y]=getPos(e); dctx.beginPath(); dctx.moveTo(x,y); });
+  dc.addEventListener('mousemove', e => { if(!drawing) return; const [x,y]=getPos(e); dctx.lineTo(x,y); dctx.strokeStyle='#000'; dctx.lineWidth=12; dctx.lineCap='round'; dctx.stroke(); updatePixels(); });
+  dc.addEventListener('mouseup', () => drawing=false);
+  dc.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; const [x,y]=getPos(e); dctx.beginPath(); dctx.moveTo(x,y); }, {passive:false});
+  dc.addEventListener('touchmove', e => { e.preventDefault(); if(!drawing) return; const [x,y]=getPos(e); dctx.lineTo(x,y); dctx.strokeStyle='#000'; dctx.lineWidth=12; dctx.lineCap='round'; dctx.stroke(); updatePixels(); }, {passive:false});
+  dc.addEventListener('touchend', () => drawing=false);
+
+  function updatePixels() {
+    const N = 14, cell = 196/N;
+    const imgData = dctx.getImageData(0,0,196,196);
+    pctx.clearRect(0,0,196,196);
+    for(let r=0;r<N;r++) for(let c=0;c<N;c++) {
+      let sum=0, cnt=0;
+      const x0=Math.floor(c*cell), y0=Math.floor(r*cell);
+      const x1=Math.floor((c+1)*cell), y1=Math.floor((r+1)*cell);
+      for(let y=y0;y<y1;y++) for(let x=x0;x<x1;x++) {
+        const idx=(y*196+x)*4;
+        sum += 255 - imgData.data[idx]; cnt++;
+      }
+      const v = cnt ? Math.round(sum/cnt) : 0;
+      const g = 255 - v;
+      pctx.fillStyle = `rgb(${g},${g},${g})`;
+      pctx.fillRect(c*cell, r*cell, cell-1, cell-1);
+      if(v > 20) {
+        pctx.fillStyle = v > 180 ? '#e6f1fb' : '#0C447C';
+        pctx.font = `bold ${Math.floor(cell*0.35)}px sans-serif`;
+        pctx.textAlign = 'center';
+        pctx.fillText(v, c*cell+cell/2, r*cell+cell*0.65);
+      }
+    }
+  }
+
+  window.clearDraw = function() {
+    dctx.fillStyle = '#fff'; dctx.fillRect(0,0,196,196);
+    pctx.clearRect(0,0,196,196);
+  };
+  updatePixels();
+}
+
+// PAGE 2
+function buildDatasetPage() {
+  const el = document.getElementById('p2');
+  if(el.dataset.built) return;
+  el.dataset.built = '1';
+
+  const digits = [
+    [[0,0,1,1,0],[0,1,0,0,1],[0,1,0,0,1],[0,1,0,0,1],[0,0,1,1,0]],
+    [[0,0,1,0,0],[0,1,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,1,1,1,0]],
+    [[0,1,1,1,0],[0,0,0,0,1],[0,0,1,1,0],[0,1,0,0,0],[0,1,1,1,1]],
+    [[0,1,1,1,0],[0,0,0,0,1],[0,0,1,1,0],[0,0,0,0,1],[0,1,1,1,0]],
+    [[0,1,0,1,0],[0,1,0,1,0],[0,1,1,1,1],[0,0,0,1,0],[0,0,0,1,0]],
+    [[0,1,1,1,1],[0,1,0,0,0],[0,1,1,1,0],[0,0,0,0,1],[0,1,1,1,0]],
+    [[0,0,1,1,0],[0,1,0,0,0],[0,1,1,1,0],[0,1,0,0,1],[0,0,1,1,0]],
+    [[0,1,1,1,1],[0,0,0,0,1],[0,0,0,1,0],[0,0,1,0,0],[0,0,1,0,0]],
+    [[0,0,1,1,0],[0,1,0,0,1],[0,0,1,1,0],[0,1,0,0,1],[0,0,1,1,0]],
+    [[0,0,1,1,0],[0,1,0,0,1],[0,0,1,1,1],[0,0,0,0,1],[0,0,1,1,0]],
+  ];
+
+  let html = `<div class="big-title">Откуда берутся данные?</div>
+    <p class="sub">MNIST — это 70 000 рукописных цифр, собранных в 1990-х. 60 000 — для обучения, 10 000 — для проверки.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;">`;
+  digits.forEach((grid, d) => {
+    html += `<div style="text-align:center;"><canvas id="dg${d}" width="50" height="50" style="border-radius:6px;display:block;"></canvas><div style="font-size:11px;color:var(--color-text-secondary);margin-top:3px;">«${d}»</div></div>`;
+  });
+  html += `</div>
+    <div class="card"><div class="card-title">Почему важна разметка?</div><div class="card-body">Это обучение с учителем. Для каждой картинки мы заранее знаем правильный ответ. Сеть смотрит на пиксели, угадывает — и сравнивает свой ответ с правильным.</div></div>
+    <div class="card"><div class="card-title">Тестовая выборка</div><div class="card-body">10 000 цифр сеть видит только после обучения — чтобы проверить, научилась ли она узнавать незнакомые примеры.</div></div>`;
+  el.innerHTML = html;
+
+  digits.forEach((grid, d) => {
+    const c = document.getElementById('dg'+d);
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#1a1a2e'; ctx.fillRect(0,0,50,50);
+    const cell = 10;
+    grid.forEach((row,r) => row.forEach((v,col) => {
+      if(v) { ctx.fillStyle = '#e6f1fb'; ctx.fillRect(col*cell, r*cell, cell-1, cell-1); }
+    }));
+  });
+}
+
+// PAGE 3
+function buildNetworkPage() {
+  const el = document.getElementById('p3');
+  if(el.dataset.built) return;
+  el.dataset.built = '1';
+  el.innerHTML = `
+    <div class="big-title">Как устроена нейросеть?</div>
+    <p class="sub">Это просто слои чисел, соединённые стрелками. Каждая стрелка умножает число на свой «вес».</p>
+    <canvas id="net-canvas" width="560" height="260" style="width:100%;max-width:560px;"></canvas>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:16px;">
+      <div class="card"><div class="card-title" style="color:#185FA5;">Вход — 784 нейрона</div><div class="card-body">Один нейрон = один пиксель. Значение от 0.0 до 1.0.</div></div>
+      <div class="card"><div class="card-title" style="color:#1D9E75;">Скрытый слой — 128</div><div class="card-body">Нейроны ищут паттерны: изогнутые линии, углы, петли.</div></div>
+      <div class="card"><div class="card-title" style="color:#D85A30;">Выход — 10 нейронов</div><div class="card-body">Каждый отвечает за одну цифру. Победитель — с наибольшим значением.</div></div>
+    </div>
+  `;
+
+  const c = document.getElementById('net-canvas');
+  const ctx = c.getContext('2d');
+  const W=560,H=260;
+  const layers = [
+    {x:60,n:6,label:'Вход\n784',color:'#185FA5'},
+    {x:220,n:5,label:'Скрытый\n128',color:'#1D9E75'},
+    {x:380,n:4,label:'Скрытый\n64',color:'#993556'},
+    {x:520,n:4,label:'Выход\n10',color:'#D85A30'},
+  ];
+  const positions = layers.map(l => {
+    const ys = [];
+    for(let i=0;i<l.n;i++) ys.push(H/2-(l.n-1)*20+i*40);
+    return {...l,ys};
+  });
+  for(let li=0;li<positions.length-1;li++) {
+    const a=positions[li],b=positions[li+1];
+    a.ys.forEach(ay => b.ys.forEach(by => {
+      ctx.beginPath(); ctx.moveTo(a.x+14,ay); ctx.lineTo(b.x-14,by);
+      ctx.strokeStyle='rgba(136,135,128,0.18)'; ctx.lineWidth=1; ctx.stroke();
+    }));
+  }
+  positions.forEach(l => {
+    l.ys.forEach((y,i) => {
+      ctx.beginPath(); ctx.arc(l.x,y,14,0,Math.PI*2);
+      ctx.fillStyle=l.color+'22'; ctx.fill();
+      ctx.strokeStyle=l.color; ctx.lineWidth=1.5; ctx.stroke();
+      if(i===l.n-1&&l.n>=5){ ctx.fillStyle=l.color; ctx.font='11px sans-serif'; ctx.textAlign='center'; ctx.fillText('⋮',l.x,y+4); }
+    });
+    ctx.fillStyle=l.color; ctx.font='11px sans-serif'; ctx.textAlign='center';
+    l.label.split('\n').forEach((line,j) => ctx.fillText(line,l.x,H-18+j*14));
+  });
+  const outL=positions[3];
+  ['0','1','7','9'].forEach((lbl,i) => {
+    ctx.fillStyle=i===2?'#D85A30':'rgba(136,135,128,0.6)';
+    ctx.font=i===2?'bold 13px sans-serif':'12px sans-serif';
+    ctx.textAlign='left';
+    ctx.fillText(lbl,outL.x+20,outL.ys[i]+4);
+  });
+}
+
+// PAGE 4
+function buildTrainingPage() {
+  const el = document.getElementById('p4');
+  if(el.dataset.built) return;
+  el.dataset.built = '1';
+  el.innerHTML = `
+    <div class="big-title">Как сеть учится?</div>
+    <p class="sub">Сеть делает предсказание, сравнивает его с правильным ответом, считает ошибку — и немного поправляет все веса. Повторяет миллионы раз.</p>
+    <div id="train-anim" style="margin-bottom:20px;"></div>
+    <button class="next-btn" id="train-btn" onclick="trainStep()">Следующий шаг ▶</button>
+    <div id="train-explain" class="card" style="margin-top:16px;"></div>
+    <div class="card" style="margin-top:10px;">
+      <div class="card-title">Backpropagation — «обратное распространение»</div>
+      <div class="card-body">После каждого примера ошибка «идёт назад» по сети. Каждый вес узнаёт: «ты виноват на столько-то». Веса, которые навредили — уменьшаются. Которые помогли — растут.</div>
+    </div>
+  `;
+
+  const steps = [
+    {title:'Шаг 1: Подаём цифру',body:'Берём картинку «7» из обучающей выборки. 784 пикселя → 784 числа на входе.',color:'#185FA5'},
+    {title:'Шаг 2: Прямой проход',body:'Числа проходят через все слои. На выходе получаем 10 значений — «уверенность» в каждой цифре.',color:'#1D9E75'},
+    {title:'Шаг 3: Считаем ошибку',body:'Правильный ответ — «7». Сеть сказала «3» с вероятностью 60%. Функция потерь (cross-entropy) считает, насколько плохо.',color:'#BA7517'},
+    {title:'Шаг 4: Обратный проход',body:'Ошибка идёт назад. Каждый вес получает свой «градиент» — насколько он виновен в ошибке.',color:'#D85A30'},
+    {title:'Шаг 5: Обновляем веса',body:'w = w − lr × градиент. Learning rate (lr ≈ 0.001) — размер шага. Не слишком большой, не слишком маленький.',color:'#993556'},
+    {title:'Шаг 6: Повторяем!',body:'Всё то же самое — для следующего примера. 60 000 примеров × несколько эпох = миллионы обновлений весов.',color:'#185FA5'},
+  ];
+
+  let cur = 0;
+
+  function renderStep(i) {
+    const s = steps[i];
+    document.getElementById('train-anim').innerHTML = `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">` +
+      steps.map((st,j) => `<div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;background:${j===i?st.color+'22':'#f1efe8'};border:1.5px solid ${j<=i?st.color:'#d3d1c7'};color:${j===i?st.color:'#888780'};">${j+1}</div>`).join('') +
+    `</div>`;
+    document.getElementById('train-explain').innerHTML = `<div class="card-title" style="color:${s.color};">${s.title}</div><div class="card-body">${s.body}</div>`;
+  }
+
+  window.trainStep = function() {
+    cur = (cur+1) % steps.length;
+    renderStep(cur);
+    document.getElementById('train-btn').textContent = cur===steps.length-1 ? 'Сначала ↺' : 'Следующий шаг ▶';
+  };
+
+  renderStep(0);
+}
+
+// PAGE 5
+function buildResultPage() {
+  const el = document.getElementById('p5');
+  if(el.dataset.built) return;
+  el.dataset.built = '1';
+
+  el.innerHTML = `
+    <div class="big-title">Что получается в итоге?</div>
+    <p class="sub">После обучения сеть смотрит на незнакомые цифры и угадывает их с точностью выше 99%. Давай посмотрим на предсказание!</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;margin-bottom:20px;">
+      <div>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:6px;">Выбери цифру:</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;max-width:200px;">
+          ${[0,1,2,3,4,5,6,7,8,9].map(d=>`<button onclick="showPred(${d})" id="dbtn${d}" style="width:36px;height:36px;border-radius:8px;border:0.5px solid #d3d1c7;background:transparent;font-size:14px;font-weight:500;cursor:pointer;color:#1a1a18;">${d}</button>`).join('')}
+        </div>
+      </div>
+      <div>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:6px;">Выход нейросети:</p>
+        <div id="pred-bars" style="width:240px;"></div>
+      </div>
+    </div>
+    <div class="card"><div class="card-title">Почему это работает?</div><div class="card-body">Скрытые слои научились замечать детали: горизонтальные и вертикальные штрихи, петли, уголки. Комбинации этих деталей уникальны для каждой цифры. Никто не программировал эти правила вручную — сеть нашла их сама!</div></div>
+    <div class="card"><div class="card-title">MNIST как "Hello World" нейросетей</div><div class="card-body">Это первое, что делают все, кто учится нейросетям. Простая задача, понятные данные — идеально чтобы понять основы перед тем, как переходить к распознаванию лиц, переводу текста или генерации изображений.</div></div>
+  `;
+
+  const fakePreds = {
+    0:[0.97,0.0,0.01,0.0,0.0,0.01,0.0,0.0,0.01,0.0],
+    1:[0.0,0.98,0.0,0.01,0.0,0.0,0.0,0.01,0.0,0.0],
+    2:[0.01,0.0,0.95,0.02,0.0,0.01,0.0,0.0,0.01,0.0],
+    3:[0.0,0.01,0.02,0.94,0.0,0.02,0.0,0.0,0.01,0.0],
+    4:[0.0,0.01,0.0,0.0,0.96,0.0,0.01,0.01,0.0,0.01],
+    5:[0.01,0.0,0.01,0.02,0.0,0.94,0.01,0.0,0.01,0.0],
+    6:[0.01,0.0,0.01,0.0,0.01,0.02,0.93,0.0,0.02,0.0],
+    7:[0.0,0.01,0.01,0.01,0.01,0.0,0.0,0.95,0.0,0.01],
+    8:[0.01,0.0,0.01,0.01,0.0,0.01,0.01,0.0,0.94,0.01],
+    9:[0.0,0.01,0.0,0.01,0.02,0.0,0.0,0.03,0.0,0.93],
+  };
+  const COLORS2=['#185FA5','#1D9E75','#D85A30','#BA7517','#993556','#185FA5','#1D9E75','#D85A30','#BA7517','#993556'];
+
+  window.showPred = function(d) {
+    document.querySelectorAll('[id^=dbtn]').forEach(b => b.style.background='transparent');
+    document.getElementById('dbtn'+d).style.background = '#e6f1fb';
+    const probs = fakePreds[d];
+    document.getElementById('pred-bars').innerHTML = probs.map((p,i) => {
+      const pct = Math.round(p*100);
+      const isWinner = i===d;
+      return `<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
+        <span style="font-size:12px;width:14px;color:${isWinner?COLORS2[i]:'#888780'};">${i}</span>
+        <div style="flex:1;height:20px;background:#f1efe8;border-radius:4px;overflow:hidden;">
+          <div style="width:${Math.max(pct,1)}%;height:100%;background:${isWinner?COLORS2[i]:'#D3D1C7'};border-radius:4px;transition:width 0.3s;"></div>
+        </div>
+        <span style="font-size:12px;min-width:32px;font-weight:${isWinner?500:400};color:${isWinner?COLORS2[i]:'#888780'};">${pct}%</span>
+      </div>`;
+    }).join('');
+  };
+
+  showPred(7);
+}
+</script>
+</body>
+</html>
