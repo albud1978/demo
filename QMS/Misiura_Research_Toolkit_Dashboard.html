@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misiura (2015) — Исследовательский инструментарий ERM в авиации</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #fafaf8;
+    --bg2: #f2f1ed;
+    --bg3: #eae9e4;
+    --card: #ffffff;
+    --text: #1a1a18;
+    --text2: #6b6a65;
+    --text3: #9c9a92;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.14);
+    --blue: #2563eb;
+    --blue-bg: #eff5ff;
+    --blue-text: #1e40af;
+    --teal: #0d9488;
+    --teal-bg: #ecfdf5;
+    --teal-text: #065f46;
+    --purple: #7c3aed;
+    --purple-bg: #f3f0ff;
+    --purple-text: #4c1d95;
+    --coral: #dc5328;
+    --coral-bg: #fff5f2;
+    --coral-text: #9a3412;
+    --amber: #d97706;
+    --amber-bg: #fffbeb;
+    --amber-text: #78350f;
+    --green: #16a34a;
+    --green-bg: #f0fdf4;
+    --green-text: #14532d;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --red-text: #7f1d1d;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.08);
+    --font: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141413;
+      --bg2: #1e1e1c;
+      --bg3: #282825;
+      --card: #1e1e1c;
+      --text: #e8e6df;
+      --text2: #a3a19a;
+      --text3: #6b6a65;
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.14);
+      --blue-bg: #172554;
+      --blue-text: #93c5fd;
+      --teal-bg: #042f2e;
+      --teal-text: #5eead4;
+      --purple-bg: #2e1065;
+      --purple-text: #c4b5fd;
+      --coral-bg: #431407;
+      --coral-text: #fdba74;
+      --amber-bg: #451a03;
+      --amber-text: #fcd34d;
+      --green-bg: #052e16;
+      --green-text: #86efac;
+      --red-bg: #450a0a;
+      --red-text: #fca5a5;
+      --shadow: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-lg: 0 4px 12px rgba(0,0,0,0.4);
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .header-title { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
+  .header-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .header-meta { font-size: 11px; color: var(--text3); font-family: var(--mono); letter-spacing: 0.3px; }
+
+  .tabs {
+    display: flex;
+    gap: 2px;
+    margin-top: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 7px 14px;
+    font-size: 12.5px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text2);
+    border: none;
+    font-family: inherit;
+    white-space: nowrap;
+    transition: all .15s;
+  }
+  .tab:hover { background: var(--bg2); color: var(--text); }
+  .tab.active { background: var(--blue-bg); color: var(--blue-text); }
+
+  .content { padding: 24px 0 60px; }
+  .panel { display: none; animation: fadeIn .2s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  .section-title { font-size: 16px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.2px; }
+  .section-sub { font-size: 14px; font-weight: 600; margin: 24px 0 10px; letter-spacing: -0.1px; }
+  .desc { font-size: 13.5px; color: var(--text2); margin: 0 0 20px; line-height: 1.7; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin: 0 0 24px; }
+  .stat { background: var(--bg2); border-radius: var(--radius); padding: 14px 16px; }
+  .stat-label { font-size: 11px; color: var(--text3); font-weight: 500; letter-spacing: 0.3px; text-transform: uppercase; }
+  .stat-val { font-size: 24px; font-weight: 600; margin-top: 4px; letter-spacing: -1px; }
+
+  .flow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 0 0 20px; }
+  .flow-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    transition: box-shadow .15s;
+  }
+  .flow-card:hover { box-shadow: var(--shadow-lg); }
+  .flow-card .num { font-size: 10px; font-weight: 600; font-family: var(--mono); letter-spacing: 1px; margin: 0 0 6px; }
+  .flow-card .ftitle { font-size: 13.5px; font-weight: 600; margin: 0 0 6px; }
+  .flow-card .fbody { font-size: 12.5px; color: var(--text2); line-height: 1.6; }
+
+  .accent-blue { border-left: 3px solid var(--blue); }
+  .accent-teal { border-left: 3px solid var(--teal); }
+  .accent-purple { border-left: 3px solid var(--purple); }
+  .accent-coral { border-left: 3px solid var(--coral); }
+  .accent-top-blue { border-top: 3px solid var(--blue); border-left: none; }
+  .accent-top-teal { border-top: 3px solid var(--teal); border-left: none; }
+  .accent-top-purple { border-top: 3px solid var(--purple); border-left: none; }
+  .accent-top-coral { border-top: 3px solid var(--coral); border-left: none; }
+
+  .code-group { margin: 0 0 8px; }
+  .code-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    background: var(--bg2);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 13.5px; font-weight: 500;
+    user-select: none;
+    transition: background .1s;
+  }
+  .code-header:hover { background: var(--bg3); }
+  .code-header .arrow { font-size: 10px; transition: transform .2s; display: inline-block; }
+  .code-header .arrow.open { transform: rotate(90deg); }
+  .code-items { display: none; padding: 8px 0 8px 28px; }
+  .code-items.open { display: block; }
+  .code-item {
+    font-size: 12.5px; color: var(--text2);
+    padding: 5px 0 5px 12px;
+    border-left: 2px solid var(--border2);
+    margin: 3px 0;
+    line-height: 1.6;
+  }
+
+  .q-block { margin: 0 0 24px; }
+  .q-title {
+    font-size: 13px; font-weight: 600;
+    padding: 8px 14px;
+    background: var(--bg2);
+    border-radius: var(--radius);
+    margin: 0 0 8px;
+  }
+  .q-list { list-style: none; padding: 0; }
+  .q-list li {
+    font-size: 12.5px; color: var(--text2);
+    padding: 5px 0 5px 16px;
+    border-left: 2px solid var(--border2);
+    margin: 2px 0 2px 12px;
+    line-height: 1.6;
+  }
+
+  .tri-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0 20px; }
+  @media (max-width: 640px) { .tri-grid { grid-template-columns: 1fr; } }
+  .tri-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+  }
+  .tri-card .tl { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px; }
+  .tri-card ul { list-style: none; padding: 0; }
+  .tri-card li { font-size: 12.5px; color: var(--text2); padding: 4px 0 4px 14px; position: relative; line-height: 1.6; }
+  .tri-card li::before { content: "–"; position: absolute; left: 0; color: var(--text3); }
+
+  .mat-wrap { overflow-x: auto; margin: 16px 0; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+  .mat-table { width: 100%; border-collapse: collapse; font-size: 12.5px; min-width: 700px; }
+  .mat-table th {
+    text-align: left; padding: 10px 12px;
+    background: var(--bg2);
+    font-weight: 600; font-size: 11px;
+    letter-spacing: 0.3px;
+    border-bottom: 1px solid var(--border2);
+    white-space: nowrap;
+  }
+  .mat-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text2); }
+  .mat-table td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; }
+  .mat-table tr:last-child td { border-bottom: none; }
+
+  .badge {
+    display: inline-block; font-size: 10px; padding: 2px 7px;
+    border-radius: 6px; font-weight: 600; font-family: var(--mono);
+    letter-spacing: 0.3px; vertical-align: middle; margin-left: 4px;
+  }
+  .badge-high { background: var(--green-bg); color: var(--green-text); }
+  .badge-med { background: var(--amber-bg); color: var(--amber-text); }
+  .badge-low { background: var(--red-bg); color: var(--red-text); }
+
+  .note {
+    background: var(--blue-bg);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    font-size: 12.5px;
+    color: var(--blue-text);
+    margin: 16px 0;
+    line-height: 1.6;
+  }
+  .note strong { font-weight: 600; }
+
+  .meta-box {
+    background: var(--bg2);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    margin: 0 0 20px;
+  }
+  .meta-label { font-size: 11px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+  .meta-val { margin-top: 4px; font-size: 13.5px; line-height: 1.6; }
+  .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; font-size: 12.5px; margin-top: 8px; }
+  .meta-grid .ml { color: var(--text3); font-weight: 500; }
+
+  .print-only { display: none; }
+  @media print {
+    .page-header { position: static; }
+    .panel { display: block !important; page-break-inside: avoid; margin-bottom: 24px; border-top: 2px solid var(--border2); padding-top: 16px; }
+    .print-only { display: block; font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+    .tabs { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="container">
+    <div class="header-top">
+      <div>
+        <div class="header-title">Исследовательский инструментарий: ERM в авиации</div>
+        <div class="header-sub">По материалам: Misiura, A. (2015). Enterprise Risk Management in the Airline Industry. PhD, Brunel University London</div>
+      </div>
+      <div class="header-meta">v1.0 / март 2026</div>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="overview">Архитектура</button>
+      <button class="tab" data-tab="workflow">Workflow анализа</button>
+      <button class="tab" data-tab="coding">Схема кодирования</button>
+      <button class="tab" data-tab="field-int">Интервью: field study</button>
+      <button class="tab" data-tab="case-int">Интервью: case study</button>
+      <button class="tab" data-tab="triang">Триангуляция</button>
+      <button class="tab" data-tab="maturity">Оценка зрелости</button>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="container">
+
+    <!-- ===== OVERVIEW ===== -->
+    <div class="panel active" id="p-overview">
+      <div class="print-only">1. Архитектура исследования</div>
+      <div class="meta-box">
+        <div class="meta-label">Источник</div>
+        <div class="meta-val">Misiura, A. (2015). <em>Enterprise Risk Management in the Airline Industry — Risk Management Structures and Practices.</em> PhD Thesis, Brunel Business School, Brunel University London. May 2015.</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat"><div class="stat-label">Авиакомпании</div><div class="stat-val">10</div></div>
+        <div class="stat"><div class="stat-label">Интервьюируемые</div><div class="stat-val">35</div></div>
+        <div class="stat"><div class="stat-label">Case studies</div><div class="stat-val">2</div></div>
+        <div class="stat"><div class="stat-label">Категории кодов</div><div class="stat-val">3 + 21</div></div>
+      </div>
+
+      <div class="section-title">Двухэтапная эмпирическая архитектура</div>
+      <div class="desc">Исследование сочетает field study (широта: 10 авиакомпаний, кросс-организационные паттерны) и case study (глубина: 2 авиакомпании, внутренняя документация и инструменты). Интерпретивная парадигма, индуктивный подход. Данные собирались в течение трёх месяцев (cross-sectional study).</div>
+
+      <div class="flow-grid">
+        <div class="flow-card accent-blue">
+          <div class="num" style="color: var(--blue);">ЭТАП 1</div>
+          <div class="ftitle">Field study</div>
+          <div class="fbody">Панель из 10 международных авиакомпаний. Полуструктурированные интервью + публичные данные. Выявление кросс-организационных паттернов конфигураций risk management. 1–3 интервьюируемых на компанию.</div>
+        </div>
+        <div class="flow-card accent-teal">
+          <div class="num" style="color: var(--teal);">ЭТАП 2</div>
+          <div class="ftitle">Case study</div>
+          <div class="fbody">Alpha Airlines (группа, ERM внедрена, 14 интервьюируемых) + Beta Airline (продвинутая система без декларации ERM, 12 интервьюируемых). Интервью на всех уровнях + внутренняя документация + RM-инструменты.</div>
+        </div>
+      </div>
+
+      <div class="section-sub">Теоретическая рамка</div>
+      <div class="flow-grid">
+        <div class="flow-card">
+          <div class="ftitle">Contingency theory</div>
+          <div class="fbody">Технические факторы: размер, сложность организационной структуры, география, риск-профиль → нет универсального дизайна ERM. Конфигурация системы зависит от контекста.</div>
+        </div>
+        <div class="flow-card">
+          <div class="ftitle">Institutional theory (OIE + NIS)</div>
+          <div class="fbody">Институциональные давления: coercive (регуляторы, требования листинга), mimetic (бенчмаркинг конкурентов), normative (IATA, ICAO, консалтинг, рейтинговые агентства) → adoption и легитимация ERM.</div>
+        </div>
+      </div>
+
+      <div class="section-sub">Критерии выборки</div>
+      <div class="desc">Три измерения вариативности для purposeful sampling: (1) размер и сложность организационной структуры (large &gt;30M pax, medium 10–30M, small &lt;10M), (2) география бизнеса (разные регуляторные среды), (3) воспринимаемая зрелость risk management (ERM vs. Traditional). Цель — максимизация разнообразия для обнаружения паттернов.</div>
+    </div>
+
+    <!-- ===== WORKFLOW ===== -->
+    <div class="panel" id="p-workflow">
+      <div class="print-only">2. Workflow анализа данных</div>
+      <div class="section-title">Организация и анализ эмпирических данных (Table 4-3)</div>
+      <div class="desc">Пошаговая логика обработки данных. Кодирование: теоретически обоснованные коды + свободные коды (emergent themes). Методы: axial и selective coding по Miles &amp; Huberman (1994), Strauss &amp; Corbin (1998).</div>
+
+      <div class="section-sub" style="color: var(--blue);">Field study workflow</div>
+      <div class="flow-grid">
+        <div class="flow-card"><div class="num" style="color: var(--blue);">ШАГ 1</div><div class="ftitle">Публичные данные</div><div class="fbody">Корпоративные отчёты, публикации, данные с сайтов авиакомпаний и отраслевых организаций</div></div>
+        <div class="flow-card"><div class="num" style="color: var(--blue);">ШАГ 2</div><div class="ftitle">Данные интервью</div><div class="fbody">Полуструктурированные интервью с ключевыми специалистами по risk management (до 40 мин, в трёх языках)</div></div>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-card"><div class="num" style="color: var(--blue);">ШАГ 2a</div><div class="ftitle">Редукция данных</div><div class="fbody">Кодирование: коды из теоретической рамки + свободное кодирование + axial и selective coding. Отсев нерелевантных данных. Вербатим-транскрибирование.</div></div>
+        <div class="flow-card"><div class="num" style="color: var(--blue);">ШАГ 2b</div><div class="ftitle">Представление данных</div><div class="fbody">Организация данных в тематические кластеры (themes). Факты отделяются от личных мнений респондентов.</div></div>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-card"><div class="num" style="color: var(--blue);">ШАГ 3</div><div class="ftitle">Верификация</div><div class="fbody">Сопоставление находок из разных источников данных (интервью vs. публичные данные)</div></div>
+        <div class="flow-card"><div class="num" style="color: var(--blue);">ШАГ 4</div><div class="ftitle">Выводы</div><div class="fbody">Формирование заключений field study, выявление кросс-организационных паттернов</div></div>
+      </div>
+
+      <div class="section-sub" style="color: var(--teal);">Case study workflow</div>
+      <div class="flow-grid">
+        <div class="flow-card"><div class="num" style="color: var(--teal);">ШАГ 5</div><div class="ftitle">Публичные данные</div><div class="fbody">Корпоративные отчёты, публикации организаций</div></div>
+        <div class="flow-card"><div class="num" style="color: var(--teal);">ШАГ 6</div><div class="ftitle">Данные интервью</div><div class="fbody">Расширенный пул: от топ-менеджмента до операционного уровня. Индивидуальные + групповые обсуждения.</div></div>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-card"><div class="num" style="color: var(--teal);">ШАГ 6a</div><div class="ftitle">Редукция данных</div><div class="fbody">Аналогичное кодирование: теоретические + свободные коды, axial/selective coding</div></div>
+        <div class="flow-card"><div class="num" style="color: var(--teal);">ШАГ 6b</div><div class="ftitle">Представление данных</div><div class="fbody">Организация в тематические кластеры</div></div>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-card"><div class="num" style="color: var(--teal);">ШАГ 7</div><div class="ftitle">Внутренняя документация</div><div class="fbody">Политики, процедуры и управленческие отчёты по risk management</div></div>
+        <div class="flow-card"><div class="num" style="color: var(--teal);">ШАГ 8</div><div class="ftitle">RM-инструменты и технологии</div><div class="fbody">RM-ПО, корпоративные реестры рисков, карты и матрицы рисков</div></div>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-card"><div class="num" style="color: var(--teal);">ШАГ 9</div><div class="ftitle">Верификация</div><div class="fbody">Сопоставление всех источников: интервью + публичные данные + документация + инструменты</div></div>
+        <div class="flow-card"><div class="num" style="color: var(--teal);">ШАГ 10</div><div class="ftitle">Выводы</div><div class="fbody">Формирование заключений case study</div></div>
+      </div>
+
+      <div class="note">Ключевое отличие case study от field study: доступ к внутренней документации (шаги 7–8), что позволяет верифицировать данные интервью не только публичными источниками, но и реальными инструментами и процедурами организации.</div>
+    </div>
+
+    <!-- ===== CODING ===== -->
+    <div class="panel" id="p-coding">
+      <div class="print-only">3. Схема кодирования</div>
+      <div class="section-title">Схема кодирования (Appendix B)</div>
+      <div class="desc">Трёхуровневая структура: 3 категории → подкатегории → коды. Категория A привязана к institutional theory (DiMaggio &amp; Powell), категория B — к contingency theory, категория C — к эмпирическим конструктам risk management. Плюс свободные коды (free coding) для emergent themes из данных.</div>
+
+      <div class="code-group">
+        <div class="code-header accent-purple" onclick="toggleCode(this)">
+          <span class="arrow">▸</span>
+          <span>A. Институциональные давления (institutional pressures)</span>
+        </div>
+        <div class="code-items">
+          <div class="code-item"><strong>Coercive pressures</strong> — принудительные давления (регуляторы, законодательство, требования листинга, SOX)</div>
+          <div class="code-item"><strong>Mimetic pressures</strong> — подражательные давления (бенчмаркинг, best practices конкурентов, peer group)</div>
+          <div class="code-item"><strong>Normative pressures</strong> — нормативные давления (профессиональные ассоциации IATA/ICAO, консалтинг, рейтинговые агентства)</div>
+          <div class="code-item"><strong>Other external institutional pressures</strong> — прочие внешние институциональные давления</div>
+          <div class="code-item"><strong>Internal institutional pressures</strong> — внутренние институциональные давления (корпоративная культура, организационные логики, embedded routines)</div>
+        </div>
+      </div>
+
+      <div class="code-group">
+        <div class="code-header accent-teal" onclick="toggleCode(this)">
+          <span class="arrow">▸</span>
+          <span>B. Контингентные факторы (contingency factors)</span>
+        </div>
+        <div class="code-items">
+          <div class="code-item"><strong>Environmental and industry-related contingency factors</strong> — факторы внешней среды и отрасли (регуляторная среда, волатильность рынка, конкурентное окружение)</div>
+          <div class="code-item"><strong>Organisation-specific contingency factors</strong> — организационно-специфические факторы (размер, сложность, бизнес-модель, governance structures)</div>
+          <div class="code-item"><strong>Contingency factors of airline risk profiles</strong> — факторы риск-профиля авиакомпании (типология рисков, экспозиции, специфика маршрутной сети)</div>
+        </div>
+      </div>
+
+      <div class="code-group">
+        <div class="code-header accent-coral" onclick="toggleCode(this)">
+          <span class="arrow">▸</span>
+          <span>C. Характеристики систем risk management (institutions, rules, routines)</span>
+        </div>
+        <div class="code-items">
+          <div class="code-item"><strong>Evolution of organisational risk management systems</strong> — эволюция организационных RM-систем</div>
+          <div class="code-item"><strong>Perceived status of risk management development</strong> — воспринимаемый статус развития RM</div>
+          <div class="code-item"><strong>Formalisation of risk management systems</strong> — формализация RM-систем (политики, процедуры, документация)</div>
+          <div class="code-item"><strong>Risk management strategies</strong> — стратегии управления рисками</div>
+          <div class="code-item"><strong>Division of roles and responsibilities</strong> — распределение ролей и ответственностей на разных фазах RM-процесса (Board, CRO, risk committees, local risk experts, internal audit)</div>
+          <div class="code-item"><strong>Methodologies guiding risk management processes</strong> — методологии RM-процессов (идентификация, оценка, обработка, мониторинг)</div>
+          <div class="code-item"><strong>Mechanisms for reporting and integration of enterprise-wide risk data</strong> — механизмы отчётности и интеграции данных о рисках across business units</div>
+          <div class="code-item"><strong>Risk management tools and technologies</strong> — инструменты и технологии RM (ПО, реестры, карты, матрицы)</div>
+          <div class="code-item"><strong>Risk portfolio</strong> — портфель рисков (типология: preventable, strategic, external risks)</div>
+          <div class="code-item"><strong>Risk culture</strong> — культура управления рисками (awareness, embedded behaviour, tone from the top)</div>
+          <div class="code-item"><strong>Risk appetites</strong> — аппетит к риску (формализованный vs. неявный)</div>
+          <div class="code-item"><strong>Links with other management and control processes</strong> — связи с другими системами управления и контроля (SMS, QMS, SeMS, EMS, SUMS, strategic planning, performance management)</div>
+          <div class="code-item"><strong>Best practices and shortcomings</strong> — лучшие практики и недостатки RM-систем</div>
+          <div class="code-item"><strong>Institutionalisation of rules and routines; decoupling and loose coupling</strong> — институционализация; разрыв между формальными правилами и реальными практиками</div>
+          <div class="code-item"><strong>Perceived maturity and functionality of risk management</strong> — воспринимаемая зрелость и функциональность RM</div>
+        </div>
+      </div>
+
+      <div class="note">Свободные коды (free codes) добавлялись по мере обнаружения тем, выходящих за пределы теоретической рамки. Это обеспечивало эмпирическую гибкость и возможность ревизии теории (Malina &amp; Selto, 2001).</div>
+    </div>
+
+    <!-- ===== FIELD INTERVIEW ===== -->
+    <div class="panel" id="p-field-int">
+      <div class="print-only">4. Интервью-гайд: field study</div>
+      <div class="section-title">Интервью-гайд: field study (Appendix E)</div>
+      <div class="desc">Полуструктурированное интервью, до 40 минут. Два варианта: для авиакомпаний с декларированным ERM и без ERM. Вопросы дополняются по ходу разговора. Интервью проводились face-to-face, по телефону или через web-конференцию, на трёх языках.</div>
+
+      <div class="meta-box">
+        <div class="meta-label">Служебная шапка интервью</div>
+        <div class="meta-grid">
+          <div><span class="ml">Дата:</span> __________</div>
+          <div><span class="ml">Время:</span> __________</div>
+          <div><span class="ml">Место:</span> __________</div>
+          <div><span class="ml">Имя интервьюируемого:</span> __________</div>
+          <div><span class="ml">Код интервьюируемого:</span> __________</div>
+          <div><span class="ml">Организация:</span> __________</div>
+          <div><span class="ml">Код организации:</span> __________</div>
+          <div><span class="ml">Ref. number:</span> __________</div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-title">Блок 1: Фоновая информация</div>
+        <ul class="q-list">
+          <li>Ваша должность и сфера ответственности в авиакомпании?</li>
+          <li>Как давно вы работаете в авиакомпании?</li>
+          <li>Как вы вовлечены в функцию risk management?</li>
+        </ul>
+      </div>
+
+      <div class="q-block">
+        <div class="q-title">Блок 2: Система ERM / Risk management (17 вопросов)</div>
+        <ul class="q-list">
+          <li>Как бы вы описали уровень развития RM-системы авиакомпании? Почему?</li>
+          <li>Следует ли авиакомпания рекомендациям каких-либо фреймворков (COSO, ISO 31000)?</li>
+          <li>Как распределены ответственности за risk management по всей авиакомпании?</li>
+          <li>Как Board и management team вовлечены в risk management?</li>
+          <li>Сконцентрирована ли RM-функция в каком-либо подразделении?</li>
+          <li>Есть ли подразделение/должность, координирующая управление разными типами рисков?</li>
+          <li>Как внутренний аудит вовлечён в RM-процесс?</li>
+          <li>Как сотрудники нижних уровней участвуют в идентификации и оценке рисков?</li>
+          <li>Существует ли документированная RM-стратегия?</li>
+          <li>Какие группы рисков управляются в рамках формальных программ с политиками и процедурами?</li>
+          <li>Насколько формализованы методологии на разных стадиях RM-процесса?</li>
+          <li>Позволяет ли система выявлять существенные экспозиции из всех бизнес-единиц?</li>
+          <li>Опишите механизмы интеграции данных о рисках из всех подразделений.</li>
+          <li>Какие инструменты используются для записи и представления информации о рисках?</li>
+          <li>Используется ли специализированное RM-программное обеспечение?</li>
+          <li>Как, по вашему мнению, можно улучшить ERM-систему?</li>
+          <li>Каковы основные недостатки вашей системы?</li>
+        </ul>
+      </div>
+
+      <div class="q-block">
+        <div class="q-title">Блок 3: Детерминанты RM-подхода (10 вопросов)</div>
+        <ul class="q-list">
+          <li>Какие факторы повлияли на решение авиакомпании внедрить ERM?</li>
+          <li>Как регуляторная среда влияет на управление рисками?</li>
+          <li>Как рекомендации консалтинговых компаний повлияли на RM-систему?</li>
+          <li>Как best practices конкурентов повлияли на RM-подход?</li>
+          <li>Каково было влияние других компаний группы на RM-систему?</li>
+          <li>Опишите влияние отраслевых ассоциаций (IATA, ICAO и т.д.) на управление рисками.</li>
+          <li>Как решение о внедрении ERM было связано с рейтинговыми агентствами?</li>
+          <li>Что оказало большее влияние: внешние факторы (легитимность) или внутренние мотивы (performance)?</li>
+          <li>Как природа авиационного бизнеса влияет на управление рисками?</li>
+          <li>Какие типы рисков наиболее важны и как они повлияли на конфигурацию системы?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ===== CASE INTERVIEW ===== -->
+    <div class="panel" id="p-case-int">
+      <div class="print-only">5. Интервью-гайд: case study</div>
+      <div class="section-title">Интервью-гайд: case study (Appendix F)</div>
+      <div class="desc">Шесть специализированных вариантов для разных уровней и функций. Топ-менеджмент — до 40 мин, средний и операционный уровень — до 30 мин. Отдельные версии для: executive level, safety/operations, finance/treasury, нижнее звено, плюс варианты для Beta (без ERM).</div>
+
+      <div class="q-block">
+        <div class="q-title">Версия A: Executive level (CRO, Management Committee, DRC)</div>
+        <ul class="q-list">
+          <li>Опишите переход RM-системы к внедрению ERM.</li>
+          <li>Как бы вы описали уровень развития ERM? Почему?</li>
+          <li>Как распределены RM-ответственности по компании/авиакомпании?</li>
+          <li>Роль Board и management team в risk management?</li>
+          <li>Есть ли централизованная координация разных типов рисков?</li>
+          <li>Роль внутреннего аудита в RM-процессе?</li>
+          <li>Участие сотрудников нижних уровней в идентификации и оценке рисков?</li>
+          <li>Документированная RM-стратегия?</li>
+          <li>Какие группы рисков управляются формально?</li>
+          <li>Степень формализации методологий RM?</li>
+          <li>Как идентифицируются риски по всей компании?</li>
+          <li>Позволяет ли ERM выявлять экспозиции из всех бизнес-единиц?</li>
+          <li>Как оцениваются, приоритизируются и эскалируются риски?</li>
+          <li>Механизмы интеграции данных о рисках?</li>
+          <li>Инструменты и специализированное ПО?</li>
+          <li>Как можно улучшить ERM-систему?</li>
+          <li>Основные shortcomings ERM-системы?</li>
+          <li>Как изменились RM-структуры и практики после внедрения ERM?</li>
+          <li>Детерминанты: регуляторы, консалтинг, конкуренты, группа, ассоциации, рейтинговые агентства, внешние vs. внутренние мотивы, природа бизнеса, типы рисков (10 вопросов)</li>
+        </ul>
+      </div>
+
+      <div class="q-block">
+        <div class="q-title">Версия B: Safety / Operations (Safety Risk Managers)</div>
+        <ul class="q-list">
+          <li>Основные риски вашего подразделения?</li>
+          <li>Влияние регуляторной среды и guidance отраслевых ассоциаций на safety/operational risks?</li>
+          <li>Распределение RM-ответственностей в production-подразделениях?</li>
+          <li>Роль Safety Committee?</li>
+          <li>Как выполняется risk management в рамках SMS?</li>
+          <li>Степень формализации RM в production-подразделениях?</li>
+          <li>Оценка risk culture в production-подразделениях?</li>
+          <li>Как SMS интегрирована в ERM-систему группы/авиакомпании?</li>
+          <li>Эскалация safety и operational risks?</li>
+          <li>Вовлечённость сотрудников production в идентификацию и оценку рисков?</li>
+          <li>Инструменты и ПО для записи и представления информации о рисках?</li>
+          <li>Как улучшить RM для safety и operational risks?</li>
+        </ul>
+      </div>
+
+      <div class="q-block">
+        <div class="q-title">Версия C: Finance / Treasury</div>
+        <ul class="q-list">
+          <li>Основные финансовые риски подразделения?</li>
+          <li>Распределение RM-ответственностей в финансовых подразделениях?</li>
+          <li>RM-процесс для финансовых рисков?</li>
+          <li>Степень формализации RM в финансовом подразделении?</li>
+          <li>Интеграция управления финансовыми рисками в ERM-систему?</li>
+          <li>Эскалация финансовых рисков?</li>
+          <li>Роль Financial Risk Committee?</li>
+          <li>Механизм Financial Risk Management framework? (Alpha)</li>
+          <li>Инструменты и ПО для финансовых рисков?</li>
+          <li>Как улучшить RM для финансовых рисков?</li>
+        </ul>
+      </div>
+
+      <div class="q-block">
+        <div class="q-title">Версия D: Нижний/средний уровень (IT, Maintenance, Ground Ops)</div>
+        <ul class="q-list">
+          <li>Есть ли установленные политики и процедуры для управления рисками в вашей области?</li>
+          <li>Какие типы рисков наиболее важны для подразделения?</li>
+          <li>Регулярно ли идентифицируются риски?</li>
+          <li>Существуют ли протоколы коммуникации для эскалации информации о рисках?</li>
+          <li>Понятны ли сотрудникам их RM-задачи?</li>
+          <li>Как поощряется участие сотрудников в RM-процессе?</li>
+          <li>Опишите цикл: идентификация → оценка → управление → отчётность по рискам.</li>
+          <li>Как можно улучшить управление рисками в подразделении?</li>
+        </ul>
+      </div>
+
+      <div class="note"><strong>Принципиальная особенность:</strong> для Beta Airline (без ERM) существуют отдельные версии гайдов, где вместо вопросов о «transition to ERM» задаются вопросы о планах внедрения ERM и причинах текущей конфигурации. Это обеспечивает контрастирующую перспективу.</div>
+    </div>
+
+    <!-- ===== TRIANGULATION ===== -->
+    <div class="panel" id="p-triang">
+      <div class="print-only">6. Триангуляция</div>
+      <div class="section-title">Схема триангуляции (Table 4-4)</div>
+      <div class="desc">Трёхуровневая триангуляция: источники данных, теоретические перспективы, методология. Цель — повышение construct validity через перекрёстную верификацию.</div>
+
+      <div class="section-sub">Триангуляция источников данных</div>
+      <div class="tri-grid">
+        <div class="tri-card accent-top-blue">
+          <div class="tl" style="color: var(--blue);">Field study</div>
+          <ul>
+            <li>Интервью (1–3 специалиста на авиакомпанию)</li>
+            <li>Публичные данные: корпоративные отчёты, публикации сайтов, отраслевые издания</li>
+          </ul>
+        </div>
+        <div class="tri-card accent-top-teal">
+          <div class="tl" style="color: var(--teal);">Case study</div>
+          <ul>
+            <li>Интервью: контрастирование мнений множества сотрудников на разных уровнях</li>
+            <li>Публичные данные</li>
+            <li>Внутренняя документация: RM-политики, процедуры, управленческие отчёты</li>
+            <li>RM-инструменты: ПО, реестры рисков, карты и матрицы рисков</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-sub">Триангуляция теоретических перспектив</div>
+      <div class="tri-card accent-top-purple" style="margin-bottom: 16px;">
+        <div class="tl" style="color: var(--purple);">Theory / perspective</div>
+        <ul>
+          <li>Данные исследуются и интерпретируются одновременно через призму contingency theory и institutional theory</li>
+          <li>Contingency: технические факторы → конфигурация RM-системы</li>
+          <li>Institutional: институциональные давления → adoption и легитимация RM</li>
+          <li>Каждая теория даёт разную, но инкрементальную перспективу на одни и те же данные</li>
+        </ul>
+      </div>
+
+      <div class="section-sub">Методологическая триангуляция</div>
+      <div class="tri-card accent-top-coral" style="margin-bottom: 16px;">
+        <div class="tl" style="color: var(--coral);">Methodology</div>
+        <ul>
+          <li>Field study в комбинации с case study для: a) верификации и b) расширения находок</li>
+          <li>Field study обеспечивает breadth — кросс-организационные паттерны из 10 авиакомпаний</li>
+          <li>Case study обеспечивает depth — контекстуальное объяснение из 2 авиакомпаний</li>
+          <li>Комбинация снижает methodology bias</li>
+        </ul>
+      </div>
+
+      <div class="section-sub">Протокол обеспечения качества</div>
+      <div class="flow-grid">
+        <div class="flow-card"><div class="ftitle">Reliability</div><div class="fbody">Consistent data collection protocol; документированные interview protocols и транскрипты; возможность независимого аудита; кодирование по теоретическим конструктам</div></div>
+        <div class="flow-card"><div class="ftitle">Internal validity</div><div class="fbody">Тщательная выборка; сильная теоретическая рамка до эмпирического исследования; rival explanations contrasted; pattern matching</div></div>
+        <div class="flow-card"><div class="ftitle">External validity</div><div class="fbody">Аналитическая генерализация (не статистическая); максимизация вариативности выборки; кросс-организационные паттерны; transferability к другим коммерческим авиакомпаниям</div></div>
+      </div>
+    </div>
+
+    <!-- ===== MATURITY ===== -->
+    <div class="panel" id="p-maturity">
+      <div class="print-only">7. Оценка зрелости RM-систем</div>
+      <div class="section-title">Оценка зрелости RM-систем (Table 5-5)</div>
+      <div class="desc">Четыре измерения зрелости: comprehensiveness (широта охвата рисков), embeddedness (укоренённость в организации), integration (интеграция данных и процессов), roles and uses (роли и использование RM в принятии решений). Данные по 9 из 10 авиакомпаний (Iota не оценена по всем измерениям).</div>
+
+      <div class="mat-wrap">
+        <table class="mat-table">
+          <thead>
+            <tr>
+              <th>Код</th>
+              <th>Comprehensiveness</th>
+              <th>Embeddedness</th>
+              <th>Integration</th>
+              <th>Roles &amp; Uses</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alpha-1</td>
+              <td>Enterprise-wide risk portfolio <span class="badge badge-high">high</span></td>
+              <td><span class="badge badge-high">high</span></td>
+              <td>Авиакомпания + группа <span class="badge badge-high">high</span></td>
+              <td>Формирование и исполнение стратегий</td>
+            </tr>
+            <tr>
+              <td>Alpha-2</td>
+              <td>Enterprise-wide risk portfolio <span class="badge badge-high">high</span></td>
+              <td><span class="badge badge-high">high</span></td>
+              <td>Авиакомпания + группа <span class="badge badge-high">high</span></td>
+              <td>Формирование и исполнение стратегий</td>
+            </tr>
+            <tr>
+              <td>Beta</td>
+              <td>Enterprise-wide risk portfolio <span class="badge badge-high">high</span></td>
+              <td><span class="badge badge-med">moderate</span></td>
+              <td>Средняя <span class="badge badge-med">med</span></td>
+              <td>Alignment с Internal Audit; decision-making</td>
+            </tr>
+            <tr>
+              <td>Gamma</td>
+              <td>Moderate <span class="badge badge-med">moderate</span></td>
+              <td><span class="badge badge-low">low</span></td>
+              <td>Низкая на уровне а/к; стратег. риски интегрированы на уровне группы <span class="badge badge-low">low</span></td>
+              <td>Compliance + decision-making</td>
+            </tr>
+            <tr>
+              <td>Delta</td>
+              <td>Moderate <span class="badge badge-med">moderate</span></td>
+              <td><span class="badge badge-low">low</span></td>
+              <td>Низкая, независимые RM-рутины <span class="badge badge-low">low</span></td>
+              <td>Compliance + decision-making</td>
+            </tr>
+            <tr>
+              <td>Epsilon</td>
+              <td>Enterprise-wide risk portfolio <span class="badge badge-high">high</span></td>
+              <td><span class="badge badge-med">unclear</span></td>
+              <td>Авиакомпания + группа <span class="badge badge-high">high</span></td>
+              <td>Формирование и исполнение стратегий</td>
+            </tr>
+            <tr>
+              <td>Zeta</td>
+              <td>Enterprise-wide risk portfolio <span class="badge badge-high">high</span></td>
+              <td><span class="badge badge-high">high</span></td>
+              <td>Высокая <span class="badge badge-high">high</span></td>
+              <td>Alignment со стратегиями и управленческим учётом</td>
+            </tr>
+            <tr>
+              <td>Eta</td>
+              <td>Enterprise-wide risk portfolio <span class="badge badge-high">high</span></td>
+              <td><span class="badge badge-high">high</span></td>
+              <td>Safety и corporate RM независимы <span class="badge badge-med">med-high</span></td>
+              <td>Операционное decision-making и планирование</td>
+            </tr>
+            <tr>
+              <td>Theta</td>
+              <td>Enterprise-wide risk portfolio <span class="badge badge-high">high</span></td>
+              <td><span class="badge badge-high">high</span></td>
+              <td>Высокая <span class="badge badge-high">high</span></td>
+              <td>Формирование и исполнение стратегий</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note"><strong>Ключевой вывод Misiura:</strong> нет универсально оптимального дизайна ERM-системы (consistent with contingency theory). Авиакомпании с высокой зрелостью по всем четырём измерениям (Alpha, Zeta, Theta) объединяет: формализованная governance-структура, CRO или эквивалент, Risk Committee, интеграция RM с strategic planning, три линии защиты. Но конкретная конфигурация определяется контекстом — регуляторной средой, размером, бизнес-моделью и риск-профилем.</div>
+
+      <div class="section-sub">Четыре измерения зрелости — определения</div>
+      <div class="flow-grid">
+        <div class="flow-card"><div class="ftitle">Comprehensiveness</div><div class="fbody">Широта охвата: от отдельных функциональных silos (safety, finance) до enterprise-wide risk portfolio, включающего preventable, strategic и external risks.</div></div>
+        <div class="flow-card"><div class="ftitle">Embeddedness</div><div class="fbody">Укоренённость: насколько RM-принципы интернализованы в повседневную деятельность, в решения на всех уровнях, в культуру организации — vs. формальная compliance-функция.</div></div>
+        <div class="flow-card"><div class="ftitle">Integration</div><div class="fbody">Интеграция: объединение данных и процессов RM из разных функциональных областей; единая методология оценки; consolidated reporting; portfolio view of risks.</div></div>
+        <div class="flow-card"><div class="ftitle">Roles &amp; Uses</div><div class="fbody">Роли и использование: от compliance/reporting до активной поддержки strategic planning, performance management и decision-making на уровне Board и management.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('p-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+function toggleCode(el) {
+  const items = el.nextElementSibling;
+  const arrow = el.querySelector('.arrow');
+  items.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+
+// Auto-open all code groups
+document.querySelectorAll('.code-items').forEach(el => el.classList.add('open'));
+document.querySelectorAll('.code-header .arrow').forEach(el => el.classList.add('open'));
+</script>
+
+</body>
+</html>
