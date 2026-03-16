@@ -51,6 +51,38 @@
     font-size: .95rem;
   }
 
+  .sections {}
+
+  .section-block {
+    margin-bottom: 40px;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: -.01em;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title .sec-icon {
+    font-size: 1.1rem;
+  }
+
+  .section-title .sec-count {
+    font-size: .75rem;
+    background: var(--tag-bg);
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-left: auto;
+    font-weight: 500;
+  }
+
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -87,14 +119,6 @@
     justify-content: center;
     font-size: 1.2rem;
     flex-shrink: 0;
-  }
-
-  .card-folder {
-    font-size: .75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--accent);
   }
 
   .card-title {
@@ -150,6 +174,8 @@
     header h1 { font-size: 1.4rem; }
     .grid { grid-template-columns: 1fr; gap: 12px; }
     .card { padding: 18px; }
+    .section-title { font-size: .95rem; flex-wrap: wrap; }
+    .section-title span[style] { display: none; }
   }
 </style>
 </head>
@@ -220,8 +246,10 @@ async function main() {
       .filter(f => f.folder);
 
     const folders = [...new Set(htmlFiles.map(f => f.folder))];
+    const topLevelFolders = [...new Set(htmlFiles.map(f => f.folder.split('/')[0]))];
+    const allFoldersToFetch = [...new Set([...folders, ...topLevelFolders])];
     const metaMap = {};
-    await Promise.all(folders.map(async folder => {
+    await Promise.all(allFoldersToFetch.map(async folder => {
       metaMap[folder] = await fetchMeta(folder);
     }));
 
@@ -230,26 +258,45 @@ async function main() {
       return;
     }
 
-    const cards = htmlFiles.map(f => {
-      const meta = metaMap[f.folder];
-      const fileMeta = meta?.files?.[f.file] || {};
-      const folderName = meta?.name || f.folder;
-      const title = fileMeta.title || f.file.replace(/\.html$/, '').replace(/[_-]/g, ' ');
-      const desc = fileMeta.description || meta?.description || '';
-      const tags = fileMeta.tags || meta?.tags || [];
-      const style = categoryStyle(tags);
-      const href = `${BASE_URL}/${f.path}`;
+    const topFolders = [...new Set(htmlFiles.map(f => f.folder.split('/')[0]))];
 
-      return `<a class="card" href="${href}">
-        <div class="card-icon" style="background:${style.color}22;color:${style.color}">${style.icon}</div>
-        <div class="card-folder">${escHTML(folderName)}</div>
-        <div class="card-title">${escHTML(title)}</div>
-        ${desc ? `<div class="card-desc">${escHTML(desc)}</div>` : ''}
-        ${tags.length ? `<div class="card-tags">${tags.map(t => `<span class="tag">${escHTML(t)}</span>`).join('')}</div>` : ''}
-      </a>`;
+    const sections = topFolders.map(topFolder => {
+      const files = htmlFiles.filter(f => f.folder.split('/')[0] === topFolder);
+      const meta = metaMap[topFolder] || metaMap[files[0]?.folder];
+      const sectionName = meta?.name || topFolder;
+      const sectionDesc = meta?.description || '';
+      const sectionTags = meta?.tags || [];
+      const sectionStyle = categoryStyle(sectionTags);
+
+      const cards = files.map(f => {
+        const fMeta = metaMap[f.folder];
+        const fileMeta = fMeta?.files?.[f.file] || {};
+        const title = fileMeta.title || f.file.replace(/\.html$/, '').replace(/[_-]/g, ' ');
+        const desc = fileMeta.description || fMeta?.description || '';
+        const tags = fileMeta.tags || fMeta?.tags || [];
+        const style = categoryStyle(tags);
+        const href = `${BASE_URL}/${f.path}`;
+
+        return `<a class="card" href="${href}">
+          <div class="card-icon" style="background:${style.color}22;color:${style.color}">${style.icon}</div>
+          <div class="card-title">${escHTML(title)}</div>
+          ${desc ? `<div class="card-desc">${escHTML(desc)}</div>` : ''}
+          ${tags.length ? `<div class="card-tags">${tags.map(t => `<span class="tag">${escHTML(t)}</span>`).join('')}</div>` : ''}
+        </a>`;
+      });
+
+      return `<div class="section-block">
+        <div class="section-title">
+          <span class="sec-icon">${sectionStyle.icon}</span>
+          ${escHTML(sectionName)}
+          ${sectionDesc ? ` <span style="font-weight:400;font-size:.85rem;color:var(--text-dim);opacity:.7">— ${escHTML(sectionDesc)}</span>` : ''}
+          <span class="sec-count">${files.length}</span>
+        </div>
+        <div class="grid">${cards.join('')}</div>
+      </div>`;
     });
 
-    app.innerHTML = `<div class="grid">${cards.join('')}</div>`;
+    app.innerHTML = `<div class="sections">${sections.join('')}</div>`;
 
   } catch (err) {
     app.innerHTML = `<div class="error-msg">Не удалось загрузить список проектов.<br><small>${escHTML(err.message)}</small></div>`;
