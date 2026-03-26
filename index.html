@@ -268,7 +268,14 @@ async function main() {
       const sectionTags = meta?.tags || [];
       const sectionStyle = categoryStyle(sectionTags);
 
-      const cards = files.map(f => {
+      const visibleFiles = files.filter(f => {
+        const fMeta = metaMap[f.folder];
+        const fileMeta = fMeta?.files?.[f.file];
+        return !fileMeta?.hidden;
+      });
+      if (!visibleFiles.length) return '';
+
+      const cards = visibleFiles.map(f => {
         const fMeta = metaMap[f.folder];
         const fileMeta = fMeta?.files?.[f.file] || {};
         const title = fileMeta.title || f.file.replace(/\.html$/, '').replace(/[_-]/g, ' ');
@@ -290,13 +297,13 @@ async function main() {
           <span class="sec-icon">${sectionStyle.icon}</span>
           ${escHTML(sectionName)}
           ${sectionDesc ? ` <span style="font-weight:400;font-size:.85rem;color:var(--text-dim);opacity:.7">— ${escHTML(sectionDesc)}</span>` : ''}
-          <span class="sec-count">${files.length}</span>
+          <span class="sec-count">${visibleFiles.length}</span>
         </div>
         <div class="grid">${cards.join('')}</div>
       </div>`;
     });
 
-    app.innerHTML = `<div class="sections">${sections.join('')}</div>`;
+    app.innerHTML = `<div class="sections">${sections.filter(Boolean).join('')}</div>`;
 
   } catch (err) {
     app.innerHTML = `<div class="error-msg">Не удалось загрузить список проектов.<br><small>${escHTML(err.message)}</small></div>`;

@@ -6,17 +6,20 @@
     "Misiura_Research_Toolkit_Dashboard.html": {
       "title": "Research Toolkit Dashboard",
       "description": "Дашборд инструментария исследований Misiura",
-      "tags": ["QMS", "viz"]
+      "tags": ["QMS", "viz"],
+      "hidden": true
     },
     "Misiura_Research_Methodology_Handbook_v2.html": {
       "title": "Research Methodology Handbook v2",
       "description": "Справочник по методологии исследований Misiura, версия 2",
-      "tags": ["QMS", "doc"]
+      "tags": ["QMS", "doc"],
+      "hidden": true
     },
     "DONO_DataSources_Analysis_v1.html": {
       "title": "ДОНО — Анализ матрицы данных",
       "description": "Критический анализ источников данных ДОНО × ERM × Resilience",
-      "tags": ["QMS", "data"]
+      "tags": ["QMS", "data"],
+      "hidden": true
     },
     "ERM_Operating_Model_v2.html": {
       "title": "ERM Operating Model v2",

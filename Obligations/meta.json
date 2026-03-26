@@ -6,7 +6,8 @@
     "credinform_api_viewer.html": {
       "title": "Credinform API v1.9 — Граф данных",
       "description": "Интерактивный граф параметров и методов Credinform REST API",
-      "tags": ["data", "viz"]
+      "tags": ["data", "viz"],
+      "hidden": true
     }
   }
 }
