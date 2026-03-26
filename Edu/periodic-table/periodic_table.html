@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Периодическая таблица — квантовая модель</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/three@0.162.0/build/three.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>html,body{margin:0;padding:0;background:#0a0e17;overflow-x:hidden}</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div id="root"></div>
+<script type="text/babel" data-type="module">
+const { useState, useEffect, useRef } = React;
+
+// ─── CATEGORIES ───
+const CAT = {
+  "alkali-metal":{l:"Щелочные металлы",c:"#E8485C"},
+  "alkaline-earth":{l:"Щёлочноземельные",c:"#F7A035"},
+  "transition-metal":{l:"Переходные металлы",c:"#3B9FD9"},
+  "post-transition":{l:"Постпереходные",c:"#6ECB63"},
+  "metalloid":{l:"Полуметаллы",c:"#8ED1C0"},
+  "nonmetal":{l:"Неметаллы",c:"#F2D544"},
+  "halogen":{l:"Галогены",c:"#C59CF7"},
+  "noble-gas":{l:"Благородные газы",c:"#E08CF7"},
+  "lanthanide":{l:"Лантаноиды",c:"#F28DBD"},
+  "actinide":{l:"Актиноиды",c:"#D4A276"},
+  "unknown":{l:"Неизвестные",c:"#8899AA"},
+};
+
+// ─── ELEMENTS (compact) ───
+const EL=[
+{z:1,s:"H",n:"Водород",en:"Hydrogen",m:1.008,cat:"nonmetal",r:1,co:1,cfg:"1s¹",st:"gas",den:0.00009,mp:-259.16,bp:-252.87,yr:1766,w:"Г. Кавендиш"},
+{z:2,s:"He",n:"Гелий",en:"Helium",m:4.003,cat:"noble-gas",r:1,co:18,cfg:"1s²",st:"gas",den:0.000179,mp:-272.2,bp:-268.93,yr:1868,w:"П. Жансен"},
+{z:3,s:"Li",n:"Литий",en:"Lithium",m:6.941,cat:"alkali-metal",r:2,co:1,cfg:"[He] 2s¹",st:"solid",den:0.534,mp:180.54,bp:1342,yr:1817,w:"Й. Арфведсон"},
+{z:4,s:"Be",n:"Бериллий",en:"Beryllium",m:9.012,cat:"alkaline-earth",r:2,co:2,cfg:"[He] 2s²",st:"solid",den:1.85,mp:1287,bp:2471,yr:1798,w:"Л. Воклен"},
+{z:5,s:"B",n:"Бор",en:"Boron",m:10.81,cat:"metalloid",r:2,co:13,cfg:"[He] 2s² 2p¹",st:"solid",den:2.34,mp:2076,bp:3927,yr:1808,w:"Г. Дэви"},
+{z:6,s:"C",n:"Углерод",en:"Carbon",m:12.011,cat:"nonmetal",r:2,co:14,cfg:"[He] 2s² 2p²",st:"solid",den:2.267,mp:3550,bp:4027,yr:-1,w:"Древность"},
+{z:7,s:"N",n:"Азот",en:"Nitrogen",m:14.007,cat:"nonmetal",r:2,co:15,cfg:"[He] 2s² 2p³",st:"gas",den:0.001251,mp:-210.1,bp:-195.79,yr:1772,w:"Д. Резерфорд"},
+{z:8,s:"O",n:"Кислород",en:"Oxygen",m:15.999,cat:"nonmetal",r:2,co:16,cfg:"[He] 2s² 2p⁴",st:"gas",den:0.001429,mp:-218.79,bp:-182.96,yr:1774,w:"Дж. Пристли"},
+{z:9,s:"F",n:"Фтор",en:"Fluorine",m:18.998,cat:"halogen",r:2,co:17,cfg:"[He] 2s² 2p⁵",st:"gas",den:0.001696,mp:-219.67,bp:-188.12,yr:1886,w:"А. Муассан"},
+{z:10,s:"Ne",n:"Неон",en:"Neon",m:20.18,cat:"noble-gas",r:2,co:18,cfg:"[He] 2s² 2p⁶",st:"gas",den:0.0009,mp:-248.59,bp:-246.08,yr:1898,w:"У. Рамзай"},
+{z:11,s:"Na",n:"Натрий",en:"Sodium",m:22.99,cat:"alkali-metal",r:3,co:1,cfg:"[Ne] 3s¹",st:"solid",den:0.971,mp:97.72,bp:883,yr:1807,w:"Г. Дэви"},
+{z:12,s:"Mg",n:"Магний",en:"Magnesium",m:24.305,cat:"alkaline-earth",r:3,co:2,cfg:"[Ne] 3s²",st:"solid",den:1.738,mp:650,bp:1091,yr:1755,w:"Дж. Блэк"},
+{z:13,s:"Al",n:"Алюминий",en:"Aluminium",m:26.982,cat:"post-transition",r:3,co:13,cfg:"[Ne] 3s² 3p¹",st:"solid",den:2.698,mp:660.32,bp:2519,yr:1825,w:"Х. Эрстед"},
+{z:14,s:"Si",n:"Кремний",en:"Silicon",m:28.086,cat:"metalloid",r:3,co:14,cfg:"[Ne] 3s² 3p²",st:"solid",den:2.3296,mp:1414,bp:3265,yr:1824,w:"Й. Берцелиус"},
+{z:15,s:"P",n:"Фосфор",en:"Phosphorus",m:30.974,cat:"nonmetal",r:3,co:15,cfg:"[Ne] 3s² 3p³",st:"solid",den:1.82,mp:44.15,bp:280.5,yr:1669,w:"Х. Бранд"},
+{z:16,s:"S",n:"Сера",en:"Sulfur",m:32.06,cat:"nonmetal",r:3,co:16,cfg:"[Ne] 3s² 3p⁴",st:"solid",den:2.067,mp:115.21,bp:444.6,yr:-1,w:"Древность"},
+{z:17,s:"Cl",n:"Хлор",en:"Chlorine",m:35.45,cat:"halogen",r:3,co:17,cfg:"[Ne] 3s² 3p⁵",st:"gas",den:0.003214,mp:-101.5,bp:-34.04,yr:1774,w:"К. Шееле"},
+{z:18,s:"Ar",n:"Аргон",en:"Argon",m:39.948,cat:"noble-gas",r:3,co:18,cfg:"[Ne] 3s² 3p⁶",st:"gas",den:0.001784,mp:-189.34,bp:-185.85,yr:1894,w:"У. Рамзай"},
+{z:19,s:"K",n:"Калий",en:"Potassium",m:39.098,cat:"alkali-metal",r:4,co:1,cfg:"[Ar] 4s¹",st:"solid",den:0.862,mp:63.38,bp:759,yr:1807,w:"Г. Дэви"},
+{z:20,s:"Ca",n:"Кальций",en:"Calcium",m:40.078,cat:"alkaline-earth",r:4,co:2,cfg:"[Ar] 4s²",st:"solid",den:1.55,mp:842,bp:1484,yr:1808,w:"Г. Дэви"},
+{z:21,s:"Sc",n:"Скандий",en:"Scandium",m:44.956,cat:"transition-metal",r:4,co:3,cfg:"[Ar] 3d¹ 4s²",st:"solid",den:2.989,mp:1541,bp:2836,yr:1879,w:"Л. Нильсон"},
+{z:22,s:"Ti",n:"Титан",en:"Titanium",m:47.867,cat:"transition-metal",r:4,co:4,cfg:"[Ar] 3d² 4s²",st:"solid",den:4.54,mp:1668,bp:3287,yr:1791,w:"У. Грегор"},
+{z:23,s:"V",n:"Ванадий",en:"Vanadium",m:50.942,cat:"transition-metal",r:4,co:5,cfg:"[Ar] 3d³ 4s²",st:"solid",den:6.11,mp:1910,bp:3407,yr:1801,w:"А. дель Рио"},
+{z:24,s:"Cr",n:"Хром",en:"Chromium",m:51.996,cat:"transition-metal",r:4,co:6,cfg:"[Ar] 3d⁵ 4s¹",st:"solid",den:7.15,mp:1907,bp:2671,yr:1798,w:"Л. Воклен"},
+{z:25,s:"Mn",n:"Марганец",en:"Manganese",m:54.938,cat:"transition-metal",r:4,co:7,cfg:"[Ar] 3d⁵ 4s²",st:"solid",den:7.44,mp:1246,bp:2061,yr:1774,w:"К. Шееле"},
+{z:26,s:"Fe",n:"Железо",en:"Iron",m:55.845,cat:"transition-metal",r:4,co:8,cfg:"[Ar] 3d⁶ 4s²",st:"solid",den:7.874,mp:1538,bp:2862,yr:-1,w:"Древность"},
+{z:27,s:"Co",n:"Кобальт",en:"Cobalt",m:58.933,cat:"transition-metal",r:4,co:9,cfg:"[Ar] 3d⁷ 4s²",st:"solid",den:8.86,mp:1495,bp:2927,yr:1735,w:"Г. Брандт"},
+{z:28,s:"Ni",n:"Никель",en:"Nickel",m:58.693,cat:"transition-metal",r:4,co:10,cfg:"[Ar] 3d⁸ 4s²",st:"solid",den:8.912,mp:1455,bp:2913,yr:1751,w:"А. Кронстедт"},
+{z:29,s:"Cu",n:"Медь",en:"Copper",m:63.546,cat:"transition-metal",r:4,co:11,cfg:"[Ar] 3d¹⁰ 4s¹",st:"solid",den:8.96,mp:1084.62,bp:2562,yr:-1,w:"Древность"},
+{z:30,s:"Zn",n:"Цинк",en:"Zinc",m:65.38,cat:"transition-metal",r:4,co:12,cfg:"[Ar] 3d¹⁰ 4s²",st:"solid",den:7.134,mp:419.53,bp:907,yr:1746,w:"А. Маргграф"},
+{z:31,s:"Ga",n:"Галлий",en:"Gallium",m:69.723,cat:"post-transition",r:4,co:13,cfg:"[Ar] 3d¹⁰ 4s² 4p¹",st:"solid",den:5.907,mp:29.76,bp:2204,yr:1875,w:"П. Лекок де Буабодран"},
+{z:32,s:"Ge",n:"Германий",en:"Germanium",m:72.63,cat:"metalloid",r:4,co:14,cfg:"[Ar] 3d¹⁰ 4s² 4p²",st:"solid",den:5.323,mp:938.25,bp:2833,yr:1886,w:"К. Винклер"},
+{z:33,s:"As",n:"Мышьяк",en:"Arsenic",m:74.922,cat:"metalloid",r:4,co:15,cfg:"[Ar] 3d¹⁰ 4s² 4p³",st:"solid",den:5.776,mp:817,bp:614,yr:1250,w:"Альберт Великий"},
+{z:34,s:"Se",n:"Селен",en:"Selenium",m:78.971,cat:"nonmetal",r:4,co:16,cfg:"[Ar] 3d¹⁰ 4s² 4p⁴",st:"solid",den:4.809,mp:221,bp:685,yr:1817,w:"Й. Берцелиус"},
+{z:35,s:"Br",n:"Бром",en:"Bromine",m:79.904,cat:"halogen",r:4,co:17,cfg:"[Ar] 3d¹⁰ 4s² 4p⁵",st:"liquid",den:3.122,mp:-7.2,bp:58.8,yr:1826,w:"А. Балар"},
+{z:36,s:"Kr",n:"Криптон",en:"Krypton",m:83.798,cat:"noble-gas",r:4,co:18,cfg:"[Ar] 3d¹⁰ 4s² 4p⁶",st:"gas",den:0.003733,mp:-157.36,bp:-153.22,yr:1898,w:"У. Рамзай"},
+{z:37,s:"Rb",n:"Рубидий",en:"Rubidium",m:85.468,cat:"alkali-metal",r:5,co:1,cfg:"[Kr] 5s¹",st:"solid",den:1.532,mp:39.31,bp:688,yr:1861,w:"Р. Бунзен"},
+{z:38,s:"Sr",n:"Стронций",en:"Strontium",m:87.62,cat:"alkaline-earth",r:5,co:2,cfg:"[Kr] 5s²",st:"solid",den:2.64,mp:777,bp:1382,yr:1790,w:"А. Кроуфорд"},
+{z:39,s:"Y",n:"Иттрий",en:"Yttrium",m:88.906,cat:"transition-metal",r:5,co:3,cfg:"[Kr] 4d¹ 5s²",st:"solid",den:4.469,mp:1526,bp:3336,yr:1794,w:"Ю. Гадолин"},
+{z:40,s:"Zr",n:"Цирконий",en:"Zirconium",m:91.224,cat:"transition-metal",r:5,co:4,cfg:"[Kr] 4d² 5s²",st:"solid",den:6.506,mp:1855,bp:4409,yr:1789,w:"М. Клапрот"},
+{z:41,s:"Nb",n:"Ниобий",en:"Niobium",m:92.906,cat:"transition-metal",r:5,co:5,cfg:"[Kr] 4d⁴ 5s¹",st:"solid",den:8.57,mp:2477,bp:4744,yr:1801,w:"Ч. Хатчет"},
+{z:42,s:"Mo",n:"Молибден",en:"Molybdenum",m:95.95,cat:"transition-metal",r:5,co:6,cfg:"[Kr] 4d⁵ 5s¹",st:"solid",den:10.22,mp:2623,bp:4639,yr:1781,w:"К. Шееле"},
+{z:43,s:"Tc",n:"Технеций",en:"Technetium",m:98,cat:"transition-metal",r:5,co:7,cfg:"[Kr] 4d⁵ 5s²",st:"solid",den:11.5,mp:2157,bp:4265,yr:1937,w:"К. Перрье"},
+{z:44,s:"Ru",n:"Рутений",en:"Ruthenium",m:101.07,cat:"transition-metal",r:5,co:8,cfg:"[Kr] 4d⁷ 5s¹",st:"solid",den:12.37,mp:2334,bp:4150,yr:1844,w:"К. Клаус"},
+{z:45,s:"Rh",n:"Родий",en:"Rhodium",m:102.906,cat:"transition-metal",r:5,co:9,cfg:"[Kr] 4d⁸ 5s¹",st:"solid",den:12.41,mp:1964,bp:3695,yr:1803,w:"У. Волластон"},
+{z:46,s:"Pd",n:"Палладий",en:"Palladium",m:106.42,cat:"transition-metal",r:5,co:10,cfg:"[Kr] 4d¹⁰",st:"solid",den:12.02,mp:1554.9,bp:2963,yr:1803,w:"У. Волластон"},
+{z:47,s:"Ag",n:"Серебро",en:"Silver",m:107.868,cat:"transition-metal",r:5,co:11,cfg:"[Kr] 4d¹⁰ 5s¹",st:"solid",den:10.501,mp:961.78,bp:2162,yr:-1,w:"Древность"},
+{z:48,s:"Cd",n:"Кадмий",en:"Cadmium",m:112.414,cat:"transition-metal",r:5,co:12,cfg:"[Kr] 4d¹⁰ 5s²",st:"solid",den:8.69,mp:321.07,bp:767,yr:1817,w:"Ф. Штромейер"},
+{z:49,s:"In",n:"Индий",en:"Indium",m:114.818,cat:"post-transition",r:5,co:13,cfg:"[Kr] 4d¹⁰ 5s² 5p¹",st:"solid",den:7.31,mp:156.6,bp:2072,yr:1863,w:"Ф. Райх"},
+{z:50,s:"Sn",n:"Олово",en:"Tin",m:118.711,cat:"post-transition",r:5,co:14,cfg:"[Kr] 4d¹⁰ 5s² 5p²",st:"solid",den:7.287,mp:231.93,bp:2602,yr:-1,w:"Древность"},
+{z:51,s:"Sb",n:"Сурьма",en:"Antimony",m:121.76,cat:"metalloid",r:5,co:15,cfg:"[Kr] 4d¹⁰ 5s² 5p³",st:"solid",den:6.685,mp:630.63,bp:1587,yr:-1,w:"Древность"},
+{z:52,s:"Te",n:"Теллур",en:"Tellurium",m:127.6,cat:"metalloid",r:5,co:16,cfg:"[Kr] 4d¹⁰ 5s² 5p⁴",st:"solid",den:6.232,mp:449.51,bp:988,yr:1783,w:"Ф. Мюллер"},
+{z:53,s:"I",n:"Йод",en:"Iodine",m:126.904,cat:"halogen",r:5,co:17,cfg:"[Kr] 4d¹⁰ 5s² 5p⁵",st:"solid",den:4.93,mp:113.7,bp:184.3,yr:1811,w:"Б. Куртуа"},
+{z:54,s:"Xe",n:"Ксенон",en:"Xenon",m:131.294,cat:"noble-gas",r:5,co:18,cfg:"[Kr] 4d¹⁰ 5s² 5p⁶",st:"gas",den:0.005887,mp:-111.75,bp:-108.1,yr:1898,w:"У. Рамзай"},
+{z:55,s:"Cs",n:"Цезий",en:"Caesium",m:132.905,cat:"alkali-metal",r:6,co:1,cfg:"[Xe] 6s¹",st:"solid",den:1.873,mp:28.44,bp:671,yr:1860,w:"Р. Бунзен"},
+{z:56,s:"Ba",n:"Барий",en:"Barium",m:137.328,cat:"alkaline-earth",r:6,co:2,cfg:"[Xe] 6s²",st:"solid",den:3.594,mp:727,bp:1897,yr:1808,w:"Г. Дэви"},
+{z:57,s:"La",n:"Лантан",en:"Lanthanum",m:138.905,cat:"lanthanide",r:9,co:3,cfg:"[Xe] 5d¹ 6s²",st:"solid",den:6.145,mp:920,bp:3464,yr:1839,w:"К. Мосандер"},
+{z:58,s:"Ce",n:"Церий",en:"Cerium",m:140.116,cat:"lanthanide",r:9,co:4,cfg:"[Xe] 4f¹ 5d¹ 6s²",st:"solid",den:6.77,mp:798,bp:3443,yr:1803,w:"Й. Берцелиус"},
+{z:59,s:"Pr",n:"Празеодим",en:"Praseodymium",m:140.908,cat:"lanthanide",r:9,co:5,cfg:"[Xe] 4f³ 6s²",st:"solid",den:6.773,mp:931,bp:3520,yr:1885,w:"К. Ауэр фон Вельсбах"},
+{z:60,s:"Nd",n:"Неодим",en:"Neodymium",m:144.242,cat:"lanthanide",r:9,co:6,cfg:"[Xe] 4f⁴ 6s²",st:"solid",den:7.007,mp:1021,bp:3074,yr:1885,w:"К. Ауэр фон Вельсбах"},
+{z:61,s:"Pm",n:"Прометий",en:"Promethium",m:145,cat:"lanthanide",r:9,co:7,cfg:"[Xe] 4f⁵ 6s²",st:"solid",den:7.26,mp:1042,bp:3000,yr:1945,w:"Дж. Маринский"},
+{z:62,s:"Sm",n:"Самарий",en:"Samarium",m:150.36,cat:"lanthanide",r:9,co:8,cfg:"[Xe] 4f⁶ 6s²",st:"solid",den:7.52,mp:1074,bp:1794,yr:1879,w:"П. Лекок де Буабодран"},
+{z:63,s:"Eu",n:"Европий",en:"Europium",m:151.964,cat:"lanthanide",r:9,co:9,cfg:"[Xe] 4f⁷ 6s²",st:"solid",den:5.243,mp:822,bp:1529,yr:1901,w:"Э. Демарсе"},
+{z:64,s:"Gd",n:"Гадолиний",en:"Gadolinium",m:157.25,cat:"lanthanide",r:9,co:10,cfg:"[Xe] 4f⁷ 5d¹ 6s²",st:"solid",den:7.895,mp:1313,bp:3273,yr:1880,w:"Ж. де Мариньяк"},
+{z:65,s:"Tb",n:"Тербий",en:"Terbium",m:158.925,cat:"lanthanide",r:9,co:11,cfg:"[Xe] 4f⁹ 6s²",st:"solid",den:8.229,mp:1356,bp:3230,yr:1843,w:"К. Мосандер"},
+{z:66,s:"Dy",n:"Диспрозий",en:"Dysprosium",m:162.5,cat:"lanthanide",r:9,co:12,cfg:"[Xe] 4f¹⁰ 6s²",st:"solid",den:8.55,mp:1412,bp:2567,yr:1886,w:"П. Лекок де Буабодран"},
+{z:67,s:"Ho",n:"Гольмий",en:"Holmium",m:164.93,cat:"lanthanide",r:9,co:13,cfg:"[Xe] 4f¹¹ 6s²",st:"solid",den:8.795,mp:1474,bp:2700,yr:1878,w:"М. Делафонтен"},
+{z:68,s:"Er",n:"Эрбий",en:"Erbium",m:167.259,cat:"lanthanide",r:9,co:14,cfg:"[Xe] 4f¹² 6s²",st:"solid",den:9.066,mp:1529,bp:2868,yr:1843,w:"К. Мосандер"},
+{z:69,s:"Tm",n:"Тулий",en:"Thulium",m:168.934,cat:"lanthanide",r:9,co:15,cfg:"[Xe] 4f¹³ 6s²",st:"solid",den:9.321,mp:1545,bp:1950,yr:1879,w:"П. Клеве"},
+{z:70,s:"Yb",n:"Иттербий",en:"Ytterbium",m:173.045,cat:"lanthanide",r:9,co:16,cfg:"[Xe] 4f¹⁴ 6s²",st:"solid",den:6.965,mp:819,bp:1196,yr:1878,w:"Ж. де Мариньяк"},
+{z:71,s:"Lu",n:"Лютеций",en:"Lutetium",m:174.967,cat:"lanthanide",r:9,co:17,cfg:"[Xe] 4f¹⁴ 5d¹ 6s²",st:"solid",den:9.84,mp:1663,bp:3402,yr:1907,w:"Ж. Урбен"},
+{z:72,s:"Hf",n:"Гафний",en:"Hafnium",m:178.49,cat:"transition-metal",r:6,co:4,cfg:"[Xe] 4f¹⁴ 5d² 6s²",st:"solid",den:13.31,mp:2233,bp:4603,yr:1923,w:"Д. Костер"},
+{z:73,s:"Ta",n:"Тантал",en:"Tantalum",m:180.948,cat:"transition-metal",r:6,co:5,cfg:"[Xe] 4f¹⁴ 5d³ 6s²",st:"solid",den:16.654,mp:3017,bp:5458,yr:1802,w:"А. Экеберг"},
+{z:74,s:"W",n:"Вольфрам",en:"Tungsten",m:183.84,cat:"transition-metal",r:6,co:6,cfg:"[Xe] 4f¹⁴ 5d⁴ 6s²",st:"solid",den:19.25,mp:3422,bp:5555,yr:1783,w:"Х. и Ф. Элюар"},
+{z:75,s:"Re",n:"Рений",en:"Rhenium",m:186.207,cat:"transition-metal",r:6,co:7,cfg:"[Xe] 4f¹⁴ 5d⁵ 6s²",st:"solid",den:21.02,mp:3186,bp:5596,yr:1925,w:"В. Ноддак"},
+{z:76,s:"Os",n:"Осмий",en:"Osmium",m:190.23,cat:"transition-metal",r:6,co:8,cfg:"[Xe] 4f¹⁴ 5d⁶ 6s²",st:"solid",den:22.587,mp:3033,bp:5012,yr:1803,w:"С. Теннант"},
+{z:77,s:"Ir",n:"Иридий",en:"Iridium",m:192.217,cat:"transition-metal",r:6,co:9,cfg:"[Xe] 4f¹⁴ 5d⁷ 6s²",st:"solid",den:22.562,mp:2446,bp:4428,yr:1803,w:"С. Теннант"},
+{z:78,s:"Pt",n:"Платина",en:"Platinum",m:195.085,cat:"transition-metal",r:6,co:10,cfg:"[Xe] 4f¹⁴ 5d⁹ 6s¹",st:"solid",den:21.46,mp:1768.3,bp:3825,yr:1735,w:"А. де Ульоа"},
+{z:79,s:"Au",n:"Золото",en:"Gold",m:196.967,cat:"transition-metal",r:6,co:11,cfg:"[Xe] 4f¹⁴ 5d¹⁰ 6s¹",st:"solid",den:19.282,mp:1064.18,bp:2856,yr:-1,w:"Древность"},
+{z:80,s:"Hg",n:"Ртуть",en:"Mercury",m:200.592,cat:"transition-metal",r:6,co:12,cfg:"[Xe] 4f¹⁴ 5d¹⁰ 6s²",st:"liquid",den:13.5336,mp:-38.83,bp:356.73,yr:-1,w:"Древность"},
+{z:81,s:"Tl",n:"Таллий",en:"Thallium",m:204.38,cat:"post-transition",r:6,co:13,cfg:"[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p¹",st:"solid",den:11.85,mp:304,bp:1473,yr:1861,w:"У. Крукс"},
+{z:82,s:"Pb",n:"Свинец",en:"Lead",m:207.2,cat:"post-transition",r:6,co:14,cfg:"[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²",st:"solid",den:11.342,mp:327.46,bp:1749,yr:-1,w:"Древность"},
+{z:83,s:"Bi",n:"Висмут",en:"Bismuth",m:208.98,cat:"post-transition",r:6,co:15,cfg:"[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p³",st:"solid",den:9.807,mp:271.4,bp:1564,yr:1753,w:"К. Жоффруа"},
+{z:84,s:"Po",n:"Полоний",en:"Polonium",m:209,cat:"post-transition",r:6,co:16,cfg:"[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁴",st:"solid",den:9.32,mp:254,bp:962,yr:1898,w:"М. Кюри"},
+{z:85,s:"At",n:"Астат",en:"Astatine",m:210,cat:"halogen",r:6,co:17,cfg:"[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁵",st:"solid",den:7,mp:302,bp:337,yr:1940,w:"Д. Корсон"},
+{z:86,s:"Rn",n:"Радон",en:"Radon",m:222,cat:"noble-gas",r:6,co:18,cfg:"[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁶",st:"gas",den:0.00973,mp:-71,bp:-61.7,yr:1900,w:"Ф. Дорн"},
+{z:87,s:"Fr",n:"Франций",en:"Francium",m:223,cat:"alkali-metal",r:7,co:1,cfg:"[Rn] 7s¹",st:"solid",den:1.87,mp:27,bp:677,yr:1939,w:"М. Пере"},
+{z:88,s:"Ra",n:"Радий",en:"Radium",m:226,cat:"alkaline-earth",r:7,co:2,cfg:"[Rn] 7s²",st:"solid",den:5.5,mp:696,bp:1737,yr:1898,w:"М. и П. Кюри"},
+{z:89,s:"Ac",n:"Актиний",en:"Actinium",m:227,cat:"actinide",r:10,co:3,cfg:"[Rn] 6d¹ 7s²",st:"solid",den:10.07,mp:1050,bp:3200,yr:1899,w:"А. Дебьерн"},
+{z:90,s:"Th",n:"Торий",en:"Thorium",m:232.038,cat:"actinide",r:10,co:4,cfg:"[Rn] 6d² 7s²",st:"solid",den:11.72,mp:1750,bp:4788,yr:1829,w:"Й. Берцелиус"},
+{z:91,s:"Pa",n:"Протактиний",en:"Protactinium",m:231.036,cat:"actinide",r:10,co:5,cfg:"[Rn] 5f² 6d¹ 7s²",st:"solid",den:15.37,mp:1572,bp:4000,yr:1913,w:"К. Фаянс"},
+{z:92,s:"U",n:"Уран",en:"Uranium",m:238.029,cat:"actinide",r:10,co:6,cfg:"[Rn] 5f³ 6d¹ 7s²",st:"solid",den:18.95,mp:1135,bp:4131,yr:1789,w:"М. Клапрот"},
+{z:93,s:"Np",n:"Нептуний",en:"Neptunium",m:237,cat:"actinide",r:10,co:7,cfg:"[Rn] 5f⁴ 6d¹ 7s²",st:"solid",den:20.45,mp:644,bp:3902,yr:1940,w:"Э. Макмиллан"},
+{z:94,s:"Pu",n:"Плутоний",en:"Plutonium",m:244,cat:"actinide",r:10,co:8,cfg:"[Rn] 5f⁶ 7s²",st:"solid",den:19.84,mp:640,bp:3228,yr:1940,w:"Г. Сиборг"},
+{z:95,s:"Am",n:"Америций",en:"Americium",m:243,cat:"actinide",r:10,co:9,cfg:"[Rn] 5f⁷ 7s²",st:"solid",den:13.69,mp:1176,bp:2011,yr:1944,w:"Г. Сиборг"},
+{z:96,s:"Cm",n:"Кюрий",en:"Curium",m:247,cat:"actinide",r:10,co:10,cfg:"[Rn] 5f⁷ 6d¹ 7s²",st:"solid",den:13.51,mp:1345,bp:3110,yr:1944,w:"Г. Сиборг"},
+{z:97,s:"Bk",n:"Берклий",en:"Berkelium",m:247,cat:"actinide",r:10,co:11,cfg:"[Rn] 5f⁹ 7s²",st:"solid",den:14.79,mp:1050,bp:2627,yr:1949,w:"Г. Сиборг"},
+{z:98,s:"Cf",n:"Калифорний",en:"Californium",m:251,cat:"actinide",r:10,co:12,cfg:"[Rn] 5f¹⁰ 7s²",st:"solid",den:15.1,mp:900,bp:1472,yr:1950,w:"Г. Сиборг"},
+{z:99,s:"Es",n:"Эйнштейний",en:"Einsteinium",m:252,cat:"actinide",r:10,co:13,cfg:"[Rn] 5f¹¹ 7s²",st:"solid",den:8.84,mp:860,bp:996,yr:1952,w:"А. Гиорсо"},
+{z:100,s:"Fm",n:"Фермий",en:"Fermium",m:257,cat:"actinide",r:10,co:14,cfg:"[Rn] 5f¹² 7s²",st:"solid",den:null,mp:1527,bp:null,yr:1952,w:"А. Гиорсо"},
+{z:101,s:"Md",n:"Менделевий",en:"Mendelevium",m:258,cat:"actinide",r:10,co:15,cfg:"[Rn] 5f¹³ 7s²",st:"solid",den:null,mp:827,bp:null,yr:1955,w:"А. Гиорсо"},
+{z:102,s:"No",n:"Нобелий",en:"Nobelium",m:259,cat:"actinide",r:10,co:16,cfg:"[Rn] 5f¹⁴ 7s²",st:"solid",den:null,mp:827,bp:null,yr:1966,w:"Г. Флёров"},
+{z:103,s:"Lr",n:"Лоуренсий",en:"Lawrencium",m:266,cat:"actinide",r:10,co:17,cfg:"[Rn] 5f¹⁴ 7s² 7p¹",st:"solid",den:null,mp:1627,bp:null,yr:1961,w:"А. Гиорсо"},
+{z:104,s:"Rf",n:"Резерфордий",en:"Rutherfordium",m:267,cat:"transition-metal",r:7,co:4,cfg:"[Rn] 5f¹⁴ 6d² 7s²",st:"unknown",den:null,mp:null,bp:null,yr:1964,w:"Г. Флёров"},
+{z:105,s:"Db",n:"Дубний",en:"Dubnium",m:268,cat:"transition-metal",r:7,co:5,cfg:"[Rn] 5f¹⁴ 6d³ 7s²",st:"unknown",den:null,mp:null,bp:null,yr:1970,w:"А. Гиорсо"},
+{z:106,s:"Sg",n:"Сиборгий",en:"Seaborgium",m:269,cat:"transition-metal",r:7,co:6,cfg:"[Rn] 5f¹⁴ 6d⁴ 7s²",st:"unknown",den:null,mp:null,bp:null,yr:1974,w:"А. Гиорсо"},
+{z:107,s:"Bh",n:"Борий",en:"Bohrium",m:270,cat:"transition-metal",r:7,co:7,cfg:"[Rn] 5f¹⁴ 6d⁵ 7s²",st:"unknown",den:null,mp:null,bp:null,yr:1981,w:"П. Армбрустер"},
+{z:108,s:"Hs",n:"Хассий",en:"Hassium",m:277,cat:"transition-metal",r:7,co:8,cfg:"[Rn] 5f¹⁴ 6d⁶ 7s²",st:"unknown",den:null,mp:null,bp:null,yr:1984,w:"П. Армбрустер"},
+{z:109,s:"Mt",n:"Мейтнерий",en:"Meitnerium",m:278,cat:"unknown",r:7,co:9,cfg:"[Rn] 5f¹⁴ 6d⁷ 7s²",st:"unknown",den:null,mp:null,bp:null,yr:1982,w:"П. Армбрустер"},
+{z:110,s:"Ds",n:"Дармштадтий",en:"Darmstadtium",m:281,cat:"unknown",r:7,co:10,cfg:"[Rn] 5f¹⁴ 6d⁸ 7s²",st:"unknown",den:null,mp:null,bp:null,yr:1994,w:"П. Армбрустер"},
+{z:111,s:"Rg",n:"Рентгений",en:"Roentgenium",m:282,cat:"unknown",r:7,co:11,cfg:"[Rn] 5f¹⁴ 6d⁹ 7s²",st:"unknown",den:null,mp:null,bp:null,yr:1994,w:"П. Армбрустер"},
+{z:112,s:"Cn",n:"Коперниций",en:"Copernicium",m:285,cat:"unknown",r:7,co:12,cfg:"[Rn] 5f¹⁴ 6d¹⁰ 7s²",st:"unknown",den:null,mp:null,bp:null,yr:1996,w:"П. Армбрустер"},
+{z:113,s:"Nh",n:"Нихоний",en:"Nihonium",m:286,cat:"unknown",r:7,co:13,cfg:"[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p¹",st:"unknown",den:null,mp:null,bp:null,yr:2003,w:"К. Морита"},
+{z:114,s:"Fl",n:"Флеровий",en:"Flerovium",m:289,cat:"unknown",r:7,co:14,cfg:"[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p²",st:"unknown",den:null,mp:null,bp:null,yr:1999,w:"Ю. Оганесян"},
+{z:115,s:"Mc",n:"Московий",en:"Moscovium",m:290,cat:"unknown",r:7,co:15,cfg:"[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p³",st:"unknown",den:null,mp:null,bp:null,yr:2003,w:"Ю. Оганесян"},
+{z:116,s:"Lv",n:"Ливерморий",en:"Livermorium",m:293,cat:"unknown",r:7,co:16,cfg:"[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁴",st:"unknown",den:null,mp:null,bp:null,yr:2000,w:"Ю. Оганесян"},
+{z:117,s:"Ts",n:"Теннессин",en:"Tennessine",m:294,cat:"unknown",r:7,co:17,cfg:"[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁵",st:"unknown",den:null,mp:null,bp:null,yr:2010,w:"Ю. Оганесян"},
+{z:118,s:"Og",n:"Оганесон",en:"Oganesson",m:294,cat:"unknown",r:7,co:18,cfg:"[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁶",st:"unknown",den:null,mp:null,bp:null,yr:2006,w:"Ю. Оганесян"},
+];
+
+// ─── QUANTUM MECHANICS ───
+const AUFBAU = [[1,0],[2,0],[2,1],[3,0],[3,1],[4,0],[3,2],[4,1],[5,0],[4,2],[5,1],[6,0],[4,3],[5,2],[6,1],[7,0],[5,3],[6,2],[7,1]];
+const SUB_NAMES = ["s","p","d","f"];
+const SUB_MAX = [2,6,10,14];
+const SUB_COLORS = { s:"#5BC0EB", p:"#9BC53D", d:"#FFA62B", f:"#E55934" };
+
+function getElectronFilling(z) {
+  const cfg = []; let rem = z;
+  for (const [n,l] of AUFBAU) {
+    if (rem <= 0) break;
+    const mx = SUB_MAX[l];
+    const el = Math.min(rem, mx);
+    cfg.push({ n, l, electrons: el, max: mx, label: `${n}${SUB_NAMES[l]}` });
+    rem -= el;
+  }
+  return cfg;
+}
+
+function getQuantumNumbers(z) {
+  const cfg = getElectronFilling(z);
+  const last = cfg[cfg.length - 1];
+  const { n, l, electrons } = last;
+  const totalOrb = 2*l + 1;
+  const mlVals = []; for (let i = -l; i <= l; i++) mlVals.push(i);
+  let ml, ms;
+  if (electrons <= totalOrb) { ml = mlVals[electrons - 1]; ms = "+½"; }
+  else { ml = mlVals[electrons - totalOrb - 1]; ms = "−½"; }
+  return { n, l, ml, ms, subshell: `${n}${SUB_NAMES[l]}`, lName: SUB_NAMES[l] };
+}
+
+function getShells(z) {
+  const mx = [2,8,18,32,32,18,8], sh = []; let rem = z;
+  for (let i = 0; i < mx.length && rem > 0; i++) { const n = Math.min(rem, mx[i]); sh.push(n); rem -= n; }
+  return sh;
+}
+
+// ─── 3D ORBITAL SHAPE ───
+// Angular probability functions (squared spherical harmonics)
+function angularProb(l, m, cosTheta, sinTheta, phi) {
+  const ct = cosTheta, st = sinTheta;
+  if (l === 0) return 1.0; // s — perfect sphere
+
+  if (l === 1) { // p orbitals
+    if (m === 0) return ct * ct;                          // pz: two lobes along z
+    if (m === 1) return st * st * Math.cos(phi) ** 2;     // px
+    return st * st * Math.sin(phi) ** 2;                  // py (m=-1)
+  }
+
+  if (l === 2) { // d orbitals
+    if (m === 0) return (3*ct*ct - 1) ** 2 / 4;                          // dz²: donut + two caps
+    if (m === 1) return st*st * ct*ct * Math.cos(phi) ** 2 * 4;          // dxz
+    if (m === -1) return st*st * ct*ct * Math.sin(phi) ** 2 * 4;         // dyz
+    if (m === 2) return st**4 * Math.cos(2*phi) ** 2;                    // dx²-y²
+    return st**4 * Math.sin(2*phi) ** 2;                                 // dxy (m=-2)
+  }
+
+  // f orbitals (l=3) — simplified but recognizable
+  if (m === 0) return ct*ct * (5*ct*ct - 3) ** 2 / 4;                                   // fz³
+  if (Math.abs(m) === 1) return st*st * (5*ct*ct - 1) ** 2 / 4;                         // fxz², fyz²
+  if (Math.abs(m) === 2) return st**4 * ct*ct * 4;                                      // fxyz, fz(x²-y²)
+  return st**6;                                                                          // fx(x²-3y²), fy(3x²-y²)
+}
+
+function OrbitalView({ l, m, accentColor }) {
+  const ref = useRef(null);
+  const cleanRef = useRef(null);
+
+  useEffect(() => {
+    const c = ref.current; if (!c) return;
+    if (cleanRef.current) cleanRef.current();
+    const w = c.clientWidth, h = c.clientHeight;
+    if (!w || !h) return;
+
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(45, w/h, 0.1, 100);
+    cam.position.set(0, 0, 5.5);
+    const ren = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    ren.setSize(w, h); ren.setPixelRatio(Math.min(devicePixelRatio, 2)); ren.setClearColor(0,0);
+    c.appendChild(ren.domElement);
+
+    const accent = new THREE.Color(accentColor);
+    const group = new THREE.Group();
+    scene.add(group);
+
+    // Sharper probability cloud with recognizable lobe shapes
+    const count = l === 0 ? 4000 : l === 1 ? 5000 : l === 2 ? 7000 : 8000;
+    const positions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
+    let idx = 0;
+
+    // Radial shell parameters — thin concentrated shell, not diffuse blob
+    const rPeak = 1.3 + l * 0.15;     // peak radius of radial probability
+    const rWidth = 0.25 + l * 0.05;   // shell thickness (thin!)
+
+    const maxAttempts = count * 12;
+    for (let a = 0; a < maxAttempts && idx < count; a++) {
+      const theta = Math.acos(2 * Math.random() - 1);
+      const phi = Math.random() * Math.PI * 2;
+      const ct = Math.cos(theta), st = Math.sin(theta);
+
+      // Angular probability — raise to power for SHARP lobes
+      let angP = angularProb(l, m, ct, st, phi);
+      // Sharpen: raise to power 2-3 to make lobes crisp with dark nodal zones
+      const sharpness = l === 0 ? 1 : l === 1 ? 2.5 : l === 2 ? 3 : 3.5;
+      angP = Math.pow(angP, sharpness);
+
+      // Reject low-probability regions — this creates the shape
+      if (Math.random() > angP) continue;
+
+      // Radial: Gaussian shell around rPeak
+      const rRand = rPeak + (Math.random() - 0.5) * 2 * rWidth * (0.5 + 0.8 * Math.random());
+      if (rRand < 0.15) continue;
+
+      // Scale radius by angular probability — denser lobes extend further
+      const r = rRand * (0.7 + 0.5 * Math.sqrt(angP));
+
+      let x = r * st * Math.cos(phi);
+      let y = r * st * Math.sin(phi);
+      let z = r * ct;
+
+      const i3 = idx * 3;
+      positions[i3] = x; positions[i3+1] = y; positions[i3+2] = z;
+
+      // Color: hot core → cooler edges
+      const dist = Math.sqrt(x*x + y*y + z*z);
+      const bright = 0.4 + 0.6 * Math.max(0, 1 - dist / (rPeak * 2));
+      const warmth = Math.pow(angP, 0.3); // high-probability = warmer color
+      colors[i3]   = accent.r * bright * (0.6 + 0.4 * warmth) + (1-bright) * 0.08;
+      colors[i3+1] = accent.g * bright * (0.5 + 0.5 * warmth) + (1-bright) * 0.05;
+      colors[i3+2] = accent.b * bright * (0.4 + 0.6 * warmth) + (1-bright) * 0.03;
+      idx++;
+    }
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions.slice(0, idx*3), 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(colors.slice(0, idx*3), 3));
+
+    const mat = new THREE.PointsMaterial({
+      size: 0.03, vertexColors: true, transparent: true, opacity: 0.8,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    });
+    group.add(new THREE.Points(geo, mat));
+
+    // Nodal plane hints — semi-transparent discs where ψ = 0
+    if (l >= 1) {
+      const planeGeo = new THREE.RingGeometry(0.1, 2.2, 64);
+      const planeMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.03, side: THREE.DoubleSide });
+      if (l === 1 && m === 0) { // pz: nodal plane at z=0
+        const plane = new THREE.Mesh(planeGeo, planeMat);
+        group.add(plane);
+      }
+      if (l === 2 && m === 0) { // dz²: nodal cone hint
+        const cone1 = new THREE.Mesh(planeGeo, planeMat);
+        cone1.rotation.x = Math.acos(1/Math.sqrt(3));
+        group.add(cone1);
+      }
+    }
+
+    // Axis labels
+    const axColors = [0xff4444, 0x44ff44, 0x4488ff];
+    const axLabels = ["x","y","z"];
+    [[1,0,0],[0,1,0],[0,0,1]].forEach(([ax,ay,az], i) => {
+      const pts = [new THREE.Vector3(-2*ax,-2*ay,-2*az), new THREE.Vector3(2*ax,2*ay,2*az)];
+      const g = new THREE.BufferGeometry().setFromPoints(pts);
+      group.add(new THREE.Line(g, new THREE.LineBasicMaterial({ color: axColors[i], transparent: true, opacity: 0.12 })));
+    });
+
+    // Small nucleus dot
+    group.add(new THREE.Mesh(
+      new THREE.SphereGeometry(0.06, 16, 16),
+      new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 })
+    ));
+
+    let mx2 = 0, my2 = 0, t = 0, animId;
+    const onMove = e => {
+      const rect = c.getBoundingClientRect();
+      mx2 = ((e.clientX - rect.left)/w - 0.5)*2;
+      my2 = ((e.clientY - rect.top)/h - 0.5)*2;
+    };
+    c.addEventListener('mousemove', onMove);
+
+    const anim = () => {
+      animId = requestAnimationFrame(anim);
+      t += 0.008;
+      group.rotation.y += (mx2*0.8 - group.rotation.y)*0.04;
+      group.rotation.x += (-my2*0.5 - group.rotation.x)*0.04;
+      group.rotation.y += 0.002;
+      mat.opacity = 0.65 + 0.15 * Math.sin(t * 2.5);
+      ren.render(scene, cam);
+    };
+    anim();
+
+    cleanRef.current = () => {
+      cancelAnimationFrame(animId);
+      c.removeEventListener('mousemove', onMove);
+      ren.dispose();
+      if (ren.domElement.parentNode === c) c.removeChild(ren.domElement);
+    };
+    return () => { if (cleanRef.current) cleanRef.current(); };
+  }, [l, m, accentColor]);
+
+  return <div ref={ref} style={{ width:"100%", height:180, borderRadius:6, cursor:"grab",
+    background:`radial-gradient(ellipse at center, ${accentColor}15 0%, transparent 70%)` }} />;
+}
+
+// ─── 3D ATOM MODEL ───
+function Atom3D({ element, accentColor }) {
+  const ref = useRef(null);
+  const cleanRef = useRef(null);
+
+  useEffect(() => {
+    const c = ref.current; if (!c) return;
+    if (cleanRef.current) cleanRef.current();
+    const w = c.clientWidth, h = c.clientHeight;
+    if (!w || !h) return;
+
+    const accent = new THREE.Color(accentColor);
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(50, w/h, 0.1, 100);
+    cam.position.set(0, 0, 7);
+    const ren = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+    ren.setSize(w, h); ren.setPixelRatio(Math.min(devicePixelRatio, 2)); ren.setClearColor(0,0);
+    c.appendChild(ren.domElement);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+    const l1 = new THREE.PointLight(0xffffff, 1, 50); l1.position.set(5,5,5); scene.add(l1);
+    const l2 = new THREE.PointLight(accent.getHex(), 0.5, 50); l2.position.set(-4,-3,4); scene.add(l2);
+
+    const group = new THREE.Group(); scene.add(group);
+    const nS = 0.28 + Math.min(element.z*0.003, 0.22);
+    const nucleus = new THREE.Mesh(new THREE.SphereGeometry(nS,32,32),
+      new THREE.MeshPhongMaterial({color:accent,emissive:accent,emissiveIntensity:0.5,shininess:120,transparent:true,opacity:0.92}));
+    group.add(nucleus);
+    group.add(new THREE.Mesh(new THREE.SphereGeometry(nS*1.5,24,24), new THREE.MeshBasicMaterial({color:accent,transparent:true,opacity:0.1})));
+
+    const bN = Math.min(element.z, 20);
+    for (let i=0;i<bN;i++){
+      const phi=Math.acos(1-2*(i+.5)/bN), theta=Math.PI*(1+Math.sqrt(5))*i;
+      const b=new THREE.Mesh(new THREE.SphereGeometry(nS*0.28,8,8),
+        new THREE.MeshPhongMaterial({color:i%2?new THREE.Color(accent).lerp(new THREE.Color(0xffffff),0.5):accent,emissive:i%2?new THREE.Color(0x888888):accent,emissiveIntensity:0.3,shininess:80}));
+      b.position.set(nS*.85*Math.sin(phi)*Math.cos(theta),nS*.85*Math.sin(phi)*Math.sin(theta),nS*.85*Math.cos(phi));
+      group.add(b);
+    }
+
+    const shells = getShells(element.z);
+    const maxR = 1 + shells.length * 0.55, scl = 3/maxR;
+    const allE = [];
+    shells.forEach((eC,si)=>{
+      const radius = (1+si*0.55)*scl;
+      const rN = Math.min(Math.ceil(eC/2),5);
+      for(let r=0;r<rN;r++){
+        const ring=new THREE.Mesh(new THREE.TorusGeometry(radius,0.006,6,128),new THREE.MeshBasicMaterial({color:accent,transparent:true,opacity:0.08+si*0.02}));
+        ring.rotation.x=(Math.PI/(rN+1))*(r+1)+si*0.15; ring.rotation.y=(r*Math.PI)/rN+si*0.25; group.add(ring);
+      }
+      for(let e=0;e<eC;e++){
+        const em=new THREE.Mesh(new THREE.SphereGeometry(0.055,12,12),new THREE.MeshPhongMaterial({color:0xffffff,emissive:accent,emissiveIntensity:0.9,shininess:200}));
+        em.add(new THREE.Mesh(new THREE.SphereGeometry(0.09,8,8),new THREE.MeshBasicMaterial({color:accent,transparent:true,opacity:0.25})));
+        group.add(em);
+        allE.push({mesh:em,radius,angle:(e/eC)*Math.PI*2,tiltX:Math.PI*((e%3)/3)+si*0.2,tiltZ:(e*0.618+si*1.1)%Math.PI,speed:0.5+0.8/(si+1)+e*0.03});
+      }
+    });
+
+    let mx2=0,my2=0,t=0,animId;
+    const onMove=ev=>{const rect=c.getBoundingClientRect();mx2=((ev.clientX-rect.left)/w-0.5)*2;my2=((ev.clientY-rect.top)/h-0.5)*2;};
+    c.addEventListener('mousemove',onMove);
+    const anim=()=>{
+      animId=requestAnimationFrame(anim); t+=0.016;
+      group.rotation.y+=(mx2*0.6-group.rotation.y)*0.04;
+      group.rotation.x+=(-my2*0.4-group.rotation.x)*0.04;
+      const p=1+Math.sin(t*2.5)*0.03; nucleus.scale.set(p,p,p);
+      allE.forEach(ed=>{
+        ed.angle+=ed.speed*0.016; const a=ed.angle,r=ed.radius;
+        const cx=Math.cos(ed.tiltX),sx=Math.sin(ed.tiltX),cz=Math.cos(ed.tiltZ),sz=Math.sin(ed.tiltZ);
+        const x0=r*Math.cos(a),y0=r*Math.sin(a);
+        ed.mesh.position.set(x0*cx,y0*cz+x0*sx*sz*0.4,x0*sx*cz*0.6-y0*sz*0.4);
+      });
+      ren.render(scene,cam);
+    };
+    anim();
+    cleanRef.current=()=>{cancelAnimationFrame(animId);c.removeEventListener('mousemove',onMove);ren.dispose();if(ren.domElement.parentNode===c)c.removeChild(ren.domElement);};
+    return ()=>{if(cleanRef.current)cleanRef.current();};
+  },[element.z,accentColor]);
+
+  return <div ref={ref} style={{width:"100%",height:180,borderRadius:6,cursor:"grab",
+    background:`radial-gradient(ellipse at center, ${accentColor}11 0%, transparent 70%)`}} />;
+}
+
+// ─── AUFBAU DIAGRAM ───
+function AufbauDiagram({ z, accentColor }) {
+  const filling = getElectronFilling(z);
+  return (
+    <div style={{ display:"flex", flexWrap:"wrap", gap:3, padding:"6px 0" }}>
+      {filling.map((sub, i) => {
+        const orbCount = (2*sub.l+1);
+        const isFull = sub.electrons === sub.max;
+        const isLast = i === filling.length - 1;
+        const sc = SUB_COLORS[SUB_NAMES[sub.l]];
+        return (
+          <div key={i} style={{
+            border: `1px solid ${isLast ? accentColor : sc}${isLast ? 'aa' : '44'}`,
+            borderRadius: 4, padding: "2px 4px",
+            background: isLast ? accentColor + '22' : 'transparent',
+          }}>
+            <div style={{ fontSize:8, color: sc, fontWeight:600, textAlign:"center", marginBottom:1 }}>{sub.label}</div>
+            <div style={{ display:"flex", gap:1 }}>
+              {Array.from({length: orbCount}).map((_, oi) => {
+                const eInOrb = Math.min(2, Math.max(0, sub.electrons - oi * 2 + (sub.electrons > orbCount ? orbCount : 0)));
+                // Hund's rule: first fill one up, then pair
+                let up = false, dn = false;
+                if (sub.electrons <= orbCount) {
+                  up = oi < sub.electrons; dn = false;
+                } else {
+                  up = true; dn = oi < (sub.electrons - orbCount);
+                }
+                return (
+                  <div key={oi} style={{
+                    width: 12, height: 18, border: `1px solid ${sc}44`,
+                    borderRadius: 2, display:"flex", flexDirection:"column",
+                    alignItems:"center", justifyContent:"center", fontSize: 8,
+                    background: (up||dn) ? sc+'11' : 'transparent',
+                  }}>
+                    {up && <span style={{color:sc,lineHeight:1}}>↑</span>}
+                    {dn && <span style={{color:sc,lineHeight:1}}>↓</span>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─── CONSTANTS ───
+const CELL = 56, GAP = 2;
+const STL = {solid:"Твёрдое",liquid:"Жидкость",gas:"Газ",unknown:"Неизв."};
+const STI = {solid:"■",liquid:"◉",gas:"○",unknown:"?"};
+
+// ─── MAIN COMPONENT ───
+function PeriodicTable() {
+  const [selected, setSelected] = useState(null);
+  const [hovCat, setHovCat] = useState(null);
+  const [search, setSearch] = useState("");
+  const [tempK, setTempK] = useState(293);
+  const [tab, setTab] = useState("atom"); // "atom" | "orbital" | "aufbau"
+  const [orbIdx, setOrbIdx] = useState(-1); // index into filling array, -1 = last
+
+  const stateAt = (el) => {
+    if(el.mp===null&&el.bp===null)return"unknown";
+    const t=tempK-273.15;
+    if(el.mp!==null&&t<el.mp)return"solid";
+    if(el.bp!==null&&t>el.bp)return"gas";
+    if(el.mp!==null&&el.bp!==null&&t>=el.mp&&t<=el.bp)return"liquid";
+    if(el.mp!==null&&el.bp===null&&t>=el.mp)return"liquid";
+    return el.st;
+  };
+  const match = (el) => {
+    if(!search) return true; const q=search.toLowerCase();
+    return el.n.toLowerCase().includes(q)||el.en.toLowerCase().includes(q)||el.s.toLowerCase().includes(q)||String(el.z).includes(q);
+  };
+
+  const sel = selected ? EL.find(e=>e.z===selected) : null;
+  const shells = sel ? getShells(sel.z) : [];
+
+  return (
+    <div style={{fontFamily:"'JetBrains Mono',monospace",background:"#0a0e17",color:"#e0e6f0",minHeight:"100vh",padding:12,boxSizing:"border-box",overflow:"auto"}}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+        *{box-sizing:border-box;margin:0;padding:0}
+        ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:#0a0e17}::-webkit-scrollbar-thumb{background:#2a3050;border-radius:3px}
+        .ec{transition:all .15s;cursor:pointer;position:relative}.ec:hover{transform:scale(1.35);z-index:20;box-shadow:0 0 20px rgba(255,255,255,.2)}
+        .lc{cursor:pointer;transition:all .15s;padding:3px 8px;border-radius:4px;font-size:10px;white-space:nowrap}.lc:hover{transform:scale(1.05)}
+        .dp{animation:si .25s ease}@keyframes si{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .ts{-webkit-appearance:none;width:100px;height:4px;border-radius:2px;background:linear-gradient(to right,#3B9FD9,#E8485C);outline:none}
+        .ts::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 0 6px rgba(255,255,255,.5)}
+        .si{background:#141a2a;border:1px solid #2a3050;color:#e0e6f0;padding:5px 10px;border-radius:6px;font-family:inherit;font-size:12px;outline:none;width:160px}
+        .si:focus{border-color:#3B9FD9;box-shadow:0 0 8px rgba(59,159,217,.3)}.si::placeholder{color:#4a5580}
+        .tab-btn{padding:4px 10px;border-radius:4px;font-size:9px;font-family:inherit;cursor:pointer;border:1px solid #2a3050;transition:all .15s;font-weight:500}
+      `}</style>
+
+      {/* Header */}
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8,flexWrap:"wrap",gap:8}}>
+        <div style={{display:"flex",alignItems:"baseline",gap:10}}>
+          <h1 style={{fontSize:18,fontWeight:700,letterSpacing:"0.05em",color:"#fff"}}>ПЕРИОДИЧЕСКАЯ ТАБЛИЦА</h1>
+          <span style={{fontSize:11,color:"#4a5580",fontWeight:300}}>118 элементов · квантовая модель</span>
+        </div>
+        <div style={{display:"flex",gap:10,alignItems:"center"}}>
+          <input className="si" placeholder="Поиск..." value={search} onChange={e=>setSearch(e.target.value)} />
+          <div style={{display:"flex",alignItems:"center",gap:6,background:"#141a2a",padding:"4px 10px",borderRadius:6,border:"1px solid #2a3050"}}>
+            <span style={{fontSize:10,color:"#4a5580"}}>T:</span>
+            <input className="ts" type="range" min={0} max={6000} value={tempK} onChange={e=>setTempK(+e.target.value)} />
+            <span style={{fontSize:11,fontWeight:600,minWidth:50}}>{tempK} K</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:8}}>
+        {Object.entries(CAT).map(([k,v])=>(
+          <div key={k} className="lc" style={{background:hovCat===k?v.c+'44':v.c+'18',border:`1px solid ${v.c}55`,color:v.c,fontWeight:hovCat===k?600:400}}
+            onMouseEnter={()=>setHovCat(k)} onMouseLeave={()=>setHovCat(null)}>{v.l}</div>
+        ))}
+        <div style={{display:"flex",gap:8,marginLeft:12,alignItems:"center",fontSize:10,color:"#4a5580"}}>
+          {Object.entries(STL).map(([k,v])=><span key={k}>{STI[k]} {v}</span>)}
+        </div>
+      </div>
+
+      <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+        {/* Grid */}
+        <div style={{position:"relative"}}>
+          {[1,2,3,4,5,6,7].map(r=><div key={r} style={{position:"absolute",left:-14,top:(r-1)*(CELL+GAP)+CELL/2-5,fontSize:9,color:"#2a3050",fontWeight:600}}>{r}</div>)}
+          {Array.from({length:18},(_,i)=>i+1).map(c=><div key={c} style={{position:"absolute",left:(c-1)*(CELL+GAP)+CELL/2-5,top:-13,fontSize:8,color:"#2a3050",fontWeight:600,textAlign:"center",width:10}}>{c}</div>)}
+          <div style={{display:"grid",gridTemplateColumns:`repeat(18,${CELL}px)`,gridTemplateRows:`repeat(7,${CELL}px) 12px repeat(2,${CELL}px)`,gap:`${GAP}px`,marginTop:2,marginLeft:2}}>
+            {EL.map(el=>{
+              const cat=CAT[el.cat];const dim=(hovCat&&el.cat!==hovCat)||(search&&!match(el));const isSel=selected===el.z;const cs=stateAt(el);
+              return(
+                <div key={el.z} className="ec" onClick={()=>{setSelected(isSel?null:el.z);setTab("atom");setOrbIdx(-1);}}
+                  style={{gridRow:el.r<=7?el.r:el.r===9?9:10,gridColumn:el.co,width:CELL,height:CELL,
+                    background:isSel?cat.c+'55':cat.c+(dim?'08':'1a'),border:`1px solid ${cat.c}${dim?'15':isSel?'aa':'44'}`,
+                    borderRadius:3,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",opacity:dim?0.25:1,padding:1}}>
+                  <span style={{fontSize:7,color:cat.c+(dim?'66':'bb'),fontWeight:300,lineHeight:1}}>{el.z}</span>
+                  <span style={{fontSize:16,fontWeight:700,color:dim?"#334":cat.c,lineHeight:1.1}}>{el.s}</span>
+                  <span style={{fontSize:6,color:"#7788aa",lineHeight:1,maxWidth:CELL-4,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{el.n}</span>
+                  <span style={{fontSize:6,color:"#4a5580",lineHeight:1}}>{el.m}</span>
+                  <span style={{fontSize:6,position:"absolute",top:2,right:3,color:cs==="gas"?"#6ec":cs==="liquid"?"#6af":cs==="solid"?"#aaa":"#555"}}>{STI[cs]}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{position:"absolute",top:7*(CELL+GAP)+14,left:-2,fontSize:8,color:CAT.lanthanide.c,fontWeight:500}}>La–Lu</div>
+          <div style={{position:"absolute",top:8*(CELL+GAP)+14+CELL,left:-2,fontSize:8,color:CAT.actinide.c,fontWeight:500}}>Ac–Lr</div>
+        </div>
+
+        {/* Detail Panel */}
+        {sel && (()=>{
+          const cc = CAT[sel.cat].c;
+          return (
+            <div className="dp" style={{background:"#111827",border:`1px solid ${cc}44`,borderRadius:10,padding:14,minWidth:280,maxWidth:320,alignSelf:"flex-start",position:"sticky",top:12}}>
+              {/* Header */}
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}>
+                <div>
+                  <div style={{fontSize:10,color:cc,fontWeight:500,marginBottom:2}}>{CAT[sel.cat].l}</div>
+                  <div style={{fontSize:36,fontWeight:700,color:cc,lineHeight:1}}>{sel.s}</div>
+                  <div style={{fontSize:14,fontWeight:600,marginTop:2}}>{sel.n}</div>
+                  <div style={{fontSize:11,color:"#4a5580"}}>{sel.en}</div>
+                </div>
+                <div style={{background:cc+'22',borderRadius:6,padding:"6px 10px",textAlign:"center"}}>
+                  <div style={{fontSize:22,fontWeight:700,color:"#fff"}}>{sel.z}</div>
+                  <div style={{fontSize:8,color:"#4a5580"}}>Номер</div>
+                </div>
+              </div>
+
+              {/* Tabs */}
+              <div style={{display:"flex",gap:4,marginBottom:8}}>
+                {[["atom","Атом"],["orbital","Орбиталь"],["aufbau","Заполнение"]].map(([k,label])=>(
+                  <button key={k} className="tab-btn" onClick={()=>setTab(k)}
+                    style={{background:tab===k?cc+'33':'#141a2a',color:tab===k?cc:'#4a5580',borderColor:tab===k?cc+'66':'#2a3050'}}>
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Tab Content */}
+              {tab === "atom" && (
+                <div style={{marginBottom:8,borderRadius:6,overflow:"hidden",border:`1px solid ${cc}22`}}>
+                  <Atom3D key={sel.z} element={sel} accentColor={cc} />
+                  <div style={{display:"flex",justifyContent:"center",gap:4,padding:"5px 8px",background:"#0a0e17cc",flexWrap:"wrap"}}>
+                    {shells.map((cnt,i)=>(
+                      <div key={i} style={{display:"inline-flex",alignItems:"center",justifyContent:"center",minWidth:22,height:22,borderRadius:"50%",fontSize:10,fontWeight:600,padding:"0 4px",background:cc+'22',color:cc,border:`1px solid ${cc}44`}}>{cnt}</div>
+                    ))}
+                    <span style={{fontSize:8,color:"#4a5580",alignSelf:"center",marginLeft:4}}>e⁻ по оболочкам</span>
+                  </div>
+                </div>
+              )}
+
+              {tab === "orbital" && (()=>{
+                const filling = getElectronFilling(sel.z);
+                // Get unique subshell types present: collect one representative per (l) type
+                // But show ALL subshells so user can browse
+                const activeIdx = orbIdx >= 0 && orbIdx < filling.length ? orbIdx : filling.length - 1;
+                const activeSub = filling[activeIdx];
+                const activeL = activeSub.l;
+                const activeLName = SUB_NAMES[activeL];
+                const activeColor = SUB_COLORS[activeLName];
+                // Pick m value: default m=0 for nice canonical shape
+                const activeM = 0;
+                // Quantum numbers for selected subshell
+                const totalOrb = 2*activeL + 1;
+                const mlVals = []; for(let i=-activeL;i<=activeL;i++) mlVals.push(i);
+                const orbShapeDesc = {
+                  0: "Сферическое облако. Вероятность одинакова во всех направлениях.",
+                  1: "Гантель — два лепестка вдоль оси. Узловая плоскость посередине (ψ=0).",
+                  2: "Четыре лепестка в перпендикулярных плоскостях. Две узловые плоскости.",
+                  3: "6–8 лепестков сложной формы. Три узловые плоскости.",
+                };
+
+                return (
+                <div style={{marginBottom:8}}>
+                  {/* Subshell selector chips */}
+                  <div style={{display:"flex",flexWrap:"wrap",gap:3,marginBottom:6}}>
+                    {filling.map((sub,i)=>{
+                      const sc = SUB_COLORS[SUB_NAMES[sub.l]];
+                      const isActive = i === activeIdx;
+                      return (
+                        <button key={i} onClick={()=>setOrbIdx(i)} className="tab-btn"
+                          style={{
+                            background: isActive ? sc+'44' : sc+'11',
+                            color: isActive ? "#fff" : sc,
+                            borderColor: isActive ? sc : sc+'33',
+                            fontSize: 10, padding:"3px 7px",
+                            boxShadow: isActive ? `0 0 8px ${sc}44` : 'none',
+                          }}>
+                          {sub.label}<sup style={{fontSize:7,marginLeft:1}}>{sub.electrons}</sup>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* 3D Orbital Cloud */}
+                  <div style={{borderRadius:6,overflow:"hidden",border:`1px solid ${activeColor}44`,marginBottom:8}}>
+                    <OrbitalView key={`${sel.z}-${activeIdx}-${activeL}-${activeM}`} l={activeL} m={activeM} accentColor={activeColor} />
+                    <div style={{textAlign:"center",padding:"6px",background:"#0a0e17cc",fontSize:10}}>
+                      <span style={{color:activeColor,fontWeight:700,fontSize:16}}>{activeSub.label}</span>
+                      <sup style={{color:activeColor,fontSize:10}}>{activeSub.electrons}</sup>
+                      <span style={{color:"#6a7a90",marginLeft:8,fontSize:9}}>
+                        {activeL===0?"● сфера":activeL===1?"∞ гантель · 2 лепестка":activeL===2?
+                          "✦ клевер · 4 лепестка":"❋ многолепестковая · "+(2*activeL+1)*2+" лепестков"}
+                      </span>
+                    </div>
+                    <div style={{padding:"4px 8px",fontSize:8,color:"#3a4a60",background:"#0a0e17cc",borderTop:"1px solid #1a2030",lineHeight:1.4}}>
+                      {orbShapeDesc[activeL]} Плотность точек = |ψ|² — вероятность найти e⁻.
+                    </div>
+                  </div>
+
+                  {/* Quantum Numbers for this subshell */}
+                  <div style={{background:"#0a0e17",borderRadius:6,padding:8,border:`1px solid ${activeColor}22`}}>
+                    <div style={{fontSize:9,color:"#4a5580",marginBottom:6,fontWeight:600,letterSpacing:"0.05em"}}>
+                      КВАНТОВЫЕ ЧИСЛА · {activeSub.label} · {activeSub.electrons}/{activeSub.max} e⁻
+                    </div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+                      {[
+                        ["n",activeSub.n,"главное","энерг. уровень"],
+                        ["ℓ",`${activeL} (${activeLName})`,"орбитальное","форма облака"],
+                        ["mₗ",`${mlVals[0]}…${mlVals[mlVals.length-1]}`,"магнитное",`${totalOrb} ориентаций`],
+                        ["mₛ","±½","спиновое","2 e⁻ на орбиталь"],
+                      ].map(([sym,val,name,desc],i)=>(
+                        <div key={i} style={{background:"#141a2a",borderRadius:4,padding:"5px 7px",border:`1px solid ${activeColor}15`}}>
+                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
+                            <span style={{fontSize:14,fontWeight:700,color:activeColor}}>{sym}</span>
+                            <span style={{fontSize:12,fontWeight:600,color:"#e0e6f0"}}>{val}</span>
+                          </div>
+                          <div style={{fontSize:7,color:"#4a5580",marginTop:2}}>{name} · {desc}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{marginTop:6,fontSize:8,color:"#3a4a60",lineHeight:1.4}}>
+                      Макс. электронов: {activeSub.max} = {totalOrb} орбитал{totalOrb===1?"ь":totalOrb<5?"и":"ей"} × 2 спина.
+                      {activeSub.electrons < activeSub.max ? ` Заполнена частично: ${activeSub.electrons}/${activeSub.max}.` : " Подоболочка заполнена полностью."}
+                    </div>
+                  </div>
+
+                  {/* Shape legend */}
+                  <div style={{display:"flex",gap:5,marginTop:8,justifyContent:"center",flexWrap:"wrap"}}>
+                    {[["s","●","сфера",0],["p","∞","гантель",1],["d","✦","клевер",2],["f","❋","мульти",3]].map(([name,icon,desc,ll])=>{
+                      const hasIt = filling.some(f=>f.l===ll);
+                      return (
+                        <div key={name} style={{display:"flex",alignItems:"center",gap:3,padding:"2px 6px",borderRadius:3,
+                          background: hasIt ? SUB_COLORS[name]+'22' : '#0e1320',
+                          border:`1px solid ${hasIt ? SUB_COLORS[name]+'55' : '#1a2030'}`,
+                          opacity: hasIt ? 1 : 0.35}}>
+                          <span style={{fontSize:10,color:SUB_COLORS[name]}}>{icon}</span>
+                          <span style={{fontSize:9,color:SUB_COLORS[name],fontWeight:600}}>{name}</span>
+                          <span style={{fontSize:7,color:"#4a5580"}}>{desc}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                );
+              })()}
+
+              {tab === "aufbau" && (
+                <div style={{marginBottom:8}}>
+                  <div style={{fontSize:9,color:"#4a5580",marginBottom:4,fontWeight:600,letterSpacing:"0.05em"}}>ЗАПОЛНЕНИЕ ПО ПРАВИЛУ АУФБАУ (КЛЕЧКОВСКОГО)</div>
+                  <AufbauDiagram z={sel.z} accentColor={cc} />
+                  <div style={{fontSize:8,color:"#4a5580",marginTop:4}}>
+                    ↑↓ = спаренные e⁻ · ↑ = неспаренный · Правило Хунда: сначала по одному
+                  </div>
+                </div>
+              )}
+
+              {/* Config */}
+              <div style={{fontSize:11,color:"#8899aa",marginBottom:8,fontFamily:"monospace",background:"#0a0e17",padding:"4px 8px",borderRadius:4}}>{sel.cfg}</div>
+
+              {/* Properties */}
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"5px 10px",fontSize:11}}>
+                {[
+                  ["Масса",sel.m+" а.е.м."],["Состояние",STL[sel.st]],
+                  ["Плотность",sel.den?sel.den+" г/см³":"—"],["Т. плавл.",sel.mp!==null?sel.mp+"°C":"—"],
+                  ["Т. кипения",sel.bp!==null?sel.bp+"°C":"—"],[`При ${tempK}K`,STL[stateAt(sel)]],
+                  ["Открыт",sel.yr>0?sel.yr+" г.":"Древность"],["Кем",sel.w],
+                ].map(([l,v],i)=><div key={i}><div style={{fontSize:9,color:"#4a5580",marginBottom:1}}>{l}</div><div style={{fontWeight:500,color:"#c0c8d8"}}>{v}</div></div>)}
+              </div>
+
+              <button onClick={()=>setSelected(null)} style={{marginTop:10,width:"100%",padding:6,background:"#1a2035",border:"1px solid #2a3050",borderRadius:4,color:"#4a5580",fontFamily:"inherit",fontSize:10,cursor:"pointer"}}>Закрыть ✕</button>
+            </div>
+          );
+        })()}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(PeriodicTable));
+</script>
+</body>
+</html>
