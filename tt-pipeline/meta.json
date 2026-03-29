@@ -1,0 +1,12 @@
+{
+  "name": "TT Pipeline",
+  "description": "YOLOv8 Table Tennis — дашборд пайплайна обработки видео",
+  "tags": ["ML", "viz"],
+  "files": {
+    "dashboard.html": {
+      "title": "Pipeline Dashboard",
+      "description": "Интерактивный дашборд: pipeline, tools, training metrics, FSM rules, file structure",
+      "tags": ["ML", "viz"]
+    }
+  }
+}

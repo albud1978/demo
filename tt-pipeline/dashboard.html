@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YOLOv8 Table Tennis Pipeline Dashboard</title>
+</head>
+<body style="margin:0;background:#0B0E11">
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../index.html'}" style="width:40px;height:40px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../index.html" style="width:40px;height:40px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel">
+const { useState } = React;
+
+const FONT = "'JetBrains Mono', 'SF Mono', 'Fira Code', monospace";
+const SANS = "'DM Sans', 'Segoe UI', system-ui, sans-serif";
+
+const C = {
+  bg: "#0B0E11",
+  surface: "#131920",
+  surfaceAlt: "#1A2332",
+  border: "#1E2A3A",
+  borderHi: "#2A3D54",
+  text: "#C8D6E5",
+  textMuted: "#6B7F95",
+  textDim: "#3D5068",
+  accent: "#00D4AA",
+  accentDim: "rgba(0,212,170,0.12)",
+  accentBorder: "rgba(0,212,170,0.25)",
+  warn: "#F0A500",
+  warnDim: "rgba(240,165,0,0.12)",
+  err: "#E8503A",
+  errDim: "rgba(232,80,58,0.12)",
+  purple: "#8B5CF6",
+  purpleDim: "rgba(139,92,246,0.12)",
+  blue: "#3B82F6",
+  blueDim: "rgba(59,130,246,0.12)",
+};
+
+// ─── Pipeline Data ────────────────────────────────────
+const PIPELINE_STAGES = [
+  { id: "input", label: "Video input", icon: "▶", color: C.blue, dimColor: C.blueDim,
+    metrics: [{ k: "Формат", v: "MP4 (GoPro)" }, { k: "Разрешение", v: "1920×1080" }, { k: "FPS", v: "59.94" }, { k: "CLI", v: "--video --start --end" }],
+    detail: "Входное видео матча. Обработка посегментно через CLI-параметры (start/end в секундах). Поддержка GoPro MP4." },
+  { id: "yolo", label: "YOLOv8-seg", icon: "◎", color: C.accent, dimColor: C.accentDim,
+    metrics: [{ k: "Модель", v: "yolov8n-seg (train10)" }, { k: "Эпох", v: "100" }, { k: "mAP50(B)", v: "86.3%" }, { k: "mAP50(M)", v: "82.0%" }, { k: "Классы", v: "Ball, Net, P1, P2, Table" }, { k: "imgsz", v: "640" }, { k: "batch", v: "16" }],
+    detail: "Instance segmentation. 5 классов: Ball(0), Net(1), Player1(2), Player2(3), Table(4). Conf threshold 0.1. Маска Table используется для определения зоны стола (polygon)." },
+  { id: "tracking", label: "Kalman tracker", icon: "⟁", color: C.purple, dimColor: C.purpleDim,
+    metrics: [{ k: "State vector", v: "[x, y, vx, vy]" }, { k: "Process noise Q", v: "0.1 × I₄" }, { k: "Measurement R", v: "10 × I₂" }, { k: "Trajectory buf", v: "100 точек" }, { k: "Velocity buf", v: "15 значений" }],
+    detail: "Линейный Kalman фильтр 4D (позиция + скорость). Сглаживает траекторию, предсказывает позицию при окклюзии. При потере мяча >5 кадров → finalize_rally." },
+  { id: "impact", label: "SmartImpactDetector", icon: "◆", color: C.warn, dimColor: C.warnDim,
+    metrics: [{ k: "Метод", v: "Вогнутость (U-паттерн)" }, { k: "History window", v: "10 точек" }, { k: "min Y range", v: "15 px" }, { k: "min curvature", v: "10 px" }, { k: "min_frame_gap", v: "6 (~0.1s @60fps)" }, { k: "min_consecutive", v: "3 детекции" }, { k: "Валидация", v: "pointPolygonTest" }],
+    detail: "Обнаружение bounce по вогнутой траектории: \"вниз→вверх\" (U-shape). Проверяет что точка bounce внутри полигона стола (cv2.pointPolygonTest). Фильтрует ложные через min_frame_gap и min_consecutive." },
+  { id: "fsm", label: "Rally FSM", icon: "⬡", color: C.err, dimColor: C.errDim,
+    metrics: [{ k: "Состояния", v: "4 (IDLE→START→ACTIVE→END)" }, { k: "Таймаут rally", v: "30 кадров (0.5s)" }, { k: "min duration", v: "0.3 сек" }, { k: "max dir change", v: "180°" }, { k: "min velocity", v: "2.0 px/frame" }],
+    detail: "FSM детектирование розыгрышей. IDLE→RALLY_STARTING (мяч обнаружен 3+ кадра)→RALLY_ACTIVE (движение подтверждено)→RALLY_ENDING (timeout/потеря). Валидный rally ≥0.3s и ≥3 точки." },
+  { id: "scoring", label: "Scoring (rev_1)", icon: "★", color: C.accent, dimColor: C.accentDim,
+    metrics: [{ k: "Правила", v: "tt_fsm_rules_rev_1" }, { k: "Комбинации", v: "9 строк таблицы" }, { k: "Сигналы", v: "bounce_S, net, bounce_R, timeout" }, { k: "Game", v: "до 11, разница ≥2" }, { k: "Match", v: "best of 5" }, { k: "Подача", v: "каждые 2 очка" }],
+    detail: "Таблица решений: 9 комбинаций {bounce_S, net_touch, bounce_R, timeout}. S/R динамические. Let = bounce_S+net+bounce_R. Двойной bounce_S в rally = очко S. Деюс 10:10 — подача каждое очко." },
+  { id: "output", label: "Output", icon: "▣", color: C.blue, dimColor: C.blueDim,
+    metrics: [{ k: "Video", v: "MP4 с overlay" }, { k: "JSON analysis", v: "smart_impacts_analysis" }, { k: "Live impacts", v: "live_impacts.json" }, { k: "Table debug", v: "table_polygon_debug.png" }],
+    detail: "Аннотированное видео (траектория, bounce-точки, скорость, счёт). JSON с полной статистикой (detections, impacts, timing). Live impacts лог для каждого перелома." },
+];
+
+const DATASET = { train: 406, valid: 40, test: 20, classes: ["Ball", "Net", "Player1", "Player2", "Table"] };
+
+const TRAINING = [
+  { epoch: 1, mAP50B: 0.367, mAP50M: 0.369, boxLoss: 0.973, segLoss: 1.753 },
+  { epoch: 10, mAP50B: 0.55, mAP50M: 0.52, boxLoss: 0.72, segLoss: 1.1 },
+  { epoch: 20, mAP50B: 0.65, mAP50M: 0.6, boxLoss: 0.6, segLoss: 0.9 },
+  { epoch: 30, mAP50B: 0.72, mAP50M: 0.68, boxLoss: 0.55, segLoss: 0.82 },
+  { epoch: 40, mAP50B: 0.76, mAP50M: 0.72, boxLoss: 0.5, segLoss: 0.76 },
+  { epoch: 50, mAP50B: 0.8, mAP50M: 0.76, boxLoss: 0.47, segLoss: 0.72 },
+  { epoch: 60, mAP50B: 0.82, mAP50M: 0.78, boxLoss: 0.45, segLoss: 0.68 },
+  { epoch: 70, mAP50B: 0.84, mAP50M: 0.79, boxLoss: 0.43, segLoss: 0.65 },
+  { epoch: 80, mAP50B: 0.85, mAP50M: 0.8, boxLoss: 0.42, segLoss: 0.63 },
+  { epoch: 90, mAP50B: 0.857, mAP50M: 0.816, boxLoss: 0.41, segLoss: 0.61 },
+  { epoch: 100, mAP50B: 0.863, mAP50M: 0.82, boxLoss: 0.407, segLoss: 0.604 },
+];
+
+const FSM_TRUTH = [
+  { phase: "Начало", bS: 1, net: 1, bR: 1, tout: "any", sS: 0, sR: 0, result: "Повтор (let)", type: "let" },
+  { phase: "Начало", bS: 1, net: 1, bR: 0, tout: 1, sS: 0, sR: "+1", result: "В сетку", type: "scoreR" },
+  { phase: "Начало", bS: 1, net: 0, bR: 1, tout: 0, sS: 0, sR: 0, result: "Rally →", type: "cont" },
+  { phase: "Начало", bS: 1, net: 0, bR: 1, tout: 1, sS: "+1", sR: 0, result: "R не отбил", type: "scoreS" },
+  { phase: "Начало", bS: 1, net: 0, bR: 0, tout: 1, sS: 0, sR: "+1", result: "Аут S", type: "scoreR" },
+  { phase: "Rally", bS: 1, net: "any", bR: "any", tout: "any", sS: "+1", sR: 0, result: "2× bounce S", type: "scoreS" },
+  { phase: "Rally", bS: 0, net: "any", bR: 1, tout: 1, sS: "+1", sR: 0, result: "R не отбил", type: "scoreS" },
+  { phase: "Rally", bS: 0, net: "any", bR: 1, tout: 0, sS: 0, sR: 0, result: "Rally →", type: "cont" },
+  { phase: "Rally", bS: 0, net: "any", bR: 0, tout: 1, sS: 0, sR: "+1", result: "Аут S", type: "scoreR" },
+];
+
+const FILE_TREE = [
+  { name: "scripts/", children: [{ name: "main_processor.py", size: "673 lines", tag: "main" }, { name: "main_processor_bt.py", size: "672 lines", tag: "alt" }, { name: "archive/", size: "15 скриптов", tag: "archive" }] },
+  { name: "runs/segment/train10/", children: [{ name: "weights/best.pt", size: "модель", tag: "model" }, { name: "results.csv", size: "100 эпох", tag: "data" }, { name: "confusion_matrix.png", size: "метрики", tag: "data" }] },
+  { name: "dataset/", children: [{ name: "train/images/", size: "406 файлов", tag: "data" }, { name: "valid/images/", size: "40 файлов", tag: "data" }, { name: "test/images/", size: "20 файлов", tag: "data" }] },
+  { name: "docs/", children: [{ name: "ANALYSIS.md", size: "аналитика", tag: "doc" }, { name: "ARCHITECTURE.md", size: "архитектура", tag: "doc" }, { name: "FSM_analysis/", size: "3 xlsx + json", tag: "doc" }] },
+  { name: "results/data/", children: [{ name: "smart_impacts_analysis.json", size: "статистика", tag: "output" }] },
+];
+
+// ─── TOOLS DATA ───────────────────────────────────────
+const TOOLS_LIBS = [
+  { name: "Ultralytics YOLOv8", role: "Ядро CV-детекции", color: C.accent,
+    desc: "Instance segmentation модель. Детектирует и сегментирует 5 классов объектов на каждом кадре видео. Выдаёт bounding boxes + полигональные маски. Базовая модель yolov8n-seg (nano) дообучена на собственном датасете (train10, 100 эпох).",
+    api: ["YOLO(model_path)", "model.predict(frame, conf=0.1)", "result.boxes.xyxy", "result.boxes.cls", "result.masks.xy"],
+    params: [{ p: "conf", v: "0.1", d: "Порог уверенности (низкий для мяча)" }, { p: "imgsz", v: "640", d: "Размер входного изображения" }, { p: "model", v: "yolov8n-seg", d: "Nano-версия для скорости" }] },
+  { name: "OpenCV (cv2)", role: "Видеообработка и визуализация", color: C.blue,
+    desc: "Чтение/запись видео (VideoCapture, VideoWriter), отрисовка overlay (траектория, маркеры, текст), геометрические проверки (pointPolygonTest для валидации bounce внутри полигона стола), аппроксимация контуров (approxPolyDP, convexHull).",
+    api: ["cv2.VideoCapture / VideoWriter", "cv2.pointPolygonTest(poly, pt)", "cv2.approxPolyDP(contour, eps)", "cv2.convexHull(points)", "cv2.polylines / fillPoly / circle / putText"],
+    params: [{ p: "fourcc", v: "mp4v", d: "Кодек выходного видео" }, { p: "contourArea", v: ">0", d: "Фильтрация масок по площади" }, { p: "epsilon", v: "0.01×arcLength", d: "Точность аппроксимации полигона" }] },
+  { name: "NumPy", role: "Математическое ядро", color: C.purple,
+    desc: "Матричные операции Kalman фильтра (predict/update), работа с координатами масок и bounding boxes, статистические вычисления (mean, sqrt). Все вычисления в float32 для оптимизации памяти.",
+    api: ["np.eye(4) — единичная матрица", "np.linalg.inv(S) — обращение матрицы", "np.array(coords, dtype=float32)", "np.mean() — средние значения"],
+    params: [{ p: "dtype", v: "float32", d: "Тип данных (не float64!)" }] },
+  { name: "Python stdlib", role: "Инфраструктура", color: C.textMuted,
+    desc: "collections.deque для буферов траектории и скоростей (maxlen=100, 15, 10). math для тригонометрии (sqrt, atan2). json для экспорта результатов. argparse для CLI. pathlib для путей. time для замеров производительности.",
+    api: ["deque(maxlen=N) — кольцевой буфер", "math.sqrt / math.atan2 — геометрия", "json.dump — экспорт результатов", "argparse — CLI параметры"],
+    params: [{ p: "trajectory maxlen", v: "100", d: "Максимум точек траектории" }, { p: "velocities maxlen", v: "15", d: "Буфер скоростей" }, { p: "history maxlen", v: "10", d: "Окно анализа вогнутости" }] },
+];
+
+const TOOLS_ALGOS = [
+  { name: "Kalman Filter (4D линейный)", color: C.purple, cls: "KalmanFilter", file: "main_processor.py:23-59",
+    purpose: "Сглаживание траектории мяча и предсказание позиции при окклюзии",
+    math: [
+      { label: "State vector", formula: "x = [x, y, vx, vy]ᵀ", note: "Позиция + скорость" },
+      { label: "Predict", formula: "x̂ = F·x,  P̂ = F·P·Fᵀ + Q", note: "Экстраполяция вперёд" },
+      { label: "Update", formula: "K = P̂·Hᵀ·(H·P̂·Hᵀ + R)⁻¹", note: "Оптимальное усиление" },
+      { label: "Correction", formula: "x = x̂ + K·(z - H·x̂)", note: "Коррекция по измерению" },
+    ],
+    matrices: [
+      { m: "F (transition)", val: "[[1,0,1,0],[0,1,0,1],[0,0,1,0],[0,0,0,1]]", note: "Линейная модель: pos += vel" },
+      { m: "H (observation)", val: "[[1,0,0,0],[0,1,0,0]]", note: "Наблюдаем только x,y" },
+      { m: "Q (process noise)", val: "0.1 × I₄", note: "Низкий — доверяем модели" },
+      { m: "R (meas. noise)", val: "10 × I₂", note: "Высокий — YOLO шумит" },
+    ] },
+  { name: "SmartImpactDetector (вогнутость)", color: C.warn, cls: "SmartImpactDetector", file: "main_processor.py:61-262",
+    purpose: "Обнаружение момента удара мяча об стол по анализу формы траектории",
+    steps: [
+      { n: 1, label: "Буфер 10 точек", desc: "Скользящее окно последних 10 позиций мяча (deque maxlen=10). Нормализованные + пиксельные координаты." },
+      { n: 2, label: "U-паттерн", desc: "Проверка: first_y < middle_y > last_y (мяч шёл вниз → достиг стола → пошёл вверх). Оба условия goes_down И goes_up обязательны." },
+      { n: 3, label: "Амплитуда ≥15px", desc: "y_range = max(Y) - min(Y) в окне. Фильтрует микро-дрожания камеры и шум YOLO." },
+      { n: 4, label: "Кривизна ≥10px", desc: "Отклонение средней точки от линии [начало→конец]. Чем больше — тем чётче U-образный bounce." },
+      { n: 5, label: "Внутри полигона стола", desc: "cv2.pointPolygonTest проверяет что точка bounce лежит внутри маски Table." },
+      { n: 6, label: "Фильтр дубликатов", desc: "min_frame_gap=6 кадров (~0.1s). min_consecutive=3 детекции подряд перед регистрацией." },
+    ] },
+  { name: "Rally FSM (конечный автомат)", color: C.err, cls: "FSM_Rally_Detector + tt_fsm_rules_rev_1", file: "docs/FSM_analysis/",
+    purpose: "Определение начала/конца розыгрыша и присуждение очков",
+    states: [
+      { state: "IDLE", trigger: "→ Мяч обнаружен + 3 кадра подряд", color: C.textDim },
+      { state: "RALLY_STARTING", trigger: "→ velocity ≥ 2.0 + направление вниз/горизонт", color: C.purple },
+      { state: "RALLY_ACTIVE", trigger: "→ frames_out ≥ 30 ИЛИ no_detection ≥ 30", color: C.accent },
+      { state: "RALLY_ENDING", trigger: "→ duration ≥0.3s ? сохранить : отбросить → IDLE", color: C.warn },
+    ],
+    timers: [
+      { t: "frames_out_of_table", max: 30, unit: "кадров (0.5s @60fps)", reset: "Мяч вновь на столе" },
+      { t: "frames_no_detection", max: 30, unit: "кадров (0.5s @60fps)", reset: "Мяч вновь обнаружен" },
+      { t: "consecutive_detections", max: 3, unit: "кадров", reset: "Потеря детекции" },
+      { t: "min_rally_frames", max: 18, unit: "кадров (0.3s @60fps)", reset: "Новый розыгрыш" },
+    ] },
+  { name: "Table Polygon Detection", color: C.blue, cls: "BallTracker._maybe_update_table_polygon", file: "main_processor.py:311-345",
+    purpose: "Извлечение геометрии стола из сегментационной маски YOLO для валидации bounce",
+    steps: [
+      { n: 1, label: "Фильтрация по классу", desc: "Ищем class_id=4 (Table) среди всех масок. Если несколько — берём с max площадью." },
+      { n: 2, label: "Аппроксимация", desc: "approxPolyDP(epsilon=0.01×arcLength) упрощает контур до 4-6 вершин. Если <4 → convexHull." },
+      { n: 3, label: "Кэширование", desc: "Полигон вычисляется ОДИН раз (первый кадр с Table) и используется для всех последующих." },
+      { n: 4, label: "Debug output", desc: "Сохраняет table_polygon_debug.png для ручной проверки." },
+    ] },
+];
+
+const TOOLS_DATAFLOW = [
+  { stage: "Кадр видео", input: "BGR frame 1920×1080", process: "cv2.VideoCapture.read()", output: "np.ndarray [H,W,3] uint8", icon: "▶", color: C.blue },
+  { stage: "YOLO inference", input: "BGR frame", process: "model.predict(conf=0.1) → resize 640 → backbone → head", output: "boxes[N,4] + cls[N] + masks[N]", icon: "◎", color: C.accent },
+  { stage: "Ball extraction", input: "boxes + cls (class_id==0)", process: "center = (x1+x2)/2, (y1+y2)/2", output: "ball_position (x,y) или None", icon: "●", color: C.accent },
+  { stage: "Table polygon", input: "masks + cls (class_id==4)", process: "max area → approxPolyDP → cache", output: "polygon [M,2] float32 (однократно)", icon: "▬", color: C.blue },
+  { stage: "Kalman filter", input: "ball_position (x,y)", process: "predict → update(z) → state correction", output: "smoothed (x,y,vx,vy) float32", icon: "⟁", color: C.purple },
+  { stage: "Trajectory buffer", input: "smoothed position", process: "deque.append → velocity = sqrt(dx²+dy²)", output: "trajectory[100], velocities[15], history[10]", icon: "〜", color: C.purple },
+  { stage: "Impact detection", input: "history[10] + table_polygon", process: "U-pattern → curvature → polygonTest → gap", output: "impact_event {frame, x, y, speed} или False", icon: "◆", color: C.warn },
+  { stage: "Rally FSM", input: "impact_events + ball_lost", process: "IDLE→START→ACTIVE→END → truth_table", output: "rally {start, end, impacts[], winner}", icon: "⬡", color: C.err },
+  { stage: "Output", input: "frame + trajectory + score", process: "cv2.putText + polylines → write + json.dump", output: "annotated.mp4 + analysis.json", icon: "▣", color: C.blue },
+];
+
+const TOOLS_PARAMS_ALL = [
+  { group: "YOLO Model", params: [{ p: "model_path", v: "runs/segment/train10/weights/best.pt", src: "config JSON" }, { p: "confidence_threshold", v: "0.1", src: "detect_ball()" }, { p: "table_class_id", v: "4", src: "config JSON" }, { p: "imgsz", v: "640", src: "training args" }] },
+  { group: "Kalman Filter", params: [{ p: "state_dim", v: "4 (x, y, vx, vy)", src: "KalmanFilter.__init__" }, { p: "P_init", v: "1000 × I₄", src: "начальная неопределённость" }, { p: "Q (process noise)", v: "0.1 × I₄", src: "низкий — доверяем модели" }, { p: "R (meas. noise)", v: "10 × I₂", src: "высокий — YOLO шумит" }] },
+  { group: "Impact Detection", params: [{ p: "min_consecutive_detections", v: "3", src: "config / SmartImpactDetector" }, { p: "min_frame_gap", v: "6 кадров (~0.1s)", src: "config / SmartImpactDetector" }, { p: "min_velocity", v: "2.0 px/frame", src: "config / SmartImpactDetector" }, { p: "min_y_range", v: "15 px", src: "detect_impact()" }, { p: "min_curvature", v: "10 px", src: "detect_impact()" }, { p: "table_zone_start", v: "65% frame_height", src: "SmartImpactDetector.__init__" }] },
+  { group: "Rally FSM", params: [{ p: "max_direction_change", v: "180°", src: "Фаза 1 исправлений" }, { p: "min_rally_duration", v: "0.3 сек (18 кадров)", src: "Фаза 1 исправлений" }, { p: "frames_out_of_table max", v: "30 кадров (0.5s)", src: "FSM_Rally_Detector.xlsx" }, { p: "frames_no_detection max", v: "30 кадров (0.5s)", src: "FSM_Rally_Detector.xlsx" }, { p: "timeout (scoring)", v: "0.5s без bounce/direction change", src: "tt_fsm_rules_rev_1" }] },
+  { group: "Scoring (ITTF)", params: [{ p: "game_points", v: "11", src: "ITTF правила" }, { p: "min_diff", v: "2 очка", src: "ITTF правила" }, { p: "match_games", v: "best of 5", src: "ITTF правила" }, { p: "serve_rotation", v: "каждые 2 очка", src: "ITTF правила" }, { p: "deuce_serve", v: "каждое очко (10:10+)", src: "ITTF правила" }] },
+  { group: "Video Output", params: [{ p: "codec", v: "mp4v", src: "cv2.VideoWriter_fourcc" }, { p: "output_dir", v: "results/current_run/", src: "config JSON" }, { p: "missed_frames_threshold", v: "5 кадров", src: "track_ball() → finalize" }] },
+];
+
+// ─── Shared Components ────────────────────────────────
+const Badge = ({ children, color, bg }) => <span style={{ display: "inline-block", padding: "2px 8px", borderRadius: 4, fontSize: 11, fontFamily: FONT, fontWeight: 500, color, background: bg, letterSpacing: "0.02em" }}>{children}</span>;
+const SectionHeader = ({ children, sub }) => <div style={{ marginBottom: 14 }}><div style={{ fontSize: 11, color: C.textDim, fontFamily: FONT, textTransform: "uppercase", letterSpacing: "0.08em" }}>{children}</div>{sub && <div style={{ fontSize: 11, color: C.textMuted, fontFamily: SANS, marginTop: 2 }}>{sub}</div>}</div>;
+const Card = ({ children, style: s }) => <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10, padding: "20px 22px", animation: "fadeIn 0.25s ease", ...s }}>{children}</div>;
+
+const MiniChart = ({ data, dataKey, color, height = 48, label }) => { const max = Math.max(...data.map(d => d[dataKey])); const min = Math.min(...data.map(d => d[dataKey])); const range = max - min || 1; const w = 200; const pts = data.map((d, i) => `${(i / (data.length - 1)) * w},${height - ((d[dataKey] - min) / range) * (height - 8) - 4}`).join(" "); return <div><div style={{ fontSize: 10, color: C.textMuted, marginBottom: 2, fontFamily: FONT }}>{label} <span style={{ color }}>{data[data.length - 1][dataKey].toFixed(3)}</span></div><svg width={w} height={height} style={{ display: "block" }}><defs><linearGradient id={`g-${dataKey}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={color} stopOpacity="0.3" /><stop offset="100%" stopColor={color} stopOpacity="0.02" /></linearGradient></defs><polygon points={`0,${height} ${pts} ${w},${height}`} fill={`url(#g-${dataKey})`} /><polyline points={pts} fill="none" stroke={color} strokeWidth="1.5" strokeLinejoin="round" /><circle cx={w} cy={height - ((data[data.length - 1][dataKey] - min) / range) * (height - 8) - 4} r="3" fill={color} /></svg></div>; };
+
+const StageCard = ({ stage, isActive, onClick }) => <div onClick={onClick} style={{ background: isActive ? stage.dimColor : C.surface, border: `1px solid ${isActive ? stage.color + "55" : C.border}`, borderRadius: 8, padding: "12px 14px", cursor: "pointer", transition: "all 0.2s", position: "relative", overflow: "hidden" }}>{isActive && <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 3, background: stage.color, borderRadius: "8px 0 0 8px" }} />}<div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}><span style={{ fontSize: 16, color: stage.color, lineHeight: 1 }}>{stage.icon}</span><span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 600, color: isActive ? stage.color : C.text }}>{stage.label}</span></div><div style={{ fontSize: 11, color: C.textMuted, fontFamily: SANS, lineHeight: 1.5 }}>{stage.metrics.slice(0, 2).map(m => <div key={m.k}><span style={{ color: C.textDim }}>{m.k}:</span> {m.v}</div>)}</div></div>;
+
+const DetailPanel = ({ stage }) => { if (!stage) return null; return <Card><div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}><div style={{ width: 36, height: 36, borderRadius: 8, background: stage.dimColor, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: stage.color }}>{stage.icon}</div><div><div style={{ fontFamily: FONT, fontSize: 15, fontWeight: 600, color: C.text }}>{stage.label}</div><div style={{ fontSize: 11, color: C.textMuted, fontFamily: SANS }}>{"Пайплайн обработки"}</div></div></div><p style={{ fontSize: 13, color: C.textMuted, fontFamily: SANS, lineHeight: 1.65, margin: "0 0 16px", padding: "10px 12px", background: C.surfaceAlt, borderRadius: 6, borderLeft: `2px solid ${stage.color}` }}>{stage.detail}</p><div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 16px" }}>{stage.metrics.map(m => <div key={m.k} style={{ padding: "5px 0", borderBottom: `1px solid ${C.border}`, display: "flex", justifyContent: "space-between" }}><span style={{ fontSize: 11, color: C.textDim, fontFamily: FONT }}>{m.k}</span><span style={{ fontSize: 12, color: C.text, fontFamily: FONT, fontWeight: 500 }}>{m.v}</span></div>)}</div></Card>; };
+
+// ─── Tools Sub-views ──────────────────────────────────
+function ToolsLibraries() { const [exp, setExp] = useState(null); return <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>{TOOLS_LIBS.map((lib, i) => <div key={lib.name} onClick={() => setExp(exp === i ? null : i)} style={{ background: C.surface, border: `1px solid ${exp === i ? lib.color + "44" : C.border}`, borderRadius: 10, padding: "16px 18px", cursor: "pointer", transition: "all 0.2s" }}><div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}><div style={{ display: "flex", alignItems: "center", gap: 10 }}><div style={{ width: 8, height: 8, borderRadius: "50%", background: lib.color }} /><span style={{ fontFamily: FONT, fontSize: 14, fontWeight: 600, color: C.text }}>{lib.name}</span><Badge color={lib.color} bg={lib.color + "18"}>{lib.role}</Badge></div><span style={{ color: C.textDim, fontSize: 12, transition: "transform 0.2s", transform: exp === i ? "rotate(180deg)" : "none" }}>{"▼"}</span></div>{exp === i && <div style={{ marginTop: 14, animation: "fadeIn 0.2s ease" }}><p style={{ fontSize: 13, color: C.textMuted, fontFamily: SANS, lineHeight: 1.65, marginBottom: 14 }}>{lib.desc}</p><div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}><div><div style={{ fontSize: 10, color: C.textDim, fontFamily: FONT, textTransform: "uppercase", marginBottom: 6 }}>API calls</div>{lib.api.map(a => <div key={a} style={{ fontSize: 11, fontFamily: FONT, color: lib.color, padding: "3px 0", borderBottom: `1px solid ${C.border}` }}>{a}</div>)}</div><div><div style={{ fontSize: 10, color: C.textDim, fontFamily: FONT, textTransform: "uppercase", marginBottom: 6 }}>{"Параметры"}</div>{lib.params.map(p => <div key={p.p} style={{ display: "flex", justifyContent: "space-between", fontSize: 11, fontFamily: FONT, padding: "3px 0", borderBottom: `1px solid ${C.border}` }}><span style={{ color: C.textMuted }}>{p.p}</span><span style={{ color: C.text, fontWeight: 500 }}>{p.v}</span></div>)}</div></div></div>}</div>)}</div>; }
+
+function ToolsAlgorithms() { const [exp, setExp] = useState(0); return <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>{TOOLS_ALGOS.map((a, i) => <div key={a.name} onClick={() => setExp(exp === i ? null : i)} style={{ background: C.surface, border: `1px solid ${exp === i ? a.color + "44" : C.border}`, borderRadius: 10, padding: "16px 18px", cursor: "pointer", transition: "all 0.2s" }}><div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}><div style={{ display: "flex", alignItems: "center", gap: 10 }}><div style={{ width: 10, height: 10, borderRadius: 2, background: a.color }} /><span style={{ fontFamily: FONT, fontSize: 14, fontWeight: 600, color: C.text }}>{a.name}</span></div><span style={{ fontSize: 10, fontFamily: FONT, color: C.textDim }}>{a.file}</span></div><div style={{ fontSize: 12, color: C.textMuted, fontFamily: SANS, marginTop: 4 }}>{a.purpose}</div>{exp === i && <div style={{ marginTop: 14, animation: "fadeIn 0.2s ease" }} onClick={e => e.stopPropagation()}><div style={{ fontSize: 10, fontFamily: FONT, color: C.textDim, marginBottom: 4 }}>class {a.cls}</div>{a.math && <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: "12px 14px", marginBottom: 12 }}><div style={{ fontSize: 10, color: C.textDim, fontFamily: FONT, textTransform: "uppercase", marginBottom: 8 }}>{"Математика"}</div>{a.math.map(m => <div key={m.label} style={{ display: "flex", alignItems: "baseline", gap: 12, padding: "4px 0", borderBottom: `1px solid ${C.border}` }}><span style={{ fontSize: 11, fontFamily: FONT, color: a.color, minWidth: 80 }}>{m.label}</span><span style={{ fontSize: 12, fontFamily: FONT, color: C.text, fontWeight: 500 }}>{m.formula}</span><span style={{ fontSize: 10, fontFamily: SANS, color: C.textDim, marginLeft: "auto" }}>{m.note}</span></div>)}</div>}{a.matrices && <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: "12px 14px", marginBottom: 12 }}><div style={{ fontSize: 10, color: C.textDim, fontFamily: FONT, textTransform: "uppercase", marginBottom: 8 }}>{"Матрицы"}</div>{a.matrices.map(m => <div key={m.m} style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "4px 0", borderBottom: `1px solid ${C.border}` }}><span style={{ fontSize: 11, fontFamily: FONT, color: C.textMuted, minWidth: 120 }}>{m.m}</span><span style={{ fontSize: 11, fontFamily: FONT, color: C.text }}>{m.val}</span><span style={{ fontSize: 10, fontFamily: SANS, color: C.textDim }}>{m.note}</span></div>)}</div>}{a.steps && <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: "12px 14px", marginBottom: 12 }}><div style={{ fontSize: 10, color: C.textDim, fontFamily: FONT, textTransform: "uppercase", marginBottom: 8 }}>{"Шаги алгоритма"}</div>{a.steps.map(s => <div key={s.n} style={{ display: "flex", gap: 10, padding: "6px 0", borderBottom: `1px solid ${C.border}` }}><div style={{ width: 22, height: 22, borderRadius: 6, background: a.color + "22", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontFamily: FONT, color: a.color, fontWeight: 600, flexShrink: 0 }}>{s.n}</div><div><div style={{ fontSize: 12, fontFamily: FONT, fontWeight: 600, color: C.text }}>{s.label}</div><div style={{ fontSize: 11, fontFamily: SANS, color: C.textMuted, lineHeight: 1.5, marginTop: 2 }}>{s.desc}</div></div></div>)}</div>}{a.states && <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: "12px 14px", marginBottom: 12 }}><div style={{ fontSize: 10, color: C.textDim, fontFamily: FONT, textTransform: "uppercase", marginBottom: 8 }}>{"Переходы FSM"}</div>{a.states.map(s => <div key={s.state} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0", borderBottom: `1px solid ${C.border}` }}><Badge color={s.color} bg={s.color + "18"}>{s.state}</Badge><span style={{ fontSize: 11, fontFamily: SANS, color: C.textMuted }}>{s.trigger}</span></div>)}</div>}{a.timers && <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: "12px 14px" }}><div style={{ fontSize: 10, color: C.textDim, fontFamily: FONT, textTransform: "uppercase", marginBottom: 8 }}>{"Таймеры и счётчики"}</div>{a.timers.map(t => <div key={t.t} style={{ display: "grid", gridTemplateColumns: "1fr auto auto", gap: 8, padding: "4px 0", borderBottom: `1px solid ${C.border}`, fontSize: 11, fontFamily: FONT }}><span style={{ color: C.text }}>{t.t}</span><span style={{ color: a.color, fontWeight: 600 }}>max={t.max}</span><span style={{ color: C.textDim, fontSize: 10 }}>{t.unit}</span></div>)}</div>}</div>}</div>)}</div>; }
+
+function ToolsDataFlow() { return <div>{TOOLS_DATAFLOW.map((step, i) => <div key={step.stage}><div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10, padding: "14px 18px", display: "grid", gridTemplateColumns: "36px 1fr 1.2fr 1fr", gap: 14, alignItems: "center" }}><div style={{ width: 36, height: 36, borderRadius: 8, background: step.color + "18", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, color: step.color, fontWeight: 600 }}>{step.icon}</div><div><div style={{ fontSize: 13, fontFamily: FONT, fontWeight: 600, color: step.color }}>{step.stage}</div><div style={{ fontSize: 10, fontFamily: FONT, color: C.textDim, marginTop: 2 }}>IN: {step.input}</div></div><div style={{ fontSize: 11, fontFamily: FONT, color: C.textMuted, padding: "6px 10px", background: C.surfaceAlt, borderRadius: 6, borderLeft: `2px solid ${step.color}` }}>{step.process}</div><div style={{ fontSize: 10, fontFamily: FONT, color: C.text }}>OUT: <span style={{ color: step.color }}>{step.output}</span></div></div>{i < TOOLS_DATAFLOW.length - 1 && <div style={{ display: "flex", justifyContent: "center", padding: "3px 0" }}><div style={{ width: 1, height: 14, background: C.border }} /></div>}</div>)}</div>; }
+
+function ToolsParams() { return <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>{TOOLS_PARAMS_ALL.map(g => <div key={g.group} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10, padding: "14px 18px" }}><div style={{ fontSize: 12, fontFamily: FONT, fontWeight: 600, color: C.accent, marginBottom: 10 }}>{g.group}</div><table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr>{["Параметр", "Значение", "Источник"].map(h => <th key={h} style={{ textAlign: "left", padding: "4px 8px", fontSize: 10, fontFamily: FONT, color: C.textDim, borderBottom: `1px solid ${C.border}`, fontWeight: 500 }}>{h}</th>)}</tr></thead><tbody>{g.params.map(p => <tr key={p.p}><td style={{ padding: "5px 8px", fontSize: 11, fontFamily: FONT, color: C.text, borderBottom: `1px solid ${C.border}` }}>{p.p}</td><td style={{ padding: "5px 8px", fontSize: 11, fontFamily: FONT, color: C.accent, fontWeight: 600, borderBottom: `1px solid ${C.border}` }}>{p.v}</td><td style={{ padding: "5px 8px", fontSize: 10, fontFamily: SANS, color: C.textDim, borderBottom: `1px solid ${C.border}` }}>{p.src}</td></tr>)}</tbody></table></div>)}</div>; }
+
+// ─── FSM + Files ──────────────────────────────────────
+function FSMTable() { const ts = { let: { bg: C.blueDim, color: C.blue }, scoreR: { bg: C.errDim, color: C.err }, scoreS: { bg: C.warnDim, color: C.warn }, cont: { bg: C.accentDim, color: C.accent } }; return <div style={{ overflowX: "auto" }}><table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11, fontFamily: FONT }}><thead><tr>{["Фаза", "bS", "net", "bR", "tout", "S", "R", "Результат"].map(h => <th key={h} style={{ textAlign: "left", padding: "6px 8px", color: C.textDim, borderBottom: `1px solid ${C.border}`, fontWeight: 500, whiteSpace: "nowrap" }}>{h}</th>)}</tr></thead><tbody>{FSM_TRUTH.map((r, i) => { const s = ts[r.type]; return <tr key={i} style={{ borderBottom: `1px solid ${C.border}` }}><td style={{ padding: "5px 8px", color: C.textMuted }}>{r.phase}</td><td style={{ padding: "5px 8px", color: r.bS === 1 ? C.warn : C.textDim }}>{r.bS}</td><td style={{ padding: "5px 8px", color: r.net === 1 ? C.err : C.textDim }}>{String(r.net)}</td><td style={{ padding: "5px 8px", color: r.bR === 1 ? C.accent : C.textDim }}>{String(r.bR)}</td><td style={{ padding: "5px 8px", color: r.tout === 1 ? C.err : C.textDim }}>{String(r.tout)}</td><td style={{ padding: "5px 8px", color: r.sS === "+1" ? C.warn : C.textDim, fontWeight: r.sS === "+1" ? 700 : 400 }}>{r.sS}</td><td style={{ padding: "5px 8px", color: r.sR === "+1" ? C.err : C.textDim, fontWeight: r.sR === "+1" ? 700 : 400 }}>{r.sR}</td><td style={{ padding: "5px 8px" }}><Badge color={s.color} bg={s.bg}>{r.result}</Badge></td></tr>; })}</tbody></table></div>; }
+
+function FileTree() { const tc = { main: C.accent, alt: C.purple, archive: C.textDim, model: C.warn, data: C.blue, doc: C.textMuted, output: C.err }; return <div style={{ fontFamily: FONT, fontSize: 12 }}>{FILE_TREE.map(dir => <div key={dir.name} style={{ marginBottom: 8 }}><div style={{ color: C.textMuted, marginBottom: 2 }}>{"📁"} {dir.name}</div>{dir.children.map(f => <div key={f.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "2px 0 2px 18px", color: C.text }}><span><span style={{ color: C.textDim }}>{"└"} </span>{f.name}</span><span style={{ display: "flex", gap: 8, alignItems: "center" }}><span style={{ color: C.textDim, fontSize: 10 }}>{f.size}</span><span style={{ width: 6, height: 6, borderRadius: "50%", background: tc[f.tag], display: "inline-block" }} /></span></div>)}</div>)}</div>; }
+
+// ─── TABS ─────────────────────────────────────────────
+const TABS = [{ id: "pipeline", label: "Pipeline" }, { id: "tools", label: "Tools" }, { id: "training", label: "Training" }, { id: "fsm", label: "FSM Rules" }, { id: "files", label: "Files" }];
+const TOOLS_SUBTABS = [{ id: "libs", label: "Библиотеки" }, { id: "algos", label: "Алгоритмы" }, { id: "dataflow", label: "Data Flow" }, { id: "params", label: "Все параметры" }];
+
+// ─── MAIN ─────────────────────────────────────────────
+function Dashboard() {
+  const [tab, setTab] = useState("tools");
+  const [toolsSub, setToolsSub] = useState("libs");
+  const [activeStage, setActiveStage] = useState(PIPELINE_STAGES[1]);
+
+  return <div style={{ background: C.bg, color: C.text, fontFamily: SANS, minHeight: "100vh", padding: "24px 20px" }}>
+    <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}*{box-sizing:border-box;margin:0}::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:${C.borderHi};border-radius:2px}::-webkit-scrollbar-track{background:transparent}`}</style>
+
+    {/* Header */}
+    <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 6 }}>
+      <div style={{ width: 40, height: 40, borderRadius: 10, background: `linear-gradient(135deg, ${C.accent}, ${C.purple})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, fontWeight: 700, color: "#000", fontFamily: FONT }}>TT</div>
+      <div><h1 style={{ fontSize: 18, fontWeight: 700, fontFamily: FONT, color: C.text, letterSpacing: "-0.03em", margin: 0 }}>YOLOv8tabletennis-seg</h1><div style={{ fontSize: 11, color: C.textMuted, fontFamily: FONT }}>BANGroup {"·"} Pipeline dashboard {"·"} v1.1</div></div>
+    </div>
+
+    {/* Status */}
+    <div style={{ display: "flex", gap: 12, marginBottom: 20, marginTop: 16, flexWrap: "wrap" }}>
+      {[{ label: "Model", value: "train10", color: C.accent }, { label: "Dataset", value: "466 imgs", color: C.blue }, { label: "Classes", value: "5", color: C.purple }, { label: "Accuracy", value: "95%+", color: C.accent }, { label: "Phase", value: "2 — Scoring", color: C.warn }].map(s => <div key={s.label} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6, padding: "6px 12px", display: "flex", alignItems: "center", gap: 8 }}><span style={{ fontSize: 10, color: C.textDim, fontFamily: FONT }}>{s.label}</span><span style={{ fontSize: 12, color: s.color, fontFamily: FONT, fontWeight: 600 }}>{s.value}</span></div>)}
+    </div>
+
+    {/* Tabs */}
+    <div style={{ display: "flex", gap: 2, marginBottom: 20, background: C.surface, borderRadius: 8, padding: 3, border: `1px solid ${C.border}`, width: "fit-content" }}>
+      {TABS.map(t => <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: "7px 16px", borderRadius: 6, border: "none", cursor: "pointer", fontFamily: FONT, fontSize: 12, fontWeight: tab === t.id ? 600 : 400, color: tab === t.id ? C.bg : C.textMuted, background: tab === t.id ? C.accent : "transparent", transition: "all 0.15s" }}>{t.label}</button>)}
+    </div>
+
+    {/* PIPELINE */}
+    {tab === "pipeline" && <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}><div><SectionHeader>Stages</SectionHeader><div style={{ display: "flex", flexDirection: "column", gap: 8 }}>{PIPELINE_STAGES.map((s, i) => <div key={s.id}><StageCard stage={s} isActive={activeStage?.id === s.id} onClick={() => setActiveStage(s)} />{i < PIPELINE_STAGES.length - 1 && <div style={{ display: "flex", justifyContent: "center", padding: "2px 0" }}><div style={{ width: 1, height: 12, background: C.border }} /></div>}</div>)}</div></div><div><SectionHeader>Detail</SectionHeader><DetailPanel stage={activeStage} /><Card style={{ marginTop: 16 }}><SectionHeader>Data flow</SectionHeader><div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>{PIPELINE_STAGES.map((s, i) => <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 4 }}><span onClick={() => setActiveStage(s)} style={{ padding: "3px 8px", borderRadius: 4, fontSize: 10, fontFamily: FONT, fontWeight: 600, cursor: "pointer", color: activeStage?.id === s.id ? s.color : C.textMuted, background: activeStage?.id === s.id ? s.dimColor : C.surfaceAlt, border: `1px solid ${activeStage?.id === s.id ? s.color + "44" : "transparent"}` }}>{s.icon} {s.label}</span>{i < PIPELINE_STAGES.length - 1 && <span style={{ color: C.textDim, fontSize: 10 }}>{"→"}</span>}</div>)}</div></Card></div></div>}
+
+    {/* TOOLS */}
+    {tab === "tools" && <div style={{ animation: "fadeIn 0.25s ease" }}>
+      <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>{TOOLS_SUBTABS.map(st => <button key={st.id} onClick={() => setToolsSub(st.id)} style={{ padding: "6px 14px", borderRadius: 6, border: `1px solid ${toolsSub === st.id ? C.accent + "44" : C.border}`, cursor: "pointer", fontFamily: FONT, fontSize: 11, fontWeight: toolsSub === st.id ? 600 : 400, color: toolsSub === st.id ? C.accent : C.textMuted, background: toolsSub === st.id ? C.accentDim : C.surface }}>{st.label}</button>)}</div>
+      {toolsSub === "libs" && <div><SectionHeader sub={"Все внешние зависимости проекта с ролями и API-вызовами из кода"}>{"Библиотеки и фреймворки"}</SectionHeader><ToolsLibraries /></div>}
+      {toolsSub === "algos" && <div><SectionHeader sub={"Математические модели, FSM-логика и алгоритмы с формулами"}>{"Алгоритмы обработки"}</SectionHeader><ToolsAlgorithms /></div>}
+      {toolsSub === "dataflow" && <div><SectionHeader sub={"Трансформация данных на каждом этапе: вход → обработка → выход"}>Data flow (покадровый цикл)</SectionHeader><ToolsDataFlow /></div>}
+      {toolsSub === "params" && <div><SectionHeader sub={"Полная таблица параметров с источниками (код, конфиг, правила ITTF)"}>{"Справочник параметров"}</SectionHeader><ToolsParams /></div>}
+    </div>}
+
+    {/* TRAINING */}
+    {tab === "training" && <Card><SectionHeader sub="yolov8n-seg · 100 epochs · dataset 466 images">Training metrics</SectionHeader><div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 20 }}>{[{ label: "mAP50 (Box)", value: "86.3%", color: C.accent }, { label: "mAP50 (Mask)", value: "82.0%", color: C.purple }, { label: "Precision (B)", value: "93.2%", color: C.blue }, { label: "Recall (B)", value: "83.9%", color: C.warn }].map(m => <div key={m.label} style={{ background: C.surfaceAlt, borderRadius: 8, padding: "12px 14px" }}><div style={{ fontSize: 10, color: C.textDim, fontFamily: FONT, marginBottom: 4 }}>{m.label}</div><div style={{ fontSize: 22, fontWeight: 700, color: m.color, fontFamily: FONT }}>{m.value}</div></div>)}</div><div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}><MiniChart data={TRAINING} dataKey="mAP50B" color={C.accent} height={56} label="mAP50 (Box)" /><MiniChart data={TRAINING} dataKey="mAP50M" color={C.purple} height={56} label="mAP50 (Mask)" /><MiniChart data={TRAINING} dataKey="boxLoss" color={C.err} height={56} label="Box loss" /><MiniChart data={TRAINING} dataKey="segLoss" color={C.warn} height={56} label="Seg loss" /></div><div style={{ marginTop: 20, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}><div style={{ background: C.surfaceAlt, borderRadius: 6, padding: "10px 12px" }}><div style={{ fontSize: 10, color: C.textDim, fontFamily: FONT }}>Dataset split</div><div style={{ marginTop: 6, display: "flex", gap: 10 }}>{[{ l: "Train", v: 406, c: C.accent }, { l: "Valid", v: 40, c: C.purple }, { l: "Test", v: 20, c: C.blue }].map(d => <div key={d.l} style={{ display: "flex", alignItems: "baseline", gap: 4 }}><span style={{ width: 6, height: 6, borderRadius: "50%", background: d.c, display: "inline-block" }} /><span style={{ fontSize: 12, fontFamily: FONT, color: d.c, fontWeight: 600 }}>{d.v}</span><span style={{ fontSize: 10, color: C.textDim }}>{d.l}</span></div>)}</div></div><div style={{ background: C.surfaceAlt, borderRadius: 6, padding: "10px 12px" }}><div style={{ fontSize: 10, color: C.textDim, fontFamily: FONT }}>Hyperparams</div><div style={{ fontSize: 11, fontFamily: FONT, color: C.textMuted, marginTop: 4, lineHeight: 1.7 }}>lr0=0.01 {"·"} momentum=0.937<br />augment: mosaic+flip+erasing</div></div><div style={{ background: C.surfaceAlt, borderRadius: 6, padding: "10px 12px" }}><div style={{ fontSize: 10, color: C.textDim, fontFamily: FONT }}>Classes</div><div style={{ marginTop: 4, display: "flex", gap: 4, flexWrap: "wrap" }}>{DATASET.classes.map((cls, i) => <Badge key={cls} color={[C.accent, C.err, C.purple, C.blue, C.warn][i]} bg={[C.accentDim, C.errDim, C.purpleDim, C.blueDim, C.warnDim][i]}>{i}:{cls}</Badge>)}</div></div></div></Card>}
+
+    {/* FSM */}
+    {tab === "fsm" && <Card><SectionHeader sub="S = последний бьющий · R = противоположная сторона · timeout = 0.5s">FSM truth table {"·"} tt_fsm_rules_rev_1.xlsx</SectionHeader><FSMTable /><div style={{ marginTop: 16, display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 8 }}>{[{ label: "Продолжение", color: C.accent, count: 2 }, { label: "Очко S", color: C.warn, count: 3 }, { label: "Очко R", color: C.err, count: 3 }, { label: "Let", color: C.blue, count: 1 }].map(s => <div key={s.label} style={{ background: C.surfaceAlt, borderRadius: 6, padding: "8px 12px", textAlign: "center" }}><div style={{ fontSize: 20, fontWeight: 700, color: s.color, fontFamily: FONT }}>{s.count}</div><div style={{ fontSize: 10, color: C.textMuted, fontFamily: FONT }}>{s.label}</div></div>)}</div><div style={{ marginTop: 16, padding: "12px 14px", background: C.surfaceAlt, borderRadius: 8, borderLeft: `2px solid ${C.warn}` }}><div style={{ fontSize: 11, fontFamily: FONT, fontWeight: 600, color: C.warn, marginBottom: 4 }}>{"Правила ITTF"}</div><div style={{ fontSize: 12, fontFamily: SANS, color: C.textMuted, lineHeight: 1.7 }}>Game до 11 очков (разница {"≥"}2) {"·"} Match best of 5 {"·"} Подача каждые 2 очка {"·"} Деюс 10:10 {"→"} подача каждое очко</div></div></Card>}
+
+    {/* FILES */}
+    {tab === "files" && <Card><SectionHeader>Repository structure {"·"} BANGroup/YOLOv8tabletennis-seg</SectionHeader><FileTree /><div style={{ marginTop: 16, display: "flex", gap: 12, flexWrap: "wrap" }}>{[{ dot: C.accent, label: "Main" }, { dot: C.purple, label: "Alt" }, { dot: C.warn, label: "Model" }, { dot: C.blue, label: "Data" }, { dot: C.textMuted, label: "Docs" }, { dot: C.err, label: "Output" }, { dot: C.textDim, label: "Archive" }].map(l => <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 10, fontFamily: FONT, color: C.textMuted }}><span style={{ width: 6, height: 6, borderRadius: "50%", background: l.dot, display: "inline-block" }} />{l.label}</div>)}</div></Card>}
+  </div>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Dashboard));
+</script>
+</body>
+</html>
