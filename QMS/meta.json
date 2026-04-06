@@ -24,7 +24,8 @@
     "ERM_Operating_Model_v2.html": {
       "title": "ERM Operating Model v2",
       "description": "Baseline операционной модели ERM для авиакомпании",
-      "tags": ["QMS", "doc"]
+      "tags": ["QMS", "doc"],
+      "hidden": true
     }
   }
 }
