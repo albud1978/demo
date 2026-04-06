@@ -1,0 +1,12 @@
+{
+  "name": "Infra",
+  "description": "Инфраструктура и архитектура",
+  "tags": ["infra", "doc"],
+  "files": {
+    "nas_data_flow.html": {
+      "title": "NAS Data Flow — Multi-OS Backup",
+      "description": "Архитектура бэкапов Apple + Linux + Windows → NAS",
+      "tags": ["infra", "viz"]
+    }
+  }
+}

@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAS Data Flow Architecture — Full Multi-OS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#f8f7f4;--bg2:#fff;--bg3:#f0efe9;--tx:#2c2c2a;--tx2:#5f5e5a;--tx3:#88877f;
+--bd:#d3d1c7;--bd2:#b4b2a9;
+--blue-50:#E6F1FB;--blue-100:#B5D4F4;--blue-400:#378ADD;--blue-600:#185FA5;--blue-800:#0C447C;
+--teal-50:#E1F5EE;--teal-100:#9FE1CB;--teal-400:#1D9E75;--teal-600:#0F6E56;--teal-800:#085041;
+--purple-50:#EEEDFE;--purple-100:#CECBF6;--purple-400:#7F77DD;--purple-600:#534AB7;--purple-800:#3C3489;
+--amber-50:#FAEEDA;--amber-100:#FAC775;--amber-400:#BA7517;--amber-600:#854F0B;--amber-800:#633806;
+--coral-50:#FAECE7;--coral-100:#F5C4B3;--coral-400:#D85A30;--coral-600:#993C1D;--coral-800:#712B13;
+--gray-50:#F1EFE8;--gray-100:#D3D1C7;--gray-400:#888780;--gray-600:#5F5E5A;--gray-800:#444441;
+--green-50:#EAF3DE;--green-100:#C0DD97;--green-400:#639922;--green-600:#3B6D11;--green-800:#27500A;
+--red-50:#FCEBEB;--red-100:#F7C1C1;--red-400:#E24B4A;--red-600:#A32D2D;--red-800:#791F1F;
+--pink-50:#FBEAF0;--pink-100:#F4C0D1;--pink-400:#D4537E;--pink-600:#993556;--pink-800:#72243E;
+--r:8px;--rl:12px;
+}
+@media(prefers-color-scheme:dark){:root{
+--bg:#1a1a18;--bg2:#242422;--bg3:#2c2c2a;--tx:#e0ded6;--tx2:#b4b2a9;--tx3:#88877f;
+--bd:#444441;--bd2:#5f5e5a;
+--blue-50:#042C53;--blue-100:#0C447C;--blue-400:#378ADD;--blue-600:#85B7EB;--blue-800:#B5D4F4;
+--teal-50:#04342C;--teal-100:#085041;--teal-400:#1D9E75;--teal-600:#5DCAA5;--teal-800:#9FE1CB;
+--purple-50:#26215C;--purple-100:#3C3489;--purple-400:#7F77DD;--purple-600:#AFA9EC;--purple-800:#CECBF6;
+--amber-50:#412402;--amber-100:#633806;--amber-400:#BA7517;--amber-600:#FAC775;--amber-800:#FAEEDA;
+--coral-50:#4A1B0C;--coral-100:#712B13;--coral-400:#D85A30;--coral-600:#F0997B;--coral-800:#F5C4B3;
+--gray-50:#2C2C2A;--gray-100:#444441;--gray-400:#888780;--gray-600:#B4B2A9;--gray-800:#D3D1C7;
+--green-50:#173404;--green-100:#27500A;--green-400:#639922;--green-600:#97C459;--green-800:#C0DD97;
+--red-50:#501313;--red-100:#791F1F;--red-400:#E24B4A;--red-600:#F09595;--red-800:#F7C1C1;
+--pink-50:#4B1528;--pink-100:#72243E;--pink-400:#D4537E;--pink-600:#ED93B1;--pink-800:#F4C0D1;
+}}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;padding:24px 16px}
+.w{max-width:1100px;margin:0 auto}
+h1{font-size:20px;font-weight:500;margin-bottom:4px}
+.sub{font-size:13px;color:var(--tx3);margin-bottom:24px}
+.tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:6px 14px;font-size:13px;border-radius:var(--r);border:0.5px solid var(--bd);background:var(--bg2);color:var(--tx2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.tab:hover{border-color:var(--bd2);color:var(--tx)}
+.tab.on{background:var(--blue-50);border-color:var(--blue-400);color:var(--blue-800);font-weight:500}
+.pn{display:none}.pn.on{display:block}
+.card{background:var(--bg2);border:0.5px solid var(--bd);border-radius:var(--rl);padding:16px 20px;margin-bottom:16px}
+.card h2{font-size:15px;font-weight:500;margin-bottom:8px}
+.card p,.card li{font-size:13px;color:var(--tx2);line-height:1.7}
+.card ul{padding-left:18px;margin-top:6px}
+.card li{margin-bottom:3px}
+.lg{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;font-size:12px;color:var(--tx2)}
+.lg span{display:flex;align-items:center;gap:5px}
+.lg i{width:12px;height:12px;border-radius:3px;display:inline-block}
+svg{width:100%;height:auto;display:block}
+.ms{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px}
+.m{background:var(--bg3);border-radius:var(--r);padding:10px 12px}
+.m .l{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.4px}
+.m .v{font-size:17px;font-weight:500;margin-top:2px}
+.m .n{font-size:10px;color:var(--tx3);margin-top:1px}
+.nb{cursor:pointer;transition:opacity .15s}.nb:hover{opacity:.82}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:100;padding:24px}
+#ov.show{display:flex}
+#dc{background:var(--bg2);border-radius:var(--rl);padding:24px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;border:0.5px solid var(--bd)}
+#dc h3{font-size:16px;font-weight:500;margin-bottom:8px}
+#dc p{font-size:13px;color:var(--tx2);margin-bottom:8px;line-height:1.7}
+#dc .x{float:right;cursor:pointer;font-size:18px;color:var(--tx3);line-height:1}
+#dc ul{font-size:13px;color:var(--tx2);padding-left:18px;margin-bottom:8px}
+#dc li{margin-bottom:4px}
+.warn{background:var(--amber-50);border:0.5px solid var(--amber-400);border-radius:var(--r);padding:10px 14px;margin:12px 0;font-size:12px;color:var(--amber-800)}
+.info{background:var(--blue-50);border:0.5px solid var(--blue-400);border-radius:var(--r);padding:10px 14px;margin:12px 0;font-size:12px;color:var(--blue-800)}
+.dup{background:var(--coral-50);border:0.5px solid var(--coral-400);border-radius:var(--r);padding:10px 14px;margin:12px 0;font-size:12px;color:var(--coral-800)}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="w">
+<h1>Архитектура бэкапов: Apple + Linux + Windows → NAS</h1>
+<p class="sub">Mac Mini M4 (мост) · 2 × DS224+ · RAID1 · Active Backup for Business · Synology Drive · rsync</p>
+
+<div class="ms">
+<div class="m"><div class="l">Мост</div><div class="v">Mac Mini M4</div><div class="n">always-on, 512 ГБ+</div></div>
+<div class="m"><div class="l">NAS A</div><div class="v">DS224+</div><div class="n">2×16 TB RAID1</div></div>
+<div class="m"><div class="l">NAS B</div><div class="v">DS224+</div><div class="n">off-site RAID1</div></div>
+<div class="m"><div class="l">OS</div><div class="v">4 платформы</div><div class="n">iOS, macOS, Linux, Win</div></div>
+<div class="m"><div class="l">Защита</div><div class="v">3-2-1</div><div class="n">+ версии + snapshots</div></div>
+</div>
+
+<div class="tabs" id="tabs">
+<div class="tab on" onclick="T(0)">Общая схема</div>
+<div class="tab" onclick="T(1)">Потоки по типам</div>
+<div class="tab" onclick="T(2)">Linux + Windows</div>
+<div class="tab" onclick="T(3)">Дубли фото</div>
+<div class="tab" onclick="T(4)">Off-site</div>
+<div class="tab" onclick="T(5)">Физ. топология</div>
+<div class="tab" onclick="T(6)">Чеклист</div>
+</div>
+
+<!-- ===== TAB 0: Overview ===== -->
+<div class="pn on" id="p0">
+<div class="lg">
+<span><i style="background:var(--blue-400)"></i>Apple-устройства</span>
+<span><i style="background:var(--amber-400)"></i>Mac Mini (мост)</span>
+<span><i style="background:var(--green-400)"></i>Linux</span>
+<span><i style="background:var(--purple-400)"></i>Windows</span>
+<span><i style="background:var(--teal-400)"></i>NAS (Synology)</span>
+<span><i style="background:var(--coral-400)"></i>Encrypted / iCloud</span>
+</div>
+<svg viewBox="0 0 960 720" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+<!-- iCloud -->
+<g class="nb" onclick="D('icloud')">
+<rect x="330" y="14" width="240" height="44" rx="22" fill="var(--coral-50)" stroke="var(--coral-400)" stroke-width="0.5"/>
+<text x="450" y="41" text-anchor="middle" font-size="13" font-weight="500" fill="var(--coral-800)">iCloud (Photos, Drive, Backup)</text>
+</g>
+
+<!-- Row 1: Source devices -->
+<g class="nb" onclick="D('iphone')">
+<rect x="20" y="110" width="140" height="52" rx="8" fill="var(--blue-50)" stroke="var(--blue-400)" stroke-width="0.5"/>
+<text x="90" y="131" text-anchor="middle" font-size="12" font-weight="500" fill="var(--blue-800)">iPhone / iPad</text>
+<text x="90" y="148" text-anchor="middle" font-size="10" fill="var(--blue-600)">фото, видео, backup</text>
+</g>
+
+<g class="nb" onclick="D('macmini')">
+<rect x="290" y="100" width="280" height="68" rx="10" fill="var(--amber-50)" stroke="var(--amber-400)" stroke-width="1.5"/>
+<text x="430" y="124" text-anchor="middle" font-size="13" font-weight="500" fill="var(--amber-800)">Mac Mini M4 — always-on мост</text>
+<text x="430" y="140" text-anchor="middle" font-size="10" fill="var(--amber-600)">iCloud sync · Finder backup · 1GbE → NAS A</text>
+<text x="430" y="155" text-anchor="middle" font-size="10" fill="var(--amber-600)">Screen Sharing (без монитора)</text>
+</g>
+
+<g class="nb" onclick="D('macbook')">
+<rect x="600" y="110" width="120" height="52" rx="8" fill="var(--blue-50)" stroke="var(--blue-400)" stroke-width="0.5"/>
+<text x="660" y="131" text-anchor="middle" font-size="12" font-weight="500" fill="var(--blue-800)">MacBook</text>
+<text x="660" y="148" text-anchor="middle" font-size="10" fill="var(--blue-600)">Time Machine</text>
+</g>
+
+<g class="nb" onclick="D('linux')">
+<rect x="740" y="110" width="130" height="52" rx="8" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="805" y="131" text-anchor="middle" font-size="12" font-weight="500" fill="var(--green-800)">Linux (Ubuntu)</text>
+<text x="805" y="148" text-anchor="middle" font-size="10" fill="var(--green-600)">ABB / rsync / Drive</text>
+</g>
+
+<g class="nb" onclick="D('windows')">
+<rect x="890" y="110" width="60" height="52" rx="8" fill="var(--purple-50)" stroke="var(--purple-400)" stroke-width="0.5"/>
+<text x="920" y="131" text-anchor="middle" font-size="11" font-weight="500" fill="var(--purple-800)">Win</text>
+<text x="920" y="148" text-anchor="middle" font-size="9" fill="var(--purple-600)">ABB</text>
+</g>
+
+<!-- iCloud → Mac Mini -->
+<line x1="450" y1="58" x2="430" y2="98" stroke="var(--coral-400)" stroke-width="1" marker-end="url(#a)"/>
+<text x="455" y="80" font-size="9" fill="var(--coral-600)">originals</text>
+
+<!-- iPhone → Mac Mini -->
+<line x1="160" y1="136" x2="288" y2="136" stroke="var(--coral-400)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#a)"/>
+<text x="224" y="128" text-anchor="middle" font-size="9" fill="var(--coral-600)">encrypted backup</text>
+
+<!-- iPhone → NAS A direct -->
+<path d="M90 162 L90 265 L290 265 L290 338" fill="none" stroke="var(--blue-400)" stroke-width="1" marker-end="url(#a)"/>
+<rect x="96" y="234" width="110" height="16" rx="4" fill="var(--bg2)" stroke="var(--bd)" stroke-width="0.5"/>
+<text x="151" y="246" text-anchor="middle" font-size="9" fill="var(--tx2)">Synology Photos</text>
+
+<!-- Mac Mini → NAS A -->
+<path d="M430 168 L430 250 L370 250 L370 338" fill="none" stroke="var(--amber-400)" stroke-width="1" marker-end="url(#a)"/>
+<rect x="380" y="220" width="110" height="16" rx="4" fill="var(--bg2)" stroke="var(--bd)" stroke-width="0.5"/>
+<text x="435" y="232" text-anchor="middle" font-size="9" fill="var(--tx2)">TM + Drive Client</text>
+
+<!-- MacBook → NAS A -->
+<path d="M660 162 L660 280 L450 280 L450 338" fill="none" stroke="var(--blue-400)" stroke-width="1" marker-end="url(#a)"/>
+<text x="560" y="274" text-anchor="middle" font-size="9" fill="var(--tx3)">Time Machine (Wi-Fi)</text>
+
+<!-- Linux → NAS A -->
+<path d="M805 162 L805 300 L500 300 L500 338" fill="none" stroke="var(--green-400)" stroke-width="1" marker-end="url(#a)"/>
+<rect x="620" y="290" width="160" height="16" rx="4" fill="var(--bg2)" stroke="var(--bd)" stroke-width="0.5"/>
+<text x="700" y="302" text-anchor="middle" font-size="9" fill="var(--green-800)">ABB agent / rsync / Drive</text>
+
+<!-- Windows → NAS A -->
+<path d="M920 162 L920 310 L530 310 L530 338" fill="none" stroke="var(--purple-400)" stroke-width="1" marker-end="url(#a)"/>
+<text x="740" y="320" text-anchor="middle" font-size="9" fill="var(--purple-600)">Active Backup for Business</text>
+
+<!-- NAS A -->
+<g class="nb" onclick="D('nasa')">
+<rect x="200" y="340" width="380" height="100" rx="12" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="1"/>
+<text x="390" y="366" text-anchor="middle" font-size="14" font-weight="500" fill="var(--teal-800)">NAS A — точка A (основной)</text>
+<text x="390" y="386" text-anchor="middle" font-size="11" fill="var(--teal-600)">DS224+ · 2 × 16 TB RAID1 · Btrfs</text>
+<text x="390" y="402" text-anchor="middle" font-size="11" fill="var(--teal-600)">Photos · Drive · Time Machine · Active Backup for Business</text>
+<text x="390" y="418" text-anchor="middle" font-size="11" fill="var(--teal-600)">Snapshot Replication + Hyper Backup → NAS B</text>
+</g>
+
+<!-- NAS B -->
+<g class="nb" onclick="D('nasb')">
+<rect x="640" y="340" width="280" height="100" rx="12" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="1" stroke-dasharray="6 3"/>
+<text x="780" y="366" text-anchor="middle" font-size="14" font-weight="500" fill="var(--teal-800)">NAS B — off-site</text>
+<text x="780" y="386" text-anchor="middle" font-size="11" fill="var(--teal-600)">DS224+ · 2 × 16 TB RAID1</text>
+<text x="780" y="402" text-anchor="middle" font-size="11" fill="var(--teal-600)">Snapshots + Hyper Backup</text>
+<text x="780" y="418" text-anchor="middle" font-size="11" fill="var(--teal-600)">Версионирование</text>
+</g>
+
+<!-- NAS A → NAS B -->
+<line x1="580" y1="380" x2="638" y2="380" stroke="var(--teal-400)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="580" y1="405" x2="638" y2="405" stroke="var(--teal-400)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#a)"/>
+
+<!-- RAID pills -->
+<rect x="220" y="448" width="54" height="18" rx="4" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="247" y="460" text-anchor="middle" font-size="9" font-weight="500" fill="var(--green-800)">RAID1</text>
+<rect x="510" y="448" width="50" height="18" rx="4" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="535" y="460" text-anchor="middle" font-size="9" font-weight="500" fill="var(--green-800)">Btrfs</text>
+<rect x="660" y="448" width="54" height="18" rx="4" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="687" y="460" text-anchor="middle" font-size="9" font-weight="500" fill="var(--green-800)">RAID1</text>
+<rect x="870" y="448" width="50" height="18" rx="4" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="895" y="460" text-anchor="middle" font-size="9" font-weight="500" fill="var(--green-800)">Btrfs</text>
+
+<!-- Summary -->
+<rect x="20" y="490" width="920" height="210" rx="12" fill="var(--bg3)" stroke="var(--bd)" stroke-width="0.5"/>
+<text x="40" y="515" font-size="13" font-weight="500" fill="var(--tx)">Сводка: что бэкапит каждая платформа</text>
+
+<text x="40" y="540" font-size="11" font-weight="500" fill="var(--blue-800)">iPhone/iPad</text>
+<text x="140" y="540" font-size="11" fill="var(--tx2)">Фото → Synology Photos (прямой). Полный бэкап → Mac Mini (Finder) → NAS A (через TM/Drive)</text>
+
+<text x="40" y="560" font-size="11" font-weight="500" fill="var(--amber-800)">Mac Mini</text>
+<text x="140" y="560" font-size="11" fill="var(--tx2)">iCloud Drive + Photos originals → NAS A (Drive Client + TM). Своя система → NAS A (TM)</text>
+
+<text x="40" y="580" font-size="11" font-weight="500" fill="var(--blue-800)">MacBook</text>
+<text x="140" y="580" font-size="11" fill="var(--tx2)">Система + данные → NAS A (Time Machine по Wi-Fi)</text>
+
+<text x="40" y="600" font-size="11" font-weight="500" fill="var(--green-800)">Linux</text>
+<text x="140" y="600" font-size="11" fill="var(--tx2)">Система (ext4) → ABB agent (image-based). Или файлы → rsync / Synology Drive (выборочно)</text>
+
+<text x="40" y="620" font-size="11" font-weight="500" fill="var(--purple-800)">Windows</text>
+<text x="140" y="620" font-size="11" fill="var(--tx2)">Система + данные → ABB agent (image-based, bare-metal restore). Или файлы → Synology Drive</text>
+
+<text x="40" y="650" font-size="11" fill="var(--coral-600)">⚠ Дубли фото: Synology Photos + iPhone backup + TM (Mac Mini Photos Library) = фото хранятся в 3 местах. См. вкладку «Дубли фото».</text>
+<text x="40" y="670" font-size="11" fill="var(--green-600)">✓ ABB для Linux: только ext4/XFS. btrfs на клиенте НЕ поддерживается. Ubuntu 24.04 — работает с агентом v2.7+.</text>
+<text x="40" y="690" font-size="11" fill="var(--teal-600)">✓ Всё реплицируется на NAS B через Snapshot Replication + Hyper Backup автоматически.</text>
+</svg>
+</div>
+
+<!-- ===== TAB 1: Data type flows ===== -->
+<div class="pn" id="p1">
+<svg viewBox="0 0 960 720" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+<text x="30" y="28" font-size="15" font-weight="500" fill="var(--tx)">Все потоки данных</text>
+<text x="30" y="52" font-size="11" font-weight="500" fill="var(--tx2)">Источник</text>
+<text x="250" y="52" font-size="11" font-weight="500" fill="var(--tx2)">Транспорт</text>
+<text x="500" y="52" font-size="11" font-weight="500" fill="var(--tx2)">Через</text>
+<text x="680" y="52" font-size="11" font-weight="500" fill="var(--tx2)">NAS A</text>
+<text x="830" y="52" font-size="11" font-weight="500" fill="var(--tx2)">NAS B</text>
+<line x1="30" y1="60" x2="930" y2="60" stroke="var(--bd)" stroke-width="0.5"/>
+
+<!-- Helper: row macro via y offsets, 52px per row -->
+<!-- Row 1: iPhone photos -->
+<rect x="30" y="72" width="170" height="36" rx="6" fill="var(--blue-50)" stroke="var(--blue-400)" stroke-width="0.5"/>
+<text x="115" y="94" text-anchor="middle" font-size="11" font-weight="500" fill="var(--blue-800)">iPhone: фото/видео</text>
+<line x1="200" y1="90" x2="248" y2="90" stroke="var(--blue-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="248" y="72" width="140" height="36" rx="6" fill="var(--gray-50)" stroke="var(--gray-400)" stroke-width="0.5"/>
+<text x="318" y="88" text-anchor="middle" font-size="10" font-weight="500" fill="var(--gray-800)">Synology Photos</text>
+<text x="318" y="100" text-anchor="middle" font-size="9" fill="var(--gray-600)">авто Wi-Fi</text>
+<line x1="388" y1="90" x2="498" y2="90" stroke="var(--teal-400)" stroke-width="1" marker-end="url(#a1)"/>
+<text x="443" y="84" text-anchor="middle" font-size="9" fill="var(--teal-600)">напрямую</text>
+<rect x="498" y="72" width="110" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5"/>
+<text x="553" y="94" text-anchor="middle" font-size="10" font-weight="500" fill="var(--teal-800)">NAS A</text>
+<line x1="608" y1="90" x2="680" y2="90" stroke="var(--teal-400)" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a1)"/>
+<rect x="680" y="72" width="80" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="720" y="94" text-anchor="middle" font-size="10" fill="var(--teal-800)">NAS B</text>
+
+<!-- Row 2: iCloud Drive -->
+<rect x="30" y="120" width="170" height="36" rx="6" fill="var(--coral-50)" stroke="var(--coral-400)" stroke-width="0.5"/>
+<text x="115" y="142" text-anchor="middle" font-size="11" font-weight="500" fill="var(--coral-800)">iCloud Drive</text>
+<line x1="200" y1="138" x2="248" y2="138" stroke="var(--coral-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="248" y="120" width="140" height="36" rx="6" fill="var(--amber-50)" stroke="var(--amber-400)" stroke-width="0.5"/>
+<text x="318" y="136" text-anchor="middle" font-size="10" font-weight="500" fill="var(--amber-800)">Mac Mini</text>
+<text x="318" y="148" text-anchor="middle" font-size="9" fill="var(--amber-600)">→ Synology Drive</text>
+<line x1="388" y1="138" x2="498" y2="138" stroke="var(--teal-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="498" y="120" width="110" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5"/>
+<text x="553" y="142" text-anchor="middle" font-size="10" font-weight="500" fill="var(--teal-800)">NAS A</text>
+<line x1="608" y1="138" x2="680" y2="138" stroke="var(--teal-400)" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a1)"/>
+<rect x="680" y="120" width="80" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="720" y="142" text-anchor="middle" font-size="10" fill="var(--teal-800)">NAS B</text>
+
+<!-- Row 3: iCloud Photos originals -->
+<rect x="30" y="168" width="170" height="36" rx="6" fill="var(--coral-50)" stroke="var(--coral-400)" stroke-width="0.5"/>
+<text x="115" y="190" text-anchor="middle" font-size="11" font-weight="500" fill="var(--coral-800)">iCloud Photos originals</text>
+<line x1="200" y1="186" x2="248" y2="186" stroke="var(--coral-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="248" y="168" width="140" height="36" rx="6" fill="var(--amber-50)" stroke="var(--amber-400)" stroke-width="0.5"/>
+<text x="318" y="184" text-anchor="middle" font-size="10" font-weight="500" fill="var(--amber-800)">Mac Mini</text>
+<text x="318" y="196" text-anchor="middle" font-size="9" fill="var(--amber-600)">→ Time Machine</text>
+<line x1="388" y1="186" x2="498" y2="186" stroke="var(--teal-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="498" y="168" width="110" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5"/>
+<text x="553" y="190" text-anchor="middle" font-size="10" font-weight="500" fill="var(--teal-800)">NAS A</text>
+<line x1="608" y1="186" x2="680" y2="186" stroke="var(--teal-400)" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a1)"/>
+<rect x="680" y="168" width="80" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="720" y="190" text-anchor="middle" font-size="10" fill="var(--teal-800)">NAS B</text>
+
+<!-- Row 4: iPhone full backup -->
+<rect x="30" y="216" width="170" height="36" rx="6" fill="var(--coral-50)" stroke="var(--coral-400)" stroke-width="0.5"/>
+<text x="115" y="232" text-anchor="middle" font-size="11" font-weight="500" fill="var(--coral-800)">iPhone полный бэкап</text>
+<text x="115" y="244" text-anchor="middle" font-size="8" fill="var(--coral-600)">Health, Keychain</text>
+<line x1="200" y1="234" x2="248" y2="234" stroke="var(--coral-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="248" y="216" width="140" height="36" rx="6" fill="var(--amber-50)" stroke="var(--amber-400)" stroke-width="0.5"/>
+<text x="318" y="232" text-anchor="middle" font-size="10" font-weight="500" fill="var(--amber-800)">Mac Mini (Finder)</text>
+<text x="318" y="244" text-anchor="middle" font-size="9" fill="var(--amber-600)">encrypted Wi-Fi</text>
+<line x1="388" y1="234" x2="498" y2="234" stroke="var(--teal-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="498" y="216" width="110" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5"/>
+<text x="553" y="238" text-anchor="middle" font-size="10" font-weight="500" fill="var(--teal-800)">NAS A</text>
+<line x1="608" y1="234" x2="680" y2="234" stroke="var(--teal-400)" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a1)"/>
+<rect x="680" y="216" width="80" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="720" y="238" text-anchor="middle" font-size="10" fill="var(--teal-800)">NAS B</text>
+
+<!-- Row 5: Mac Mini system -->
+<rect x="30" y="264" width="170" height="36" rx="6" fill="var(--amber-50)" stroke="var(--amber-400)" stroke-width="0.5"/>
+<text x="115" y="286" text-anchor="middle" font-size="11" font-weight="500" fill="var(--amber-800)">Mac Mini (система)</text>
+<line x1="200" y1="282" x2="498" y2="282" stroke="var(--amber-400)" stroke-width="1" marker-end="url(#a1)"/>
+<text x="348" y="276" text-anchor="middle" font-size="9" fill="var(--amber-600)">Time Machine (1GbE)</text>
+<rect x="498" y="264" width="110" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5"/>
+<text x="553" y="286" text-anchor="middle" font-size="10" font-weight="500" fill="var(--teal-800)">NAS A</text>
+<line x1="608" y1="282" x2="680" y2="282" stroke="var(--teal-400)" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a1)"/>
+<rect x="680" y="264" width="80" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="720" y="286" text-anchor="middle" font-size="10" fill="var(--teal-800)">NAS B</text>
+
+<!-- Row 6: MacBook -->
+<rect x="30" y="312" width="170" height="36" rx="6" fill="var(--blue-50)" stroke="var(--blue-400)" stroke-width="0.5"/>
+<text x="115" y="334" text-anchor="middle" font-size="11" font-weight="500" fill="var(--blue-800)">MacBook (система)</text>
+<line x1="200" y1="330" x2="498" y2="330" stroke="var(--blue-400)" stroke-width="1" marker-end="url(#a1)"/>
+<text x="348" y="324" text-anchor="middle" font-size="9" fill="var(--blue-600)">Time Machine (Wi-Fi)</text>
+<rect x="498" y="312" width="110" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5"/>
+<text x="553" y="334" text-anchor="middle" font-size="10" font-weight="500" fill="var(--teal-800)">NAS A</text>
+<line x1="608" y1="330" x2="680" y2="330" stroke="var(--teal-400)" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a1)"/>
+<rect x="680" y="312" width="80" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="720" y="334" text-anchor="middle" font-size="10" fill="var(--teal-800)">NAS B</text>
+
+<!-- Row 7: Linux system -->
+<rect x="30" y="360" width="170" height="36" rx="6" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="115" y="382" text-anchor="middle" font-size="11" font-weight="500" fill="var(--green-800)">Linux (система, ext4)</text>
+<line x1="200" y1="378" x2="248" y2="378" stroke="var(--green-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="248" y="360" width="140" height="36" rx="6" fill="var(--gray-50)" stroke="var(--gray-400)" stroke-width="0.5"/>
+<text x="318" y="376" text-anchor="middle" font-size="10" font-weight="500" fill="var(--gray-800)">ABB agent</text>
+<text x="318" y="388" text-anchor="middle" font-size="9" fill="var(--gray-600)">image-based, CBT</text>
+<line x1="388" y1="378" x2="498" y2="378" stroke="var(--teal-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="498" y="360" width="110" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5"/>
+<text x="553" y="382" text-anchor="middle" font-size="10" font-weight="500" fill="var(--teal-800)">NAS A</text>
+<line x1="608" y1="378" x2="680" y2="378" stroke="var(--teal-400)" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a1)"/>
+<rect x="680" y="360" width="80" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="720" y="382" text-anchor="middle" font-size="10" fill="var(--teal-800)">NAS B</text>
+
+<!-- Row 8: Linux files (alt) -->
+<rect x="30" y="408" width="170" height="36" rx="6" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="115" y="430" text-anchor="middle" font-size="11" font-weight="500" fill="var(--green-800)">Linux (файлы, любая FS)</text>
+<line x1="200" y1="426" x2="248" y2="426" stroke="var(--green-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="248" y="408" width="140" height="36" rx="6" fill="var(--gray-50)" stroke="var(--gray-400)" stroke-width="0.5"/>
+<text x="318" y="424" text-anchor="middle" font-size="10" font-weight="500" fill="var(--gray-800)">rsync / Drive Client</text>
+<text x="318" y="436" text-anchor="middle" font-size="9" fill="var(--gray-600)">файловый уровень</text>
+<line x1="388" y1="426" x2="498" y2="426" stroke="var(--teal-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="498" y="408" width="110" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5"/>
+<text x="553" y="430" text-anchor="middle" font-size="10" font-weight="500" fill="var(--teal-800)">NAS A</text>
+<line x1="608" y1="426" x2="680" y2="426" stroke="var(--teal-400)" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a1)"/>
+<rect x="680" y="408" width="80" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="720" y="430" text-anchor="middle" font-size="10" fill="var(--teal-800)">NAS B</text>
+
+<!-- Row 9: Windows -->
+<rect x="30" y="456" width="170" height="36" rx="6" fill="var(--purple-50)" stroke="var(--purple-400)" stroke-width="0.5"/>
+<text x="115" y="478" text-anchor="middle" font-size="11" font-weight="500" fill="var(--purple-800)">Windows (система)</text>
+<line x1="200" y1="474" x2="248" y2="474" stroke="var(--purple-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="248" y="456" width="140" height="36" rx="6" fill="var(--gray-50)" stroke="var(--gray-400)" stroke-width="0.5"/>
+<text x="318" y="472" text-anchor="middle" font-size="10" font-weight="500" fill="var(--gray-800)">ABB agent</text>
+<text x="318" y="484" text-anchor="middle" font-size="9" fill="var(--gray-600)">image + bare-metal</text>
+<line x1="388" y1="474" x2="498" y2="474" stroke="var(--teal-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="498" y="456" width="110" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5"/>
+<text x="553" y="478" text-anchor="middle" font-size="10" font-weight="500" fill="var(--teal-800)">NAS A</text>
+<line x1="608" y1="474" x2="680" y2="474" stroke="var(--teal-400)" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a1)"/>
+<rect x="680" y="456" width="80" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="720" y="478" text-anchor="middle" font-size="10" fill="var(--teal-800)">NAS B</text>
+
+<!-- Row 10: Contacts -->
+<rect x="30" y="504" width="170" height="36" rx="6" fill="var(--coral-50)" stroke="var(--coral-400)" stroke-width="0.5"/>
+<text x="115" y="526" text-anchor="middle" font-size="11" font-weight="500" fill="var(--coral-800)">Контакты, календари</text>
+<line x1="200" y1="522" x2="248" y2="522" stroke="var(--coral-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="248" y="504" width="140" height="36" rx="6" fill="var(--amber-50)" stroke="var(--amber-400)" stroke-width="0.5"/>
+<text x="318" y="520" text-anchor="middle" font-size="10" font-weight="500" fill="var(--amber-800)">Mac Mini</text>
+<text x="318" y="532" text-anchor="middle" font-size="9" fill="var(--amber-600)">vCard + .ics</text>
+<line x1="388" y1="522" x2="498" y2="522" stroke="var(--teal-400)" stroke-width="1" marker-end="url(#a1)"/>
+<rect x="498" y="504" width="110" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5"/>
+<text x="553" y="526" text-anchor="middle" font-size="10" font-weight="500" fill="var(--teal-800)">NAS A</text>
+<line x1="608" y1="522" x2="680" y2="522" stroke="var(--teal-400)" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a1)"/>
+<rect x="680" y="504" width="80" height="36" rx="6" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="720" y="526" text-anchor="middle" font-size="10" fill="var(--teal-800)">NAS B</text>
+
+<!-- Legend -->
+<rect x="30" y="560" width="730" height="80" rx="8" fill="var(--bg3)" stroke="var(--bd)" stroke-width="0.5"/>
+<text x="50" y="580" font-size="10" fill="var(--tx2)">● Сплошная линия = прямой поток</text>
+<text x="50" y="595" font-size="10" fill="var(--tx2)">● Пунктир = репликация (Snapshot Replication / Hyper Backup)</text>
+<text x="50" y="610" font-size="10" fill="var(--green-800)">● ABB = Active Backup for Business (бесплатно на DS224+, image-based, incremental, CBT)</text>
+<text x="50" y="625" font-size="10" fill="var(--coral-600)">● Оранжевый = требует Mac Mini как промежуточный узел</text>
+</svg>
+</div>
+
+<!-- ===== TAB 2: Linux + Windows ===== -->
+<div class="pn" id="p2">
+<div class="card">
+<h2>Linux: варианты бэкапа на NAS</h2>
+<ul>
+<li><strong>Active Backup for Business (ABB)</strong> — бесплатный пакет Synology. Image-based backup с Changed Block Tracking. Агент ставится на Linux-машину (.deb/.rpm). Поддерживает <strong>только ext2/ext3/ext4/XFS</strong> — btrfs на клиенте не поддерживается. Ubuntu 24.04 работает с агентом v2.7+. Инкрементальные бэкапы, восстановление на уровне файлов или bare-metal.</li>
+<li><strong>rsync через SSH/SMB</strong> — универсальный вариант для любой файловой системы, включая btrfs. NAS A подключается как rsync-target. Можно настроить через cron: <code>rsync -avz --delete /home/ user@nas-a:/volume1/LinuxBackup/</code>. Не даёт bare-metal restore, но закрывает файловый бэкап.</li>
+<li><strong>Synology Drive Client</strong> — есть Linux-версия. Синхронизация папок в реальном времени. Подходит для рабочих файлов, но не для системного бэкапа.</li>
+</ul>
+<div class="warn">⚠ Если Ubuntu стоит на btrfs — ABB agent не сможет сделать image backup. Используй rsync для файлов + отдельно бэкапь /etc, /home, список пакетов. Или переведи root на ext4.</div>
+<div class="info">Твоя конфигурация: Ubuntu 24.04 с RTX 5090. Если root на ext4 — ABB agent будет работать, включая инкрементальные образы. Для /home и рабочих данных можно дополнительно настроить rsync или Drive Client.</div>
+</div>
+<div class="card">
+<h2>Windows: варианты бэкапа на NAS</h2>
+<ul>
+<li><strong>Active Backup for Business (ABB)</strong> — основной вариант. Поддерживает Windows 10/11 все редакции, Server 2016–2025. Image-based backup с VSS-based Changed Block Tracking. Bare-metal restore, восстановление отдельных файлов, восстановление в VM (VMware/Hyper-V/Synology VMM).</li>
+<li><strong>Synology Drive Client</strong> — файловая синхронизация, как Dropbox. Для рабочих папок.</li>
+<li><strong>Windows File History</strong> — встроенная, можно направить на SMB-шару NAS. Но ABB лучше: и система, и данные, и bare-metal.</li>
+</ul>
+<div class="info">ABB на DS224+ бесплатен и не требует лицензий. Все бэкапы дедуплицируются на уровне блоков — 10 машин с Windows 10 займут не 10× места, а значительно меньше.</div>
+</div>
+<div class="card">
+<h2>Сравнение инструментов по OS</h2>
+<table style="width:100%;font-size:12px;border-collapse:collapse">
+<tr style="border-bottom:1px solid var(--bd)"><th style="text-align:left;padding:6px">OS</th><th style="text-align:left;padding:6px">System backup</th><th style="text-align:left;padding:6px">File sync</th><th style="text-align:left;padding:6px">Bare-metal</th></tr>
+<tr style="border-bottom:1px solid var(--bd)"><td style="padding:6px;color:var(--blue-800)">macOS</td><td style="padding:6px">Time Machine</td><td style="padding:6px">Synology Drive</td><td style="padding:6px">Да (TM)</td></tr>
+<tr style="border-bottom:1px solid var(--bd)"><td style="padding:6px;color:var(--green-800)">Linux (ext4)</td><td style="padding:6px">ABB agent</td><td style="padding:6px">rsync / Drive</td><td style="padding:6px">Да (ABB)</td></tr>
+<tr style="border-bottom:1px solid var(--bd)"><td style="padding:6px;color:var(--green-800)">Linux (btrfs)</td><td style="padding:6px">rsync + скрипт</td><td style="padding:6px">rsync / Drive</td><td style="padding:6px">Нет (ручное)</td></tr>
+<tr style="border-bottom:1px solid var(--bd)"><td style="padding:6px;color:var(--purple-800)">Windows</td><td style="padding:6px">ABB agent</td><td style="padding:6px">Synology Drive</td><td style="padding:6px">Да (ABB)</td></tr>
+<tr><td style="padding:6px;color:var(--coral-800)">iOS</td><td style="padding:6px">Finder → Mac Mini</td><td style="padding:6px">Synology Photos</td><td style="padding:6px">Да (restore в Finder)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ===== TAB 3: Photo dedup ===== -->
+<div class="pn" id="p3">
+<div class="card">
+<h2>Где фото хранятся на NAS (и есть ли дубли)</h2>
+<p>При текущей схеме одно и то же фото с iPhone может оказаться в трёх местах на NAS A:</p>
+<ul>
+<li><strong>Synology Photos</strong> — прямой upload с iPhone. Фото лежит как файл в папке /photo/.</li>
+<li><strong>Encrypted iPhone backup</strong> — внутри бэкапа, созданного Finder на Mac Mini. Это один большой зашифрованный blob, фото из него не извлекаются отдельно.</li>
+<li><strong>Time Machine (Mac Mini)</strong> — внутри TM-снимка Mac Mini, который хранит iCloud Photos Library с оригиналами. Фото внутри TM sparse bundle.</li>
+</ul>
+</div>
+<div class="dup">
+<strong>Реальный overhead:</strong> Synology Photos хранит фото как обычные файлы (полный размер). iPhone backup — это monolithic blob (~30–60 ГБ на устройство, включая всё, не только фото). Time Machine инкрементальна — после первого полного снимка занимает мало места. Итого: дублирование фото добавляет примерно 15–20% от объёма фото-библиотеки. При библиотеке в 500 ГБ это ~75–100 ГБ «лишнего» — не критично на 10 ТБ RAID1.
+</div>
+<div class="card">
+<h2>Можно ли убрать дубли?</h2>
+<ul>
+<li><strong>Вариант 1 (рекомендуемый): не трогать.</strong> Три копии — это три разных уровня защиты. Synology Photos = быстрый доступ с телефона. iPhone backup = полное восстановление устройства. TM = историческая лента версий. Если что-то сломается в одном месте — два других страхуют.</li>
+<li><strong>Вариант 2: исключить Photos Library из Time Machine.</strong> В настройках TM на Mac Mini добавить ~/Pictures/Photos Library.photoslibrary в исключения. Экономит место, но теряется версионирование фото через TM.</li>
+<li><strong>Вариант 3: отключить Synology Photos auto-upload.</strong> Фото будут приходить только через Mac Mini (iCloud → Mac Mini → TM/Drive → NAS). Убирает прямой поток, но добавляет зависимость от Mac Mini для фото — если он выключен, фото не бэкапятся.</li>
+</ul>
+</div>
+<div class="card">
+<h2>Мой совет</h2>
+<p>Оставить все три потока. 75–100 ГБ «лишнего» на 10 ТБ — это менее 1% общего объёма. Зато Synology Photos работает напрямую (не зависит от Mac Mini), iPhone backup даёт полный restore устройства, а TM даёт историю. Разные задачи — разные копии.</p>
+<p>Если объём фото-библиотеки вырастет до 2+ ТБ, тогда имеет смысл исключить Photos Library из TM (вариант 2).</p>
+</div>
+</div>
+
+<!-- ===== TAB 4: Off-site ===== -->
+<div class="pn" id="p4">
+<svg viewBox="0 0 960 440" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text x="30" y="28" font-size="15" font-weight="500" fill="var(--tx)">Off-site: NAS A → NAS B (однонаправленная репликация)</text>
+<rect x="40" y="60" width="380" height="260" rx="16" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5"/>
+<text x="230" y="86" text-anchor="middle" font-size="13" font-weight="500" fill="var(--teal-800)">NAS A — все бэкапы (Apple+Linux+Win)</text>
+<rect x="70" y="106" width="150" height="40" rx="8" fill="var(--bg2)" stroke="var(--bd)" stroke-width="0.5"/>
+<text x="145" y="122" text-anchor="middle" font-size="10" font-weight="500" fill="var(--tx)">Shared folders</text>
+<text x="145" y="136" text-anchor="middle" font-size="9" fill="var(--tx2)">Photos, Drive, TM, ABB</text>
+<rect x="250" y="106" width="150" height="40" rx="8" fill="var(--bg2)" stroke="var(--bd)" stroke-width="0.5"/>
+<text x="325" y="122" text-anchor="middle" font-size="10" font-weight="500" fill="var(--tx)">Btrfs snapshots</text>
+<text x="325" y="136" text-anchor="middle" font-size="9" fill="var(--tx2)">point-in-time</text>
+<rect x="70" y="170" width="150" height="40" rx="8" fill="var(--purple-50)" stroke="var(--purple-400)" stroke-width="0.5"/>
+<text x="145" y="186" text-anchor="middle" font-size="10" font-weight="500" fill="var(--purple-800)">Snapshot Replication</text>
+<text x="145" y="200" text-anchor="middle" font-size="9" fill="var(--purple-600)">каждые 15–60 мин</text>
+<rect x="250" y="170" width="150" height="40" rx="8" fill="var(--coral-50)" stroke="var(--coral-400)" stroke-width="0.5"/>
+<text x="325" y="186" text-anchor="middle" font-size="10" font-weight="500" fill="var(--coral-800)">Hyper Backup</text>
+<text x="325" y="200" text-anchor="middle" font-size="9" fill="var(--coral-600)">раз в день, шифрованный</text>
+<line x1="145" y1="146" x2="145" y2="168" stroke="var(--bd2)" stroke-width="0.5" marker-end="url(#a3)"/>
+<line x1="325" y1="146" x2="325" y2="168" stroke="var(--bd2)" stroke-width="0.5" marker-end="url(#a3)"/>
+<rect x="110" y="240" width="90" height="26" rx="6" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="155" y="257" text-anchor="middle" font-size="9" font-weight="500" fill="var(--green-800)">WD Red Pro 16TB</text>
+<rect x="260" y="240" width="90" height="26" rx="6" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="305" y="257" text-anchor="middle" font-size="9" font-weight="500" fill="var(--green-800)">WD Red Pro 16TB</text>
+<text x="230" y="298" text-anchor="middle" font-size="10" fill="var(--green-600)">RAID1</text>
+
+<rect x="540" y="60" width="380" height="260" rx="16" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="0.5" stroke-dasharray="6 3"/>
+<text x="730" y="86" text-anchor="middle" font-size="13" font-weight="500" fill="var(--teal-800)">NAS B — off-site (версионирование)</text>
+<rect x="570" y="106" width="150" height="40" rx="8" fill="var(--bg2)" stroke="var(--bd)" stroke-width="0.5"/>
+<text x="645" y="122" text-anchor="middle" font-size="10" font-weight="500" fill="var(--tx)">Реплика snapshots</text>
+<text x="645" y="136" text-anchor="middle" font-size="9" fill="var(--tx2)">дельта-блоки</text>
+<rect x="750" y="106" width="150" height="40" rx="8" fill="var(--bg2)" stroke="var(--bd)" stroke-width="0.5"/>
+<text x="825" y="122" text-anchor="middle" font-size="10" font-weight="500" fill="var(--tx)">Hyper Backup store</text>
+<text x="825" y="136" text-anchor="middle" font-size="9" fill="var(--tx2)">версии + дедупликация</text>
+<rect x="610" y="240" width="90" height="26" rx="6" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="655" y="257" text-anchor="middle" font-size="9" font-weight="500" fill="var(--green-800)">WD Red Pro 16TB</text>
+<rect x="760" y="240" width="90" height="26" rx="6" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="805" y="257" text-anchor="middle" font-size="9" font-weight="500" fill="var(--green-800)">WD Red Pro 16TB</text>
+<text x="730" y="298" text-anchor="middle" font-size="10" fill="var(--green-600)">RAID1</text>
+
+<line x1="220" y1="190" x2="568" y2="126" stroke="var(--purple-400)" stroke-width="1.5" marker-end="url(#a3)"/>
+<text x="400" y="142" text-anchor="middle" font-size="9" font-weight="500" fill="var(--purple-600)">Snapshot Replication</text>
+<line x1="400" y1="210" x2="748" y2="126" stroke="var(--coral-400)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#a3)"/>
+<text x="580" y="188" text-anchor="middle" font-size="9" font-weight="500" fill="var(--coral-600)">Hyper Backup</text>
+
+<rect x="40" y="340" width="880" height="80" rx="8" fill="var(--bg3)" stroke="var(--bd)" stroke-width="0.5"/>
+<text x="60" y="362" font-size="11" font-weight="500" fill="var(--tx)">Что реплицируется на NAS B</text>
+<text x="60" y="382" font-size="11" fill="var(--tx2)">ВСЁ: фото (Synology Photos), файлы (Drive), бэкапы Mac (TM), бэкапы Linux/Windows (ABB), iPhone backups — всё на одном volume.</text>
+<text x="60" y="400" font-size="11" fill="var(--red-800)">При шифровальщике или удалении на A — на B остаются версии. Это НЕ двустороннее зеркало.</text>
+</svg>
+</div>
+
+<!-- ===== TAB 5: Physical topology ===== -->
+<div class="pn" id="p5">
+<div class="lg">
+<span><i style="background:var(--blue-400)"></i>Ubiquiti (сеть)</span>
+<span><i style="background:var(--amber-400)"></i>Mac Mini</span>
+<span><i style="background:var(--teal-400)"></i>NAS</span>
+<span><i style="background:var(--green-400)"></i>Linux/Windows</span>
+<span><i style="background:var(--purple-400)"></i>Wi-Fi клиенты</span>
+</div>
+<svg viewBox="0 0 960 740" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="a5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+<!-- ====== SITE A ====== -->
+<rect x="20" y="10" width="620" height="700" rx="16" fill="var(--bg3)" stroke="var(--bd)" stroke-width="0.5"/>
+<text x="40" y="38" font-size="14" font-weight="500" fill="var(--tx)">Точка A (основная)</text>
+
+<!-- EdgeRouter -->
+<g class="nb" onclick="D('edge')">
+<rect x="220" y="60" width="220" height="52" rx="8" fill="var(--blue-50)" stroke="var(--blue-400)" stroke-width="1"/>
+<text x="330" y="82" text-anchor="middle" font-size="12" font-weight="500" fill="var(--blue-800)">EdgeRouter</text>
+<text x="330" y="98" text-anchor="middle" font-size="10" fill="var(--blue-600)">WAN / DHCP / маршрутизация / VPN</text>
+</g>
+
+<!-- WAN arrow up -->
+<line x1="330" y1="60" x2="330" y2="36" stroke="var(--tx3)" stroke-width="1" marker-end="url(#a5)"/>
+<text x="344" y="50" font-size="9" fill="var(--tx3)">WAN / ISP</text>
+
+<!-- EdgeRouter → Switch -->
+<line x1="330" y1="112" x2="330" y2="148" stroke="var(--blue-400)" stroke-width="1.5" marker-end="url(#a5)"/>
+<text x="344" y="134" font-size="9" fill="var(--blue-600)">Ethernet</text>
+
+<!-- US-24-250W Switch -->
+<g class="nb" onclick="D('switch')">
+<rect x="120" y="150" width="420" height="60" rx="8" fill="var(--blue-50)" stroke="var(--blue-400)" stroke-width="1.5"/>
+<text x="330" y="174" text-anchor="middle" font-size="13" font-weight="500" fill="var(--blue-800)">UniFi Switch US-24-250W</text>
+<text x="330" y="192" text-anchor="middle" font-size="10" fill="var(--blue-600)">24 × 1GbE · PoE 250W · Managed · L2</text>
+</g>
+
+<!-- Cloud Key (small, off to the side) -->
+<g class="nb" onclick="D('ck')">
+<rect x="560" y="158" width="70" height="44" rx="6" fill="var(--gray-50)" stroke="var(--gray-400)" stroke-width="0.5"/>
+<text x="595" y="176" text-anchor="middle" font-size="9" font-weight="500" fill="var(--gray-800)">Cloud</text>
+<text x="595" y="190" text-anchor="middle" font-size="9" fill="var(--gray-600)">Key</text>
+</g>
+<line x1="540" y1="180" x2="558" y2="180" stroke="var(--gray-400)" stroke-width="0.5"/>
+
+<!-- From switch: downward lines to devices -->
+<!-- Port labels on switch -->
+<text x="145" y="222" text-anchor="middle" font-size="8" fill="var(--tx3)">P1</text>
+<text x="230" y="222" text-anchor="middle" font-size="8" fill="var(--tx3)">P2-3</text>
+<text x="330" y="222" text-anchor="middle" font-size="8" fill="var(--tx3)">P4</text>
+<text x="430" y="222" text-anchor="middle" font-size="8" fill="var(--tx3)">P5</text>
+<text x="510" y="222" text-anchor="middle" font-size="8" fill="var(--tx3)">P6+</text>
+
+<!-- Mac Mini -->
+<line x1="145" y1="210" x2="145" y2="260" stroke="var(--amber-400)" stroke-width="1" marker-end="url(#a5)"/>
+<g class="nb" onclick="D('macmini')">
+<rect x="60" y="262" width="170" height="56" rx="8" fill="var(--amber-50)" stroke="var(--amber-400)" stroke-width="1"/>
+<text x="145" y="284" text-anchor="middle" font-size="12" font-weight="500" fill="var(--amber-800)">Mac Mini M4</text>
+<text x="145" y="300" text-anchor="middle" font-size="10" fill="var(--amber-600)">always-on мост · 1GbE</text>
+</g>
+
+<!-- NAS A (2 ports - LAG) -->
+<line x1="220" y1="210" x2="220" y2="350" stroke="var(--teal-400)" stroke-width="1.5"/>
+<line x1="240" y1="210" x2="240" y2="350" stroke="var(--teal-400)" stroke-width="1.5"/>
+<text x="254" y="340" font-size="8" fill="var(--teal-600)">LAG</text>
+<g class="nb" onclick="D('nasa')">
+<rect x="160" y="352" width="200" height="68" rx="10" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="1.5"/>
+<text x="260" y="374" text-anchor="middle" font-size="13" font-weight="500" fill="var(--teal-800)">NAS A — DS224+</text>
+<text x="260" y="392" text-anchor="middle" font-size="10" fill="var(--teal-600)">2×16 TB RAID1 · Btrfs</text>
+<text x="260" y="406" text-anchor="middle" font-size="10" fill="var(--teal-600)">2×1GbE (Link Aggregation)</text>
+</g>
+
+<!-- Linux -->
+<line x1="330" y1="210" x2="330" y2="260" stroke="var(--green-400)" stroke-width="1" marker-end="url(#a5)"/>
+<g class="nb" onclick="D('linux')">
+<rect x="270" y="262" width="140" height="56" rx="8" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="340" y="284" text-anchor="middle" font-size="12" font-weight="500" fill="var(--green-800)">Linux (Ubuntu)</text>
+<text x="340" y="300" text-anchor="middle" font-size="10" fill="var(--green-600)">RTX 5090 · 1GbE</text>
+</g>
+
+<!-- Windows -->
+<line x1="430" y1="210" x2="430" y2="260" stroke="var(--purple-400)" stroke-width="1" marker-end="url(#a5)"/>
+<g class="nb" onclick="D('windows')">
+<rect x="380" y="262" width="120" height="56" rx="8" fill="var(--purple-50)" stroke="var(--purple-400)" stroke-width="0.5"/>
+<text x="440" y="284" text-anchor="middle" font-size="12" font-weight="500" fill="var(--purple-800)">Windows</text>
+<text x="440" y="300" text-anchor="middle" font-size="10" fill="var(--purple-600)">1GbE</text>
+</g>
+
+<!-- UAP-AC-LR (PoE from switch) -->
+<line x1="510" y1="210" x2="510" y2="260" stroke="var(--blue-400)" stroke-width="1" marker-end="url(#a5)"/>
+<text x="524" y="240" font-size="8" fill="var(--blue-600)">PoE</text>
+<g class="nb" onclick="D('uap')">
+<rect x="460" y="262" width="120" height="56" rx="8" fill="var(--blue-50)" stroke="var(--blue-400)" stroke-width="0.5"/>
+<text x="520" y="282" text-anchor="middle" font-size="11" font-weight="500" fill="var(--blue-800)">UAP-AC-LR</text>
+<text x="520" y="298" text-anchor="middle" font-size="10" fill="var(--blue-600)">Wi-Fi · PoE</text>
+</g>
+
+<!-- IP Cameras removed — будут отдельным контуром -->
+
+<!-- Wi-Fi clients from UAP -->
+<path d="M520 318 L520 370" fill="none" stroke="var(--purple-400)" stroke-width="0.5" stroke-dasharray="3 3"/>
+<path d="M520 370 L440 400" fill="none" stroke="var(--purple-400)" stroke-width="0.5" stroke-dasharray="3 3" marker-end="url(#a5)"/>
+<path d="M520 370 L520 400" fill="none" stroke="var(--purple-400)" stroke-width="0.5" stroke-dasharray="3 3" marker-end="url(#a5)"/>
+<path d="M520 370 L600 400" fill="none" stroke="var(--purple-400)" stroke-width="0.5" stroke-dasharray="3 3" marker-end="url(#a5)"/>
+
+<rect x="400" y="402" width="80" height="36" rx="6" fill="var(--purple-50)" stroke="var(--purple-400)" stroke-width="0.5"/>
+<text x="440" y="424" text-anchor="middle" font-size="10" font-weight="500" fill="var(--purple-800)">iPhone</text>
+<rect x="480" y="402" width="80" height="36" rx="6" fill="var(--purple-50)" stroke="var(--purple-400)" stroke-width="0.5"/>
+<text x="520" y="424" text-anchor="middle" font-size="10" font-weight="500" fill="var(--purple-800)">iPad</text>
+<rect x="560" y="402" width="80" height="36" rx="6" fill="var(--purple-50)" stroke="var(--purple-400)" stroke-width="0.5"/>
+<text x="600" y="424" text-anchor="middle" font-size="10" font-weight="500" fill="var(--purple-800)">MacBook</text>
+
+<!-- Disks under NAS A -->
+<rect x="170" y="438" width="82" height="24" rx="4" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="211" y="454" text-anchor="middle" font-size="8" font-weight="500" fill="var(--green-800)">WD Red Pro 16TB</text>
+<rect x="268" y="438" width="82" height="24" rx="4" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="309" y="454" text-anchor="middle" font-size="8" font-weight="500" fill="var(--green-800)">WD Red Pro 16TB</text>
+
+<!-- Logical flow note -->
+<rect x="40" y="490" width="590" height="100" rx="8" fill="var(--bg2)" stroke="var(--bd)" stroke-width="0.5"/>
+<text x="60" y="512" font-size="11" font-weight="500" fill="var(--tx)">Потоки данных (точка A)</text>
+<text x="60" y="530" font-size="10" fill="var(--tx2)">iPhone/iPad → Wi-Fi → UAP → Switch → NAS A (Synology Photos) + Switch → Mac Mini (Finder backup)</text>
+<text x="60" y="546" font-size="10" fill="var(--tx2)">Mac Mini → Switch → NAS A (Time Machine + Synology Drive, 1GbE)</text>
+<text x="60" y="562" font-size="10" fill="var(--tx2)">Linux/Windows → Switch → NAS A (ABB agent / rsync, 1GbE)</text>
+
+<!-- More UAPs note -->
+<rect x="40" y="590" width="590" height="40" rx="8" fill="var(--blue-50)" stroke="var(--blue-400)" stroke-width="0.5"/>
+<text x="60" y="614" font-size="10" fill="var(--blue-800)">Несколько UAP-AC-LR по территории — все через PoE от US-24-250W, управление через Cloud Key.</text>
+
+<!-- Site A → Site B WAN tunnel -->
+<rect x="40" y="644" width="590" height="50" rx="8" fill="var(--coral-50)" stroke="var(--coral-400)" stroke-width="0.5"/>
+<text x="60" y="666" font-size="11" font-weight="500" fill="var(--coral-800)">WAN-канал: NAS A → NAS B</text>
+<text x="60" y="682" font-size="10" fill="var(--coral-600)">Snapshot Replication + Hyper Backup через VPN-туннель (EdgeRouter ↔ AmpliFi) или QuickConnect/DDNS</text>
+
+<!-- ====== SITE B ====== -->
+<rect x="660" y="10" width="280" height="700" rx="16" fill="var(--bg3)" stroke="var(--bd)" stroke-width="0.5" stroke-dasharray="6 3"/>
+<text x="680" y="38" font-size="14" font-weight="500" fill="var(--tx)">Точка B (off-site)</text>
+
+<!-- AmpliFi -->
+<g class="nb" onclick="D('amplifi')">
+<rect x="720" y="100" width="180" height="52" rx="8" fill="var(--blue-50)" stroke="var(--blue-400)" stroke-width="0.5"/>
+<text x="810" y="122" text-anchor="middle" font-size="12" font-weight="500" fill="var(--blue-800)">AmpliFi (Ubiquiti)</text>
+<text x="810" y="138" text-anchor="middle" font-size="10" fill="var(--blue-600)">Router + Mesh Wi-Fi</text>
+</g>
+
+<!-- WAN arrow -->
+<line x1="810" y1="100" x2="810" y2="62" stroke="var(--tx3)" stroke-width="1" marker-end="url(#a5)"/>
+<text x="824" y="80" font-size="9" fill="var(--tx3)">WAN / ISP</text>
+
+<!-- AmpliFi → NAS B -->
+<line x1="810" y1="152" x2="810" y2="210" stroke="var(--blue-400)" stroke-width="1" marker-end="url(#a5)"/>
+<text x="824" y="186" font-size="9" fill="var(--blue-600)">Ethernet</text>
+
+<!-- NAS B -->
+<g class="nb" onclick="D('nasb')">
+<rect x="710" y="212" width="200" height="68" rx="10" fill="var(--teal-50)" stroke="var(--teal-400)" stroke-width="1" stroke-dasharray="5 3"/>
+<text x="810" y="234" text-anchor="middle" font-size="13" font-weight="500" fill="var(--teal-800)">NAS B — DS224+</text>
+<text x="810" y="252" text-anchor="middle" font-size="10" fill="var(--teal-600)">2×16 TB RAID1 · Btrfs</text>
+<text x="810" y="266" text-anchor="middle" font-size="10" fill="var(--teal-600)">Приёмник реплик</text>
+</g>
+
+<!-- Disks NAS B -->
+<rect x="720" y="296" width="82" height="24" rx="4" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="761" y="312" text-anchor="middle" font-size="8" font-weight="500" fill="var(--green-800)">WD Red Pro 16TB</text>
+<rect x="818" y="296" width="82" height="24" rx="4" fill="var(--green-50)" stroke="var(--green-400)" stroke-width="0.5"/>
+<text x="859" y="312" text-anchor="middle" font-size="8" font-weight="500" fill="var(--green-800)">WD Red Pro 16TB</text>
+
+<!-- Site B notes -->
+<rect x="680" y="350" width="240" height="100" rx="8" fill="var(--bg2)" stroke="var(--bd)" stroke-width="0.5"/>
+<text x="700" y="372" font-size="11" font-weight="500" fill="var(--tx)">Задачи NAS B</text>
+<text x="700" y="392" font-size="10" fill="var(--tx2)">Принимает snapshots</text>
+<text x="700" y="408" font-size="10" fill="var(--tx2)">Принимает Hyper Backup</text>
+<text x="700" y="424" font-size="10" fill="var(--tx2)">Версионирование</text>
+<text x="700" y="440" font-size="10" fill="var(--tx2)">Point-in-time recovery</text>
+
+<!-- WAN link between sites (visual) -->
+<path d="M330 694 L330 720 L810 720 L810 152" fill="none" stroke="var(--coral-400)" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#a5)"/>
+<rect x="490" y="706" width="180" height="18" rx="4" fill="var(--coral-50)" stroke="var(--coral-400)" stroke-width="0.5"/>
+<text x="580" y="719" text-anchor="middle" font-size="9" font-weight="500" fill="var(--coral-800)">WAN: VPN / QuickConnect / DDNS</text>
+
+</svg>
+</div>
+
+<!-- ===== TAB 6: Checklist ===== -->
+<div class="pn" id="p6">
+<div class="card">
+<h2>Шаг 1: Покупки</h2>
+<ul>
+<li>2 × Synology DS224+</li>
+<li>4 × WD Red Pro 16 TB (WD161KFGX)</li>
+<li>Mac Mini M4 16 ГБ / 512 ГБ</li>
+<li>Ethernet-кабели Cat 6</li>
+</ul>
+</div>
+<div class="card">
+<h2>Шаг 2: NAS A</h2>
+<ul>
+<li>DSM → Storage Pool (RAID1, Btrfs) → shared folders: Photos, Drive, TimeMachine, ABB</li>
+<li>Пакеты: Synology Photos, Synology Drive Server, Active Backup for Business, Snapshot Replication, Hyper Backup</li>
+<li>Time Machine service: Control Panel → File Services → SMB → Enable TM</li>
+<li>ABB: активировать (бесплатно с Synology Account)</li>
+</ul>
+</div>
+<div class="card">
+<h2>Шаг 3: NAS B (off-site)</h2>
+<ul>
+<li>DSM → Storage Pool (RAID1, Btrfs)</li>
+<li>Принимает Snapshot Replication (настроить на NAS A → target NAS B)</li>
+<li>Принимает Hyper Backup (NAS A → Remote NAS → NAS B)</li>
+<li>Расписание: Snapshots каждые 15–60 мин, Hyper Backup раз в день</li>
+</ul>
+</div>
+<div class="card">
+<h2>Шаг 4: Mac Mini M4</h2>
+<ul>
+<li>Ethernet к NAS A (или роутеру)</li>
+<li>Apple Account → iCloud Drive + Photos → «Download Originals»</li>
+<li>Synology Drive Client → sync на NAS A</li>
+<li>Time Machine → NAS A</li>
+<li>Energy → не засыпать с выключенным дисплеем</li>
+<li>Screen Sharing → вкл (управление с MacBook)</li>
+<li>Finder → iPhone → Trust → Wi-Fi sync → Encrypt local backup</li>
+</ul>
+</div>
+<div class="card">
+<h2>Шаг 5: iPhone / iPad</h2>
+<ul>
+<li>Synology Photos (App Store) → Auto Upload вкл</li>
+<li>Проверить: Finder на Mac Mini → Wi-Fi sync + encrypted backup</li>
+</ul>
+</div>
+<div class="card">
+<h2>Шаг 6: MacBook</h2>
+<ul>
+<li>Time Machine → NAS A (Wi-Fi)</li>
+<li>Screen Sharing: vnc://[mac-mini-ip]</li>
+</ul>
+</div>
+<div class="card">
+<h2>Шаг 7: Linux (Ubuntu)</h2>
+<ul>
+<li><strong>Если ext4:</strong> скачать ABB Agent v2.7+ (.deb) → <code>sudo ./install.run</code> → <code>sudo abb-cli -c</code> → указать IP NAS A</li>
+<li>В DSM ABB: создать задачу для Linux-машины, задать расписание</li>
+<li><strong>Если btrfs или доп. файлы:</strong> <code>crontab -e</code> → <code>0 2 * * * rsync -avz --delete /home/ user@nas-a:/volume1/LinuxBackup/</code></li>
+<li>Опционально: Synology Drive Client (Linux .deb) для real-time sync рабочих папок</li>
+</ul>
+</div>
+<div class="card">
+<h2>Шаг 8: Windows</h2>
+<ul>
+<li>Скачать ABB Agent (exe) из DSM → установить → указать IP NAS A</li>
+<li>В DSM ABB: создать задачу, включить image-based backup + расписание</li>
+<li>Опционально: Synology Drive Client для файловой синхронизации</li>
+</ul>
+</div>
+<div class="card">
+<h2>Шаг 9: Проверка всех потоков</h2>
+<ul>
+<li>☐ iPhone фото → Synology Photos на NAS A</li>
+<li>☐ Mac Mini TM backup → NAS A</li>
+<li>☐ MacBook TM backup → NAS A</li>
+<li>☐ iCloud Drive файлы → Drive на NAS A</li>
+<li>☐ Encrypted iPhone backup → Finder на Mac Mini → TM → NAS A</li>
+<li>☐ Linux → ABB / rsync → NAS A</li>
+<li>☐ Windows → ABB → NAS A</li>
+<li>☐ Snapshot Replication → NAS B (проверить в DSM NAS B)</li>
+<li>☐ Hyper Backup → NAS B (задача без ошибок)</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<div id="ov" onclick="if(event.target===this)X()"><div id="dc"></div></div>
+
+<script>
+function T(n){document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('on',i===n));document.querySelectorAll('.pn').forEach((p,i)=>p.classList.toggle('on',i===n))}
+const DD={
+icloud:{t:'iCloud',b:'<p>Хранит фото, файлы, бэкапы, контакты, Health, Keychain. Часть данных (Health, Keychain) — end-to-end encrypted, доступны только через encrypted local backup на Mac.</p><p>Mac Mini держит оригиналы и отдаёт на NAS.</p>'},
+iphone:{t:'iPhone / iPad',b:'<p><strong>Фото/видео:</strong> Synology Photos → NAS A напрямую.</p><p><strong>Полный бэкап:</strong> Finder на Mac Mini, encrypted, Wi-Fi sync (авто на зарядке).</p><p><strong>Дубли фото:</strong> да, фото окажутся и в Synology Photos, и внутри iPhone backup, и в TM Mac Mini. См. вкладку «Дубли фото» — это нормально, overhead ~15–20%.</p>'},
+macmini:{t:'Mac Mini M4',b:'<p>Always-on мост: iCloud originals → NAS, encrypted iPhone backup → NAS, Time Machine.</p><p>M4, 16 ГБ RAM, 512 ГБ+ SSD, 1GbE Ethernet. Screen Sharing с MacBook, без монитора. 5–10 Вт idle.</p>'},
+macbook:{t:'MacBook',b:'<p>Рабочий инструмент. Time Machine → NAS A по Wi-Fi. Screen Sharing для Mac Mini. От него ничего не зависит.</p>'},
+linux:{t:'Linux (Ubuntu)',b:'<p><strong>ABB agent:</strong> image-based backup с CBT. Только ext4/XFS — btrfs не поддерживается. Ubuntu 24.04 + агент v2.7+.</p><p><strong>rsync:</strong> универсальный, любая FS. Через cron на NAS по SSH/SMB.</p><p><strong>Drive Client:</strong> есть Linux-версия. Real-time sync рабочих папок.</p><p><strong>Рекомендация:</strong> ABB для системного образа (если ext4) + rsync/Drive для отдельных папок.</p>'},
+windows:{t:'Windows',b:'<p><strong>ABB agent:</strong> image-based, VSS-based CBT, bare-metal restore. Win 10/11, Server 2016–2025.</p><p><strong>Drive Client:</strong> файловая sync.</p><p>ABB бесплатен на DS224+. Дедупликация блоков — несколько Win-машин занимают меньше суммы.</p>'},
+nasa:{t:'NAS A',b:'<p>DS224+, 2×16 TB RAID1 Btrfs. Полный объём ~16 ТБ — только под бэкапы и файлы.</p><ul><li>Synology Photos (iPhone фото)</li><li>Synology Drive (файлы Mac Mini/Linux)</li><li>Time Machine (Mac Mini + MacBook)</li><li>ABB (Linux + Windows)</li><li>Snapshot Replication + Hyper Backup → NAS B</li></ul><p>Видеонаблюдение — отдельный контур (планируется).</p>'},
+nasb:{t:'NAS B (off-site)',b:'<p>DS224+, 2×16 TB RAID1 Btrfs. Принимает snapshots + Hyper Backup. Версионирование, point-in-time recovery.</p><p>НЕ двустороннее зеркало — однонаправленная версионированная репликация.</p><p>Реплицируется ВСЁ: Apple + Linux + Windows бэкапы.</p><p><strong>Сеть:</strong> подключён к AmpliFi в точке B по Ethernet.</p>'},
+edge:{t:'EdgeRouter',b:'<p>Маршрутизатор Ubiquiti EdgeRouter — основной gateway точки A.</p><ul><li>WAN / ISP — выход в интернет</li><li>DHCP-сервер для локальной сети</li><li>VPN-сервер для site-to-site туннеля к точке B (Snapshot Replication / Hyper Backup)</li><li>Firewall, NAT, QoS</li></ul><p>Для репликации NAS A → NAS B можно поднять IPsec/WireGuard VPN между EdgeRouter и AmpliFi (или между двумя NAS через QuickConnect/DDNS).</p>'},
+switch:{t:'US-24-250W',b:'<p>UniFi Switch 24-портовый managed L2 коммутатор с PoE 250W.</p><ul><li>Все проводные устройства подключены сюда: Mac Mini, NAS A (2 порта, LAG), Linux, Windows</li><li>UAP-AC-LR получают питание через PoE от этого свитча</li><li>Для NAS A можно настроить Link Aggregation (LACP) на 2 портах — до 2 Гбит/с агрегированной пропускной способности</li><li>Управление через Cloud Key</li></ul>'},
+ck:{t:'Cloud Key',b:'<p>UniFi Cloud Key — контроллер для управления UniFi-устройствами (свитч, точки доступа). Не участвует в потоке данных бэкапов.</p>'},
+uap:{t:'UAP-AC-LR',b:'<p>UniFi Access Point AC Long Range — точки доступа Wi-Fi по территории.</p><ul><li>Питание: PoE от US-24-250W</li><li>Клиенты: iPhone, iPad, MacBook</li><li>MacBook → Wi-Fi → UAP → Switch → NAS A (Time Machine)</li><li>iPhone → Wi-Fi → UAP → Switch → NAS A (Synology Photos) + Mac Mini (Finder backup)</li></ul>'},
+amplifi:{t:'AmpliFi (точка B)',b:'<p>Ubiquiti AmpliFi — mesh-роутер в точке B (off-site). NAS B подключён к нему по Ethernet.</p><p>Для репликации NAS A → NAS B используется WAN-канал. Варианты связи:</p><ul><li><strong>VPN site-to-site:</strong> IPsec/WireGuard между EdgeRouter (A) и AmpliFi (B) — NAS видят друг друга по внутренним IP</li><li><strong>Synology QuickConnect:</strong> облачный relay, без VPN, но медленнее</li><li><strong>DDNS + port forward:</strong> NAS A подключается к NAS B по внешнему IP:порт</li></ul><p>Рекомендация: VPN site-to-site (EdgeRouter умеет нативно).</p>'},
+cameras:{t:'IP-камеры',b:'<p>Видеонаблюдение планируется отдельным контуром. DS224+ поддерживает до 25 камер 1080p через Surveillance Station.</p>'}
+};
+function D(k){const d=DD[k];if(!d)return;document.getElementById('dc').innerHTML='<span class="x" onclick="X()">&times;</span><h3>'+d.t+'</h3>'+d.b;document.getElementById('ov').classList.add('show')}
+function X(){document.getElementById('ov').classList.remove('show')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')X()});
+</script>
+</body>
+</html>
