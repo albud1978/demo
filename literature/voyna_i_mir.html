@@ -1941,7 +1941,7 @@ function renderTimelane() {
   let rowCount = 0;
   TIMELANE_ORDER.forEach(g => rowCount += g.members.length);
   const grpCount = TIMELANE_ORDER.length;
-  const totalH = TL_MARGIN.top + rowCount * TL_ROW_H + (grpCount - 1) * TL_GROUP_GAP + TL_MARGIN.bottom + 10;
+  const totalH = TL_MARGIN.top + rowCount * TL_ROW_H + grpCount * 18 + (grpCount - 1) * TL_GROUP_GAP + TL_MARGIN.bottom + 10;
 
   svg.attr('viewBox', `0 0 ${TL_VIEWBOX_W} ${totalH}`)
      .attr('preserveAspectRatio', 'xMidYMin meet')
@@ -1990,12 +1990,14 @@ function renderTimelane() {
 
     svg.append('rect').attr('class','tl-group-band')
       .attr('x', 0).attr('y', curY - 4)
-      .attr('width', TL_VIEWBOX_W).attr('height', grpH + 8)
+      .attr('width', TL_VIEWBOX_W).attr('height', grpH + 26)
       .attr('fill', meta.hex);
 
     svg.append('text').attr('class','tl-group-label')
       .attr('x', 12).attr('y', curY + 11)
       .attr('fill', meta.hex).text(meta.name);
+
+    curY += 18;
 
     group.members.forEach(charId => {
       const c = charMap.get(charId);
