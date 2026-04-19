@@ -1,0 +1,2335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Война и мир — интерактивный дашборд</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+  :root {
+    --paper: #f2e9d6;
+    --paper-dark: #e6d9bd;
+    --ink: #2a1810;
+    --ink-soft: #4a3425;
+    --burgundy: #7a1f1f;
+    --burgundy-deep: #5c1414;
+    --gold: #a8812a;
+    --gold-light: #c9a961;
+    --forest: #3a5040;
+    --sky: #4a6b7c;
+    --muted: #8a7963;
+
+    /* Family colors */
+    --rostov: #c2410c;     /* warm orange-red */
+    --bolkonsky: #1e4a6b;  /* deep blue */
+    --bezukhov: #3a5a3a;   /* forest green */
+    --kuragin: #6b2e6b;    /* dark purple */
+    --drubetsky: #8b6914;  /* ochre */
+    --historical: #3a3a3a; /* graphite */
+    --other: #7a5a3a;      /* brown */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Lora', Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Paper texture overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(122,31,31,0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(168,129,42,0.05) 0%, transparent 50%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.12  0 0 0 0 0.06  0 0 0 0.06 0'/></filter><rect width='400' height='400' filter='url(%23n)'/></svg>");
+    mix-blend-mode: multiply;
+    opacity: 0.9;
+  }
+
+  /* Subtle vignette */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    box-shadow: inset 0 0 200px rgba(42,24,16,0.25);
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 3;
+  }
+
+  /* ========== HERO ========== */
+  .hero {
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid rgba(122,31,31,0.25);
+  }
+
+  .hero-ornament {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold);
+    font-size: 2rem;
+    letter-spacing: 1rem;
+    margin-bottom: 1rem;
+    user-select: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Caveat', cursive;
+    color: var(--burgundy);
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero h1 .amp {
+    font-style: italic;
+    color: var(--burgundy);
+    font-weight: 400;
+    display: inline-block;
+    transform: translateY(-0.05em);
+  }
+
+  .hero-author {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin: 1rem 0 1.5rem;
+    letter-spacing: 0.1em;
+  }
+
+  .hero-epigraph {
+    max-width: 640px;
+    margin: 2rem auto 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.25rem;
+    color: var(--ink-soft);
+    position: relative;
+    padding: 1rem 2rem;
+  }
+
+  .hero-epigraph::before,
+  .hero-epigraph::after {
+    content: "";
+    position: absolute;
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .hero-epigraph::before { top: 0; }
+  .hero-epigraph::after  { bottom: 0; }
+
+  .hero-epigraph cite {
+    display: block;
+    font-size: 0.95rem;
+    font-style: normal;
+    color: var(--muted);
+    margin-top: 0.5rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ========== STATS ========== */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: rgba(122,31,31,0.15);
+    margin: 3rem 0;
+    border-top: 1px solid rgba(122,31,31,0.2);
+    border-bottom: 1px solid rgba(122,31,31,0.2);
+  }
+
+  .stat {
+    background: var(--paper);
+    padding: 1.5rem 1rem;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 500;
+    color: var(--burgundy);
+    line-height: 1;
+    display: block;
+  }
+
+  .stat-label {
+    font-family: 'Lora', serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--ink-soft);
+    margin-top: 0.5rem;
+    display: block;
+  }
+
+  /* ========== SECTION HEADERS ========== */
+  .section {
+    padding: 4rem 0;
+    position: relative;
+  }
+
+  .section-eyebrow {
+    font-family: 'Caveat', cursive;
+    color: var(--burgundy);
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 0.8rem;
+    letter-spacing: -0.01em;
+  }
+
+  .section-lead {
+    max-width: 720px;
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    margin-bottom: 2.5rem;
+  }
+
+  .section-divider {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    letter-spacing: 1rem;
+    margin: 1rem 0;
+    user-select: none;
+  }
+
+  /* ========== TIMELINE ========== */
+  .timeline-wrap {
+    background: linear-gradient(180deg, rgba(230,217,189,0.4), rgba(242,233,214,0.2));
+    padding: 2rem;
+    border: 1px solid rgba(122,31,31,0.15);
+    position: relative;
+  }
+
+  .timeline-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+  }
+
+  .filter-label {
+    font-family: 'Caveat', cursive;
+    color: var(--ink-soft);
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+  }
+
+  .filter-btn {
+    font-family: 'Lora', serif;
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem;
+    background: transparent;
+    border: 1px solid rgba(42,24,16,0.3);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.05em;
+  }
+
+  .filter-btn:hover { background: rgba(122,31,31,0.08); color: var(--ink); }
+  .filter-btn.active {
+    background: var(--burgundy);
+    color: var(--paper);
+    border-color: var(--burgundy);
+  }
+
+  .timeline-track {
+    position: relative;
+    padding: 2rem 0 1rem;
+    overflow-x: auto;
+  }
+
+  .timeline-line {
+    position: relative;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold), var(--gold-light));
+    margin: 60px 0;
+    min-width: 1600px;
+  }
+
+  .timeline-year {
+    position: absolute;
+    top: 12px;
+    transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .timeline-year::before {
+    content: "";
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 8px;
+    background: var(--muted);
+  }
+
+  .event-dot {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(.4,0,.2,1);
+    border: 2px solid var(--paper);
+    box-shadow: 0 2px 8px rgba(42,24,16,0.3);
+    z-index: 2;
+  }
+  .event-dot:hover { transform: translate(-50%, -50%) scale(1.4); box-shadow: 0 4px 16px rgba(122,31,31,0.5); }
+  .event-dot.active { transform: translate(-50%, -50%) scale(1.5); box-shadow: 0 0 0 4px rgba(168,129,42,0.3), 0 4px 16px rgba(122,31,31,0.5); }
+  .event-dot.war { background: var(--burgundy); }
+  .event-dot.peace { background: var(--forest); }
+  .event-dot.personal { background: var(--rostov); }
+  .event-dot.political { background: var(--sky); }
+  .event-dot.hidden { display: none; }
+
+  .event-label {
+    position: absolute;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    transform: translateX(-50%);
+    pointer-events: none;
+    font-style: italic;
+    max-width: 130px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .event-label.top    { bottom: 30px; }
+  .event-label.bottom { top: 30px; }
+
+  .event-detail {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: var(--paper);
+    border: 1px solid rgba(122,31,31,0.2);
+    border-left: 4px solid var(--burgundy);
+    min-height: 160px;
+    position: relative;
+  }
+
+  .event-detail-year {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    color: var(--gold);
+    font-weight: 500;
+    line-height: 1;
+    position: absolute;
+    right: 2rem;
+    top: 1rem;
+    opacity: 0.4;
+  }
+
+  .event-detail-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+    padding-right: 4rem;
+  }
+
+  .event-detail-meta {
+    font-family: 'Caveat', cursive;
+    color: var(--burgundy);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .event-detail-body {
+    font-size: 1rem;
+    color: var(--ink-soft);
+    max-width: 720px;
+  }
+
+  .event-detail-chars {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .event-detail-chars span {
+    font-size: 0.82rem;
+    padding: 0.2rem 0.6rem;
+    background: rgba(122,31,31,0.08);
+    border: 1px solid rgba(122,31,31,0.2);
+    color: var(--ink);
+  }
+
+  /* ========== TIMELANE (swimlane) ========== */
+  .timelane-wrap {
+    background: linear-gradient(180deg, rgba(230,217,189,0.4), rgba(242,233,214,0.2));
+    border: 1px solid rgba(122,31,31,0.15);
+    padding: 1rem;
+    position: relative;
+    overflow-x: auto;
+  }
+
+  .timelane-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.2rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .tl-hint {
+    font-family: 'Caveat', cursive;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+  }
+
+  .tl-event-detail {
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--paper);
+    border: 1px solid rgba(122,31,31,0.2);
+    border-left: 4px solid var(--burgundy);
+    min-height: 70px;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+
+  .tl-event-detail-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    color: var(--ink);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+  .tl-event-detail-year {
+    font-family: 'Caveat', cursive;
+    color: var(--burgundy);
+    font-size: 1rem;
+  }
+
+  #timelane-svg {
+    display: block;
+    width: 100%;
+    min-height: 880px;
+  }
+
+  .tl-era-band { fill-opacity: 0.10; }
+  .tl-era-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    fill: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .tl-year-grid { stroke: rgba(42,24,16,0.08); stroke-width: 1; }
+  .tl-year-label {
+    font-family: 'Cormorant Garamond', serif;
+    fill: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-anchor: middle;
+  }
+  .tl-group-band { fill-opacity: 0.06; }
+  .tl-group-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    fill: var(--ink);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  .tl-lane-label {
+    font-family: 'Lora', serif;
+    font-size: 11.5px;
+    fill: var(--ink-soft);
+    cursor: pointer;
+    dominant-baseline: middle;
+  }
+  .tl-lane-label.major { font-weight: 600; fill: var(--ink); font-size: 12px; }
+  .tl-lane-label:hover { fill: var(--burgundy); text-decoration: underline; }
+  .tl-lane-label.dimmed { opacity: 0.35; }
+  .tl-lane-label.active { fill: var(--burgundy); font-weight: 600; }
+
+  .tl-lane-bg {
+    fill: rgba(42,24,16,0);
+    cursor: pointer;
+  }
+  .tl-lane-bg:hover { fill: rgba(122,31,31,0.04); }
+
+  .tl-life-line { stroke-width: 1.8; stroke-linecap: round; }
+  .tl-life-line.major { stroke-width: 2.6; }
+  .tl-life-line.dimmed { stroke-opacity: 0.12; }
+
+  .tl-death-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    fill: var(--burgundy);
+    dominant-baseline: middle;
+    text-anchor: middle;
+    font-weight: 600;
+    pointer-events: none;
+  }
+  .tl-death-mark.dimmed { opacity: 0.2; }
+
+  .tl-event-dot {
+    cursor: pointer;
+    stroke: var(--paper);
+    stroke-width: 1.5;
+    transition: r 0.15s ease, stroke-width 0.15s ease;
+  }
+  .tl-event-dot:hover { stroke: var(--ink); stroke-width: 2; }
+  .tl-event-dot.active { stroke: var(--gold); stroke-width: 3; }
+  .tl-event-dot.dimmed { opacity: 0.18; }
+
+  .tl-connector {
+    stroke: var(--gold);
+    stroke-width: 1.5;
+    stroke-dasharray: 2 3;
+    fill: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+  .tl-connector.visible { opacity: 0.85; }
+
+  .tl-event-vline {
+    stroke: var(--burgundy);
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .tl-event-vline.visible { opacity: 0.35; }
+
+  /* ========== NETWORK GRAPH ========== */
+  .network-wrap {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  @media (max-width: 960px) {
+    .network-wrap { grid-template-columns: 1fr; }
+  }
+
+  .network-canvas {
+    background: radial-gradient(ellipse at center, rgba(242,233,214,0.4), rgba(230,217,189,0.1));
+    border: 1px solid rgba(122,31,31,0.15);
+    position: relative;
+    min-height: 680px;
+    overflow: hidden;
+  }
+
+  #network-svg { width: 100%; height: 680px; cursor: grab; display: block; }
+  #network-svg:active { cursor: grabbing; }
+
+  .network-overlay {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    max-width: 70%;
+  }
+
+  .family-chip {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.7rem;
+    background: rgba(242,233,214,0.9);
+    border: 1px solid rgba(42,24,16,0.2);
+    cursor: pointer;
+    font-family: 'Lora', serif;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .family-chip:hover { background: var(--paper); }
+  .family-chip.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .family-chip .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  .character-panel {
+    background: var(--paper);
+    border: 1px solid rgba(122,31,31,0.2);
+    padding: 1.5rem;
+    min-height: 680px;
+    position: sticky;
+    top: 1rem;
+  }
+
+  .panel-placeholder {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--muted);
+    text-align: center;
+    padding-top: 3rem;
+    font-size: 1.1rem;
+  }
+  .panel-placeholder::before {
+    content: "❦";
+    display: block;
+    font-size: 2.5rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    font-style: normal;
+  }
+
+  .panel-family {
+    font-family: 'Caveat', cursive;
+    font-size: 1.15rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .panel-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 0.3rem;
+  }
+
+  .panel-role {
+    font-style: italic;
+    color: var(--burgundy);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(122,31,31,0.2);
+  }
+
+  .panel-section {
+    margin-bottom: 1rem;
+  }
+  .panel-section h4 {
+    font-family: 'Lora', serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+  .panel-section p {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+
+  .panel-relations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .panel-relations span {
+    font-size: 0.82rem;
+    padding: 0.2rem 0.55rem;
+    background: rgba(122,31,31,0.06);
+    border: 1px solid rgba(122,31,31,0.2);
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .panel-relations span:hover { background: var(--burgundy); color: var(--paper); }
+
+  /* Graph elements */
+  .node circle {
+    stroke: var(--paper);
+    stroke-width: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .node:hover circle { stroke: var(--ink); stroke-width: 3px; }
+  .node.active circle { stroke: var(--gold); stroke-width: 4px; }
+  .node.dimmed circle { opacity: 0.2; }
+  .node text {
+    font-family: 'Lora', serif;
+    font-size: 11px;
+    fill: var(--ink);
+    pointer-events: none;
+    text-anchor: middle;
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 3px;
+    stroke-linejoin: round;
+  }
+  .node.dimmed text { opacity: 0.2; }
+  .node.major text { font-size: 13px; font-weight: 600; }
+
+  .link { fill: none; stroke-opacity: 0.55; transition: all 0.2s; }
+  .link.family   { stroke: #4a3425; stroke-width: 1.6px; }
+  .link.marriage { stroke: var(--burgundy); stroke-width: 2.4px; stroke-dasharray: none; }
+  .link.love     { stroke: var(--rostov); stroke-width: 1.8px; stroke-dasharray: 4 3; }
+  .link.friend   { stroke: var(--forest); stroke-width: 1.6px; }
+  .link.enemy    { stroke: var(--kuragin); stroke-width: 1.8px; stroke-dasharray: 2 3; }
+  .link.mentor   { stroke: var(--gold); stroke-width: 1.6px; stroke-dasharray: 6 3; }
+  .link.rival    { stroke: var(--ink); stroke-width: 1.4px; stroke-dasharray: 1 4; }
+  .link.dimmed   { stroke-opacity: 0.07; }
+
+  .legend {
+    margin-top: 1.2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 0.6rem 1rem;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; }
+  .legend-line {
+    width: 28px;
+    height: 2px;
+    background: var(--ink);
+    flex-shrink: 0;
+  }
+
+  /* ========== FAMILIES ========== */
+  .families-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .family-card {
+    background: var(--paper);
+    border: 1px solid rgba(122,31,31,0.2);
+    padding: 1.75rem;
+    position: relative;
+    border-top: 4px solid var(--fam-color, var(--ink));
+    transition: transform 0.25s ease;
+  }
+  .family-card:hover { transform: translateY(-3px); }
+
+  .family-crest {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    color: var(--fam-color, var(--ink));
+    margin-bottom: 0.5rem;
+    opacity: 0.7;
+  }
+
+  .family-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+
+  .family-motto {
+    font-family: 'Caveat', cursive;
+    color: var(--burgundy);
+    font-size: 1.15rem;
+    margin-bottom: 1rem;
+  }
+
+  .family-body {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    margin-bottom: 1rem;
+  }
+
+  .family-members {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .family-members span {
+    font-size: 0.78rem;
+    padding: 0.2rem 0.55rem;
+    background: rgba(42,24,16,0.06);
+    border: 1px solid rgba(42,24,16,0.15);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .family-members span:hover {
+    background: var(--fam-color);
+    color: var(--paper);
+    border-color: var(--fam-color);
+  }
+
+  /* ========== ARCS (duchovnye puti) ========== */
+  .arcs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .arc-card {
+    background: var(--paper);
+    border: 1px solid rgba(122,31,31,0.2);
+    padding: 2rem;
+    position: relative;
+  }
+
+  .arc-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem;
+    color: var(--gold);
+    line-height: 1;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    opacity: 0.35;
+    font-style: italic;
+  }
+
+  .arc-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+  }
+
+  .arc-subtitle {
+    font-family: 'Caveat', cursive;
+    color: var(--burgundy);
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .arc-steps {
+    list-style: none;
+    padding: 0;
+    counter-reset: step;
+    border-left: 2px solid rgba(168,129,42,0.35);
+    padding-left: 1rem;
+    margin-left: 0.5rem;
+  }
+  .arc-steps li {
+    position: relative;
+    padding: 0.6rem 0 0.6rem 0.5rem;
+    counter-increment: step;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+  .arc-steps li::before {
+    content: "";
+    position: absolute;
+    left: -1.45rem;
+    top: 1.1rem;
+    width: 10px; height: 10px;
+    background: var(--paper);
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+  }
+  .arc-steps li strong {
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  /* ========== IDEAS ========== */
+  .ideas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .idea-card {
+    background: linear-gradient(180deg, var(--paper) 0%, var(--paper-dark) 100%);
+    padding: 2rem;
+    border: 1px solid rgba(42,24,16,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .idea-card::before {
+    content: "";
+    position: absolute;
+    top: -1px; left: -1px; right: -1px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--burgundy), var(--gold), var(--burgundy));
+  }
+
+  .idea-symbol {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    color: var(--burgundy);
+    line-height: 1;
+    font-weight: 600;
+    font-style: italic;
+    display: inline-block;
+    margin-bottom: 0.3rem;
+  }
+
+  .idea-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+
+  .idea-ru {
+    font-family: 'Caveat', cursive;
+    color: var(--burgundy);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .idea-body {
+    font-size: 0.96rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  .idea-body em {
+    color: var(--ink);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.03em;
+  }
+
+  /* ========== QUOTES ========== */
+  .quotes-stack {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .quote-card {
+    padding: 2rem;
+    border-left: 3px solid var(--gold);
+    background: rgba(242,233,214,0.3);
+    position: relative;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .quote-card::before {
+    content: "\201C";
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-size: 5rem;
+    color: var(--burgundy);
+    opacity: 0.3;
+    line-height: 1;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .quote-text {
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.5;
+    margin-bottom: 0.8rem;
+    padding-top: 1rem;
+  }
+
+  .quote-attr {
+    font-family: 'Lora', serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-style: normal;
+  }
+
+  /* ========== NAVIGATION ========== */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(242,233,214,0.92);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(122,31,31,0.2);
+    padding: 0.75rem 0;
+  }
+
+  .nav-inner {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding: 0 2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+  }
+  .nav-inner .nav-link {
+    color: var(--ink-soft);
+    background: transparent;
+    border: none;
+    padding: 0.2rem 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 1px solid transparent;
+    transition: all 0.15s;
+  }
+  .nav-inner .nav-link:hover { color: var(--burgundy); border-bottom-color: var(--burgundy); }
+
+  /* ========== FOOTER ========== */
+  footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    border-top: 1px solid rgba(122,31,31,0.2);
+    margin-top: 3rem;
+    color: var(--muted);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+  }
+  footer .orn {
+    font-size: 1.5rem;
+    color: var(--gold);
+    letter-spacing: 1rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 640px) {
+    .container { padding: 0 1rem; }
+    .hero { padding: 2rem 1rem; }
+    .section { padding: 2.5rem 0; }
+    .hero-ornament { font-size: 1.3rem; letter-spacing: 0.5rem; }
+    .event-detail-year { font-size: 2rem; }
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: fixed;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.6rem 0.9rem;
+    font-family: 'Lora', serif;
+    font-size: 0.85rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 1000;
+    max-width: 260px;
+    line-height: 1.4;
+    border-left: 3px solid var(--gold);
+  }
+  .tooltip.visible { opacity: 1; }
+  .tooltip strong { color: var(--gold-light); display: block; margin-bottom: 0.2rem; }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar { height: 10px; width: 10px; }
+  ::-webkit-scrollbar-track { background: rgba(42,24,16,0.05); }
+  ::-webkit-scrollbar-thumb { background: rgba(122,31,31,0.4); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--burgundy); }
+</style>
+</head>
+<body>
+
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--burgundy,#6b2d3e);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--burgundy,#6b2d3e);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <button type="button" class="nav-link" data-target="overview">Вступление</button>
+    <button type="button" class="nav-link" data-target="timeline">Хроника</button>
+    <button type="button" class="nav-link" data-target="timelane">Герои × время</button>
+    <button type="button" class="nav-link" data-target="network">Граф героев</button>
+    <button type="button" class="nav-link" data-target="families">Семьи</button>
+    <button type="button" class="nav-link" data-target="arcs">Духовные пути</button>
+    <button type="button" class="nav-link" data-target="ideas">Мысли Толстого</button>
+    <button type="button" class="nav-link" data-target="quotes">Цитаты</button>
+  </div>
+</nav>
+
+<header class="hero" id="overview">
+  <div class="container">
+    <div class="hero-ornament">❦ ❦ ❦</div>
+    <div class="hero-eyebrow">роман-эпопея в четырёх томах</div>
+    <h1>Война <span class="amp">&amp;</span> миръ</h1>
+    <div class="hero-author">ЛЕВЪ ⋅ НИКОЛАЕВИЧЪ ⋅ ТОЛСТОЙ</div>
+    <blockquote class="hero-epigraph">
+      «Всё, всё, что понимаю, я понимаю только потому, что люблю. Всё есть, всё существует только потому, что я люблю.»
+      <cite>— КН. АНДРЕЙ БОЛКОНСКИЙ</cite>
+    </blockquote>
+  </div>
+</header>
+
+<div class="container">
+  <div class="stats">
+    <div class="stat"><span class="stat-number">4</span><span class="stat-label">тома</span></div>
+    <div class="stat"><span class="stat-number">1805<br><span style="font-size:1.2rem">—</span><br>1820</span><span class="stat-label">хронология</span></div>
+    <div class="stat"><span class="stat-number">559</span><span class="stat-label">персонажей</span></div>
+    <div class="stat"><span class="stat-number">~1225</span><span class="stat-label">страниц</span></div>
+    <div class="stat"><span class="stat-number">6</span><span class="stat-label">лет работы</span></div>
+    <div class="stat"><span class="stat-number">1869</span><span class="stat-label">завершён</span></div>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<section class="section" id="timeline">
+  <div class="container">
+    <div class="section-eyebrow">хроника</div>
+    <h2 class="section-title">Время войны и мира</h2>
+    <p class="section-lead">Пятнадцать лет — от салона Анны Шерер до эпилога в Лысых Горах. Исторические катастрофы сплетаются с частными судьбами. Нажмите на любую точку, чтобы развернуть событие.</p>
+
+    <div class="timeline-wrap">
+      <div class="timeline-controls">
+        <span class="filter-label">Показать:</span>
+        <button class="filter-btn active" data-filter="all">всё</button>
+        <button class="filter-btn" data-filter="war">война</button>
+        <button class="filter-btn" data-filter="peace">мир</button>
+        <button class="filter-btn" data-filter="personal">личное</button>
+        <button class="filter-btn" data-filter="political">политика</button>
+      </div>
+
+      <div class="timeline-track">
+        <div class="timeline-line" id="timeline-line"></div>
+      </div>
+
+      <div class="event-detail" id="event-detail">
+        <div class="event-detail-year" id="ed-year">—</div>
+        <h3 class="event-detail-title" id="ed-title">Выберите событие на шкале</h3>
+        <div class="event-detail-meta" id="ed-meta"></div>
+        <p class="event-detail-body" id="ed-body">Пятнадцать лет, отражённых в романе, — это не просто фон для частных судеб, а живая ткань истории, в которую втянут каждый герой.</p>
+        <div class="event-detail-chars" id="ed-chars"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELANE -->
+<section class="section" id="timelane">
+  <div class="container">
+    <div class="section-eyebrow">хроника × герои</div>
+    <h2 class="section-title">Герои во времени</h2>
+    <p class="section-lead">Плоская развёртка: у каждого героя своя строка, ключевые события — точки на ней. Видно, кто когда появляется, чьи линии пересекаются и кто где обрывается (†). Нажмите на любую точку — её участники соединятся вертикальной линией. Нажмите на имя — героя видно крупнее.</p>
+
+    <div class="timelane-wrap">
+      <div class="timelane-controls">
+        <span class="tl-hint">фон: <b style="color:var(--forest)">мир</b> → <b style="color:var(--burgundy)">война 1812</b> → <b style="color:var(--gold)">эпилог</b></span>
+        <span class="tl-hint">&nbsp;·&nbsp;крестик † — смерть героя в рамках романа</span>
+      </div>
+
+      <svg id="timelane-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+
+      <div class="tl-event-detail" id="tl-event-detail">
+        <span class="tl-event-detail-title">Наведите или нажмите на любую точку</span>
+        <span class="tl-event-detail-year">27 ключевых событий · 34 героя · 15 лет</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NETWORK -->
+<section class="section" id="network">
+  <div class="container">
+    <div class="section-eyebrow">граф персонажей</div>
+    <h2 class="section-title">Связи, что держат мир</h2>
+    <p class="section-lead">Четыре семьи, десятки судеб, сотни нитей. Семейные узы, браки, любовь и вражда, дружба и наставничество — всё переплетено. Нажмите на героя, чтобы увидеть его роль и связи.</p>
+
+    <div class="network-wrap">
+      <div class="network-canvas">
+        <div class="network-overlay" id="family-filters"></div>
+        <svg id="network-svg"></svg>
+      </div>
+
+      <aside class="character-panel" id="character-panel">
+        <div class="panel-placeholder">
+          Нажмите на любого героя,<br>чтобы узнать о нём больше
+        </div>
+      </aside>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-line" style="background:#4a3425"></span>семейные узы</div>
+      <div class="legend-item"><span class="legend-line" style="background:var(--burgundy); height:3px"></span>брак</div>
+      <div class="legend-item"><span class="legend-line" style="background:var(--rostov); background-image:repeating-linear-gradient(90deg,var(--rostov) 0 6px,transparent 6px 10px)"></span>любовь / влечение</div>
+      <div class="legend-item"><span class="legend-line" style="background:var(--forest)"></span>дружба</div>
+      <div class="legend-item"><span class="legend-line" style="background:var(--kuragin); background-image:repeating-linear-gradient(90deg,var(--kuragin) 0 3px,transparent 3px 6px)"></span>вражда / дуэль</div>
+      <div class="legend-item"><span class="legend-line" style="background:var(--gold); background-image:repeating-linear-gradient(90deg,var(--gold) 0 8px,transparent 8px 12px)"></span>наставничество</div>
+      <div class="legend-item"><span class="legend-line" style="background:var(--ink); background-image:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 6px)"></span>соперничество</div>
+    </div>
+  </div>
+</section>
+
+<!-- FAMILIES -->
+<section class="section" id="families">
+  <div class="container">
+    <div class="section-eyebrow">четыре рода</div>
+    <h2 class="section-title">Семьи романа</h2>
+    <p class="section-lead">Каждая семья — отдельный мир со своей атмосферой, этикой, языком. Толстой ведёт нас сквозь четыре дворянских рода, противопоставляя их друг другу.</p>
+
+    <div class="families-grid" id="families-grid"></div>
+  </div>
+</section>
+
+<!-- ARCS -->
+<section class="section" id="arcs">
+  <div class="container">
+    <div class="section-eyebrow">духовные пути</div>
+    <h2 class="section-title">Арки главных героев</h2>
+    <p class="section-lead">Толстой не пишет статичных характеров — он пишет движение души. У каждого из главных героев своя внутренняя дорога, ступени которой можно проследить.</p>
+
+    <div class="arcs-grid" id="arcs-grid"></div>
+  </div>
+</section>
+
+<!-- IDEAS -->
+<section class="section" id="ideas">
+  <div class="container">
+    <div class="section-eyebrow">философия романа</div>
+    <h2 class="section-title">Главные мысли Толстого</h2>
+    <p class="section-lead">«Война и мир» — не только роман о любви и войне, но и философский трактат. Вот ключевые идеи, пронизывающие все четыре тома.</p>
+
+    <div class="ideas-grid" id="ideas-grid"></div>
+  </div>
+</section>
+
+<!-- QUOTES -->
+<section class="section" id="quotes">
+  <div class="container">
+    <div class="section-eyebrow">голос автора и героев</div>
+    <h2 class="section-title">Цитаты, которые помнят</h2>
+    <div class="quotes-stack" id="quotes-stack"></div>
+  </div>
+</section>
+
+<footer>
+  <span class="orn">❦ ❦ ❦</span>
+  «Война и миръ» — Л. Н. Толстой, 1863–1869<br>
+  Интерактивный дашборд — Clio in folio
+</footer>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script id="data-and-logic">
+/* ================== NAV SCROLL ================== */
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.nav-link');
+  if (!btn) return;
+  e.preventDefault();
+  const id = btn.dataset.target;
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+/* ================== DATA ================== */
+
+const FAMILY_META = {
+  rostov:    { name: 'Ростовы',      color: 'var(--rostov)',     hex: '#c2410c' },
+  bolkonsky: { name: 'Болконские',   color: 'var(--bolkonsky)',  hex: '#1e4a6b' },
+  bezukhov:  { name: 'Безуховы',     color: 'var(--bezukhov)',   hex: '#3a5a3a' },
+  kuragin:   { name: 'Курагины',     color: 'var(--kuragin)',    hex: '#6b2e6b' },
+  drubetsky: { name: 'Друбецкие',    color: 'var(--drubetsky)',  hex: '#8b6914' },
+  historical:{ name: 'Исторические', color: 'var(--historical)', hex: '#3a3a3a' },
+  other:     { name: 'Другие',       color: 'var(--other)',      hex: '#7a5a3a' },
+};
+
+/* Nodes: id = внутренний ключ, name = отображаемое имя */
+const CHARACTERS = [
+  // ——— Ростовы
+  { id:'natasha',   name:'Наташа Ростова',        family:'rostov',    major:true,  role:'Душа романа, «живая жизнь»',
+    bio:'Юная, порывистая, искренняя. Олицетворение жизни, стихии, чувства. Проходит путь от девочки-ребёнка через катастрофическую страсть к Анатолю, духовный кризис, ухаживание за раненым Андреем — к тихой материнской любви и семье с Пьером.',
+    fate:'В эпилоге — жена Пьера, мать четверых детей, «плодовитая самка», по словам Толстого.' },
+  { id:'nikolay',   name:'Николай Ростов',        family:'rostov',    major:true,  role:'Простой честный офицер',
+    bio:'Старший сын Ростовых. Гусар, прямая душа, не склонная к рефлексии. Проходит огонь Шенграбена, Аустерлица, 1812 года. Его любовь к Соне уступает долгу — он женится на княжне Марье и спасает семью от разорения.',
+    fate:'Хозяин Лысых Гор, отец семейства, практичный помещик.' },
+  { id:'petya',     name:'Петя Ростов',           family:'rostov',    role:'Младший, мальчик на войне',
+    bio:'Юный восторженный мальчик, рвавшийся на войну. Попадает в партизанский отряд Денисова — и погибает в первой же стычке, не доживя до шестнадцати лет.',
+    fate:'Погиб в бою осенью 1812 года.' },
+  { id:'vera',      name:'Вера Ростова',          family:'rostov',    role:'Холодная старшая сестра',
+    bio:'Старшая дочь Ростовых — единственная в семье «не Ростова»: правильная, скучная, холодная. Вышла замуж за Берга.',
+    fate:'Замужем за Бергом, воплощение пошлости светского брака.' },
+  { id:'sonya',     name:'Соня',                  family:'rostov',    role:'Приёмная племянница',
+    bio:'Сирота, воспитанная у Ростовых. Беззаветно любит Николая с детства. Жертвует собой, отпуская его к Марье. В эпилоге — «пустоцвет», прижившаяся приживалка.',
+    fate:'Не вышла замуж; живёт при семье Николая и Марьи.' },
+  { id:'count_rostov', name:'Илья Андреевич Ростов', family:'rostov', role:'Отец, хлебосольный барин',
+    bio:'Добрейший, широкий, непрактичный. Любит всех и всё — но разоряет семью хлебосольством и доверчивостью.',
+    fate:'Умирает, не вынеся потерь 1812 года; оставляет долги.' },
+  { id:'countess_rostova', name:'Графиня Ростова', family:'rostov', role:'Мать, сердце дома',
+    bio:'Мать большого семейства, прежде всего — мать. Ломается после гибели Пети.',
+    fate:'Переживает сына Петю; живёт старостью в семье Николая.' },
+  { id:'berg',      name:'Берг',                  family:'rostov',    role:'Муж Веры, карьерист-немец',
+    bio:'Аккуратный, пошлый офицер-немец, расчётливо делающий карьеру и покупающий шифоньерку в горящей Москве.',
+    fate:'Преуспевает — в мире Толстого это и есть приговор.' },
+
+  // ——— Болконские
+  { id:'andrey',    name:'Андрей Болконский',     family:'bolkonsky', major:true,  role:'Гордый искатель смысла',
+    bio:'Князь, адъютант Кутузова. Аустерлицкое небо открывает ему ничтожность славы. Теряет жену, ищет нового дела у Сперанского, встречает Наташу — и теряет её. Смертельно ранен на Бородинском поле; прощает Анатоля; умирая, достигает любви-всепрощения.',
+    fate:'Умирает в 1812 году от раны, полученной при Бородине.' },
+  { id:'marya',     name:'Княжна Марья Болконская', family:'bolkonsky', major:true, role:'Кроткая, глубоко верующая',
+    bio:'Некрасивая, но с «лучистыми глазами». Живёт под гнётом сурового отца, тайком мечтает о семье и детях, скрывает от себя любовь к Анатолю. Становится женой Николая Ростова и обретает счастье.',
+    fate:'Жена Николая Ростова, мать семейства, хозяйка Лысых Гор.' },
+  { id:'old_bolkonsky', name:'Н. А. Болконский-старший', family:'bolkonsky', role:'Суровый отец, «Прусский король»',
+    bio:'Отставной генерал екатерининских времён, гордый, язвительный, живущий по расписанию в Лысых Горах. Тиран с сердцем, любит детей мучительной любовью.',
+    fate:'Умирает в 1812 при приближении французов, не успев проститься с Марьей.' },
+  { id:'liza',      name:'Лиза («маленькая княгиня»)', family:'bolkonsky', role:'Первая жена Андрея',
+    bio:'Милая, беременная, с «губкой с усиками». Непонимающая, поверхностная — но чистая. Смотрит с картины укоризненным взглядом после смерти.',
+    fate:'Умирает в родах в Лысых Горах в 1806 году.' },
+  { id:'nikolenka', name:'Николенька Болконский', family:'bolkonsky', role:'Сын Андрея, надежда эпилога',
+    bio:'Мальчик, растущий у Марьи. В эпилоге — ему видится сон о великом деле; намёк на поколение декабристов.',
+    fate:'Подросток к 1820 году; живёт у тётки Марьи и дяди Николая.' },
+  { id:'bourienne', name:'Мадемуазель Бурьен',    family:'bolkonsky', role:'Компаньонка Марьи, интриганка',
+    bio:'Француженка при княжне Марье. Хитра, пуста, становится полуфавориткой старого князя, кокетничает с Анатолем.',
+    fate:'Вытеснена из Лысых Гор после замужества Марьи.' },
+
+  // ——— Безуховы
+  { id:'pierre',    name:'Пьер Безухов',          family:'bezukhov',  major:true,  role:'Главный духовный искатель',
+    bio:'Незаконный сын графа Безухова, внезапный наследник огромного состояния. Неуклюжий, добрый, мучительно ищущий смысла. Проходит масонство, несчастный брак с Элен, дуэль с Долоховым, план убийства Наполеона, плен, встречу с Платоном Каратаевым — и обретает простую мудрость жить.',
+    fate:'Муж Наташи, отец семейства; по намёкам эпилога — сочувствует тайному обществу.' },
+  { id:'old_bezukhov', name:'Граф Кирилл Безухов', family:'bezukhov', role:'Умирающий екатерининский вельможа',
+    bio:'Богатейший вельможа, отец Пьера. Его долгая смерть и борьба за завещание открывают роман в петербургском плане.',
+    fate:'Умирает в 1805 году, оставляя состояние Пьеру.' },
+
+  // ——— Курагины
+  { id:'vasily',    name:'Князь Василий Курагин', family:'kuragin',   role:'Светский интриган, отец',
+    bio:'Ловкий царедворец. Крадёт мозаиковый портфель, толкает Пьера к браку с Элен, устраивает своих детей. Олицетворение светской пошлости и расчёта.',
+    fate:'Доживает в столице, по-прежнему в интригах.' },
+  { id:'helene',    name:'Элен Курагина',         family:'kuragin',   major:true,  role:'Красавица без души',
+    bio:'«Мраморная» красавица. Становится женой Пьера из-за его наследства; заводит любовников, в т.ч. Долохова. Мечется между двумя кандидатами, втайне собираясь оставить Пьера.',
+    fate:'Умирает в Петербурге в 1812 году при тёмных обстоятельствах (аборт / отравление).' },
+  { id:'anatole',   name:'Анатоль Курагин',       family:'kuragin',   role:'Повеса, соблазнитель',
+    bio:'Красивый, глупый, обаятельный распутник. Тайно женат на польской крестьянке. Чуть не увозит Наташу, ломая её жизнь и её брак с Андреем.',
+    fate:'Ранен под Бородиным, теряет ногу; по некоторым деталям — умирает от ран.' },
+  { id:'hippolyte', name:'Ипполит Курагин',       family:'kuragin',   role:'Глупый старший сын',
+    bio:'Дурачок, шутящий невпопад в салоне Анны Шерер. Живая карикатура на светский тип.',
+    fate:'Незаметная дипломатическая карьера.' },
+
+  // ——— Друбецкие
+  { id:'anna_mikh', name:'Анна Михайловна Друбецкая', family:'drubetsky', role:'Пробивная мать',
+    bio:'Небогатая вдова, двигающая карьеру сына всеми путями. Хлопочет у постели умирающего Безухова ради крох.',
+    fate:'Живёт при сыне, довольная его успехом.' },
+  { id:'boris',     name:'Борис Друбецкой',       family:'drubetsky', role:'Холодный карьерист',
+    bio:'Детский друг Николая Ростова. Хладнокровно строит карьеру, женится на богатой Жюли Карагиной, отказывается от юной любви к Наташе.',
+    fate:'Преуспевающий офицер, богатый женою.' },
+
+  // ——— Другие
+  { id:'dolokhov',  name:'Фёдор Долохов',         family:'other',     major:true,  role:'Бретёр, игрок, герой',
+    bio:'Отчаянный офицер, картёжник, дуэлянт, любовник Элен. Ранен Пьером, разоряет Николая в карты, позже — одна из главных фигур партизанской войны 1812 года. Трагически привязан к матери и сестре.',
+    fate:'Продолжает службу; неоднозначный герой до конца.' },
+  { id:'denisov',   name:'Василий Денисов',       family:'other',     role:'Гусар, друг Николая',
+    bio:'Картавый, храбрый, поэт-партизан. Командир Николая и Пети. Безответно влюблён в Наташу.',
+    fate:'Командир партизанского отряда, переживает гибель Пети.' },
+  { id:'platon',    name:'Платон Каратаев',       family:'other',     major:true,  role:'Народный мудрец',
+    bio:'Солдат-крестьянин, с которым Пьер встречается в плену. Круглый, ласковый, говорит поговорками. Воплощение народной правды и простоты, «капля народного моря».',
+    fate:'Расстрелян конвоирами на отступлении из Москвы.' },
+  { id:'scherer',   name:'Анна Павловна Шерер',    family:'other',     role:'Хозяйка петербургского салона',
+    bio:'Фрейлина императрицы, содержит модный салон. С её раута начинается роман — и всё искусственное, светское, поддельное.',
+    fate:'Продолжает принимать в своём салоне.' },
+  { id:'tushin',    name:'Капитан Тушин',          family:'other',     role:'Скромный герой Шенграбена',
+    bio:'Маленький, кроткий артиллерист. Спасает исход боя без приказа, мыслит мир гигантскими образами; Толстой противопоставляет его «великим» полководцам.',
+    fate:'Разжалован незаслуженно; остаётся служить.' },
+  { id:'julie',     name:'Жюли Карагина',          family:'other',     role:'Богатая невеста',
+    bio:'Подруга Марьи по переписке. Пишет о Руссо и сантиментах, выходит за Бориса по расчёту.',
+    fate:'Замужем за Борисом.' },
+
+  // ——— Исторические
+  { id:'kutuzov',   name:'М. И. Кутузов',          family:'historical', major:true, role:'Народный полководец',
+    bio:'У Толстого — воплощение народной мудрости: не «великий человек», а тот, кто умеет не мешать ходу истории. Старик, плачущий над иконой; спящий на совете, знающий, что армию надо беречь.',
+    fate:'Выигрывает 1812 год, умирает в 1813-м.' },
+  { id:'napoleon',  name:'Наполеон Бонапарт',      family:'historical', major:true, role:'Ложный «великий человек»',
+    bio:'Для Толстого — предельное выражение мифа о личности, творящей историю. Самодовольный, ничтожный актёр на сцене, уверенный, что он двигает миллионами. Особенно жалок на Поклонной горе в ожидании депутации.',
+    fate:'Отступает из России, теряет армию; для Толстого — разоблачён.' },
+  { id:'alexander', name:'Александр I',            family:'historical', role:'Император, кумир Николая',
+    bio:'Молодой государь, которого боготворит юный Ростов; живое олицетворение русского мифа о царе.',
+    fate:'Правит до 1825 года; в романе появляется в ключевые минуты.' },
+  { id:'speransky', name:'М. М. Сперанский',       family:'historical', role:'Реформатор, зеркало для Андрея',
+    bio:'Государственный деятель, в сотрудничестве с которым Андрей на время находит смысл. Его сухая рационалистичность в итоге отталкивает князя.',
+    fate:'В 1812 отправлен в опалу.' },
+  { id:'bagration', name:'Князь П. И. Багратион',  family:'historical', role:'Боевой генерал',
+    bio:'Грузинский князь, полководец Шенграбенского арьергарда. Для Толстого — пример честного вождя под огнём, не претендующего на «великое».',
+    fate:'Смертельно ранен при Бородине.' },
+  { id:'rostopchin', name:'Ф. В. Ростопчин',       family:'historical', role:'Главнокомандующий Москвы',
+    bio:'Московский генерал-губернатор. Его афишки и расправа над Верещагиным — предмет беспощадного толстовского анализа.',
+    fate:'Покидает Москву перед её занятием французами.' },
+];
+
+/* Links: types = family, marriage, love, friend, enemy, mentor, rival */
+const LINKS = [
+  // Ростовы — кровные
+  { s:'count_rostov', t:'countess_rostova', type:'marriage' },
+  { s:'count_rostov', t:'natasha', type:'family' },
+  { s:'count_rostov', t:'nikolay', type:'family' },
+  { s:'count_rostov', t:'petya',   type:'family' },
+  { s:'count_rostov', t:'vera',    type:'family' },
+  { s:'countess_rostova', t:'natasha', type:'family' },
+  { s:'countess_rostova', t:'nikolay', type:'family' },
+  { s:'countess_rostova', t:'petya',   type:'family' },
+  { s:'countess_rostova', t:'vera',    type:'family' },
+  { s:'sonya', t:'countess_rostova', type:'family' },
+  { s:'sonya', t:'natasha', type:'friend' },
+
+  // Болконские — кровные
+  { s:'old_bolkonsky', t:'andrey', type:'family' },
+  { s:'old_bolkonsky', t:'marya',  type:'family' },
+  { s:'andrey', t:'marya', type:'family' },
+  { s:'andrey', t:'liza',  type:'marriage' },
+  { s:'andrey', t:'nikolenka', type:'family' },
+  { s:'liza',   t:'nikolenka', type:'family' },
+  { s:'marya',  t:'nikolenka', type:'family' },
+  { s:'bourienne', t:'marya', type:'enemy' },
+  { s:'bourienne', t:'anatole', type:'love' },
+
+  // Курагины
+  { s:'vasily', t:'helene',    type:'family' },
+  { s:'vasily', t:'anatole',   type:'family' },
+  { s:'vasily', t:'hippolyte', type:'family' },
+
+  // Безуховы
+  { s:'old_bezukhov', t:'pierre', type:'family' },
+
+  // Друбецкие
+  { s:'anna_mikh', t:'boris', type:'family' },
+
+  // Браки романа
+  { s:'pierre', t:'helene',  type:'marriage' },
+  { s:'pierre', t:'natasha', type:'marriage' },
+  { s:'nikolay', t:'marya',  type:'marriage' },
+  { s:'vera', t:'berg',      type:'marriage' },
+  { s:'boris', t:'julie',    type:'marriage' },
+
+  // Любовь / помолвки / соблазнение
+  { s:'andrey',  t:'natasha', type:'love' },
+  { s:'anatole', t:'natasha', type:'love' },
+  { s:'nikolay', t:'sonya',   type:'love' },
+  { s:'denisov', t:'natasha', type:'love' },
+  { s:'dolokhov',t:'sonya',   type:'love' },
+  { s:'helene',  t:'dolokhov',type:'love' },
+  { s:'anatole', t:'marya',   type:'love' },
+  { s:'boris',   t:'natasha', type:'love' },
+
+  // Дружба
+  { s:'pierre', t:'andrey',   type:'friend' },
+  { s:'nikolay', t:'denisov', type:'friend' },
+  { s:'nikolay', t:'boris',   type:'friend' },
+  { s:'marya',  t:'julie',    type:'friend' },
+  { s:'petya',  t:'denisov',  type:'friend' },
+
+  // Вражда / дуэли / соперничество
+  { s:'pierre',  t:'dolokhov', type:'enemy' },
+  { s:'pierre',  t:'anatole',  type:'enemy' },
+  { s:'andrey',  t:'anatole',  type:'enemy' },
+  { s:'dolokhov',t:'nikolay',  type:'rival' }, // карточный долг
+  { s:'scherer', t:'pierre',   type:'rival' },
+
+  // Наставничество / влияние
+  { s:'platon',    t:'pierre',  type:'mentor' },
+  { s:'speransky', t:'andrey',  type:'mentor' },
+  { s:'old_bolkonsky', t:'andrey', type:'mentor' },
+  { s:'kutuzov',  t:'andrey',  type:'mentor' },
+
+  // Исторические оси
+  { s:'kutuzov', t:'napoleon', type:'enemy' },
+  { s:'kutuzov', t:'alexander', type:'rival' },
+  { s:'bagration', t:'kutuzov', type:'friend' },
+  { s:'pierre',  t:'napoleon',  type:'enemy' },
+  { s:'nikolay', t:'alexander', type:'friend' }, // обожание
+  { s:'rostopchin', t:'pierre', type:'rival' },
+  { s:'tushin',  t:'andrey',    type:'friend' },
+
+  // Карьерная ось
+  { s:'boris', t:'anna_mikh', type:'family' },
+  { s:'boris', t:'helene',    type:'friend' }, // петербургский круг
+];
+
+const EVENTS = [
+  { year:'июль 1805', pos:0.01, type:'peace',     top:true,
+    title:'Салон Анны Павловны Шерер',
+    meta:'С чего начинается роман',
+    body:'В модной петербургской гостиной обсуждают Наполеона. Появляется неуклюжий Пьер. Князь Василий уже плетёт интриги. Толстой одним движением обнажает весь фальшивый язык света — французская речь на фоне грядущей войны.',
+    chars:['scherer','pierre','andrey','vasily','anna_mikh','hippolyte'] },
+  { year:'август 1805', pos:0.03, type:'peace', top:false,
+    title:'Именины Наташи',
+    meta:'Мир Ростовых',
+    body:'День рождения Наташи и её матери. Тринадцатилетняя Наташа впервые обещает себя Борису; дом Ростовых — образ русской жизни, противопоставленной петербургскому салону.',
+    chars:['natasha','nikolay','sonya','boris','count_rostov','petya','vera'] },
+  { year:'сент. 1805', pos:0.055, type:'peace', top:true,
+    title:'Смерть старого Безухова',
+    meta:'Борьба за наследство',
+    body:'В Петербурге умирает граф Кирилл Безухов. Князь Василий и Анна Михайловна Друбецкая борются за мозаиковый портфель с завещанием. Пьер внезапно становится одним из богатейших людей России — и лакомым женихом.',
+    chars:['old_bezukhov','pierre','vasily','anna_mikh'] },
+  { year:'ноябрь 1805', pos:0.08, type:'war', top:false,
+    title:'Шенграбенское сражение',
+    meta:'Первый бой Николая и Андрея',
+    body:'Арьергард Багратиона сдерживает втрое превосходящего врага. Николай впервые видит войну и бежит, увидев французов. Капитан Тушин спасает положение батареей, которую никто не приказывал открывать. Андрей впервые задумывается, что «великое» рождается не там, где ищут славы.',
+    chars:['andrey','nikolay','bagration','kutuzov','tushin','denisov'] },
+  { year:'дек. 1805', pos:0.10, type:'war', top:true,
+    title:'Аустерлиц',
+    meta:'Небо Андрея',
+    body:'Катастрофа русско-австрийской армии. Князь Андрей со знаменем в руках ранен, лежит на поле боя и смотрит в высокое, бесконечное небо — и внезапно понимает, что всё, ради чего он жил, ничтожно. «Как тихо, спокойно и торжественно...». Наполеон, объезжающий поле, кажется ему маленьким.',
+    chars:['andrey','napoleon','alexander','kutuzov'] },
+  { year:'1806', pos:0.14, type:'personal', top:false,
+    title:'Смерть Лизы в родах',
+    meta:'Немой укор',
+    body:'Князь Андрей возвращается в Лысые Горы в день, когда его жена Лиза умирает, рожая сына. Её застывшее лицо с выражением «что вы со мной сделали?» становится для Андрея тяжёлым укором — и толчком к долгому кризису.',
+    chars:['andrey','liza','marya','nikolenka','old_bolkonsky'] },
+  { year:'1806', pos:0.17, type:'personal', top:true,
+    title:'Брак Пьера и Элен',
+    meta:'Западня света',
+    body:'Князь Василий почти насильно женит Пьера на Элен. Свадьба — и сразу отвращение. Пьер понимает, что его обманули, но не может уйти от пустой красавицы.',
+    chars:['pierre','helene','vasily'] },
+  { year:'март 1806', pos:0.20, type:'personal', top:false,
+    title:'Дуэль Пьера с Долоховым',
+    meta:'Нелепое убийство',
+    body:'Узнав о связи Элен и Долохова, близорукий Пьер, никогда не державший пистолета, ранит бретёра Долохова. После этого он порывает с Элен и уходит в духовные искания — масонство.',
+    chars:['pierre','dolokhov','helene'] },
+  { year:'1807', pos:0.24, type:'political', top:true,
+    title:'Тильзитский мир',
+    meta:'Унижение России',
+    body:'Россия подписывает мир с Наполеоном. Николай Ростов, обожающий Александра, в Тильзите видит, как его кумир целуется с Бонапартом — и теряет почву под ногами: «Наше дело — повиноваться, а не рассуждать».',
+    chars:['alexander','napoleon','nikolay','boris'] },
+  { year:'весна 1809', pos:0.33, type:'personal', top:false,
+    title:'Дуб князя Андрея',
+    meta:'Оживший лес',
+    body:'Князь Андрей по дороге в Отрадное видит старый, скрюченный дуб — символ его собственной мёртвой души. Через несколько месяцев на обратной дороге тот же дуб покрывается молодой зеленью. Между ними — ночная Наташа у окна в Отрадном, чей голос возвращает Андрею жизнь.',
+    chars:['andrey','natasha'] },
+  { year:'1809–10', pos:0.37, type:'political', top:true,
+    title:'Андрей у Сперанского',
+    meta:'Увлечение реформой',
+    body:'Князь Андрей в Петербурге работает над реформами в комиссии Сперанского. На время находит смысл — и разочаровывается, увидев в Сперанском холод и «зеркала». Толстой устами героя разоблачает рационалистическую государственность.',
+    chars:['andrey','speransky'] },
+  { year:'дек. 1809', pos:0.39, type:'peace', top:false,
+    title:'Первый бал Наташи',
+    meta:'Вспышка жизни',
+    body:'На новогоднем балу Наташа впервые танцует с князем Андреем. «Она — лучшая девушка в мире». Он влюбляется; вспыхнувшее чувство становится осью всего романа.',
+    chars:['natasha','andrey','pierre','boris'] },
+  { year:'1810', pos:0.42, type:'personal', top:true,
+    title:'Помолвка Андрея и Наташи',
+    meta:'Ждать год',
+    body:'По настоянию старого князя Болконского свадьбу отложили на год. Андрей уезжает за границу. Наташа остаётся в Москве — с обещанием, но без любимого.',
+    chars:['andrey','natasha','old_bolkonsky','marya'] },
+  { year:'1811', pos:0.47, type:'personal', top:false,
+    title:'История с Анатолем',
+    meta:'Падение и спасение',
+    body:'В Москве Наташа теряет голову от Анатоля Курагина, который, уже будучи тайно женат, готовит её побег. Сонечка и Марья Дмитриевна срывают план. Наташа пытается отравиться; Пьер, утешая её, впервые понимает, что любит её. Андрей отказывается простить.',
+    chars:['natasha','anatole','pierre','sonya','andrey','helene'] },
+  { year:'июнь 1812', pos:0.54, type:'war', top:true,
+    title:'Наполеон переходит Неман',
+    meta:'Начало Отечественной',
+    body:'«Двенадцать языков» пересекают российскую границу. Русская армия отступает. Начинается война, которую Толстой объявит не войной двух воль, а движением огромных стихийных масс.',
+    chars:['napoleon','alexander','kutuzov'] },
+  { year:'авг. 1812', pos:0.60, type:'war', top:false,
+    title:'Оставление Смоленска',
+    meta:'Земля горит',
+    body:'Купец Ферапонтов поджигает собственные лабазы: «тащи всё, ребята, не доставайся дьяволам!». Простой народ впервые входит в роман как настоящий субъект войны.',
+    chars:['andrey','napoleon','kutuzov'] },
+  { year:'26 авг. 1812', pos:0.64, type:'war', top:true,
+    title:'Бородинская битва',
+    meta:'Главный день романа',
+    body:'Центральная глава эпопеи. Пьер в белой шляпе бродит по полю как сторонний наблюдатель. Князь Андрей смертельно ранен гранатой. Кутузов руководит не войсками, а «духом армии». Толстой: Бородино — нравственная победа русских, победа духа над числом.',
+    chars:['andrey','pierre','kutuzov','napoleon','bagration','dolokhov','nikolay'] },
+  { year:'1 сент. 1812', pos:0.66, type:'political', top:false,
+    title:'Совет в Филях',
+    meta:'«Москву оставлять»',
+    body:'Кутузов берёт на себя ответственность сдать Москву без боя. Девочка Малаша подсматривает с печки. Россия оказывается больше Москвы.',
+    chars:['kutuzov'] },
+  { year:'2 сент. 1812', pos:0.68, type:'war', top:true,
+    title:'Пожар Москвы',
+    meta:'Гибель старого мира',
+    body:'Ростовы спешно покидают Москву, бросая имущество и увозя раненых — среди них смертельно раненного Андрея. Пьер остаётся в горящем городе с безумной идеей убить Наполеона. Французы стреляют Верещагина; Ростопчин произносит свою роль.',
+    chars:['pierre','natasha','andrey','rostopchin','napoleon'] },
+  { year:'сент. 1812', pos:0.70, type:'personal', top:false,
+    title:'Пьер спасает девочку — и попадает в плен',
+    meta:'Простой человеческий поступок',
+    body:'Пьер спасает ребёнка из горящего дома, защищает женщину от мародёра — и французы хватают его как поджигателя. Начинается главный духовный период его жизни.',
+    chars:['pierre'] },
+  { year:'окт. 1812', pos:0.73, type:'personal', top:true,
+    title:'Пьер и Платон Каратаев',
+    meta:'Круглое слово',
+    body:'В плену Пьер встречает солдата Платона Каратаева — круглого, ласкового, говорящего поговорками. «Не нашим умом, а Божьим судом». Именно здесь Пьер обретает ту простоту и ту любовь, ради которых был написан роман.',
+    chars:['pierre','platon'] },
+  { year:'окт. 1812', pos:0.75, type:'personal', top:false,
+    title:'Смерть князя Андрея',
+    meta:'Любовь как ответ',
+    body:'В Ярославле Наташа выхаживает смертельно раненого Андрея. Перед смертью он прощает Анатоля, рядом с ним — Наташа и сестра Марья. Его последние слова о том, что «любовь есть Бог, и умереть — значит мне, частице любви, вернуться к общему и вечному источнику».',
+    chars:['andrey','natasha','marya'] },
+  { year:'окт. 1812', pos:0.77, type:'war', top:true,
+    title:'Отступление французов и гибель Пети',
+    meta:'Партизанская война',
+    body:'Армия Наполеона уходит из Москвы. Партизанские отряды Денисова и Долохова идут на обозы. В одной из атак гибнет пятнадцатилетний Петя Ростов. Каратаев отстаёт по болезни — и его расстреливают.',
+    chars:['petya','denisov','dolokhov','platon','pierre'] },
+  { year:'нояб. 1812', pos:0.80, type:'war', top:false,
+    title:'Освобождение Пьера',
+    meta:'Новое рождение',
+    body:'Отряд Денисова отбивает колонну пленных, среди них — измождённый, но внутренне преображённый Пьер. Он возвращается в мир другим человеком.',
+    chars:['pierre','denisov','dolokhov'] },
+  { year:'1813', pos:0.85, type:'personal', top:true,
+    title:'Марья и Николай',
+    meta:'Молчаливое сватовство',
+    body:'В Воронеже княжна Марья и Николай сближаются. Освобождённые от прошлого, они обретают друг друга — и Николай, прежде не видевший «богатой невесты», видит её «лучистые глаза».',
+    chars:['marya','nikolay'] },
+  { year:'1813', pos:0.87, type:'personal', top:false,
+    title:'Пьер и Наташа — снова',
+    meta:'Тихая встреча',
+    body:'В Москве, у Марьи, Пьер видит изменившуюся, повзрослевшую после горя Наташу. Несколько слов, несколько взглядов — и роман тихо сходит к своей семейной развязке.',
+    chars:['pierre','natasha','marya'] },
+  { year:'1820', pos:0.98, type:'peace', top:true,
+    title:'Эпилог в Лысых Горах',
+    meta:'Мысль семейная',
+    body:'Две семьи — Безуховы и Ростовы — живут в имении. Наташа в пелёнках, Марья с детьми, Николай — хозяин. Пьер возвращается из Петербурга с речами, которые тревожат всех: он сочувствует тайному обществу. Николенька Болконский видит сон о великом отце — и просыпается в слезах.',
+    chars:['pierre','natasha','marya','nikolay','nikolenka','sonya','countess_rostova','denisov'] },
+];
+
+/* Families with members and description */
+const FAMILIES = [
+  { key:'rostov', name:'Ростовы', motto:'Живая жизнь, русская душа',
+    body:'Московская семья — шумная, щедрая, непрактичная, с охотами, балами, детьми, долгами. Толстой пишет их с нежной любовью: здесь тепло, здесь много едят, здесь всегда плачут и смеются.',
+    members:['count_rostov','countess_rostova','natasha','nikolay','petya','vera','sonya','berg'] },
+  { key:'bolkonsky', name:'Болконские', motto:'Гордость, долг, внутренний огонь',
+    body:'Старинный род, живущий в отдалении от света в Лысых Горах по расписанию старого князя. Здесь геометрия и Руссо, латынь и молитва, холод и жажда большого дела.',
+    members:['old_bolkonsky','andrey','marya','liza','nikolenka','bourienne'] },
+  { key:'bezukhov', name:'Безуховы', motto:'Большая душа, большие деньги',
+    body:'Род, сузившийся до одного человека — Пьера. Огромное состояние, огромное тело, огромный внутренний мир. Весь дом — один главный искатель смысла.',
+    members:['old_bezukhov','pierre'] },
+  { key:'kuragin', name:'Курагины', motto:'Мрамор и яд',
+    body:'Семья «без души» в мире Толстого. Красота Элен, развратная пустота Анатоля, глупость Ипполита, интриги Василия — всё, что Толстой ненавидит в свете, собрано здесь в одной фамилии.',
+    members:['vasily','helene','anatole','hippolyte'] },
+  { key:'drubetsky', name:'Друбецкие', motto:'Пробивная бедность',
+    body:'Обедневшие, но честолюбивые. Анна Михайловна любой ценой устраивает сына; Борис, холодный и расчётливый, последовательно делает карьеру и женится на деньгах.',
+    members:['anna_mikh','boris'] },
+  { key:'other', name:'Другие герои', motto:'Голоса истории и народа',
+    body:'Партизан Денисов, бретёр Долохов, капитан Тушин, солдат Платон Каратаев, салонная хозяйка Шерер — каждый из них носит в романе особый голос.',
+    members:['dolokhov','denisov','platon','scherer','tushin','julie'] },
+  { key:'historical', name:'Исторические лица', motto:'Реальные на сцене вымысла',
+    body:'Кутузов и Наполеон — два полюса толстовской философии истории. Александр, Сперанский, Багратион, Ростопчин — живые реальные персонажи, вписанные в ткань романа.',
+    members:['kutuzov','napoleon','alexander','speransky','bagration','rostopchin'] },
+];
+
+/* Arcs: духовные пути главных героев */
+const ARCS = [
+  { name:'Пьер Безухов', subtitle:'от богатого мальчика — к простой мудрости', id:'pierre',
+    steps:[
+      { title:'Наследство и свет', body:'Внезапно разбогатев, Пьер попадает в интриги князя Василия и женится на Элен. Первый опыт — обмана и пустоты.' },
+      { title:'Дуэль и масонство', body:'После дуэли с Долоховым и разрыва с женой ищет смысл в масонстве. Пытается «делать добро» крестьянам — и не умеет.' },
+      { title:'Любовь к Наташе', body:'Влюбляется, не смея себе признаться. Пока Наташа помолвлена с Андреем — дружески её оберегает.' },
+      { title:'План убить Наполеона', body:'В горящей Москве Пьер с кинжалом ищет Наполеона — и вместо этого спасает ребёнка и попадает в плен.' },
+      { title:'Платон Каратаев', body:'В плену встречает солдата-крестьянина. Открывает, что истина — в простоте, в смирении, в любви ко всему живому.' },
+      { title:'Семья с Наташей', body:'После войны женится на Наташе. Обретает покой — и одновременно тревогу: к концу романа сочувствует тайному обществу.' },
+    ]},
+  { name:'Князь Андрей', subtitle:'от жажды славы — к любви-всепрощению', id:'andrey',
+    steps:[
+      { title:'Жажда «своего Тулона»', body:'Молодой, блестящий, презирающий свет и ищущий великого дела. Уходит на войну за славой.' },
+      { title:'Небо Аустерлица', body:'Раненый, смотрит в высокое небо. Всё величие — ничтожно. Наполеон — муха.' },
+      { title:'Смерть Лизы', body:'Возвращается и теряет жену в родах. Замыкается в деревне; решает «жить для себя и близких».' },
+      { title:'Дуб и Наташа', body:'Снова раскрывается жизни через встречу с Наташей в Отрадном.' },
+      { title:'Разрыв', body:'После истории с Анатолем разрывает помолвку. Не умеет простить.' },
+      { title:'Бородино и смерть', body:'Смертельно ранен гранатой. В Ярославле, у Наташи, приходит к любви, которая «есть Бог». Умирает примирённым.' },
+    ]},
+  { name:'Наташа Ростова', subtitle:'от девочки — к матери и женщине', id:'natasha',
+    steps:[
+      { title:'Девочка-бесёнок', body:'Шумная, живая, с куклой Мими. Средоточие ростовского тепла.' },
+      { title:'Первый бал', body:'Танцует с князем Андреем и впервые любит по-настоящему.' },
+      { title:'Ожидание', body:'Год помолвки вдали. Светская жизнь Москвы затягивает её в одиночество.' },
+      { title:'Падение', body:'Поддаётся обаянию Анатоля. Пытается отравиться. Духовный кризис.' },
+      { title:'Смерть Андрея', body:'Выхаживает его в Ярославле. Получает прощение. Переживает смерть — и вырастает.' },
+      { title:'Мать', body:'В эпилоге — тихая семейная женщина, жена Пьера. Толстому важнее всего именно это.' },
+    ]},
+  { name:'Марья Болконская', subtitle:'от молчаливой покорности — к счастливому браку', id:'marya',
+    steps:[
+      { title:'Под отцом', body:'Живёт в Лысых Горах под тяжёлой опекой князя. Тайно ненавидит свою жизнь — и тут же кается.' },
+      { title:'Отказ Анатолю', body:'Понимает, что не нужна Анатолю и не может оставить отца. Выбирает верность.' },
+      { title:'Смерть отца и война', body:'Теряет отца в 1812. Чуть не попадает во власть бунтующих мужиков Богучарова — спасение Николаем.' },
+      { title:'Встреча с Николаем', body:'В Воронеже; взаимная сдержанная любовь.' },
+      { title:'Семья', body:'Жена Николая, мать; «лучистые глаза» светят теперь всем детям в доме.' },
+    ]},
+  { name:'Николай Ростов', subtitle:'от порыва — к простой честной жизни', id:'nikolay',
+    steps:[
+      { title:'Юный гусар', body:'Обожает государя, рвётся на войну; первый бой под Шенграбеном — паническое бегство.' },
+      { title:'Огонь Аустерлица и Тильзит', body:'Видит, как царь целуется с Наполеоном; запрещает себе рассуждать: «наше дело — повиноваться».' },
+      { title:'Сонина любовь и карточный долг', body:'Любит Соню; проигрывает Долохову огромные деньги; клянётся себе никогда больше.' },
+      { title:'Охота, Святки, пляска Наташи', body:'Лучшие страницы русской жизни; обретение корней.' },
+      { title:'1812 и Марья', body:'Встреча с Марьей в Воронеже; чувство долга перед матерью и Соней постепенно превращается в любовь.' },
+      { title:'Хозяин Лысых Гор', body:'В эпилоге — честный, практичный барин, муж Марьи.' },
+    ]},
+];
+
+/* Philosophical ideas */
+const IDEAS = [
+  { symbol:'Н', title:'Мысль народная', ru:'«Народ есть носитель истории»',
+    body:'Главная, по собственному признанию Толстого, идея романа. Историю движут не короли и полководцы, а <em>народ</em> — огромное множество простых людей с их страстями, ошибками, общим настроением. Победа 1812 года — победа «дубины народной войны».' },
+  { symbol:'С', title:'Мысль семейная', ru:'«Семья как единственный устойчивый мир»',
+    body:'Семья у Толстого — оплот нравственной жизни. Настоящее счастье — в Лысых Горах эпилога: пелёнки, дети, хозяйство, взаимная забота. Весь роман, пройдя через салоны и поля сражений, возвращает героев <em>домой</em>.' },
+  { symbol:'И', title:'Философия истории', ru:'«Нет великого, где нет простоты»',
+    body:'Толстой отвергает «теорию великого человека». Наполеон самодоволен и смешон; Кутузов велик именно потому, что не мешает <em>ходу вещей</em>. История — это равнодействующая миллионов воль, а не воля одного.' },
+  { symbol:'Ж', title:'«Живая жизнь»', ru:'«Жить, а не играть в жизнь»',
+    body:'Настоящая жизнь — там, где Наташа поёт, где Николай скачет за волком, где Пьер просто любит. Всё искусственное — салоны, светские маски, «оперы» — у Толстого <em>вычерчено как подделка</em>, как сценический обман.' },
+  { symbol:'Д', title:'Свобода и необходимость', ru:'«Чем ближе к истории — тем меньше свободы»',
+    body:'В знаменитой второй части эпилога Толстой строит целую теорию: чем больше у человека власти над другими, тем меньше его действия принадлежат ему — он становится «рабом истории». Свободен — частный человек. Несвободен — царь.' },
+  { symbol:'Л', title:'Любовь как ответ', ru:'«Любить всё — значит не умереть никогда»',
+    body:'Перед смертью Андрей приходит к мысли: <em>Бог есть любовь, любовь есть Бог</em>, и умереть — значит, любящей частице вернуться в общий источник. Пьер в плену открывает ту же истину через Платона Каратаева: «Жизнь есть всё. Жизнь есть Бог».' },
+  { symbol:'К', title:'Критика света', ru:'«Говорят по-французски — лгут по-человечески»',
+    body:'Петербургский салон, «золотая» молодёжь, Курагины — всё это у Толстого <em>театр без души</em>. Пустая красота Элен, карьера Бориса, интрига Василия: мир «как будто», в котором нельзя жить по-настоящему.' },
+  { symbol:'П', title:'Роевая жизнь', ru:'«Человек в общем — больше, чем один»',
+    body:'Толстой вводит образ <em>роя, множества, муравейника</em>. На войне, в бою, в толпе человек теряет индивидуальное «я» и подчиняется общему движению. Отсюда — его недоверие к планам генералов и вера в «дух войска».' },
+];
+
+/* Quotes */
+const QUOTES = [
+  { text:'Как тихо, спокойно и торжественно, совсем не так, как я бежал, — совсем не так, как мы бежали, кричали и дрались... совсем не так ползут облака по этому высокому, бесконечному небу.', attr:'князь Андрей на поле Аустерлица' },
+  { text:'Всё, всё, что понимаю, я понимаю только потому, что люблю. Всё есть, всё существует только потому, что я люблю.', attr:'князь Андрей перед смертью' },
+  { text:'Жизнь есть всё. Жизнь есть Бог. Всё перемещается и движется, и это движение есть Бог.', attr:'Пьер в плену' },
+  { text:'Я не гляжу на него, как на великого человека, и, признаюсь, я его никак не чувствую великим человеком.', attr:'князь Андрей — о Наполеоне' },
+  { text:'Они хотели убить меня? Они хотели убить мою бессмертную душу? — подумал он и засмеялся, и заснул.', attr:'Пьер у костра после казни' },
+  { text:'Сопрягать надо. Надо сопрягать.', attr:'князь Андрей в бреду' },
+  { text:'Наша жизнь — капля в море. Часть большого целого.', attr:'Платон Каратаев' },
+  { text:'Нет величия там, где нет простоты, добра и правды.', attr:'голос автора — о Наполеоне' },
+  { text:'Сколько я людей считал совершенно мёртвыми, а они воскресали во мне!', attr:'Пьер в эпилоге' },
+  { text:'Что такое любовь? Любовь мешает смерти. Любовь есть жизнь.', attr:'князь Андрей в Ярославле' },
+];
+
+/* ================== RENDER ================== */
+
+const charMap = new Map(CHARACTERS.map(c => [c.id, c]));
+const tooltip = document.getElementById('tooltip');
+
+function showTip(html, ev) {
+  tooltip.innerHTML = html;
+  tooltip.classList.add('visible');
+  const tw = tooltip.offsetWidth, th = tooltip.offsetHeight;
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + tw > window.innerWidth - 10)  x = ev.clientX - tw - 14;
+  if (y + th > window.innerHeight - 10) y = ev.clientY - th - 14;
+  tooltip.style.left = x + 'px';
+  tooltip.style.top = y + 'px';
+}
+function hideTip() { tooltip.classList.remove('visible'); }
+
+/* ----- Families grid ----- */
+function renderFamilies() {
+  const grid = document.getElementById('families-grid');
+  grid.innerHTML = FAMILIES.map(f => {
+    const hex = FAMILY_META[f.key].hex;
+    const members = f.members.map(id => {
+      const c = charMap.get(id);
+      if (!c) return '';
+      return `<span data-char="${id}">${c.name}</span>`;
+    }).join('');
+    return `
+      <div class="family-card" style="--fam-color:${hex}">
+        <div class="family-crest">§</div>
+        <div class="family-name">${f.name}</div>
+        <div class="family-motto">${f.motto}</div>
+        <p class="family-body">${f.body}</p>
+        <div class="family-members">${members}</div>
+      </div>`;
+  }).join('');
+
+  grid.querySelectorAll('[data-char]').forEach(el => {
+    el.addEventListener('click', () => {
+      selectCharacter(el.dataset.char);
+      document.getElementById('network').scrollIntoView({ behavior:'smooth' });
+    });
+  });
+}
+
+/* ----- Arcs ----- */
+function renderArcs() {
+  const grid = document.getElementById('arcs-grid');
+  grid.innerHTML = ARCS.map((a, i) => `
+    <div class="arc-card">
+      <div class="arc-number">${String(i+1).padStart(2,'0')}</div>
+      <div class="arc-name">${a.name}</div>
+      <div class="arc-subtitle">${a.subtitle}</div>
+      <ol class="arc-steps">
+        ${a.steps.map(s => `<li><strong>${s.title}</strong>${s.body}</li>`).join('')}
+      </ol>
+    </div>
+  `).join('');
+}
+
+/* ----- Ideas ----- */
+function renderIdeas() {
+  const grid = document.getElementById('ideas-grid');
+  grid.innerHTML = IDEAS.map(i => `
+    <div class="idea-card">
+      <div class="idea-symbol">${i.symbol}</div>
+      <div class="idea-title">${i.title}</div>
+      <div class="idea-ru">${i.ru}</div>
+      <p class="idea-body">${i.body}</p>
+    </div>
+  `).join('');
+}
+
+/* ----- Quotes ----- */
+function renderQuotes() {
+  const stack = document.getElementById('quotes-stack');
+  stack.innerHTML = QUOTES.map(q => `
+    <div class="quote-card">
+      <div class="quote-text">${q.text}</div>
+      <div class="quote-attr">— ${q.attr}</div>
+    </div>
+  `).join('');
+}
+
+/* ----- Timeline ----- */
+function renderTimeline() {
+  const line = document.getElementById('timeline-line');
+  line.innerHTML = '';
+
+  // Year markers
+  for (let y = 1805; y <= 1820; y++) {
+    const pos = (y - 1805) / 15;
+    const el = document.createElement('div');
+    el.className = 'timeline-year';
+    el.style.left = (pos * 100) + '%';
+    el.textContent = y;
+    line.appendChild(el);
+  }
+
+  EVENTS.forEach((ev, idx) => {
+    const dot = document.createElement('div');
+    dot.className = `event-dot ${ev.type}`;
+    dot.style.left = (ev.pos * 100) + '%';
+    dot.dataset.idx = idx;
+    dot.dataset.type = ev.type;
+    line.appendChild(dot);
+
+    const label = document.createElement('div');
+    label.className = 'event-label ' + (ev.top ? 'top' : 'bottom');
+    label.textContent = ev.title;
+    label.style.left = (ev.pos * 100) + '%';
+    line.appendChild(label);
+
+    dot.addEventListener('mouseenter', e => showTip(`<strong>${ev.title}</strong>${ev.year}`, e));
+    dot.addEventListener('mousemove',  e => showTip(`<strong>${ev.title}</strong>${ev.year}`, e));
+    dot.addEventListener('mouseleave', hideTip);
+    dot.addEventListener('click', () => selectEvent(idx));
+  });
+
+  // Default — show first major event
+  selectEvent(4); // Аустерлиц
+}
+
+function selectEvent(idx) {
+  const ev = EVENTS[idx];
+  document.querySelectorAll('.event-dot').forEach(d => d.classList.remove('active'));
+  const dot = document.querySelector(`.event-dot[data-idx="${idx}"]`);
+  if (dot) dot.classList.add('active');
+
+  document.getElementById('ed-year').textContent  = ev.year;
+  document.getElementById('ed-title').textContent = ev.title;
+  document.getElementById('ed-meta').textContent  = ev.meta;
+  document.getElementById('ed-body').textContent  = ev.body;
+
+  const chars = document.getElementById('ed-chars');
+  chars.innerHTML = (ev.chars || []).map(id => {
+    const c = charMap.get(id);
+    return c ? `<span data-char="${id}">${c.name}</span>` : '';
+  }).join('');
+  chars.querySelectorAll('[data-char]').forEach(el => {
+    el.addEventListener('click', () => {
+      selectCharacter(el.dataset.char);
+      document.getElementById('network').scrollIntoView({ behavior:'smooth' });
+    });
+  });
+
+  // Также обновить swimlane (если он уже отрисован)
+  activeTlEventIdx = idx;
+  updateTimelaneForEvent(idx);
+}
+
+/* Timeline filters */
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    document.querySelectorAll('.event-dot').forEach(d => {
+      d.classList.toggle('hidden', f !== 'all' && d.dataset.type !== f);
+    });
+    document.querySelectorAll('.event-label').forEach((l, i) => {
+      const t = EVENTS[i]?.type;
+      l.style.display = (f === 'all' || t === f) ? '' : 'none';
+    });
+  });
+});
+
+/* ================== TIMELANE (swimlane: герои × время) ================== */
+
+const TIMELANE_ORDER = [
+  { key:'rostov',     members:['natasha','nikolay','petya','vera','sonya','count_rostov','countess_rostova','berg'] },
+  { key:'bolkonsky',  members:['andrey','marya','old_bolkonsky','liza','nikolenka','bourienne'] },
+  { key:'bezukhov',   members:['pierre','old_bezukhov'] },
+  { key:'kuragin',    members:['helene','anatole','vasily','hippolyte'] },
+  { key:'drubetsky',  members:['boris','anna_mikh'] },
+  { key:'other',      members:['dolokhov','denisov','platon','scherer','tushin','julie'] },
+  { key:'historical', members:['kutuzov','napoleon','alexander','bagration','speransky','rostopchin'] },
+];
+
+/* Периоды жизни героя в романе; pos ∈ [0,1] соответствует 1805–1820. */
+const LIFESPANS = {
+  old_bezukhov:  { from:0.00, to:0.055, dies:true },
+  liza:          { from:0.00, to:0.14,  dies:true },
+  old_bolkonsky: { from:0.00, to:0.58,  dies:true },
+  bagration:     { from:0.00, to:0.65,  dies:true },
+  anatole:       { from:0.00, to:0.66,  dies:true },
+  helene:        { from:0.00, to:0.69,  dies:true },
+  andrey:        { from:0.00, to:0.75,  dies:true },
+  petya:         { from:0.00, to:0.77,  dies:true },
+  platon:        { from:0.60, to:0.77,  dies:true },
+  count_rostov:  { from:0.00, to:0.83,  dies:true },
+  kutuzov:       { from:0.00, to:0.87,  dies:true },
+  nikolenka:     { from:0.14, to:1.00,  dies:false },
+};
+
+const TL_VIEWBOX_W = 1400;
+const TL_MARGIN = { top: 52, right: 40, bottom: 16, left: 180 };
+const TL_ROW_H = 21;
+const TL_GROUP_GAP = 14;
+const TL_TYPE_COLOR = { war:'#7a1f1f', peace:'#3a5040', personal:'#c2410c', political:'#4a6b7c' };
+
+let laneYMap = {};
+let activeTlEventIdx = null;
+
+function renderTimelane() {
+  const svg = d3.select('#timelane-svg');
+  svg.selectAll('*').remove();
+  laneYMap = {};
+
+  let rowCount = 0;
+  TIMELANE_ORDER.forEach(g => rowCount += g.members.length);
+  const grpCount = TIMELANE_ORDER.length;
+  const totalH = TL_MARGIN.top + rowCount * TL_ROW_H + (grpCount - 1) * TL_GROUP_GAP + TL_MARGIN.bottom + 10;
+
+  svg.attr('viewBox', `0 0 ${TL_VIEWBOX_W} ${totalH}`)
+     .attr('preserveAspectRatio', 'xMidYMin meet')
+     .style('min-width', '1100px')
+     .style('width', '100%')
+     .style('height', 'auto');
+
+  const plotX0 = TL_MARGIN.left;
+  const plotW  = TL_VIEWBOX_W - TL_MARGIN.left - TL_MARGIN.right;
+  const xScale = pos => plotX0 + pos * plotW;
+
+  /* Эпохи (цветные фоновые полосы) */
+  const eras = [
+    { from: 0.00, to: 0.54, hex:'#3a5040', label:'МИРЪ' },
+    { from: 0.54, to: 0.80, hex:'#7a1f1f', label:'ВОЙНА · 1812' },
+    { from: 0.80, to: 1.00, hex:'#a8812a', label:'ЭПИЛОГЪ' },
+  ];
+  eras.forEach(era => {
+    svg.append('rect').attr('class','tl-era-band')
+      .attr('x', xScale(era.from)).attr('y', TL_MARGIN.top - 10)
+      .attr('width', xScale(era.to) - xScale(era.from))
+      .attr('height', totalH - TL_MARGIN.top + 5)
+      .attr('fill', era.hex);
+    svg.append('text').attr('class','tl-era-label')
+      .attr('x', xScale((era.from + era.to)/2)).attr('y', 18)
+      .attr('text-anchor','middle').attr('fill', era.hex)
+      .text(era.label);
+  });
+
+  /* Год: вертикальная сетка + подпись */
+  for (let y = 1805; y <= 1820; y++) {
+    const pos = (y - 1805) / 15;
+    const x = xScale(pos);
+    svg.append('line').attr('class','tl-year-grid')
+      .attr('x1', x).attr('x2', x)
+      .attr('y1', TL_MARGIN.top - 6).attr('y2', totalH - TL_MARGIN.bottom);
+    svg.append('text').attr('class','tl-year-label')
+      .attr('x', x).attr('y', TL_MARGIN.top - 14).text(y);
+  }
+
+  /* Строки героев, сгруппированные по семьям */
+  let curY = TL_MARGIN.top + 8;
+  TIMELANE_ORDER.forEach((group) => {
+    const meta = FAMILY_META[group.key];
+    const grpH = group.members.length * TL_ROW_H;
+
+    svg.append('rect').attr('class','tl-group-band')
+      .attr('x', 0).attr('y', curY - 4)
+      .attr('width', TL_VIEWBOX_W).attr('height', grpH + 8)
+      .attr('fill', meta.hex);
+
+    svg.append('text').attr('class','tl-group-label')
+      .attr('x', 12).attr('y', curY + 11)
+      .attr('fill', meta.hex).text(meta.name);
+
+    group.members.forEach(charId => {
+      const c = charMap.get(charId);
+      if (!c) return;
+      const span = LIFESPANS[charId] || { from:0, to:1, dies:false };
+      const yMid = curY + TL_ROW_H/2;
+      laneYMap[charId] = yMid;
+
+      /* Кликабельный фон строки */
+      svg.append('rect').attr('class','tl-lane-bg')
+        .attr('data-char', charId)
+        .attr('x', TL_MARGIN.left - 4).attr('y', curY)
+        .attr('width', plotW + 4).attr('height', TL_ROW_H)
+        .on('click', (e) => { e.stopPropagation(); selectCharacter(charId); });
+
+      /* Подпись слева */
+      svg.append('text').attr('class','tl-lane-label' + (c.major ? ' major' : ''))
+        .attr('data-char', charId)
+        .attr('x', TL_MARGIN.left - 12).attr('y', yMid)
+        .attr('text-anchor','end').text(c.name)
+        .on('click', (e) => { e.stopPropagation(); selectCharacter(charId); });
+
+      /* Линия жизни героя в романе */
+      svg.append('line').attr('class','tl-life-line' + (c.major ? ' major' : ''))
+        .attr('data-char', charId)
+        .attr('x1', xScale(span.from)).attr('x2', xScale(span.to))
+        .attr('y1', yMid).attr('y2', yMid)
+        .attr('stroke', meta.hex)
+        .attr('stroke-opacity', c.major ? 0.75 : 0.55);
+
+      /* Крестик смерти */
+      if (span.dies) {
+        svg.append('text').attr('class','tl-death-mark')
+          .attr('data-char', charId)
+          .attr('x', xScale(span.to) + 10).attr('y', yMid + 1)
+          .text('†');
+      }
+
+      curY += TL_ROW_H;
+    });
+    curY += TL_GROUP_GAP;
+  });
+
+  /* Слои для соединителей и точек событий */
+  svg.append('g').attr('class','tl-vline-layer');
+  svg.append('g').attr('class','tl-conn-layer');
+  const dotLayer = svg.append('g').attr('class','tl-dot-layer');
+
+  /* Точки событий на полосах */
+  EVENTS.forEach((ev, idx) => {
+    const x = xScale(ev.pos);
+    (ev.chars || []).forEach(charId => {
+      const yPos = laneYMap[charId];
+      if (yPos == null) return;
+      dotLayer.append('circle').attr('class','tl-event-dot')
+        .attr('data-event', idx).attr('data-char', charId)
+        .attr('cx', x).attr('cy', yPos).attr('r', 4.7)
+        .attr('fill', TL_TYPE_COLOR[ev.type] || '#666')
+        .on('click', (e) => { e.stopPropagation(); selectEvent(idx); })
+        .on('mouseenter', (e) => showTip(`<strong>${ev.title}</strong>${ev.year} · ${ev.meta}`, e))
+        .on('mousemove',  (e) => showTip(`<strong>${ev.title}</strong>${ev.year} · ${ev.meta}`, e))
+        .on('mouseleave', hideTip);
+    });
+  });
+
+  /* Клик по пустому SVG — сброс */
+  svg.on('click', () => clearTimelaneSelection());
+
+  /* Применить уже активное событие, если было выбрано */
+  if (activeTlEventIdx != null) updateTimelaneForEvent(activeTlEventIdx);
+}
+
+function clearTimelaneSelection() {
+  const svg = d3.select('#timelane-svg');
+  svg.selectAll('.tl-event-dot').classed('active', false).classed('dimmed', false);
+  svg.selectAll('.tl-life-line').classed('dimmed', false);
+  svg.selectAll('.tl-lane-label').classed('dimmed', false).classed('active', false);
+  svg.selectAll('.tl-death-mark').classed('dimmed', false);
+  svg.selectAll('.tl-vline-layer *').remove();
+  svg.selectAll('.tl-conn-layer *').remove();
+}
+
+function updateTimelaneForEvent(idx) {
+  const ev = EVENTS[idx];
+  if (!ev) return;
+  const svg = d3.select('#timelane-svg');
+  if (svg.selectAll('.tl-event-dot').empty()) return;
+
+  clearTimelaneSelection();
+  const participants = new Set(ev.chars || []);
+
+  svg.selectAll('.tl-event-dot')
+    .classed('dimmed', function(){ return this.getAttribute('data-event') !== String(idx); })
+    .classed('active', function(){ return this.getAttribute('data-event') === String(idx); });
+
+  svg.selectAll('.tl-life-line').classed('dimmed', function(){
+    return !participants.has(this.getAttribute('data-char'));
+  });
+  svg.selectAll('.tl-lane-label')
+    .classed('dimmed', function(){ return !participants.has(this.getAttribute('data-char')); })
+    .classed('active', function(){ return  participants.has(this.getAttribute('data-char')); });
+  svg.selectAll('.tl-death-mark').classed('dimmed', function(){
+    return !participants.has(this.getAttribute('data-char'));
+  });
+
+  /* Вертикальный соединитель всех участников события */
+  const plotX0 = TL_MARGIN.left;
+  const plotW  = TL_VIEWBOX_W - TL_MARGIN.left - TL_MARGIN.right;
+  const x = plotX0 + ev.pos * plotW;
+  const ys = (ev.chars || []).map(id => laneYMap[id]).filter(v => v != null).sort((a,b) => a-b);
+
+  if (ys.length >= 2) {
+    const vlineLayer = svg.select('.tl-vline-layer');
+    vlineLayer.append('line').attr('class','tl-event-vline visible')
+      .attr('x1', x).attr('x2', x)
+      .attr('y1', ys[0] - 6).attr('y2', ys[ys.length-1] + 6);
+
+    /* Изящные дуговые соединители между последовательными участниками */
+    const connLayer = svg.select('.tl-conn-layer');
+    for (let i = 1; i < ys.length; i++) {
+      const y1 = ys[i-1], y2 = ys[i];
+      connLayer.append('path').attr('class','tl-connector visible')
+        .attr('d', `M ${x-9} ${y1} Q ${x-22} ${(y1+y2)/2} ${x-9} ${y2}`);
+    }
+  }
+
+  const box = document.getElementById('tl-event-detail');
+  if (box) {
+    box.innerHTML = `
+      <span class="tl-event-detail-title">${ev.title}</span>
+      <span class="tl-event-detail-year">${ev.year} · ${ev.meta}</span>
+      <p style="margin-top:0.5rem; color:var(--ink-soft)">${ev.body}</p>
+    `;
+  }
+}
+
+function updateTimelaneForCharacter(charId) {
+  const svg = d3.select('#timelane-svg');
+  if (svg.selectAll('.tl-lane-label').empty()) return;
+
+  activeTlEventIdx = null;
+  svg.selectAll('.tl-vline-layer *').remove();
+  svg.selectAll('.tl-conn-layer *').remove();
+
+  svg.selectAll('.tl-lane-label')
+    .classed('active', function(){ return this.getAttribute('data-char') === charId; })
+    .classed('dimmed', function(){ return this.getAttribute('data-char') !== charId; });
+  svg.selectAll('.tl-life-line').classed('dimmed', function(){
+    return this.getAttribute('data-char') !== charId;
+  });
+  svg.selectAll('.tl-event-dot')
+    .classed('dimmed', function(){ return this.getAttribute('data-char') !== charId; })
+    .classed('active', false);
+  svg.selectAll('.tl-death-mark').classed('dimmed', function(){
+    return this.getAttribute('data-char') !== charId;
+  });
+}
+
+/* ================== NETWORK GRAPH ================== */
+
+let simulation, svg, linkSel, nodeSel;
+let activeFamilies = new Set(Object.keys(FAMILY_META));
+let activeCharId = null;
+
+function initNetwork() {
+  const svgEl = document.getElementById('network-svg');
+  const rect = svgEl.getBoundingClientRect();
+  const width = rect.width, height = rect.height;
+
+  svg = d3.select(svgEl);
+
+  // Build nodes/links (convert ids -> refs)
+  const nodes = CHARACTERS.map(c => ({ ...c }));
+  const links = LINKS.map(l => ({ source: l.s, target: l.t, type: l.type }));
+
+  // Build family filters
+  const filtersEl = document.getElementById('family-filters');
+  filtersEl.innerHTML = Object.entries(FAMILY_META).map(([k, m]) =>
+    `<div class="family-chip active" data-fam="${k}"><span class="dot" style="background:${m.hex}"></span>${m.name}</div>`
+  ).join('');
+  filtersEl.querySelectorAll('.family-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const fam = chip.dataset.fam;
+      if (activeFamilies.has(fam)) { activeFamilies.delete(fam); chip.classList.remove('active'); }
+      else { activeFamilies.add(fam); chip.classList.add('active'); }
+      updateVisibility();
+    });
+  });
+
+  // Zoom/pan
+  const g = svg.append('g');
+  svg.call(d3.zoom().scaleExtent([0.3, 3]).on('zoom', e => g.attr('transform', e.transform)));
+
+  linkSel = g.append('g').attr('class','links').selectAll('line')
+    .data(links).join('line')
+    .attr('class', d => 'link ' + d.type);
+
+  nodeSel = g.append('g').attr('class','nodes').selectAll('g')
+    .data(nodes).join('g')
+    .attr('class', d => 'node' + (d.major ? ' major' : ''))
+    .call(d3.drag()
+      .on('start', dragStart)
+      .on('drag',  dragMove)
+      .on('end',   dragEnd))
+    .on('click', (e, d) => { selectCharacter(d.id); e.stopPropagation(); })
+    .on('mouseenter', (e, d) => showTip(`<strong>${d.name}</strong>${d.role}`, e))
+    .on('mousemove',  (e, d) => showTip(`<strong>${d.name}</strong>${d.role}`, e))
+    .on('mouseleave', hideTip);
+
+  nodeSel.append('circle')
+    .attr('r', d => d.major ? 14 : 9)
+    .attr('fill', d => FAMILY_META[d.family].hex);
+
+  nodeSel.append('text')
+    .attr('dy', d => d.major ? 28 : 22)
+    .text(d => d.name.split(' ').slice(0,2).join(' '));
+
+  simulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d => d.id).distance(d => {
+      if (d.type === 'family' || d.type === 'marriage') return 55;
+      if (d.type === 'mentor') return 75;
+      return 95;
+    }).strength(d => d.type === 'family' ? 1.0 : 0.45))
+    .force('charge', d3.forceManyBody().strength(-260))
+    .force('center', d3.forceCenter(width/2, height/2))
+    .force('collide', d3.forceCollide().radius(d => d.major ? 30 : 22))
+    .on('tick', ticked);
+
+  function ticked() {
+    linkSel
+      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+    nodeSel.attr('transform', d => `translate(${d.x},${d.y})`);
+  }
+
+  function dragStart(event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x; d.fy = d.y;
+  }
+  function dragMove(event, d) { d.fx = event.x; d.fy = event.y; }
+  function dragEnd(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null; d.fy = null;
+  }
+
+  svg.on('click', () => { activeCharId = null; updateVisibility(); renderPlaceholder(); });
+}
+
+function updateVisibility() {
+  nodeSel.classed('dimmed', d => {
+    if (!activeFamilies.has(d.family)) return true;
+    if (activeCharId) {
+      if (d.id === activeCharId) return false;
+      const connected = LINKS.some(l =>
+        (l.s === activeCharId && l.t === d.id) || (l.t === activeCharId && l.s === d.id)
+      );
+      return !connected;
+    }
+    return false;
+  });
+  nodeSel.classed('active', d => d.id === activeCharId);
+
+  linkSel.classed('dimmed', d => {
+    const s = typeof d.source === 'object' ? d.source.id : d.source;
+    const t = typeof d.target === 'object' ? d.target.id : d.target;
+    const sN = charMap.get(s), tN = charMap.get(t);
+    if (!sN || !tN) return true;
+    if (!activeFamilies.has(sN.family) || !activeFamilies.has(tN.family)) return true;
+    if (activeCharId && s !== activeCharId && t !== activeCharId) return true;
+    return false;
+  });
+}
+
+/* ----- Character panel ----- */
+function selectCharacter(id) {
+  const c = charMap.get(id);
+  if (!c) return;
+  activeCharId = id;
+  updateVisibility();
+
+  const relatedLinks = LINKS.filter(l => l.s === id || l.t === id);
+  const relations = relatedLinks.map(l => {
+    const otherId = l.s === id ? l.t : l.s;
+    const other = charMap.get(otherId);
+    if (!other) return '';
+    const typeLabels = {
+      family:'родство', marriage:'брак', love:'любовь',
+      friend:'дружба', enemy:'вражда', mentor:'наставник', rival:'соперник'
+    };
+    return `<span data-char="${otherId}" title="${typeLabels[l.type] || l.type}">${other.name}</span>`;
+  }).join('');
+
+  const panel = document.getElementById('character-panel');
+  const fam = FAMILY_META[c.family];
+  panel.innerHTML = `
+    <div class="panel-family" style="color:${fam.hex}">${fam.name}</div>
+    <div class="panel-name">${c.name}</div>
+    <div class="panel-role">${c.role || ''}</div>
+    <div class="panel-section">
+      <h4>Характеристика</h4>
+      <p>${c.bio || ''}</p>
+    </div>
+    ${c.fate ? `<div class="panel-section"><h4>Судьба</h4><p>${c.fate}</p></div>` : ''}
+    ${relations ? `<div class="panel-section"><h4>Связи</h4><div class="panel-relations">${relations}</div></div>` : ''}
+  `;
+  panel.querySelectorAll('[data-char]').forEach(el => {
+    el.addEventListener('click', () => selectCharacter(el.dataset.char));
+  });
+
+  /* Синхронизация со swimlane */
+  updateTimelaneForCharacter(id);
+}
+
+function renderPlaceholder() {
+  const panel = document.getElementById('character-panel');
+  panel.innerHTML = `<div class="panel-placeholder">Нажмите на любого героя,<br>чтобы узнать о нём больше</div>`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderFamilies();
+  renderArcs();
+  renderIdeas();
+  renderQuotes();
+  renderTimeline();
+  renderTimelane();
+  initNetwork();
+});
+// Safety if DOMContentLoaded already fired
+if (document.readyState !== 'loading') {
+  renderFamilies(); renderArcs(); renderIdeas(); renderQuotes();
+  renderTimeline(); renderTimelane(); initNetwork();
+}
+</script>
+
+</body>
+</html>
