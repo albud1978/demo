@@ -355,6 +355,130 @@
   .event-label.top    { bottom: 30px; }
   .event-label.bottom { top: 30px; }
 
+  /* Кластер-зона — невидимая hover-область над плотной группой */
+  .event-cluster-zone {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60px;
+    z-index: 3;
+    cursor: help;
+  }
+  .event-cluster-zone::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    transform: translateY(-50%);
+    height: 3px;
+    border-top: 1px dashed rgba(168,129,42,0.5);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .event-cluster-zone:hover::before,
+  .event-cluster-zone.mag-active::before { opacity: 1; }
+
+  /* Магнифайер — всплывающая детальная шкала */
+  .event-magnifier {
+    position: absolute;
+    bottom: 130px;
+    transform: translateX(-50%) translateY(8px);
+    background: var(--paper);
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    padding: 1.1rem 1.4rem 1.6rem;
+    min-width: 460px;
+    max-width: 640px;
+    box-shadow: 0 12px 40px rgba(42,24,16,0.25), 0 0 0 1px rgba(168,129,42,0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    z-index: 20;
+  }
+  .event-magnifier.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+  .event-magnifier::after {
+    content: '';
+    position: absolute;
+    bottom: -9px; left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 16px; height: 16px;
+    background: var(--paper);
+    border-right: 1px solid var(--gold);
+    border-bottom: 1px solid var(--gold);
+  }
+  .magnifier-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.78rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 0.9rem;
+    text-align: center;
+    font-style: italic;
+  }
+  .magnifier-line {
+    position: relative;
+    height: 44px;
+    border-top: 1px solid rgba(168,129,42,0.35);
+    margin: 0 8px;
+  }
+  .magnifier-months {
+    position: relative;
+    height: 14px;
+    margin: 0 8px;
+    margin-bottom: 4px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .magnifier-month {
+    position: absolute;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  .mag-dot {
+    position: absolute;
+    top: -7px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    transition: transform 0.15s;
+    border: 2px solid var(--paper);
+    box-shadow: 0 2px 6px rgba(42,24,16,0.25);
+  }
+  .mag-dot:hover,
+  .mag-dot.active { transform: translateX(-50%) scale(1.35); box-shadow: 0 0 0 3px rgba(168,129,42,0.3); }
+  .mag-dot.war      { background: var(--burgundy); }
+  .mag-dot.peace    { background: var(--forest); }
+  .mag-dot.personal { background: var(--rostov); }
+  .mag-dot.political{ background: var(--sky); }
+
+  .mag-label {
+    position: absolute;
+    top: 22px;
+    left: 0;
+    transform-origin: left center;
+    transform: translateX(-2px) rotate(32deg);
+    white-space: nowrap;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.82rem;
+    color: var(--ink);
+    font-style: italic;
+    pointer-events: none;
+  }
+  .mag-label .mag-label-date {
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+    margin-right: 0.3em;
+  }
+
   .event-detail {
     margin-top: 2rem;
     padding: 2rem;
@@ -1078,9 +1202,6 @@
 
 <nav class="nav">
   <div class="nav-inner">
-    <a onclick="if(history.length>1){history.back()}else{location.href='../index.html'}" style="width:32px;height:32px;border-radius:50%;background:var(--burgundy,#6b2d3e);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:16px;cursor:pointer;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.15)" title="Назад">&#8592;</a>
-    <a href="../index.html" style="width:32px;height:32px;border-radius:50%;background:var(--burgundy,#6b2d3e);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:16px;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.15)" title="На главную">&#8962;</a>
-    <span style="width:1px;height:20px;background:rgba(122,31,31,0.2);flex-shrink:0"></span>
     <button type="button" class="nav-link" data-target="overview">Вступление</button>
     <button type="button" class="nav-link" data-target="timeline">Хроника</button>
     <button type="button" class="nav-link" data-target="timelane">Герои × время</button>
@@ -1122,6 +1243,9 @@
     <div class="section-eyebrow">хроника</div>
     <h2 class="section-title">Время войны и мира</h2>
     <p class="section-lead">Пятнадцать лет — от салона Анны Шерер до эпилога в Лысых Горах. Исторические катастрофы сплетаются с частными судьбами. Нажмите на любую точку, чтобы развернуть событие.</p>
+    <p class="section-lead" style="font-size:0.9rem; color:var(--muted); font-style:italic; border-left:2px solid var(--gold); padding-left:1rem; margin-bottom:1.5rem;">
+      ❦ Даты даны по старому стилю — юлианскому календарю, которым пользовался Толстой и вся российская традиция XIX века. Чтобы получить дату по новому (григорианскому) стилю, общепринятому в западных источниках, прибавьте 12 дней: Бородино 26 августа = 7 сентября н. ст.; переход Немана 12 июня = 24 июня н. ст.; Аустерлиц 20 ноября = 2 декабря н. ст.
+    </p>
 
     <div class="timeline-wrap">
       <div class="timeline-controls">
@@ -1154,6 +1278,9 @@
     <div class="section-eyebrow">хроника × герои</div>
     <h2 class="section-title">Герои во времени</h2>
     <p class="section-lead">Плоская развёртка: у каждого героя своя строка, ключевые события — точки на ней. Видно, кто когда появляется, чьи линии пересекаются и кто где обрывается (†). Нажмите на любую точку — её участники соединятся вертикальной линией. Нажмите на имя — героя видно крупнее.</p>
+    <p class="section-lead" style="font-size:0.88rem; color:var(--muted); font-style:italic;">
+      ❦ Даты — по старому стилю (юлианскому), как в тексте Толстого. Для нового (григорианского) стиля прибавьте 12 дней.
+    </p>
 
     <div class="timelane-wrap">
       <div class="timelane-controls">
@@ -1165,7 +1292,7 @@
 
       <div class="tl-event-detail" id="tl-event-detail">
         <span class="tl-event-detail-title">Наведите или нажмите на любую точку</span>
-        <span class="tl-event-detail-year">27 ключевых событий · 34 героя · 15 лет</span>
+        <span class="tl-event-detail-year">34 ключевых события · 34 героя · 15 лет (1805–1820)</span>
       </div>
     </div>
   </div>
@@ -1484,172 +1611,172 @@ const LINKS = [
 ];
 
 const EVENTS = [
-  { year:'июль 1805', pos:0.01, type:'peace',     top:true,
+  { year:'июль 1805', pos:0.0337, type:'peace',     top:true,
     title:'Салон Анны Павловны Шерер',
     meta:'С чего начинается роман',
     body:'В модной петербургской гостиной обсуждают Наполеона. Появляется неуклюжий Пьер. Князь Василий уже плетёт интриги. Толстой одним движением обнажает весь фальшивый язык света — французская речь на фоне грядущей войны.',
     chars:['scherer','pierre','andrey','vasily','anna_mikh','hippolyte'] },
-  { year:'август 1805', pos:0.03, type:'peace', top:false,
+  { year:'август 1805', pos:0.0389, type:'peace', top:false,
     title:'Именины Наташи',
     meta:'Мир Ростовых',
     body:'День рождения Наташи и её матери. Тринадцатилетняя Наташа впервые обещает себя Борису; дом Ростовых — образ русской жизни, противопоставленной петербургскому салону.',
     chars:['natasha','nikolay','sonya','boris','count_rostov','petya','vera'] },
-  { year:'сент. 1805', pos:0.055, type:'peace', top:true,
+  { year:'сент. 1805', pos:0.0441, type:'peace', top:true,
     title:'Смерть старого Безухова',
     meta:'Борьба за наследство',
     body:'В Москве умирает граф Кирилл Владимирович Безухов. Князь Василий и Анна Михайловна Друбецкая борются за мозаиковый портфель с завещанием. Пьер, высланный из Петербурга за кутежи с Анатолем и прибывший к отцу в Москву, внезапно становится одним из богатейших людей России — и лакомым женихом.',
     chars:['old_bezukhov','pierre','vasily','anna_mikh'] },
-  { year:'ноябрь 1805', pos:0.08, type:'war', top:false,
+  { year:'ноябрь 1805', pos:0.0526, type:'war', top:false,
     title:'Шенграбенское сражение',
     meta:'Первый бой Николая и Андрея',
     body:'Арьергард Багратиона сдерживает втрое превосходящего врага. Николай впервые видит войну и бежит, увидев французов. Капитан Тушин спасает положение батареей, которую никто не приказывал открывать. Андрей впервые задумывается, что «великое» рождается не там, где ищут славы.',
     chars:['andrey','nikolay','bagration','kutuzov','tushin','denisov'] },
-  { year:'дек. 1805', pos:0.10, type:'war', top:true,
+  { year:'дек. 1805', pos:0.0575, type:'war', top:true,
     title:'Аустерлиц',
     meta:'Небо Андрея',
     body:'Катастрофа русско-австрийской армии. Князь Андрей со знаменем в руках ранен, лежит на поле боя и смотрит в высокое, бесконечное небо — и внезапно понимает, что всё, ради чего он жил, ничтожно. «Как тихо, спокойно и торжественно...». Наполеон, объезжающий поле, кажется ему маленьким.',
     chars:['andrey','napoleon','alexander','kutuzov'] },
-  { year:'1806', pos:0.14, type:'personal', top:false,
+  { year:'1806', pos:0.0753, type:'personal', top:false,
     title:'Смерть Лизы в родах',
     meta:'Немой укор',
     body:'Князь Андрей возвращается в Лысые Горы в день, когда его жена Лиза умирает, рожая сына. Её застывшее лицо с выражением «что вы со мной сделали?» становится для Андрея тяжёлым укором — и толчком к долгому кризису.',
     chars:['andrey','liza','marya','nikolenka','old_bolkonsky'] },
-  { year:'нояб. 1805', pos:0.095, type:'personal', top:true,
+  { year:'нояб. 1805', pos:0.0554, type:'personal', top:true,
     title:'Брак Пьера и Элен',
     meta:'Западня света',
     body:'Князь Василий почти насильно женит Пьера на Элен. Через полтора месяца после «именин» у Шерера Пьер, не сумев вымолвить самостоятельно слов предложения, оказывается женихом, а затем и мужем красавицы. Свадьба — и сразу отвращение. Пьер понимает, что его обманули, но не может уйти от пустой красавицы.',
     chars:['pierre','helene','vasily'] },
-  { year:'март 1806', pos:0.20, type:'personal', top:false,
+  { year:'март 1806', pos:0.0745, type:'personal', top:false,
     title:'Дуэль Пьера с Долоховым',
     meta:'Нелепое убийство',
     body:'Узнав о связи Элен и Долохова, близорукий Пьер, никогда не державший пистолета, ранит бретёра Долохова. После этого он порывает с Элен и уходит в духовные искания — масонство.',
     chars:['pierre','dolokhov','helene'] },
-  { year:'весна 1806', pos:0.22, type:'personal', top:true,
+  { year:'весна 1806', pos:0.0806, type:'personal', top:true,
     title:'Карточный проигрыш Николая',
     meta:'Месть Долохова',
     body:'Получив от Сони отказ и зная, что она любит Николая, Долохов заманивает Ростова на прощальную пирушку и хладнокровно обыгрывает его на 43 тысячи — огромную для разоряющихся Ростовых сумму. Николай в отчаянии просит деньги у отца; старик Илья Андреевич находит их «с улыбкой» — и тем только глубже ранит сына.',
     chars:['nikolay','dolokhov','sonya','count_rostov'] },
-  { year:'июнь 1807', pos:0.24, type:'political', top:true,
+  { year:'июнь 1807', pos:0.1552, type:'political', top:true,
     title:'Тильзитский мир',
     meta:'Унижение России',
     body:'Россия подписывает мир с Наполеоном. Николай Ростов, приехавший в Тильзит хлопотать за разжалованного Денисова (его обвинили в мародёрстве и грабеже фуражных обозов, он лёг в госпиталь), видит, как Александр по-братски встречается с Бонапартом, а Наполеон награждает орденом Почётного легиона случайно выбранного русского солдата Лазарева. Потрясение Николая гасится знаменитым: «наше дело — исполнять свой долг, рубиться и не думать».',
     chars:['alexander','napoleon','nikolay','boris','denisov'] },
-  { year:'весна 1809', pos:0.33, type:'personal', top:false,
+  { year:'весна 1809', pos:0.2681, type:'personal', top:false,
     title:'Дуб князя Андрея',
     meta:'Оживший лес',
     body:'Князь Андрей по дороге в Отрадное видит старый, скрюченный дуб — символ его собственной мёртвой души. Через несколько месяцев на обратной дороге тот же дуб покрывается молодой зеленью. Между ними — ночная Наташа у окна в Отрадном, чей голос возвращает Андрею жизнь.',
     chars:['andrey','natasha'] },
-  { year:'1809–10', pos:0.37, type:'political', top:true,
+  { year:'1809–10', pos:0.3149, type:'political', top:true,
     title:'Андрей у Сперанского и Аракчеева',
     meta:'Увлечение реформой',
     body:'Князь Андрей приезжает в Петербург с проектом нового военного устава. Военный министр Аракчеев назначает его в военную комиссию; затем он сближается со Сперанским, государственным секретарём и главой гражданских реформ, и начинает работать над разделом законов о правах и обязанностях лиц. На время находит смысл в реформе — и разочаровывается, увидев в Сперанском холодную наигранность, «зеркала» вместо живого человека. Толстой устами героя разоблачает рационалистическую государственность.',
     chars:['andrey','speransky'] },
-  { year:'31 дек. 1809', pos:0.39, type:'peace', top:false,
+  { year:'31 дек. 1809', pos:0.3125, type:'peace', top:false,
     title:'Первый бал Наташи',
     meta:'Вспышка жизни',
     body:'На новогоднем балу у екатерининского вельможи Наташа, которую долго никто не зовёт, впервые танцует с князем Андреем — по просьбе Пьера. «Давно я ждал тебя», — словно говорит ему танец. Вспыхнувшее чувство становится осью всего романа.',
     chars:['natasha','andrey','pierre','boris'] },
-  { year:'1810', pos:0.42, type:'personal', top:true,
+  { year:'1810', pos:0.341, type:'personal', top:true,
     title:'Помолвка Андрея и Наташи',
     meta:'Ждать год',
     body:'По настоянию старого князя Болконского свадьбу отложили на год. Андрей уезжает за границу. Наташа остаётся в Москве — с обещанием, но без любимого.',
     chars:['andrey','natasha','old_bolkonsky','marya'] },
-  { year:'осень 1810', pos:0.44, type:'peace', top:false,
+  { year:'осень 1810', pos:0.3594, type:'peace', top:false,
     title:'Охота и Святки в Отрадном',
     meta:'«Живая жизнь»',
     body:'Ростовы живут в деревне. Травля волка — Наташа на Арапке кричит «а-тю-тю!»; вечером у дядюшки под балалайку Наташа пускается в пляс, и откуда «в этой графинечке, воспитанной эмигранткой-француженкой, было всё это?» — всё русское, народное, невыразимое словом. Через несколько дней — святочные ряженые, ночная поездка в санях к Мелюковым, гадание Сони в амбаре. Для Толстого эти страницы — образ «живой» русской жизни, противопоставленной искусственности света.',
     chars:['natasha','nikolay','sonya','petya'] },
-  { year:'1811', pos:0.47, type:'personal', top:false,
+  { year:'1811', pos:0.4167, type:'personal', top:false,
     title:'История с Анатолем',
     meta:'Падение и спасение',
     body:'В Москве Наташа теряет голову от Анатоля Курагина, который, уже будучи тайно женат, готовит её побег. Сонечка и Марья Дмитриевна срывают план. Наташа пытается отравиться; Пьер, утешая её, впервые понимает, что любит её. Андрей отказывается простить.',
     chars:['natasha','anatole','pierre','sonya','andrey','helene'] },
-  { year:'12 июня 1812', pos:0.54, type:'war', top:true,
+  { year:'12 июня 1812', pos:0.4655, type:'war', top:true,
     title:'Наполеон переходит Неман',
     meta:'Начало Отечественной',
     body:'«Двенадцать языков» пересекают российскую границу. Наполеон, переодетый в польский мундир, выезжает осмотреть переправу — польские уланы с восторгом бросаются переплывать реку, и десятки их тонут на его глазах. В тот же день Александр в Вильне — на бале у Бенигсена. Русская армия отступает. Начинается война, которую Толстой объявит не войной двух воль, а движением огромных стихийных масс.',
     chars:['napoleon','alexander','kutuzov'] },
-  { year:'авг. 1812', pos:0.60, type:'war', top:false,
+  { year:'авг. 1812', pos:0.4747, type:'war', top:false,
     title:'Оставление Смоленска',
     meta:'Земля горит',
     body:'Армии Багратиона и Барклая соединяются. Купец Ферапонтов поджигает собственные лабазы: «тащи всё, ребята, не доставайся дьяволам!». Управляющий Алпатыч, посланный старым Болконским в Смоленск, видит бомбардировку и встречает Андрея — тот советует ему увозить семью. Простой народ впервые входит в роман как настоящий субъект войны.',
     chars:['andrey','napoleon','kutuzov'] },
-  { year:'авг. 1812', pos:0.62, type:'personal', top:true,
+  { year:'авг. 1812', pos:0.4764, type:'personal', top:true,
     title:'Смерть старого князя · Богучарово',
     meta:'Марья и Николай',
     body:'Старый князь Николай Андреевич, поражённый ударом при вести о войне, умирает в Богучарове, не успев простить себе сурового обращения с дочерью. Марья остаётся одна среди бунтующих богучаровских мужиков, отказывающихся её выпустить. Проезжающий мимо Николай Ростов с эскадроном разгоняет бунт и спасает княжну. Их первая встреча — и начало их тихой любви.',
     chars:['old_bolkonsky','marya','nikolay','andrey','bourienne'] },
-  { year:'26 авг. 1812', pos:0.64, type:'war', top:true,
+  { year:'26 авг. 1812', pos:0.4783, type:'war', top:true,
     title:'Бородинская битва',
     meta:'Главный день романа',
     body:'Центральная глава эпопеи. Накануне вдоль войск проносят икону Смоленской Богоматери, Кутузов преклоняет перед ней колени; Долохов подходит к Пьеру и просит у него прощения. В день боя Пьер в белой шляпе едет смотреть сражение и оказывается в самом аду — на батарее Раевского, где солдаты прозвали его «нашим барином». Полк князя Андрея стоит в резерве — Андрей смертельно ранен гранатой, упавшей в двух шагах. Кутузов руководит не войсками, а «духом армии». Толстой: Бородино — нравственная победа русских, победа духа над числом.',
     chars:['andrey','pierre','kutuzov','napoleon','bagration','dolokhov','nikolay'] },
-  { year:'1 сент. 1812', pos:0.66, type:'political', top:false,
+  { year:'1 сент. 1812', pos:0.4792, type:'political', top:false,
     title:'Совет в Филях',
     meta:'«Москву оставлять»',
     body:'Кутузов берёт на себя ответственность сдать Москву без боя. Девочка Малаша подсматривает с печки. Россия оказывается больше Москвы.',
     chars:['kutuzov'] },
-  { year:'2 сент. 1812', pos:0.68, type:'war', top:true,
+  { year:'2 сент. 1812', pos:0.4793, type:'war', top:true,
     title:'Вступление в Москву и пожар',
     meta:'Гибель старого мира',
     body:'Наполеон на Поклонной горе два часа ждёт «депутацию бояр» с ключами от города — речь к ним уже сложилась в его воображении; депутация не приходит. Ростовы спешно покидают Москву, бросая имущество и увозя раненых — среди них смертельно раненного Андрея. Пьер остаётся в горящем городе с безумной идеей убить Наполеона. На Лобном месте Ростопчин отдаёт толпе несчастного Верещагина.',
     chars:['pierre','natasha','andrey','rostopchin','napoleon'] },
-  { year:'сент. 1812', pos:0.70, type:'personal', top:false,
+  { year:'сент. 1812', pos:0.4795, type:'personal', top:false,
     title:'Пьер спасает девочку — и попадает в плен',
     meta:'Простой человеческий поступок',
     body:'Пьер спасает ребёнка из горящего дома, защищает женщину от мародёра — и французы хватают его как поджигателя. Начинается главный духовный период его жизни.',
     chars:['pierre'] },
-  { year:'8 сент. 1812', pos:0.72, type:'war', top:true,
+  { year:'сер. сент. 1812', pos:0.4816, type:'war', top:true,
     title:'Расстрел на Девичьем поле',
     meta:'Зрелище, убившее веру',
     body:'Пьера с другими «поджигателями» приводят на Девичье поле. Маршал Даву на допросе, встретившись с ним взглядом, видит человека — и велит отвести в сторону. Остальных пятерых расстреливают на глазах Пьера, шестого — одного за другим. Зрелище казни убивает в нём веру в разумность жизни и в Бога, которому он поклонялся. В этом выжженном внутреннем мире он и встретит Каратаева.',
     chars:['pierre'] },
-  { year:'окт. 1812', pos:0.74, type:'personal', top:false,
+  { year:'окт. 1812', pos:0.4851, type:'personal', top:false,
     title:'Пьер и Платон Каратаев',
     meta:'Круглое слово',
     body:'В бараке для пленных, где Пьера после казни содержат как мещанина, он встречает солдата Апшеронского полка Платона Каратаева — круглого, ласкового, с собачкой Серым. «Каратаевы прозвище», — отвечает тот во множественном числе; он любит всех, кто перед ним, — шавку, французов, Пьера, — но ни к кому не привязан. Его речь — сплошь поговорки: «Рок головы ищет», «Час терпеть, а век жить». Именно здесь, в четыре недели плена, Пьер обретает простую мудрость, ради которой и был написан роман.',
     chars:['pierre','platon'] },
-  { year:'окт. 1812', pos:0.76, type:'personal', top:true,
+  { year:'окт. 1812', pos:0.4859, type:'personal', top:true,
     title:'Смерть князя Андрея',
     meta:'Любовь как ответ',
     body:'В Ярославле, куда Ростовы привезли раненого, Наташа выхаживает Андрея. Княжна Марья приезжает, узнав о нём; прежде холодная к Наташе, она сходится с ней у ложа брата — общее горе делает их близкими подругами. Перед смертью Андрей прощает Анатоля; в его бреду слышится «Сопрягать надо», в сознании — «Любовь есть Бог, и умереть — значит мне, частице любви, вернуться к общему и вечному источнику». Он умирает «с полным спокойствием», зная, что смерть — не конец, а пробуждение.',
     chars:['andrey','natasha','marya'] },
-  { year:'22 окт. 1812', pos:0.78, type:'war', top:false,
+  { year:'22 окт. 1812', pos:0.488, type:'war', top:false,
     title:'Отступление французов · гибель Пети и Каратаева',
     meta:'Партизанская война',
     body:'Армия Наполеона уходит из Москвы. Партизанские отряды Денисова и Долохова идут на обозы. Накануне атаки у села Шамшево Петя Ростов, попавший в отряд Денисова и рвавшийся в бой, слышит ночью, как из стука сабли и капели в его голове рождается торжественная музыка. На рассвете при первых выстрелах он не слушает приказа Денисова «слушаться меня», скачет вперёд — и получает пулю в голову. В тот же день на привале пленных конвоиры пристреливают ослабевшего Каратаева — Пьер, внутренне отдалившийся от него, слышит выстрел и не смеет оглянуться.',
     chars:['petya','denisov','dolokhov','platon','pierre'] },
-  { year:'нояб. 1812', pos:0.80, type:'war', top:true,
+  { year:'нояб. 1812', pos:0.492, type:'war', top:true,
     title:'Освобождение Пьера',
     meta:'Новое рождение',
     body:'Отряд Денисова отбивает колонну пленных, среди них — измождённый, внутренне преображённый Пьер. В то же утро в саду хоронят Петю. Пьер едет в Орёл, три месяца болеет; там от Денисова узнаёт сразу о трёх смертях — Элен, Андрея и Пети. Выздоравливая, впервые в жизни чувствует простое счастье — мучительный вопрос «зачем?» исчез.',
     chars:['pierre','denisov','dolokhov'] },
-  { year:'1813', pos:0.85, type:'personal', top:true,
+  { year:'1813', pos:0.5076, type:'personal', top:true,
     title:'Марья и Николай',
     meta:'Молчаливое сватовство',
     body:'В Воронеже княжна Марья и Николай сближаются. Освобождённые от прошлого, они обретают друг друга — и Николай, прежде не видевший «богатой невесты», видит её «лучистые глаза».',
     chars:['marya','nikolay'] },
-  { year:'апр. 1813', pos:0.86, type:'political', top:false,
+  { year:'апр. 1813', pos:0.5182, type:'political', top:false,
     title:'Смерть Кутузова',
     meta:'Конец эпохи',
     body:'После изгнания французов за Неман Кутузов, возражавший против похода в Европу, отстранён от командования — «представителю народной войны», по слову Толстого, «ничего не оставалось, кроме смерти. И он умер». Место главнокомандующего занимает лично Александр I.',
     chars:['kutuzov','alexander'] },
-  { year:'1813', pos:0.87, type:'personal', top:false,
+  { year:'1813', pos:0.5128, type:'personal', top:false,
     title:'Пьер и Наташа — снова',
     meta:'Тихая встреча',
     body:'В Москве, у Марьи, Пьер видит изменившуюся, повзрослевшую после горя Наташу. Несколько слов, несколько взглядов — и роман тихо сходит к своей семейной развязке.',
     chars:['pierre','natasha','marya'] },
-  { year:'весна 1813', pos:0.89, type:'personal', top:true,
+  { year:'весна 1813', pos:0.5137, type:'personal', top:true,
     title:'Свадьба Пьера и Наташи · смерть старого графа',
     meta:'Новая жизнь на руинах',
     body:'Ранней весной 1813 Пьер и Наташа венчаются. В том же году умирает старый граф Илья Андреевич Ростов, надорванный потерями 1812-го, оставляя огромные долги. Николай выходит в отставку и поступает чиновником, чтобы расплатиться.',
     chars:['pierre','natasha','count_rostov','nikolay','countess_rostova'] },
-  { year:'осень 1814', pos:0.92, type:'personal', top:false,
+  { year:'осень 1814', pos:0.6118, type:'personal', top:false,
     title:'Свадьба Николая и Марьи',
     meta:'Лысые Горы возвращаются',
     body:'Николай женится на княжне Марье. Вместе с матерью-графиней и Соней они переезжают в Лысые Горы. За три года Николай выплачивает отцовские долги, возвращает заём Пьеру; к 1820-му мечтает выкупить родовое Отрадное.',
     chars:['nikolay','marya','sonya','countess_rostova'] },
-  { year:'5 дек. 1820', pos:0.98, type:'peace', top:true,
+  { year:'5 дек. 1820', pos:0.9955, type:'peace', top:true,
     title:'Эпилог · Лысые Горы, день св. Николая',
     meta:'Мысль семейная — и трещина на ней',
     body:'Канун именин Николая. У Безуховых к 1820 году — три дочери и сын Петя; у Николая с Марьей — Андрюша, Митя и трёхлетняя любимица отца Наташа, Марья ждёт четвёртого. Гостит отставной генерал Денисов. Пьер приезжает из Петербурга, где он один из основателей тайного общества, и горячо говорит мужчинам об Аракчееве, Библейском обществе, всеобщем упадке — «нужен союз честных людей». Николай резко обрывает: «если мне Аракчеев велит идти на вас с эскадроном и рубить — ни на секунду не задумаюсь». Николенька Болконский, 15 лет, слушает дядю Пьера с блестящими глазами. Ночью мальчику снится, что они с Пьером в древнеримских шлемах идут впереди войска — но Николай Ростов останавливает их по приказу Аракчеева; обернувшись, Николенька видит вместо Пьера отца — Андрея. Проснувшись в слезах, он клянётся совершить то, чем «гордился бы даже мой отец». Так роман замыкается — и открывается — в будущее 14 декабря 1825 года.',
@@ -1859,7 +1986,7 @@ function renderTimeline() {
 
   // Year markers
   for (let y = 1805; y <= 1820; y++) {
-    const pos = (y - 1805) / 15;
+    const pos = (y - 1805) / 16;
     const el = document.createElement('div');
     el.className = 'timeline-year';
     el.style.left = (pos * 100) + '%';
@@ -1885,6 +2012,171 @@ function renderTimeline() {
     dot.addEventListener('mousemove',  e => showTip(`<strong>${ev.title}</strong>${ev.year}`, e));
     dot.addEventListener('mouseleave', hideTip);
     dot.addEventListener('click', () => selectEvent(idx));
+  });
+
+  /* ----- Кластеризация плотных событий и магнифайер ----- */
+  // Находим группы событий, где расстояние между соседями < CLUSTER_DIST
+  // (примерно 2 месяца на шкале 16 лет)
+  const CLUSTER_DIST = 0.015;
+  const CLUSTER_MIN_SIZE = 3;
+
+  const sortedIdxByPos = EVENTS
+    .map((ev, i) => ({ ev, i }))
+    .sort((a, b) => a.ev.pos - b.ev.pos);
+
+  const clusters = [];
+  let current = [];
+  for (let j = 0; j < sortedIdxByPos.length; j++) {
+    if (current.length === 0) {
+      current.push(sortedIdxByPos[j]);
+    } else {
+      const last = current[current.length - 1];
+      if (sortedIdxByPos[j].ev.pos - last.ev.pos < CLUSTER_DIST) {
+        current.push(sortedIdxByPos[j]);
+      } else {
+        if (current.length >= CLUSTER_MIN_SIZE) clusters.push(current);
+        current = [sortedIdxByPos[j]];
+      }
+    }
+  }
+  if (current.length >= CLUSTER_MIN_SIZE) clusters.push(current);
+
+  // Парсер даты события — пытается вытащить (год, месяц, день) для разнесения внутри кластера
+  function parseEventDate(s) {
+    const monthMap = {
+      'янв':1,'февр':2,'март':3,'апр':4,'мая':5,'май':5,'июн':6,'июл':7,
+      'авг':8,'сент':9,'сен':9,'окт':10,'нояб':11,'ноя':11,'дек':12
+    };
+    const m = s.match(/(\d{4})/);
+    const year = m ? parseInt(m[1]) : 0;
+    let month = 6, day = 15;
+    const low = s.toLowerCase();
+    // день + месяц
+    const dm = low.match(/(\d{1,2})\s+([а-я]+)/);
+    if (dm) {
+      day = parseInt(dm[1]);
+      for (const [k,v] of Object.entries(monthMap)) if (dm[2].startsWith(k)) { month = v; break; }
+    } else {
+      for (const [k,v] of Object.entries(monthMap)) if (low.includes(k)) { month = v; break; }
+      if (low.includes('весна')) month = 4;
+      else if (low.includes('лето')) month = 7;
+      else if (low.includes('осень')) month = 10;
+      else if (low.includes('зима')) month = 1;
+      if (low.includes('сер.')) day = 15;
+      else if (low.includes('нач.')) day = 5;
+      else if (low.includes('кон.')) day = 25;
+    }
+    return { year, month, day, ordinal: year * 365 + month * 30 + day };
+  }
+
+  // Создаю магнифайер для каждого кластера
+  clusters.forEach(cluster => {
+    const minP = Math.min(...cluster.map(c => c.ev.pos));
+    const maxP = Math.max(...cluster.map(c => c.ev.pos));
+    const centerP = (minP + maxP) / 2;
+
+    // Hover-зонтик
+    const zone = document.createElement('div');
+    zone.className = 'event-cluster-zone';
+    const padding = 0.004;
+    zone.style.left = Math.max(0, (minP - padding) * 100) + '%';
+    zone.style.width = ((maxP - minP + padding * 2) * 100) + '%';
+    line.appendChild(zone);
+
+    // Определяю, какой год/период в кластере
+    const dates = cluster.map(c => parseEventDate(c.ev.year));
+    const years = [...new Set(dates.map(d => d.year).filter(Boolean))].sort();
+    const periodLabel = years.length === 1
+      ? `${years[0]} год — ${cluster.length} событий`
+      : `${years[0]}–${years[years.length-1]} — ${cluster.length} событий`;
+
+    // Сортирую по реальной ординале и вычисляю локальные позиции
+    const withDates = cluster.map(c => ({ ...c, d: parseEventDate(c.ev.year) }));
+    withDates.sort((a, b) => a.d.ordinal - b.d.ordinal);
+    const minOrd = withDates[0].d.ordinal;
+    const maxOrd = withDates[withDates.length - 1].d.ordinal;
+    const ordRange = Math.max(1, maxOrd - minOrd);
+
+    // Магнифайер
+    const mag = document.createElement('div');
+    mag.className = 'event-magnifier';
+    mag.style.left = (centerP * 100) + '%';
+
+    // Подписи месяцев
+    const monthsLine = document.createElement('div');
+    monthsLine.className = 'magnifier-months';
+    const monthNames = ['янв','февр','март','апр','май','июн','июл','авг','сент','окт','нояб','дек'];
+    const minDate = withDates[0].d;
+    const maxDate = withDates[withDates.length-1].d;
+    const ms = new Set();
+    for (let yr = minDate.year; yr <= maxDate.year; yr++) {
+      for (let mn = 1; mn <= 12; mn++) {
+        const ord = yr * 365 + mn * 30 + 15;
+        if (ord >= minOrd - 10 && ord <= maxOrd + 10) {
+          const localP = (ord - minOrd) / ordRange;
+          if (localP >= -0.05 && localP <= 1.05) {
+            const m = document.createElement('span');
+            m.className = 'magnifier-month';
+            m.textContent = monthNames[mn-1];
+            m.style.left = Math.max(0, Math.min(100, localP * 100)) + '%';
+            monthsLine.appendChild(m);
+          }
+        }
+      }
+    }
+
+    mag.innerHTML = `<div class="magnifier-title">${periodLabel}</div>`;
+    mag.appendChild(monthsLine);
+
+    const magLine = document.createElement('div');
+    magLine.className = 'magnifier-line';
+
+    withDates.forEach(c => {
+      const localP = (c.d.ordinal - minOrd) / ordRange;
+      const md = document.createElement('div');
+      md.className = `mag-dot ${c.ev.type}`;
+      md.style.left = (localP * 100) + '%';
+      md.dataset.idx = c.i;
+      md.addEventListener('click', e => {
+        e.stopPropagation();
+        selectEvent(c.i);
+        mag.classList.remove('visible');
+        zone.classList.remove('mag-active');
+      });
+      md.innerHTML = `<span class="mag-label"><span class="mag-label-date">${c.ev.year}</span>${c.ev.title}</span>`;
+      magLine.appendChild(md);
+    });
+
+    mag.appendChild(magLine);
+    line.appendChild(mag);
+
+    // Управление видимостью
+    let hideTimer = null;
+    const show = () => {
+      clearTimeout(hideTimer);
+      mag.classList.add('visible');
+      zone.classList.add('mag-active');
+    };
+    const scheduleHide = () => {
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => {
+        mag.classList.remove('visible');
+        zone.classList.remove('mag-active');
+      }, 250);
+    };
+    zone.addEventListener('mouseenter', show);
+    zone.addEventListener('mouseleave', scheduleHide);
+    mag.addEventListener('mouseenter', show);
+    mag.addEventListener('mouseleave', scheduleHide);
+
+    // И также открываем магнифайер, если наводят на любую из точек кластера
+    cluster.forEach(c => {
+      const dotEl = line.querySelector(`.event-dot[data-idx="${c.i}"]`);
+      if (dotEl) {
+        dotEl.addEventListener('mouseenter', show);
+        dotEl.addEventListener('mouseleave', scheduleHide);
+      }
+    });
   });
 
   // Default — show first major event
@@ -1949,18 +2241,18 @@ const TIMELANE_ORDER = [
 
 /* Периоды жизни героя в романе; pos ∈ [0,1] соответствует 1805–1820. */
 const LIFESPANS = {
-  old_bezukhov:  { from:0.00, to:0.055, dies:true },
-  liza:          { from:0.00, to:0.14,  dies:true },
-  old_bolkonsky: { from:0.00, to:0.62,  dies:true },
-  bagration:     { from:0.00, to:0.65,  dies:true },
-  anatole:       { from:0.00, to:0.64,  dies:true },
-  helene:        { from:0.00, to:0.66,  dies:true },
-  andrey:        { from:0.00, to:0.76,  dies:true },
-  petya:         { from:0.00, to:0.78,  dies:true },
-  platon:        { from:0.60, to:0.78,  dies:true },
-  count_rostov:  { from:0.00, to:0.89,  dies:true },
-  kutuzov:       { from:0.00, to:0.86,  dies:true },
-  nikolenka:     { from:0.14, to:1.00,  dies:false },
+  old_bezukhov:  { from:0.00,   to:0.0441, dies:true },
+  liza:          { from:0.00,   to:0.0806, dies:true },
+  old_bolkonsky: { from:0.00,   to:0.4764, dies:true },
+  bagration:     { from:0.00,   to:0.4811, dies:true },
+  anatole:       { from:0.00,   to:0.4844, dies:true },
+  helene:        { from:0.00,   to:0.4844, dies:true },
+  andrey:        { from:0.00,   to:0.4859, dies:true },
+  petya:         { from:0.00,   to:0.4880, dies:true },
+  platon:        { from:0.4816, to:0.4880, dies:true },
+  count_rostov:  { from:0.00,   to:0.5233, dies:true },
+  kutuzov:       { from:0.00,   to:0.5182, dies:true },
+  nikolenka:     { from:0.0781, to:1.00,   dies:false },
 };
 
 const TL_VIEWBOX_W = 1400;
@@ -1994,9 +2286,9 @@ function renderTimelane() {
 
   /* Эпохи (цветные фоновые полосы) */
   const eras = [
-    { from: 0.00, to: 0.54, hex:'#3a5040', label:'МИРЪ' },
-    { from: 0.54, to: 0.80, hex:'#7a1f1f', label:'ВОЙНА · 1812' },
-    { from: 0.80, to: 1.00, hex:'#a8812a', label:'ЭПИЛОГЪ' },
+    { from: 0.00,   to: 0.4655, hex:'#3a5040', label:'МИРЪ' },
+    { from: 0.4655, to: 0.5000, hex:'#7a1f1f', label:'ВОЙНА · 1812' },
+    { from: 0.5000, to: 1.00,   hex:'#a8812a', label:'ЭПИЛОГЪ' },
   ];
   eras.forEach(era => {
     svg.append('rect').attr('class','tl-era-band')
@@ -2012,7 +2304,7 @@ function renderTimelane() {
 
   /* Год: вертикальная сетка + подпись */
   for (let y = 1805; y <= 1820; y++) {
-    const pos = (y - 1805) / 15;
+    const pos = (y - 1805) / 16;
     const x = xScale(pos);
     svg.append('line').attr('class','tl-year-grid')
       .attr('x1', x).attr('x2', x)
