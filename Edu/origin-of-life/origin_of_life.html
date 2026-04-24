@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>От звёздной пыли к ДНК · Семь этапов химической эволюции</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET / BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Spectral', Georgia, serif;
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #e8e4f0;
+  background: #08040f;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1, h2, h3, h4 {
+  font-family: 'Fraunces', 'Times New Roman', serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+em { font-style: italic; color: #f0e6ff; }
+strong { font-weight: 500; color: #fff; }
+
+/* ============================================================
+   BACKGROUND GRADIENT — cosmos → biology
+   ============================================================ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(90, 20, 140, 0.4) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 30%, rgba(180, 50, 100, 0.2) 0%, transparent 45%),
+    radial-gradient(ellipse at 30% 60%, rgba(200, 120, 40, 0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 90%, rgba(40, 180, 120, 0.2) 0%, transparent 40%),
+    linear-gradient(180deg,
+      #050010 0%,
+      #0a0420 15%,
+      #160830 30%,
+      #2d0a2a 45%,
+      #2a1808 60%,
+      #0a2218 75%,
+      #042820 90%,
+      #031a14 100%);
+  z-index: -2;
+}
+
+/* Star field */
+.starfield {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 1.5rem;
+  position: relative;
+}
+.hero-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #a299b8;
+  margin-bottom: 2rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 99px;
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.02);
+}
+.hero h1 {
+  font-size: clamp(3rem, 9vw, 7rem);
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #fff 0%, #d4a5ff 40%, #ff9a5a 70%, #4dffaa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  max-width: 900px;
+}
+.hero h1 em {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: inherit;
+  -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: clamp(1.05rem, 2vw, 1.4rem);
+  color: #a299b8;
+  max-width: 640px;
+  font-weight: 300;
+  margin-bottom: 3rem;
+  font-style: italic;
+}
+.hero-stats {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: #786d92;
+}
+.hero-stats span strong {
+  display: block;
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  color: #f0e6ff;
+  margin-bottom: 0.2rem;
+  letter-spacing: -0.02em;
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #6a5f84;
+  animation: bob 2s ease-in-out infinite;
+}
+@keyframes bob { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
+
+/* ============================================================
+   TIMELINE NAV (sticky)
+   ============================================================ */
+.timeline {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0.8rem 1rem;
+  background: rgba(8, 4, 15, 0.7);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.timeline-track {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  gap: 0;
+}
+.timeline-line {
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    #d4a5ff 0%, #ff7a9a 16%, #ff9a5a 33%,
+    #4dd4d4 50%, #88ffaa 66%, #b8ff88 83%, #4dffaa 100%);
+  opacity: 0.25;
+  transform: translateY(-0.5px);
+}
+.timeline-dot {
+  position: relative;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: #0f0820;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: #6a5f84;
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 2;
+}
+.timeline-dot:hover { transform: scale(1.2); color: #fff; border-color: #fff; }
+.timeline-dot.active {
+  background: radial-gradient(circle, var(--dot-color) 0%, transparent 70%);
+  border-color: var(--dot-color);
+  color: #fff;
+  box-shadow: 0 0 20px var(--dot-color);
+}
+.timeline-dot.passed { border-color: rgba(255,255,255,0.35); color: #a299b8; }
+.timeline-dot::after {
+  content: attr(data-label);
+  position: absolute;
+  top: 140%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Spectral', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: #a299b8;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  font-style: italic;
+}
+.timeline-dot:hover::after, .timeline-dot.active::after { opacity: 1; }
+@media (max-width: 640px) {
+  .timeline-dot::after { display: none; }
+}
+
+/* ============================================================
+   STAGE GENERIC
+   ============================================================ */
+.stage {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 7rem 1.5rem 5rem;
+  position: relative;
+}
+.stage-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  align-items: start;
+  margin-bottom: 3rem;
+}
+.stage-num {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(4.5rem, 12vw, 9rem);
+  font-weight: 300;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--stage-accent);
+  opacity: 0.75;
+  font-style: italic;
+}
+.stage-intro {
+  padding-top: 0.5rem;
+}
+.stage-time {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stage-accent);
+  padding: 0.35rem 0.85rem;
+  border: 1px solid currentColor;
+  border-radius: 99px;
+  margin-bottom: 1.2rem;
+  opacity: 0.85;
+}
+.stage h2 {
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 300;
+  margin-bottom: 0.8rem;
+  color: #f5efff;
+}
+.stage h2 em {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--stage-accent);
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+}
+.stage-tagline {
+  font-size: 1.1rem;
+  color: #b8adcc;
+  font-style: italic;
+  max-width: 620px;
+}
+
+.stage-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  font-size: 1.02rem;
+}
+@media (min-width: 900px) {
+  .stage-body { grid-template-columns: 1.2fr 1fr; gap: 3rem; align-items: start; }
+}
+.stage-prose p { margin-bottom: 1.2rem; color: #d8cfe8; }
+.stage-prose p:first-child::first-letter {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 3.5em;
+  float: left;
+  line-height: 0.85;
+  margin: 0.1em 0.1em 0 -0.05em;
+  color: var(--stage-accent);
+  font-weight: 300;
+}
+
+/* Molecule viz card */
+.viz {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 1.5rem;
+  position: sticky;
+  top: 80px;
+  backdrop-filter: blur(10px);
+}
+.viz-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--stage-accent);
+  margin-bottom: 1rem;
+  opacity: 0.8;
+}
+.viz-svg {
+  width: 100%;
+  aspect-ratio: 1;
+  margin-bottom: 1rem;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.03) 0%, transparent 70%);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.viz-caption {
+  font-family: 'Spectral', serif;
+  font-style: italic;
+  font-size: 0.88rem;
+  color: #a299b8;
+  min-height: 3em;
+}
+.viz-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+  flex-wrap: wrap;
+}
+.viz-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stage-accent);
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 99px;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  opacity: 0.7;
+}
+.viz-btn:hover { opacity: 1; background: rgba(255,255,255,0.04); transform: translateY(-1px); }
+.viz-btn:active { transform: translateY(0); }
+
+/* Key facts pullquote */
+.pullquote {
+  border-left: 2px solid var(--stage-accent);
+  padding: 0.5rem 0 0.5rem 1.3rem;
+  margin: 1.8rem 0;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: #e8dff5;
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+/* Deep dive accordion */
+.deep {
+  margin-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 1rem;
+}
+.deep-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stage-accent);
+  background: none;
+  border: none;
+  padding: 0.6rem 0;
+  width: 100%;
+  text-align: left;
+}
+.deep-toggle::before {
+  content: '';
+  width: 20px; height: 1px;
+  background: currentColor;
+  transition: transform 0.3s;
+}
+.deep-toggle.open::before {
+  transform: rotate(90deg);
+}
+.deep-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.2,0.8,0.2,1);
+}
+.deep-content.open { max-height: 3000px; }
+.deep-content-inner {
+  padding: 1.2rem 0 0.5rem;
+  font-size: 0.95rem;
+  color: #c8bdd8;
+}
+.deep-content h4 {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--stage-accent);
+  margin: 1.4rem 0 0.5rem;
+  font-weight: 400;
+}
+.deep-content h4:first-child { margin-top: 0; }
+.deep-content p { margin-bottom: 0.9rem; }
+.formula {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9em;
+  background: rgba(255,255,255,0.04);
+  padding: 0.15em 0.45em;
+  border-radius: 4px;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* Controversy callout */
+.dispute {
+  margin: 1.8rem 0;
+  padding: 1.2rem 1.4rem;
+  border: 1px dashed rgba(255, 120, 80, 0.35);
+  border-radius: 8px;
+  background: rgba(255, 120, 80, 0.04);
+  position: relative;
+}
+.dispute::before {
+  content: '⟐ дискуссия';
+  position: absolute;
+  top: -0.7em;
+  left: 1rem;
+  background: #1a0a0f;
+  padding: 0 0.6rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: #ff9a7a;
+  text-transform: uppercase;
+}
+.dispute p { font-size: 0.92rem; margin-bottom: 0.6rem; }
+.dispute p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   STAGE-SPECIFIC ACCENTS
+   ============================================================ */
+#stage1 { --stage-accent: #d4a5ff; }
+#stage2 { --stage-accent: #ff88bb; }
+#stage3 { --stage-accent: #ff9a5a; }
+#stage4 { --stage-accent: #ffc857; }
+#stage5 { --stage-accent: #4dd4d4; }
+#stage6 { --stage-accent: #88ffaa; }
+#stage7 { --stage-accent: #4dffaa; }
+
+/* ============================================================
+   MOLECULE SVG STYLES
+   ============================================================ */
+.atom { transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+.bond { transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); stroke-width: 2; }
+.label { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; pointer-events: none; }
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  background: rgba(10, 5, 20, 0.95);
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #e8e4f0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 200;
+  max-width: 220px;
+  font-family: 'Spectral', serif;
+}
+.tooltip.show { opacity: 1; }
+
+/* ============================================================
+   EPILOGUE
+   ============================================================ */
+.epilogue {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 8rem 1.5rem 10rem;
+  text-align: center;
+}
+.epilogue h2 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  margin-bottom: 2rem;
+  font-weight: 300;
+  background: linear-gradient(135deg, #4dffaa 0%, #88ffaa 50%, #4dd4d4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.epilogue h2 em {
+  font-style: italic;
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+}
+.epilogue p {
+  font-size: 1.15rem;
+  color: #b8adcc;
+  margin-bottom: 1.2rem;
+  font-style: italic;
+}
+.disputes-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 4rem;
+  text-align: left;
+}
+@media (min-width: 700px) { .disputes-grid { grid-template-columns: 1fr 1fr; } }
+.dispute-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.dispute-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 150, 100, 0.3);
+}
+.dispute-card h3 {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 1.25rem;
+  color: #ffb090;
+  margin-bottom: 0.8rem;
+  font-weight: 400;
+}
+.dispute-card p { font-size: 0.95rem; color: #c8bdd8; font-style: normal; }
+.vs {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: #ff9a7a;
+  padding: 0.1rem 0.4rem;
+  background: rgba(255, 154, 122, 0.1);
+  border-radius: 4px;
+  margin: 0 0.3rem;
+}
+
+footer {
+  text-align: center;
+  padding: 3rem 1rem 4rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: #6a5f84;
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.stage { animation: fadeUp 0.8s ease-out both; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Utility */
+.inline-mol {
+  display: inline-block;
+  vertical-align: middle;
+  width: 2.2em;
+  height: 1.3em;
+  margin: 0 0.15em;
+}
+
+@media (max-width: 640px) {
+  .stage-header { grid-template-columns: 1fr; gap: 0.5rem; }
+  .stage-num { font-size: 4rem; }
+  .viz { position: static; }
+  .stage { padding: 5rem 1.2rem 3rem; }
+  body { font-size: 16px; }
+}
+
+/* Print */
+@media print {
+  body::before, .starfield, .timeline { display: none; }
+  .stage { page-break-after: always; }
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<canvas class="starfield" id="stars"></canvas>
+<div class="tooltip" id="tooltip"></div>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="hero">
+  <div class="hero-badge">Химическая эволюция · Интерактивная доска</div>
+  <h1>От <em>звёздной пыли</em><br>к <em>живой молекуле</em></h1>
+  <p class="hero-sub">Семь этапов, 13,8 миллиардов лет, один непрерывный сюжет — как водород в конце концов научился читать сам себя.</p>
+  <div class="hero-stats">
+    <span><strong>6</strong>Ключевых элементов</span>
+    <span><strong>4+</strong>Основных гипотез</span>
+    <span><strong>7</strong>Этапов сборки</span>
+    <span><strong>1</strong>Общий предок</span>
+  </div>
+  <div class="scroll-hint">↓ Прокрути вниз ↓</div>
+</section>
+
+<!-- ============================================================
+     TIMELINE NAV
+     ============================================================ -->
+<nav class="timeline" id="timeline">
+  <div class="timeline-track">
+    <div class="timeline-line"></div>
+    <a href="#stage1" class="timeline-dot" data-stage="1" data-label="Звёзды" style="--dot-color: #d4a5ff">1</a>
+    <a href="#stage2" class="timeline-dot" data-stage="2" data-label="Земля" style="--dot-color: #ff88bb">2</a>
+    <a href="#stage3" class="timeline-dot" data-stage="3" data-label="Бульон" style="--dot-color: #ff9a5a">3</a>
+    <a href="#stage4" class="timeline-dot" data-stage="4" data-label="Сборка" style="--dot-color: #ffc857">4</a>
+    <a href="#stage5" class="timeline-dot" data-stage="5" data-label="РНК-мир" style="--dot-color: #4dd4d4">5</a>
+    <a href="#stage6" class="timeline-dot" data-stage="6" data-label="Клетки" style="--dot-color: #88ffaa">6</a>
+    <a href="#stage7" class="timeline-dot" data-stage="7" data-label="ДНК" style="--dot-color: #4dffaa">7</a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     STAGE 1 — COSMIC NUCLEOSYNTHESIS
+     ============================================================ -->
+<section class="stage" id="stage1">
+  <header class="stage-header">
+    <div class="stage-num">I</div>
+    <div class="stage-intro">
+      <div class="stage-time">13,8 — 9 млрд лет назад</div>
+      <h2>Звёзды варят <em>элементы</em></h2>
+      <p class="stage-tagline">Всё, что тебя составляет — кроме водорода — когда-то было внутри умирающей звезды.</p>
+    </div>
+  </header>
+
+  <div class="stage-body">
+    <div class="stage-prose">
+      <p>После Большого взрыва во Вселенной было только два элемента: водород (~75%) и гелий (~25%). Следов лития — чайная ложка на галактику. Никакого углерода, кислорода, азота. Химии жизни просто нет из чего строиться.</p>
+
+      <p>Первое поколение звёзд загорается через ~200 млн лет. Внутри них давление и температура такие, что ядра водорода сливаются в гелий (<span class="formula">pp</span>-цепочка и <span class="formula">CNO</span>-цикл). Когда водород в ядре кончается, звезда сжимается, нагревается сильнее — и начинает жечь гелий в углерод через <em>тройную альфа-реакцию</em>: три ядра <span class="formula">⁴He</span> сталкиваются и дают <span class="formula">¹²C</span>.</p>
+
+      <p>Дальше — по лестнице: C → O → Ne → Mg → Si → ... до <strong>железа</strong>. На железе термоядерный синтез останавливается: дальше энергия перестаёт выделяться. Звезда коллапсирует и взрывается сверхновой, разбрасывая эти «готовые» элементы по Галактике. В самом взрыве рождаются ещё более тяжёлые — золото, уран, фосфор.</p>
+
+      <p class="pullquote">Шесть элементов — C, H, N, O, P, S — дают ~99% массы живого. Все они, кроме водорода, сварены в звёздах.</p>
+
+      <p>Углерод среди них особенный. У него четыре валентности, он одинаково легко соединяется с собой, с водородом, с кислородом, с азотом. Из него строятся цепочки, кольца, ветвления. Это идеальный молекулярный конструктор — и другого у Вселенной, насколько мы видели, нет.</p>
+    </div>
+
+    <aside class="viz">
+      <div class="viz-title">◦ Ядерная кухня</div>
+      <div class="viz-svg">
+        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" id="svg-stars">
+          <defs>
+            <radialGradient id="star1" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="#fff8e0" stop-opacity="1"/>
+              <stop offset="40%" stop-color="#ffcc66" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#ff4488" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="supernova" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+              <stop offset="20%" stop-color="#fff8e0" stop-opacity="0.9"/>
+              <stop offset="60%" stop-color="#d4a5ff" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#3d1a5c" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <g id="phase-star">
+            <circle cx="150" cy="150" r="50" fill="url(#star1)"/>
+            <text x="150" y="152" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#fff" opacity="0.9">H → He</text>
+            <g class="orbit" style="transform-origin:150px 150px; animation: spin 6s linear infinite">
+              <circle cx="150" cy="90" r="4" fill="#d4a5ff"/>
+            </g>
+            <g class="orbit" style="transform-origin:150px 150px; animation: spin 9s linear infinite reverse">
+              <circle cx="150" cy="220" r="3" fill="#ffcc66"/>
+            </g>
+          </g>
+          <g id="phase-nova" style="display:none">
+            <circle cx="150" cy="150" r="130" fill="url(#supernova)" opacity="0.8"/>
+            <g font-family="JetBrains Mono" font-size="12" font-weight="600">
+              <text x="60" y="80" fill="#d4a5ff">C</text>
+              <text x="230" y="80" fill="#88ffaa">N</text>
+              <text x="80" y="230" fill="#ff9a5a">O</text>
+              <text x="210" y="240" fill="#ffc857">P</text>
+              <text x="150" y="60" fill="#fff" text-anchor="middle">S</text>
+              <text x="150" y="265" fill="#4dd4d4" text-anchor="middle">Fe</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="viz-caption" id="cap1">Ядро звезды горит водородом. Нажми «взорвать» — и элементы разлетятся по Галактике.</div>
+      <div class="viz-controls">
+        <button class="viz-btn" onclick="stageOneToggle()">Взорвать ✦</button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="deep">
+    <button class="deep-toggle">Глубже в химию ядер</button>
+    <div class="deep-content">
+      <div class="deep-content-inner">
+        <h4>Три нуклеосинтеза на одну Вселенную</h4>
+        <p><strong>Первичный (BBN):</strong> первые 20 минут после Большого взрыва. Дал <span class="formula">¹H</span>, <span class="formula">²H</span> (дейтерий), <span class="formula">³He</span>, <span class="formula">⁴He</span>, следы <span class="formula">⁷Li</span>. И всё — дальше температура упала, фабрика закрылась.</p>
+        <p><strong>Звёздный:</strong> работает непрерывно. Низкомассивные звёзды типа Солнца доходят до углерода-кислорода (горят миллиарды лет, остаются белыми карликами). Массивные — до железа за десятки миллионов лет, потом взрываются.</p>
+        <p><strong>Взрывной (r- и s-процессы):</strong> элементы тяжелее железа рождаются в считаные секунды при взрывах сверхновых и слиянии нейтронных звёзд. Там нейтроны захватываются ядрами так быстро, что получаются золото, платина, уран.</p>
+
+        <h4>Почему именно CHNOPS?</h4>
+        <p><strong>Космическая распространённость + химическая универсальность.</strong> Углерод, азот, кислород — в первой десятке самых частых элементов во Вселенной. Плюс их химия исключительно богата. Фосфор реже (он плод s-процесса в звёздах), но без <span class="formula">PO₄³⁻</span> не было бы ни ДНК, ни АТФ — слишком уж удобная геометрия.</p>
+
+        <h4>Органика в межзвёздном пространстве</h4>
+        <p>В холодных облаках между звёздами обнаружено более <strong>250 молекул</strong>, включая воду, аммиак, метанол, уксусную кислоту, глицин (простейшая аминокислота), циановодород HCN. На льдах пылинок идут фотохимические реакции. В метеорите <em>Murchison</em> (упал в 1969) нашли 70+ аминокислот, сахара, азотистые основания. Часть органики Земля получила «с доставкой» — от комет и астероидов.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STAGE 2 — YOUNG EARTH
+     ============================================================ -->
+<section class="stage" id="stage2">
+  <header class="stage-header">
+    <div class="stage-num">II</div>
+    <div class="stage-intro">
+      <div class="stage-time">4,5 — 4,0 млрд лет назад</div>
+      <h2>Ранняя Земля: <em>реактор</em> под открытым небом</h2>
+      <p class="stage-tagline">Горячая планета с тонкой атмосферой, без озона и кислорода, с молниями, вулканами и постоянным УФ-ливнем.</p>
+    </div>
+  </header>
+
+  <div class="stage-body">
+    <div class="stage-prose">
+      <p>Земля собралась из пылевого диска вокруг Солнца за ~100 млн лет. Первые миллионы лет — расплавленный магматический океан. Примерно 4,4 млрд лет назад температура падает достаточно, чтобы водяной пар сконденсировался в первые океаны.</p>
+
+      <p>Атмосфера в это время — не земная в привычном смысле. <strong>Никакого свободного кислорода</strong> (он появится только через 2 миллиарда лет, когда цианобактерии научатся фотосинтезу). Основные газы: <span class="formula">CO₂</span>, <span class="formula">N₂</span>, <span class="formula">H₂O</span>, следы <span class="formula">SO₂</span>, <span class="formula">H₂S</span>, метана и аммиака. Давление в несколько раз выше, чем сейчас.</p>
+
+      <p>Самое интересное — <em>энергетика</em>. Озонового слоя нет, поэтому УФ-излучение лупит по поверхности без фильтра. Грозы — в десятки раз чаще нынешних из-за горячей и влажной атмосферы. Вулканизм — всюду. На дне океана — гидротермальные источники: «чёрные курильщики» (кислые, горячие, ~400 °C) и щелочные серпентинитовые поля (умеренные, ~70 °C, насыщенные водородом).</p>
+
+      <p class="pullquote">Во всех этих местах одновременно происходит одно и то же: из простых газов получаются чуть более сложные молекулы.</p>
+
+      <p>Плюс бонус: <em>поздняя тяжёлая бомбардировка</em> (~4,1–3,8 млрд лет назад). Кометы и астероиды сыплются на Землю, принося воду и уже готовые органические молекулы — аминокислоты, сахара, основания. Химия получает «затравку» прямо из космоса.</p>
+
+      <div class="dispute">
+        <p><strong>Какой именно был состав атмосферы — до сих пор спорят.</strong> Миллер и Юри в 1953 году исходили из сильно восстановительной смеси (метан, аммиак, водород). Современные геохимические данные говорят, что атмосфера была ближе к нейтральной — в основном CO₂ и N₂. А в нейтральной атмосфере знаменитая реакция Миллера работает заметно хуже.</p>
+        <p>Поэтому внимание сместилось на <em>локальные «горячие точки»</em>: вулканические области с восстановительными газами, подлёдные щелочные источники, лужи на поверхности. Там химия работает, даже если атмосфера «не та».</p>
+      </div>
+    </div>
+
+    <aside class="viz">
+      <div class="viz-title">◦ Условия на ранней Земле</div>
+      <div class="viz-svg">
+        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="earthCore" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="#ffaa44"/>
+              <stop offset="60%" stop-color="#aa3311"/>
+              <stop offset="100%" stop-color="#4a1a08"/>
+            </radialGradient>
+            <radialGradient id="atm" cx="50%" cy="50%">
+              <stop offset="70%" stop-color="#ff88bb" stop-opacity="0"/>
+              <stop offset="95%" stop-color="#ff88bb" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#ff88bb" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <!-- Atmosphere halo -->
+          <circle cx="150" cy="150" r="140" fill="url(#atm)"/>
+          <!-- Earth -->
+          <circle cx="150" cy="150" r="100" fill="url(#earthCore)"/>
+          <!-- Lightning -->
+          <path d="M 120 70 L 135 100 L 125 100 L 140 130" stroke="#fffacc" stroke-width="2" fill="none" opacity="0.9"/>
+          <path d="M 200 80 L 210 110 L 200 110 L 215 140" stroke="#fffacc" stroke-width="1.5" fill="none" opacity="0.7"/>
+          <!-- Volcano -->
+          <path d="M 70 210 L 100 180 L 130 210 Z" fill="#2a0a05"/>
+          <circle cx="100" cy="175" r="8" fill="#ffaa44" opacity="0.9">
+            <animate attributeName="r" values="6;10;6" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <!-- Molecules floating -->
+          <g font-family="JetBrains Mono" font-size="10" font-weight="600" opacity="0.85">
+            <text x="60" y="90" fill="#d4a5ff">CO₂</text>
+            <text x="220" y="60" fill="#88ffaa">N₂</text>
+            <text x="210" y="210" fill="#4dd4d4">H₂O</text>
+            <text x="40" y="160" fill="#ffc857">CH₄</text>
+            <text x="240" y="150" fill="#ff9a5a">NH₃</text>
+            <text x="140" y="260" fill="#ff88bb">H₂S</text>
+          </g>
+          <!-- UV rays -->
+          <g stroke="#d4a5ff" stroke-width="1" opacity="0.5">
+            <line x1="30" y1="30" x2="90" y2="80">
+              <animate attributeName="opacity" values="0.2;0.7;0.2" dur="3s" repeatCount="indefinite"/>
+            </line>
+            <line x1="270" y1="30" x2="220" y2="80">
+              <animate attributeName="opacity" values="0.5;0.1;0.5" dur="2.5s" repeatCount="indefinite"/>
+            </line>
+            <line x1="150" y1="10" x2="150" y2="60">
+              <animate attributeName="opacity" values="0.3;0.8;0.3" dur="4s" repeatCount="indefinite"/>
+            </line>
+          </g>
+        </svg>
+      </div>
+      <div class="viz-caption">Горячая планета, густая восстановительная атмосфера, постоянный приток энергии: УФ, молнии, вулканы, гидротермы.</div>
+    </aside>
+  </div>
+
+  <div class="deep">
+    <button class="deep-toggle">Геохимические детали</button>
+    <div class="deep-content">
+      <div class="deep-content-inner">
+        <h4>Два «двигателя» химии</h4>
+        <p><strong>Поверхностный сценарий (Sutherland, Deamer):</strong> мелкие пресные лужи на вулканической суше. Циклы «высыхание-намокание» заставляют молекулы концентрироваться и полимеризоваться. УФ обеспечивает энергию для нестандартных реакций.</p>
+        <p><strong>Гидротермальный сценарий (Russell, Martin, Lane):</strong> щелочные гидротермы типа поля «Lost City» в Атлантике. Пористые минеральные трубы создают микрореакторы с градиентом pH и температуры. Градиент протонов между щелочным нутром и кислым океаном — первая «батарейка» для химии (та же идея, что в АТФ-синтазе современных клеток).</p>
+
+        <h4>Минералы как катализаторы</h4>
+        <p>Глины (монтмориллонит), пирит, цеолиты, карбонаты — их поверхности связывают органические молекулы и ускоряют реакции, которые в свободном растворе идут очень медленно. Грэм Кернс-Смит в 1985 году даже предлагал гипотезу «<em>глиняной жизни</em>» — что первая «генетика» была не молекулярной, а кристаллической: дефекты в глинах могли передаваться от слоя к слою.</p>
+
+        <h4>Где и когда?</h4>
+        <p>Самые древние <em>геохимические следы жизни</em> — 3,8 млрд лет назад (изотопы углерода в Гренландии), а бесспорные <em>микрофоссилии</em> — около 3,5 млрд лет (Австралия, Pilbara). Значит, от «голой планеты» до «первых клеток» было всего 300–500 миллионов лет. По геологическим меркам — стремительно.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STAGE 3 — PREBIOTIC CHEMISTRY
+     ============================================================ -->
+<section class="stage" id="stage3">
+  <header class="stage-header">
+    <div class="stage-num">III</div>
+    <div class="stage-intro">
+      <div class="stage-time">4,0 — 3,8 млрд лет назад</div>
+      <h2>Первичный <em>бульон</em>: появляются детали</h2>
+      <p class="stage-tagline">Из газов и простых молекул сами собой получаются аминокислоты, сахара, основания и липиды — все пять основных «семейств» блоков жизни.</p>
+    </div>
+  </header>
+
+  <div class="stage-body">
+    <div class="stage-prose">
+      <p>В 1953 году аспирант Стэнли Миллер запечатал в стеклянной колбе смесь метана, аммиака, водорода и водяного пара, нагрел её и пустил электрический разряд. Через неделю на дне оказался коричневый осадок. В нём — <em>аминокислоты</em>. Миллер показал: чтобы из газов получить кирпичики белков, никаких чудес не нужно, достаточно энергии.</p>
+
+      <p>С тех пор набрали полный комплект. <strong>Все четыре класса биомолекул</strong> получены в пребиотических условиях:</p>
+
+      <p>⟡ <strong>Аминокислоты</strong> — из циановодорода HCN и формальдегида (через стрекеровский синтез и его варианты). В метеоритах находят все 20 «стандартных» плюс ещё сотню нестандартных.</p>
+
+      <p>⟡ <strong>Сахара</strong>, включая <em>рибозу</em> — из формальдегида по <em>формозной реакции</em> Бутлерова (1861): CH₂O сам с собой полимеризуется в смесь сахаров. Проблема: рибоза — меньшинство и быстро распадается. Это узкое место долго мучило исследователей.</p>
+
+      <p>⟡ <strong>Азотистые основания.</strong> Самый красивый факт во всей химии жизни: аденин — это <strong>пять молекул HCN, соединённых вместе</strong>. Молекулярная формула аденина — <span class="formula">C₅H₅N₅</span>. Пять HCN дают ровно её. В 1961 году Хуан Оро сварил аденин, просто выпаривая раствор HCN в аммиаке.</p>
+
+      <p class="pullquote">Жизнь использует основания, которые можно получить из самой простой органики нагреванием концентрированного раствора.</p>
+
+      <p>⟡ <strong>Липиды.</strong> Простые жирные кислоты образуются в гидротермальных условиях и в реакциях Фишера–Тропша. В воде они сами собирают плёнку или пузырёк — из-за гидрофобного эффекта. Никакой биологии для этого не нужно, чистая термодинамика.</p>
+
+      <p>Ключевой прорыв сделала группа Джона Сазерленда в 2009 году. Они показали, как из совсем простого сырья — цианоацетилена, гликольальдегида, фосфата — за несколько шагов получается <strong>активированный рибонуклеотид</strong>. Собранный, с правильной геометрией, готовый для полимеризации. Без проблемы «сначала рибоза, потом основание».</p>
+    </div>
+
+    <aside class="viz">
+      <div class="viz-title">◦ 5 × HCN → аденин</div>
+      <div class="viz-svg">
+        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" id="svg-adenine">
+          <!-- HCN molecules floating state. HCN structure: H-C≡N -->
+          <g id="hcn-floating">
+            <g transform="translate(60, 60)" class="hcn-mol">
+              <!-- single H-C bond -->
+              <line x1="8" y1="0" x2="22" y2="0" stroke="#888" stroke-width="1.5"/>
+              <!-- triple C≡N bond -->
+              <line x1="39" y1="-3" x2="51" y2="-3" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="0" x2="51" y2="0" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="3" x2="51" y2="3" stroke="#888" stroke-width="1.5"/>
+              <circle cx="0" cy="0" r="8" fill="#e8e4f0"/>
+              <circle cx="30" cy="0" r="9" fill="#4dd4d4"/>
+              <circle cx="60" cy="0" r="9" fill="#88aaff"/>
+              <text x="0" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">H</text>
+              <text x="30" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">C</text>
+              <text x="60" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">N</text>
+            </g>
+            <g transform="translate(180, 50)" class="hcn-mol">
+              <line x1="8" y1="0" x2="22" y2="0" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="-3" x2="51" y2="-3" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="0" x2="51" y2="0" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="3" x2="51" y2="3" stroke="#888" stroke-width="1.5"/>
+              <circle cx="0" cy="0" r="8" fill="#e8e4f0"/>
+              <circle cx="30" cy="0" r="9" fill="#4dd4d4"/>
+              <circle cx="60" cy="0" r="9" fill="#88aaff"/>
+              <text x="0" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">H</text>
+              <text x="30" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">C</text>
+              <text x="60" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">N</text>
+            </g>
+            <g transform="translate(40, 180)" class="hcn-mol">
+              <line x1="8" y1="0" x2="22" y2="0" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="-3" x2="51" y2="-3" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="0" x2="51" y2="0" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="3" x2="51" y2="3" stroke="#888" stroke-width="1.5"/>
+              <circle cx="0" cy="0" r="8" fill="#e8e4f0"/>
+              <circle cx="30" cy="0" r="9" fill="#4dd4d4"/>
+              <circle cx="60" cy="0" r="9" fill="#88aaff"/>
+              <text x="0" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">H</text>
+              <text x="30" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">C</text>
+              <text x="60" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">N</text>
+            </g>
+            <g transform="translate(190, 180)" class="hcn-mol">
+              <line x1="8" y1="0" x2="22" y2="0" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="-3" x2="51" y2="-3" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="0" x2="51" y2="0" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="3" x2="51" y2="3" stroke="#888" stroke-width="1.5"/>
+              <circle cx="0" cy="0" r="8" fill="#e8e4f0"/>
+              <circle cx="30" cy="0" r="9" fill="#4dd4d4"/>
+              <circle cx="60" cy="0" r="9" fill="#88aaff"/>
+              <text x="0" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">H</text>
+              <text x="30" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">C</text>
+              <text x="60" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">N</text>
+            </g>
+            <g transform="translate(120, 240)" class="hcn-mol">
+              <line x1="8" y1="0" x2="22" y2="0" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="-3" x2="51" y2="-3" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="0" x2="51" y2="0" stroke="#888" stroke-width="1.5"/>
+              <line x1="39" y1="3" x2="51" y2="3" stroke="#888" stroke-width="1.5"/>
+              <circle cx="0" cy="0" r="8" fill="#e8e4f0"/>
+              <circle cx="30" cy="0" r="9" fill="#4dd4d4"/>
+              <circle cx="60" cy="0" r="9" fill="#88aaff"/>
+              <text x="0" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">H</text>
+              <text x="30" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">C</text>
+              <text x="60" y="3" text-anchor="middle" font-size="8" font-weight="700" fill="#000">N</text>
+            </g>
+          </g>
+
+          <!-- Adenine structure (hidden initially) -->
+          <g id="adenine" style="opacity: 0; transform: scale(0.7); transform-origin: 150px 150px; transition: all 1.2s cubic-bezier(0.4,0,0.2,1)">
+            <!-- Pyrimidine ring + imidazole fused -->
+            <g transform="translate(150,150)">
+              <!-- Pyrimidine hexagon left -->
+              <polygon points="-50,-20 -25,-40 0,-20 0,10 -25,30 -50,10" fill="none" stroke="#ff9a5a" stroke-width="2"/>
+              <!-- Imidazole pentagon right -->
+              <polygon points="0,-20 25,-30 45,-10 30,20 0,10" fill="none" stroke="#ff9a5a" stroke-width="2"/>
+              <!-- Double bonds (inner) -->
+              <line x1="-45" y1="-15" x2="-30" y2="-30" stroke="#ff9a5a" stroke-width="2"/>
+              <line x1="-20" y1="-35" x2="-3" y2="-22" stroke="#ff9a5a" stroke-width="2"/>
+              <line x1="-3" y1="5" x2="-22" y2="25" stroke="#ff9a5a" stroke-width="2"/>
+              <line x1="23" y1="-25" x2="40" y2="-10" stroke="#ff9a5a" stroke-width="2"/>
+              <!-- NH2 -->
+              <line x1="-50" y1="-20" x2="-75" y2="-35" stroke="#888" stroke-width="1.5"/>
+              <circle cx="-80" cy="-38" r="10" fill="#88aaff"/>
+              <text x="-80" y="-35" text-anchor="middle" font-size="9" font-weight="700" fill="#000">NH₂</text>
+              <!-- N atoms in rings -->
+              <circle cx="-25" cy="-40" r="8" fill="#88aaff"/><text x="-25" y="-37" text-anchor="middle" font-size="9" font-weight="700" fill="#000">N</text>
+              <circle cx="-25" cy="30" r="8" fill="#88aaff"/><text x="-25" y="33" text-anchor="middle" font-size="9" font-weight="700" fill="#000">N</text>
+              <circle cx="25" cy="-30" r="8" fill="#88aaff"/><text x="25" y="-27" text-anchor="middle" font-size="9" font-weight="700" fill="#000">N</text>
+              <circle cx="30" cy="20" r="8" fill="#88aaff"/><text x="30" y="23" text-anchor="middle" font-size="9" font-weight="700" fill="#000">N</text>
+              <!-- H on N9 -->
+              <line x1="30" y1="20" x2="50" y2="35" stroke="#888" stroke-width="1.5"/>
+              <circle cx="54" cy="37" r="7" fill="#e8e4f0"/>
+              <text x="54" y="40" text-anchor="middle" font-size="8" font-weight="700" fill="#000">H</text>
+              <!-- Label -->
+              <text x="0" y="65" text-anchor="middle" font-family="Fraunces" font-size="16" font-style="italic" fill="#ff9a5a">Аденин</text>
+              <text x="0" y="80" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#c8bdd8">C₅H₅N₅</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="viz-caption" id="cap3">5 молекул циановодорода → одна молекула аденина. Атомы сходятся ровно.</div>
+      <div class="viz-controls">
+        <button class="viz-btn" onclick="assembleAdenine()">Собрать ◆</button>
+        <button class="viz-btn" onclick="resetAdenine()">Сброс</button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="deep">
+    <button class="deep-toggle">Химия пребиотических реакций</button>
+    <div class="deep-content">
+      <div class="deep-content-inner">
+        <h4>Стрекеровский синтез аминокислот</h4>
+        <p>Альдегид + аммиак + HCN → α-аминонитрил → гидролиз → α-аминокислота. В воде идёт при комнатной температуре. Из формальдегида получается <em>глицин</em>, из ацетальдегида — <em>аланин</em>, и так далее. В эксперименте Миллера основной продукт — именно глицин.</p>
+
+        <h4>Формозная реакция (Butlerov, 1861)</h4>
+        <p>2 × CH₂O → гликольальдегид → глицеральдегид → ... → смесь сахаров, включая тетрозы, пентозы, гексозы. Автокаталитическая: продукт ускоряет собственную наработку. Катализируется борат-ионами, что стабилизирует именно <em>рибозу</em> среди сахаров (работа Рикардо, Карригана, Бенера, 2004).</p>
+
+        <h4>Синтез Оро (1961) и путь Сазерленда (2009)</h4>
+        <p><strong>Оро:</strong> нагреть концентрированный раствор HCN с аммиаком — получаются пурины (аденин, гуанин) через HCN-тетрамер диаминомалеонитрил.</p>
+        <p><strong>Сазерленд:</strong> вместо того чтобы собирать рибозу и основание отдельно, а потом их соединять (что плохо работает), сразу берут цианамид + цианоацетилен + гликольальдегид + глицеральдегид + фосфат. Фосфат катализирует и буферизует. За 5–6 шагов получается <em>активированный цитидинмонофосфат</em> — готовый рибонуклеотид. Это один из главных прорывов пребиотической химии XXI века.</p>
+
+        <h4>Проблема хиральности</h4>
+        <p>В неживой природе аминокислоты получаются смесью L- и D-энантиомеров 50/50. А жизнь использует <em>только L-аминокислоты</em> и <em>только D-сахара</em>. Как произошёл этот отбор? Варианты: циркулярно поляризованный УФ-свет от нейтронных звёзд (разрушает один из энантиомеров немного быстрее); кристаллические поверхности (например, кальцит селективно адсорбирует один из типов); автокаталитическое усиление (реакция Соаи). До конца не решено.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STAGE 4 — POLYMERIZATION
+     ============================================================ -->
+<section class="stage" id="stage4">
+  <header class="stage-header">
+    <div class="stage-num">IV</div>
+    <div class="stage-intro">
+      <div class="stage-time">3,9 — 3,8 млрд лет назад</div>
+      <h2>Сборка: мономеры <em>склеиваются</em></h2>
+      <p class="stage-tagline">Отдельные блоки соединяются в длинные цепочки. Главный парадокс: реакции конденсации не любят воду, а мы — в океане.</p>
+    </div>
+  </header>
+
+  <div class="stage-body">
+    <div class="stage-prose">
+      <p>Проблема полимеризации называется <strong>«парадоксом воды»</strong>. Соединение двух мономеров в цепочку — это реакция <em>конденсации</em>: от мономеров отщепляется молекула воды. В водном растворе такая реакция термодинамически невыгодна — вода и так вокруг, обратной реакции (гидролиза) намного «удобнее» идти. Но вся химия жизни идёт именно в воде.</p>
+
+      <p>Решения, которые нашла природа (и которые воспроизведены в лаборатории):</p>
+
+      <p>⟡ <strong>Высыхание и намокание.</strong> Лужа на вулкане пересохла — концентрация мономеров резко выросла, воды стало мало, конденсация пошла. Пошёл дождь — вода вернулась, полимеры остались. Циклы wet-dry — один из самых эффективных пребиотических «моторов».</p>
+
+      <p>⟡ <strong>Минеральные поверхности.</strong> Монтмориллонитовые глины связывают активированные нуклеотиды и выстраивают их в ряд, как магнитики на холодильнике. Работы Феррис (2002) показали: на таких поверхностях сами собой получаются РНК-цепочки длиной до 50 нуклеотидов.</p>
+
+      <p>⟡ <strong>Активированные группы.</strong> Когда мономер приходит уже с высокоэнергетической меткой (например, с аденозин-фосфатом или имидазолидом), отщеплять воду проще — энергия «в комплекте».</p>
+
+      <p class="pullquote">Не в каждом месте и не с любыми мономерами — но в правильных условиях цепочки собираются сами собой.</p>
+
+      <p>Параллельно случается ещё одно важное событие: <strong>липиды в воде самособираются в пузырьки</strong>. Молекула жирной кислоты — гидрофильная «голова» + гидрофобный «хвост». В воде хвосты прячутся друг к другу, головы смотрят наружу. Получается двухслойная мембрана — и она сама замыкается в сферу. Никто не собирает — просто физика.</p>
+
+      <p>Итог этапа: в отдельных «горячих точках» существуют короткие <em>пептиды</em> (белкоподобные цепочки), короткие <em>РНК</em>, и липидные пузырьки. Они пока не связаны — но уже все присутствуют.</p>
+    </div>
+
+    <aside class="viz">
+      <div class="viz-title">◦ Полимеризация нуклеотидов</div>
+      <div class="viz-svg">
+        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" id="svg-poly">
+          <defs>
+            <linearGradient id="sugarGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffc857"/>
+              <stop offset="100%" stop-color="#ff9a5a"/>
+            </linearGradient>
+          </defs>
+          <!-- Nucleotide 1 -->
+          <g transform="translate(50,150)" class="nucleotide">
+            <!-- Phosphate -->
+            <circle cx="0" cy="0" r="14" fill="#88aaff"/>
+            <text x="0" y="4" text-anchor="middle" font-size="10" font-weight="700" fill="#000">P</text>
+            <!-- bond to sugar -->
+            <line x1="14" y1="0" x2="36" y2="0" stroke="#888" stroke-width="1.5"/>
+            <!-- Sugar pentagon -->
+            <polygon points="50,0 65,-12 80,0 75,15 55,15" fill="url(#sugarGrad)" stroke="#d4832a" stroke-width="1.5"/>
+            <text x="65" y="4" text-anchor="middle" font-size="9" font-weight="700" fill="#000">S</text>
+            <!-- bond to base -->
+            <line x1="65" y1="-12" x2="65" y2="-30" stroke="#888" stroke-width="1.5"/>
+            <!-- Base -->
+            <rect x="50" y="-55" width="30" height="22" rx="4" fill="#ff9a5a"/>
+            <text x="65" y="-40" text-anchor="middle" font-size="10" font-weight="700" fill="#000">A</text>
+          </g>
+          <!-- Nucleotide 2 -->
+          <g transform="translate(160,150)" class="nucleotide">
+            <circle cx="0" cy="0" r="14" fill="#88aaff"/>
+            <text x="0" y="4" text-anchor="middle" font-size="10" font-weight="700" fill="#000">P</text>
+            <line x1="14" y1="0" x2="36" y2="0" stroke="#888" stroke-width="1.5"/>
+            <polygon points="50,0 65,-12 80,0 75,15 55,15" fill="url(#sugarGrad)" stroke="#d4832a" stroke-width="1.5"/>
+            <text x="65" y="4" text-anchor="middle" font-size="9" font-weight="700" fill="#000">S</text>
+            <line x1="65" y1="-12" x2="65" y2="-30" stroke="#888" stroke-width="1.5"/>
+            <rect x="50" y="-55" width="30" height="22" rx="4" fill="#ffc857"/>
+            <text x="65" y="-40" text-anchor="middle" font-size="10" font-weight="700" fill="#000">U</text>
+          </g>
+          <!-- Linking bond (dashed = new) -->
+          <line id="polybond" x1="130" y1="150" x2="174" y2="150" stroke="#4dd4d4" stroke-width="2.5" stroke-dasharray="5,3"/>
+          <text x="152" y="175" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#4dd4d4">–H₂O</text>
+          <!-- Third monomer floating -->
+          <g transform="translate(240,80)" class="nucleotide" id="nuc3" style="opacity:0.55">
+            <circle cx="0" cy="0" r="12" fill="#88aaff"/>
+            <text x="0" y="3" text-anchor="middle" font-size="9" font-weight="700" fill="#000">P</text>
+            <polygon points="22,0 34,-10 46,0 42,12 26,12" fill="url(#sugarGrad)" stroke="#d4832a" stroke-width="1"/>
+            <rect x="22" y="-25" width="24" height="18" rx="3" fill="#88ffaa"/>
+            <text x="34" y="-12" text-anchor="middle" font-size="9" font-weight="700" fill="#000">C</text>
+          </g>
+          <!-- Title -->
+          <text x="150" y="255" text-anchor="middle" font-family="Fraunces" font-style="italic" font-size="14" fill="#ffc857">фосфодиэфирная связь</text>
+          <text x="150" y="275" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#c8bdd8">основание + сахар + фосфат = нуклеотид · цепочка = РНК</text>
+        </svg>
+      </div>
+      <div class="viz-caption">Фосфат одного нуклеотида соединяется с сахаром следующего. Отщепляется вода. Повтор — и получается цепочка РНК.</div>
+    </aside>
+  </div>
+
+  <div class="deep">
+    <button class="deep-toggle">Как именно склеиваются цепочки</button>
+    <div class="deep-content">
+      <div class="deep-content-inner">
+        <h4>Пептидная связь</h4>
+        <p>Карбоксильная группа одной аминокислоты (<span class="formula">–COOH</span>) + аминогруппа другой (<span class="formula">–NH₂</span>) → амидная (<span class="formula">–CO–NH–</span>) + <span class="formula">H₂O</span>. Именно эта связь соединяет аминокислоты в белках. В воде при нейтральном pH равновесие сильно смещено влево (в сторону свободных аминокислот) — нужен «мотор»: wet-dry циклы, катализ на минералах, или активация через аминоацил-аденилат.</p>
+
+        <h4>Фосфодиэфирная связь в РНК</h4>
+        <p>3′-OH группа сахара одного нуклеотида реагирует с 5′-фосфатом следующего. Получается <em>фосфодиэфирная связь</em> — с отщеплением воды. Минус: в свободной воде идёт с крошечным выходом. Плюс: если нуклеотид активирован (например, как 5′-фосфоимидазолид), реакция идёт прямо на матрице-шаблоне, копируя её.</p>
+
+        <h4>Эксперименты Феррис на глине</h4>
+        <p>Джеймс Феррис пропускал активированные мононуклеотиды через колонку с монтмориллонитом. Результат: РНК длиной до 50 нуклеотидов, выстраивающиеся преимущественно в «правильную» 3′–5′ связь. Поверхность глины работает и как концентратор, и как матрица.</p>
+
+        <h4>Самосборка липидов</h4>
+        <p>Жирные кислоты с длиной хвоста 8–14 углеродов образуют в воде мицеллы и везикулы. При нужном pH (близком к pKa, около 7–9) формируется <em>липидная бислойная мембрана</em> — не фосфолипидная, как в современных клетках, а более простая. Она пропускает малые молекулы (включая нуклеотиды), что позволяет «питать» захваченную внутри РНК снаружи. Этот трюк — основа модели протоклетки.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STAGE 5 — RNA WORLD
+     ============================================================ -->
+<section class="stage" id="stage5">
+  <header class="stage-header">
+    <div class="stage-num">V</div>
+    <div class="stage-intro">
+      <div class="stage-time">~3,8 млрд лет назад</div>
+      <h2>Мир <em>РНК</em>: молекула, которая читает себя</h2>
+      <p class="stage-tagline">Одна молекула умеет и хранить информацию, и катализировать реакции. Разделение труда ещё не случилось — и именно это делает самокопирование возможным.</p>
+    </div>
+  </header>
+
+  <div class="stage-body">
+    <div class="stage-prose">
+      <p>Здесь происходит главное. Пока у нас были только отдельные молекулы — пусть сложные, но пассивные. Теперь появляется <strong>молекула, которая делает копии самой себя</strong>. И запускается дарвиновский отбор — на молекулярном уровне.</p>
+
+      <p>Ключевая идея, которую в 1986 году сформулировал Уолтер Гилберт, называется <em>«мир РНК»</em>. РНК уникальна тем, что совмещает две функции:</p>
+
+      <p>⟡ <strong>Хранит информацию.</strong> Последовательность нуклеотидов — это текст, как в ДНК.</p>
+
+      <p>⟡ <strong>Катализирует реакции.</strong> Свёрнутая в трёхмерную структуру РНК может работать ферментом. Такие РНК-ферменты называются <em>рибозимами</em>. Открыты в 1982-м Томасом Чехом, за что он с Сидни Альтманом получил Нобеля в 1989-м.</p>
+
+      <p class="pullquote">Если РНК умеет и хранить, и работать — значит, для жизни достаточно одной этой молекулы. Белки могут прийти позже.</p>
+
+      <p>В современных лабораториях получены рибозимы, которые копируют другие РНК (полимеразы R18, Class I ligase). Полностью самовоспроизводящийся рибозим ещё не собран — но ключевые компоненты есть. В 2011 году Холлиджер получил рибозим, способный копировать цепи длиной больше собственной.</p>
+
+      <p>Главное доказательство теории — <em>рибосома</em>. Это огромный молекулярный комплекс, который в каждой клетке собирает белки из аминокислот по инструкции мРНК. Долгое время считалось, что каталитический центр у неё белковый. В 2000-е Йонат, Рамакришнан и Стейц показали: <strong>центр рибосомы — чистая РНК</strong>. То есть самая фундаментальная машина жизни — рибозим. Живое ископаемое из РНК-мира.</p>
+
+      <p>В этот же момент начинает работать <strong>естественный отбор</strong>. Молекулы РНК отличаются друг от друга; одни копируются быстрее и точнее, другие — хуже; «дети» первых становится больше. Жизнь как эволюционный процесс начинается именно здесь — задолго до первой клетки.</p>
+    </div>
+
+    <aside class="viz">
+      <div class="viz-title">◦ Самокопирование РНК</div>
+      <div class="viz-svg">
+        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" id="svg-rna">
+          <!-- Original strand -->
+          <g id="rna-template" transform="translate(30,80)">
+            <path d="M 0 0 Q 40 -10 80 0 T 160 0 T 240 0" fill="none" stroke="#4dd4d4" stroke-width="3"/>
+            <!-- Bases on template -->
+            <g font-family="JetBrains Mono" font-size="10" font-weight="700">
+              <rect x="15" y="-25" width="18" height="14" rx="2" fill="#4dd4d4"/><text x="24" y="-14" text-anchor="middle" fill="#000">A</text>
+              <rect x="55" y="-25" width="18" height="14" rx="2" fill="#4dd4d4"/><text x="64" y="-14" text-anchor="middle" fill="#000">U</text>
+              <rect x="95" y="-25" width="18" height="14" rx="2" fill="#4dd4d4"/><text x="104" y="-14" text-anchor="middle" fill="#000">G</text>
+              <rect x="135" y="-25" width="18" height="14" rx="2" fill="#4dd4d4"/><text x="144" y="-14" text-anchor="middle" fill="#000">C</text>
+              <rect x="175" y="-25" width="18" height="14" rx="2" fill="#4dd4d4"/><text x="184" y="-14" text-anchor="middle" fill="#000">A</text>
+              <rect x="215" y="-25" width="18" height="14" rx="2" fill="#4dd4d4"/><text x="224" y="-14" text-anchor="middle" fill="#000">U</text>
+            </g>
+          </g>
+          <!-- Pairing bonds -->
+          <g stroke="#88ffaa" stroke-width="1" stroke-dasharray="2,2" id="rna-pairs">
+            <line x1="54" y1="76" x2="54" y2="132"/>
+            <line x1="94" y1="76" x2="94" y2="132"/>
+            <line x1="134" y1="76" x2="134" y2="132"/>
+            <line x1="174" y1="76" x2="174" y2="132"/>
+            <line x1="214" y1="76" x2="214" y2="132"/>
+            <line x1="254" y1="76" x2="254" y2="132"/>
+          </g>
+          <!-- New strand (complementary) -->
+          <g id="rna-new" transform="translate(30,200)">
+            <path d="M 0 0 Q 40 10 80 0 T 160 0 T 240 0" fill="none" stroke="#88ffaa" stroke-width="3"/>
+            <g font-family="JetBrains Mono" font-size="10" font-weight="700">
+              <rect x="15" y="-11" width="18" height="14" rx="2" fill="#88ffaa"/><text x="24" y="0" text-anchor="middle" fill="#000">U</text>
+              <rect x="55" y="-11" width="18" height="14" rx="2" fill="#88ffaa"/><text x="64" y="0" text-anchor="middle" fill="#000">A</text>
+              <rect x="95" y="-11" width="18" height="14" rx="2" fill="#88ffaa"/><text x="104" y="0" text-anchor="middle" fill="#000">C</text>
+              <rect x="135" y="-11" width="18" height="14" rx="2" fill="#88ffaa"/><text x="144" y="0" text-anchor="middle" fill="#000">G</text>
+              <rect x="175" y="-11" width="18" height="14" rx="2" fill="#88ffaa"/><text x="184" y="0" text-anchor="middle" fill="#000">U</text>
+              <rect x="215" y="-11" width="18" height="14" rx="2" fill="#88ffaa"/><text x="224" y="0" text-anchor="middle" fill="#000">A</text>
+            </g>
+          </g>
+          <!-- Ribozyme label -->
+          <g transform="translate(150,275)">
+            <text text-anchor="middle" font-family="Fraunces" font-size="14" font-style="italic" fill="#4dd4d4">A–U · G–C</text>
+            <text y="14" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#c8bdd8">комплементарное копирование</text>
+          </g>
+        </svg>
+      </div>
+      <div class="viz-caption">РНК-шаблон (бирюзовая) служит матрицей. Рибозим-полимераза собирает вдоль неё комплементарную копию (зелёная): A↔U, G↔C.</div>
+    </aside>
+  </div>
+
+  <div class="deep">
+    <button class="deep-toggle">Почему именно РНК, а не что-то другое</button>
+    <div class="deep-content">
+      <div class="deep-content-inner">
+        <h4>Двойная функция — ключевой аргумент</h4>
+        <p>Классическая задача «курицы и яйца»: белки делают ДНК, ДНК кодирует белки — с чего началось? РНК решает её одним движением: <strong>она и код, и катализатор</strong>. Поэтому РНК-мир — гипотеза с минимумом допущений.</p>
+
+        <h4>Рибосома как живое ископаемое</h4>
+        <p>Большая субъединица рибосомы содержит 23S rRNA (~2900 нуклеотидов) и более 30 белков. Работы Нобелевских лауреатов Йонат, Стейца и Рамакришнана (2009) в разрешении 2,4 Å показали: в пептидилтрансферазном центре — там, где, собственно, пептидная связь и образуется — нет ни одного белкового атома в радиусе ~18 Å. Вся работа — на РНК. Белки лишь стабилизируют конструкцию снаружи.</p>
+
+        <h4>Полученные в лаборатории рибозимы</h4>
+        <p>Методом <em>in vitro</em> эволюции (SELEX) получены рибозимы с самыми разными функциями: лигазы, полимеразы, самосплайсинг, самоаминоацилирование (присоединение аминокислоты к тРНК-подобной структуре), даже простейший метаболизм. Самый мощный на данный момент — рибозим-полимераза tC19Z Холлиджера, способный копировать нити длиной ~200 нуклеотидов.</p>
+
+        <h4>Альтернативы РНК</h4>
+        <p>Многие исследователи (включая Эшенмозера) получали альтернативные нуклеиновые кислоты: <em>TNA</em> (на основе треозы), <em>PNA</em> (пептидный остов), <em>GNA</em>, <em>ANA</em>. Некоторые из них химически проще в получении из пребиотического сырья и могли быть «предками» РНК. Возможно, мир РНК сам эволюционировал из более простого «мира XNA».</p>
+
+        <div class="dispute">
+          <p><strong>Главный альтернативный сценарий — «метаболизм первым»</strong> (Wächtershäuser, Russell, Morowitz). Он говорит, что сначала появились циклы химических реакций на поверхности минералов (например, протоверсия цикла Кребса), а информационные молекулы — уже поверх этой метаболической сети.</p>
+          <p>Сторонники РНК-мира отвечают: без наследственности нет и отбора, а без отбора метаболизм не закрепляется. Пока экспериментальное преимущество у РНК-гипотезы.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STAGE 6 — PROTOCELLS
+     ============================================================ -->
+<section class="stage" id="stage6">
+  <header class="stage-header">
+    <div class="stage-num">VI</div>
+    <div class="stage-intro">
+      <div class="stage-time">~3,7 млрд лет назад</div>
+      <h2>Протоклетки: <em>индивидуальность</em> появляется</h2>
+      <p class="stage-tagline">Липидный пузырёк + самокопирующаяся РНК внутри = первый предшественник клетки. Здесь появляется понятие «организм».</p>
+    </div>
+  </header>
+
+  <div class="stage-body">
+    <div class="stage-prose">
+      <p>Самокопирующаяся РНК в открытом растворе имеет проблему: её копии могут «вскармливаться» любыми свободными нуклеотидами, включая соседскими. А «улучшения» одной молекулы легко помогают её соседям тоже. Значит, отбор идёт только между <em>типами</em> РНК, но не между <em>индивидуумами</em>.</p>
+
+      <p>Выход — <strong>компартментализация</strong>. Запереть каждую самокопирующуюся молекулу в свой пузырёк. Тогда улучшения достаются только «своему» содержимому. Начинается настоящий индивидуальный отбор.</p>
+
+      <p>Липидные пузырьки, как мы видели, собираются сами. Джек Шостак (Нобель 2009) в Гарварде показал в лаборатории всю цепочку:</p>
+
+      <p>⟡ <strong>Захват.</strong> При определённых условиях (пересыхание-намокание) РНК оказывается внутри везикулы.</p>
+
+      <p>⟡ <strong>Рост.</strong> Везикула получает новые жирные кислоты из окружающей среды и <em>растёт</em>. Те, у которых внутри больше полимеров, растут быстрее (осмотическое давление забирает липиды у пустых соседей — есть и такой трюк).</p>
+
+      <p>⟡ <strong>Деление.</strong> При механическом воздействии (волны, вибрация, протекание через поры) большая везикула делится на две. С вероятностью 50/50 содержимое тоже делится пополам.</p>
+
+      <p>⟡ <strong>Наследование и отбор.</strong> Если внутри есть самореплицирующаяся РНК — её копии попадают в «дочерние» пузырьки. Вариации наследуются. Лучшие — размножаются.</p>
+
+      <p class="pullquote">Это ещё не клетка. Но уже <em>организм</em> — с оболочкой, генетическим материалом и судьбой.</p>
+
+      <p>Примерно в это же время появляется примитивный <em>метаболизм</em>. Рибозимы внутри протоклетки ускоряют определённые реакции — например, активацию нуклеотидов или синтез простых органических соединений. Чем точнее «настроен» такой рибозимный набор, тем быстрее растёт протоклетка — и тем больше её потомков.</p>
+    </div>
+
+    <aside class="viz">
+      <div class="viz-title">◦ Протоклетка</div>
+      <div class="viz-svg">
+        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" id="svg-proto">
+          <defs>
+            <radialGradient id="vesicle" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="rgba(136,255,170,0.05)"/>
+              <stop offset="80%" stop-color="rgba(136,255,170,0.08)"/>
+              <stop offset="100%" stop-color="rgba(136,255,170,0.3)"/>
+            </radialGradient>
+          </defs>
+          <!-- Vesicle body -->
+          <circle cx="150" cy="150" r="110" fill="url(#vesicle)" stroke="#88ffaa" stroke-width="1.5" opacity="0.9"/>
+          <circle cx="150" cy="150" r="100" fill="none" stroke="#88ffaa" stroke-width="1" opacity="0.5"/>
+
+          <!-- Lipid molecules embedded in bilayer -->
+          <g id="lipids">
+            <!-- render 20 lipid pairs around circumference -->
+          </g>
+
+          <!-- RNA ribbon inside -->
+          <path d="M 80 150 Q 120 100 160 150 T 220 150" fill="none" stroke="#4dd4d4" stroke-width="2.5"/>
+          <g font-family="JetBrains Mono" font-size="8" font-weight="700">
+            <rect x="80" y="145" width="10" height="10" rx="1" fill="#4dd4d4"/><text x="85" y="153" text-anchor="middle" fill="#000">A</text>
+            <rect x="110" y="120" width="10" height="10" rx="1" fill="#4dd4d4"/><text x="115" y="128" text-anchor="middle" fill="#000">U</text>
+            <rect x="140" y="110" width="10" height="10" rx="1" fill="#4dd4d4"/><text x="145" y="118" text-anchor="middle" fill="#000">G</text>
+            <rect x="170" y="125" width="10" height="10" rx="1" fill="#4dd4d4"/><text x="175" y="133" text-anchor="middle" fill="#000">C</text>
+            <rect x="195" y="145" width="10" height="10" rx="1" fill="#4dd4d4"/><text x="200" y="153" text-anchor="middle" fill="#000">A</text>
+          </g>
+
+          <!-- Free nucleotides floating in/out -->
+          <g opacity="0.6" font-family="JetBrains Mono" font-size="8" font-weight="700">
+            <circle cx="130" cy="200" r="7" fill="#ffc857"/><text x="130" y="203" text-anchor="middle" fill="#000">U</text>
+            <circle cx="180" cy="190" r="7" fill="#ff9a5a"/><text x="180" y="193" text-anchor="middle" fill="#000">A</text>
+            <circle cx="100" cy="170" r="7" fill="#88aaff"/><text x="100" y="173" text-anchor="middle" fill="#000">C</text>
+          </g>
+
+          <!-- External nucleotides entering -->
+          <g opacity="0.5" font-family="JetBrains Mono" font-size="8" font-weight="700">
+            <circle cx="40" cy="100" r="6" fill="#ff9a5a"/><text x="40" y="103" text-anchor="middle" fill="#000">A</text>
+            <circle cx="260" cy="100" r="6" fill="#88aaff"/><text x="260" y="103" text-anchor="middle" fill="#000">G</text>
+            <circle cx="40" cy="210" r="6" fill="#ffc857"/><text x="40" y="213" text-anchor="middle" fill="#000">U</text>
+            <line x1="52" y1="106" x2="72" y2="122" stroke="#88ffaa" stroke-width="0.8" stroke-dasharray="2,2" opacity="0.5"/>
+          </g>
+
+          <!-- Labels -->
+          <text x="150" y="280" text-anchor="middle" font-family="Fraunces" font-style="italic" font-size="13" fill="#88ffaa">оболочка + гены + обмен</text>
+        </svg>
+      </div>
+      <div class="viz-caption">Липидная мембрана окружает РНК. Нуклеотиды проникают через мембрану → РНК растёт и копируется → протоклетка делится.</div>
+    </aside>
+  </div>
+
+  <div class="deep">
+    <button class="deep-toggle">Эксперименты Шостака и компания</button>
+    <div class="deep-content">
+      <div class="deep-content-inner">
+        <h4>Жирнокислотные везикулы vs фосфолипидные</h4>
+        <p>Современные клетки используют <em>фосфолипиды</em> (с глицериновым костяком и фосфатной группой). Но их синтез сложный — нужны ферменты. А простые <em>жирные кислоты</em> (например, олеиновая, октановая) образуют везикулы сами, в мягких условиях. Минус — они менее стабильны, чувствительны к pH и ионам. Плюс — проницаемы для ионов и малых молекул, что нужно ранней протоклетке (ещё нет белковых каналов).</p>
+
+        <h4>Как пузырёк растёт и делится без машинерии</h4>
+        <p>Шостак и Манн показали: везикулы из <em>миристолеиновой кислоты</em> растут, забирая липиды из мицелл в среде. При концентрации РНК внутри выше, чем снаружи, осмотическое давление натягивает мембрану — такая везикула «съедает» липиды соседок и растёт быстрее. При механической встряске удлинённые везикулы делятся пополам — без потери содержимого.</p>
+
+        <h4>Термоциклирование в гидротермах</h4>
+        <p>Дамер, Брассё и другие показали: в гидротермальных полях на горячих камнях происходят циклы нагрев-охлаждение. На краю лужи — конденсация липидов в пузырьки с захватом РНК. При погружении — везикулы высвобождают РНК обратно. Каждый цикл даёт новое «перемешивание» генов и отбор на стабильность.</p>
+
+        <h4>Что именно выбирается</h4>
+        <p>Поколение за поколением выигрывают протоклетки с: более эффективными рибозимами, лучшим удержанием собственной РНК, более прочной мембраной, умением «питаться» новыми молекулами. Все эти черты селекционируются на чисто химическом уровне, без единого белка. Это и есть <em>химический дарвинизм</em> — предшественник биологического.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STAGE 7 — DNA AND LUCA
+     ============================================================ -->
+<section class="stage" id="stage7">
+  <header class="stage-header">
+    <div class="stage-num">VII</div>
+    <div class="stage-intro">
+      <div class="stage-time">~3,5 млрд лет назад · LUCA</div>
+      <h2>ДНК берёт управление: <em>разделение труда</em></h2>
+      <p class="stage-tagline">Информация уходит в ДНК, работа — на белки, посредник — РНК. Возникает центральная догма и последний общий предок всего живого.</p>
+    </div>
+  </header>
+
+  <div class="stage-body">
+    <div class="stage-prose">
+      <p>РНК — молодец, но нестабильна. Её 2′-OH группа делает цепочку склонной к гидролизу: в воде РНК «ломается» за часы-дни. Для короткой РНК, которой надо прожить одно-два поколения, это терпимо. Но чем сложнее протоклетка, тем длиннее нужен геном — и тем критичнее его долговечность.</p>
+
+      <p>Эволюция находит две поправки, которые превращают РНК в <strong>ДНК</strong>:</p>
+
+      <p>⟡ <strong>Дезоксирибоза вместо рибозы.</strong> Уберём 2′-OH — и цепь становится намного стабильнее. Ошибок при гидролизе меньше, геном живёт дольше.</p>
+
+      <p>⟡ <strong>Урацил → тимин.</strong> Тимин — это урацил с дополнительной метильной группой. Он точнее отличается от цитозина при репликации: снижается число мутаций.</p>
+
+      <p>⟡ <strong>Двойная спираль.</strong> Две комплементарные нити означают, что при повреждении одной вторая служит шаблоном для починки. Это встроенная система резервного копирования.</p>
+
+      <p class="pullquote">ДНК — РНК, оптимизированная под долгое хранение. РНК — оптимизирована под работу. Каждой — своя роль.</p>
+
+      <p>Параллельно развиваются <strong>белки</strong>. Они собираются по РНК-инструкции (с помощью рибосомы — рибозима), но катализируют реакции в десятки тысяч раз эффективнее, чем рибозимы, и умеют гораздо больше разных вещей. Как только белковый синтез налажен — белки захватывают почти все каталитические функции.</p>
+
+      <p>Складывается <em>центральная догма молекулярной биологии</em>:</p>
+
+      <p class="mono" style="font-size: 1.1rem; text-align: center; margin: 1.5rem 0; color: #4dffaa;">ДНК &nbsp;→&nbsp; РНК &nbsp;→&nbsp; БЕЛОК</p>
+
+      <p>ДНК хранит. РНК транслирует. Белки работают. Эта схема не менялась ~3,5 миллиарда лет и остаётся универсальной — от кишечной палочки до голубого кита.</p>
+
+      <p>Где-то в районе <strong>3,5–4 миллиарда лет назад</strong> появляется <strong>LUCA</strong> — Last Universal Common Ancestor, последний универсальный общий предок. Реальный организм, от которого произошли все — бактерии, археи, животные, грибы, растения, включая тебя. По реконструкциям его генома, LUCA жил в горячих анаэробных условиях (возможно, в гидротермальных источниках), питался CO₂ и H₂, имел ~350 консервативных генов. Уже полноценный — с ДНК-геномом, белковым метаболизмом и рибосомой.</p>
+
+      <p>Дальше — 3,5 миллиарда лет обычной биологической эволюции. Уже без принципиальных химических скачков.</p>
+    </div>
+
+    <aside class="viz">
+      <div class="viz-title">◦ Двойная спираль ДНК</div>
+      <div class="viz-svg">
+        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" id="svg-dna">
+          <defs>
+            <linearGradient id="dnaBackbone" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#4dffaa"/>
+              <stop offset="100%" stop-color="#4dd4d4"/>
+            </linearGradient>
+          </defs>
+          <!-- Backbone strands (sine waves) -->
+          <path d="M 80 20 Q 180 60 80 100 Q 180 140 80 180 Q 180 220 80 260 Q 180 280 100 290" fill="none" stroke="#4dffaa" stroke-width="2.5"/>
+          <path d="M 220 20 Q 120 60 220 100 Q 120 140 220 180 Q 120 220 220 260 Q 120 280 200 290" fill="none" stroke="#4dd4d4" stroke-width="2.5"/>
+          <!-- Base pairs -->
+          <g font-family="JetBrains Mono" font-size="10" font-weight="700">
+            <g transform="translate(0,30)">
+              <line x1="88" y1="0" x2="212" y2="0" stroke="#4dffaa" stroke-width="1.5" opacity="0.7"/>
+              <rect x="88" y="-7" width="16" height="14" rx="2" fill="#ff9a5a"/><text x="96" y="4" text-anchor="middle" fill="#000">A</text>
+              <rect x="196" y="-7" width="16" height="14" rx="2" fill="#ffc857"/><text x="204" y="4" text-anchor="middle" fill="#000">T</text>
+            </g>
+            <g transform="translate(0,75)">
+              <line x1="100" y1="0" x2="200" y2="0" stroke="#4dffaa" stroke-width="1.5" opacity="0.7"/>
+              <rect x="100" y="-7" width="16" height="14" rx="2" fill="#88aaff"/><text x="108" y="4" text-anchor="middle" fill="#000">G</text>
+              <rect x="184" y="-7" width="16" height="14" rx="2" fill="#88ffaa"/><text x="192" y="4" text-anchor="middle" fill="#000">C</text>
+            </g>
+            <g transform="translate(0,120)">
+              <line x1="88" y1="0" x2="212" y2="0" stroke="#4dffaa" stroke-width="1.5" opacity="0.7"/>
+              <rect x="88" y="-7" width="16" height="14" rx="2" fill="#ffc857"/><text x="96" y="4" text-anchor="middle" fill="#000">T</text>
+              <rect x="196" y="-7" width="16" height="14" rx="2" fill="#ff9a5a"/><text x="204" y="4" text-anchor="middle" fill="#000">A</text>
+            </g>
+            <g transform="translate(0,165)">
+              <line x1="100" y1="0" x2="200" y2="0" stroke="#4dffaa" stroke-width="1.5" opacity="0.7"/>
+              <rect x="100" y="-7" width="16" height="14" rx="2" fill="#88ffaa"/><text x="108" y="4" text-anchor="middle" fill="#000">C</text>
+              <rect x="184" y="-7" width="16" height="14" rx="2" fill="#88aaff"/><text x="192" y="4" text-anchor="middle" fill="#000">G</text>
+            </g>
+            <g transform="translate(0,210)">
+              <line x1="88" y1="0" x2="212" y2="0" stroke="#4dffaa" stroke-width="1.5" opacity="0.7"/>
+              <rect x="88" y="-7" width="16" height="14" rx="2" fill="#ff9a5a"/><text x="96" y="4" text-anchor="middle" fill="#000">A</text>
+              <rect x="196" y="-7" width="16" height="14" rx="2" fill="#ffc857"/><text x="204" y="4" text-anchor="middle" fill="#000">T</text>
+            </g>
+            <g transform="translate(0,255)">
+              <line x1="100" y1="0" x2="200" y2="0" stroke="#4dffaa" stroke-width="1.5" opacity="0.7"/>
+              <rect x="100" y="-7" width="16" height="14" rx="2" fill="#88aaff"/><text x="108" y="4" text-anchor="middle" fill="#000">G</text>
+              <rect x="184" y="-7" width="16" height="14" rx="2" fill="#88ffaa"/><text x="192" y="4" text-anchor="middle" fill="#000">C</text>
+            </g>
+          </g>
+          <text x="150" y="15" text-anchor="middle" font-family="Fraunces" font-style="italic" font-size="12" fill="#4dffaa">A≡T · G≡C</text>
+        </svg>
+      </div>
+      <div class="viz-caption">Две антипараллельные нити ДНК, связанные водородными связями между A–T (2 связи) и G–C (3 связи). Двойная копия — встроенное резервирование.</div>
+    </aside>
+  </div>
+
+  <div class="deep">
+    <button class="deep-toggle">Разделение труда и LUCA</button>
+    <div class="deep-content">
+      <div class="deep-content-inner">
+        <h4>Почему ДНК стабильнее РНК</h4>
+        <p>2′-гидроксильная группа рибозы в РНК лежит совсем рядом с фосфодиэфирной связью и может атаковать её — особенно при щелочном pH или в присутствии двухвалентных катионов. Результат — самогидролиз и разрыв цепи. В ДНК этой группы нет (остался только водород), поэтому она живёт в тысячи раз дольше. В мёртвых мамонтах ДНК сохраняется 40 000 лет — РНК столько не живёт и в морозилке.</p>
+
+        <h4>Переход РНК → ДНК на уровне ферментов</h4>
+        <p>Современный фермент <em>рибонуклеотид-редуктаза</em> делает дезоксирибонуклеотиды из рибонуклеотидов, восстанавливая 2′-OH. Это сложный радикальный механизм, и этот фермент — один из самых древних и универсальных. Значит, переход от РНК- к ДНК-жизни произошёл уже <em>после</em> изобретения белкового катализа.</p>
+
+        <h4>Рождение генетического кода</h4>
+        <p>Ключевой элемент — <em>тРНК</em>, транспортные РНК, которые с одной стороны распознают кодон в мРНК, с другой — несут правильную аминокислоту. Кто их соединяет — аминоацил-тРНК-синтетазы (белки). Сам код — 64 кодона → 20 аминокислот — не случаен: похожие аминокислоты кодируются похожими кодонами, что минимизирует вред от мутаций. Как именно он «закристаллизовался» — ещё одна большая загадка. Гипотезы: стереохимическое сродство, сородство через предшественник, коэволюция биосинтеза аминокислот.</p>
+
+        <h4>Кто такой LUCA</h4>
+        <p>Работа Мартина, Веймельса и коллег (2016) методом поиска генов, присутствующих у максимально удалённых ветвей жизни, реконструировала ~355 генов LUCA. Портрет получается такой: <em>автотроф-хемолитотроф</em>, живущий на CO₂ + H₂ (вот почему Ник Лейн и Билл Мартин продвигают гидротермальную гипотезу — там есть оба газа), анаэроб, термофил или гипертермофил, фиксировал азот, использовал энергию протонного градиента на мембране.</p>
+
+        <p>От LUCA разошлись две главных ветви — <em>Bacteria</em> и <em>Archaea</em>. Эукариоты (включая нас) появились намного позже — как результат слияния археи с бактерией (будущей митохондрией) ~2 млрд лет назад.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     EPILOGUE / CONTROVERSIES
+     ============================================================ -->
+<section class="epilogue">
+  <h2>Главные <em>споры</em> и открытые вопросы</h2>
+  <p>Сюжет в целом сложился, но внутри каждого этапа кипят дискуссии. Вот шесть самых живых:</p>
+
+  <div class="disputes-grid">
+    <div class="dispute-card">
+      <h3>Поверхность <span class="vs">vs</span> глубина</h3>
+      <p>Где всё началось — в пресных лужах на вулканической суше с УФ и wet-dry циклами (Сазерленд, Деамер), или в щелочных гидротермах на дне океана с протонными градиентами (Рассел, Лейн, Мартин)? Аргументы есть у обеих школ, и спор — один из самых жарких в области.</p>
+    </div>
+    <div class="dispute-card">
+      <h3>РНК-мир <span class="vs">vs</span> метаболизм первым</h3>
+      <p>Информация возникла раньше обмена веществ (Гилберт) или наоборот (Вехтершойзер, Моровиц)? «РНК-первые» выигрывают экспериментами с рибозимами. «Метаболисты» отвечают: без автокаталитической химической сети не с чем работать отбору.</p>
+    </div>
+    <div class="dispute-card">
+      <h3>Какая была атмосфера</h3>
+      <p>Миллер исходил из восстановительной (CH₄, NH₃, H₂). Современная геохимия — скорее нейтральная (CO₂, N₂). В нейтральной Миллер работает слабо. Поэтому акцент сместился на локальные «горячие точки» и доставку органики кометами.</p>
+    </div>
+    <div class="dispute-card">
+      <h3>Предшествовала ли РНК другая молекула</h3>
+      <p>Химически РНК тяжело собрать «с нуля». Возможно, сначала существовал более простой информационный полимер (TNA, PNA, GNA), а РНК появилась позже как улучшение. Экспериментальные доказательства обоих вариантов продолжают накапливаться.</p>
+    </div>
+    <div class="dispute-card">
+      <h3>Откуда гомохиральность</h3>
+      <p>Почему жизнь использует только L-аминокислоты и D-сахара? Циркулярно поляризованный звёздный свет? Селективная адсорбция на кристаллах кальцита? Автокатализ (реакция Соаи)? Возможно — всё вместе плюс усиление случайного изначального перекоса.</p>
+    </div>
+    <div class="dispute-card">
+      <h3>Одна жизнь или много</h3>
+      <p>LUCA — последний общий предок <em>всех выживших</em>. Но могли быть параллельные попытки — другие протоклетки, другие химические варианты жизни. Возможно, они существовали миллионы лет, пока одна линия не вытеснила остальных. Следов пока не найдено, но гипотеза «теневой биосферы» обсуждается всерьёз.</p>
+    </div>
+  </div>
+
+  <p style="margin-top: 5rem; color: #7a7090;">Каждый этап из семи — это не маловероятное чудо, а <em>химически выгодная ступенька</em>. Вселенная собирает ДНК из звёздной пыли примерно так же, как вода стекает под гору: медленно, по многу путей, но в среднем — вниз.</p>
+</section>
+
+<footer>
+  <div>◦ ◦ ◦</div>
+  <div style="margin-top: 1rem">интерактивная доска · химическая эволюция</div>
+</footer>
+
+<script>
+/* ============================================================
+   STARFIELD
+   ============================================================ */
+(function() {
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = Math.min(window.innerHeight, 900);
+    stars = [];
+    const n = Math.floor((canvas.width * canvas.height) / 4000);
+    for (let i = 0; i < n; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.3 + 0.2,
+        a: Math.random() * 0.8 + 0.2,
+        da: (Math.random() - 0.5) * 0.02,
+      });
+    }
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const s of stars) {
+      s.a += s.da;
+      if (s.a < 0.15 || s.a > 1) s.da *= -1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(220, 210, 255, ${s.a})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ============================================================
+   TIMELINE — active dot on scroll
+   ============================================================ */
+(function() {
+  const dots = document.querySelectorAll('.timeline-dot');
+  const stages = document.querySelectorAll('.stage');
+
+  function updateActive() {
+    const scrollY = window.scrollY + window.innerHeight * 0.3;
+    let activeIdx = -1;
+    stages.forEach((s, i) => {
+      if (s.offsetTop <= scrollY) activeIdx = i;
+    });
+    dots.forEach((d, i) => {
+      d.classList.toggle('active', i === activeIdx);
+      d.classList.toggle('passed', i < activeIdx);
+    });
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+})();
+
+/* ============================================================
+   DEEP DIVE ACCORDIONS
+   ============================================================ */
+document.querySelectorAll('.deep-toggle').forEach(btn => {
+  btn.dataset.original = btn.textContent;
+  btn.addEventListener('click', () => {
+    const content = btn.nextElementSibling;
+    const isOpen = btn.classList.toggle('open');
+    content.classList.toggle('open');
+    btn.textContent = isOpen ? 'Свернуть ←' : btn.dataset.original;
+  });
+});
+
+/* ============================================================
+   STAGE 1 — star / supernova toggle
+   ============================================================ */
+let novaState = false;
+function stageOneToggle() {
+  const star = document.getElementById('phase-star');
+  const nova = document.getElementById('phase-nova');
+  const cap = document.getElementById('cap1');
+  novaState = !novaState;
+  if (novaState) {
+    star.style.display = 'none';
+    nova.style.display = 'block';
+    cap.textContent = 'Взрыв сверхновой. Углерод, азот, кислород, фосфор, сера разлетаются по Галактике — в будущие планеты и живые организмы.';
+  } else {
+    star.style.display = 'block';
+    nova.style.display = 'none';
+    cap.textContent = 'Ядро звезды горит водородом. Нажми «взорвать» — и элементы разлетятся по Галактике.';
+  }
+}
+
+/* ============================================================
+   STAGE 3 — HCN → Adenine assembly
+   ============================================================ */
+function assembleAdenine() {
+  const floating = document.getElementById('hcn-floating');
+  const adenine = document.getElementById('adenine');
+  const cap = document.getElementById('cap3');
+  floating.style.transition = 'opacity 1s, transform 1.2s cubic-bezier(0.4,0,0.2,1)';
+  floating.style.opacity = '0';
+  floating.style.transform = 'scale(0.3) translate(80px, 80px)';
+  setTimeout(() => {
+    adenine.style.opacity = '1';
+    adenine.style.transform = 'scale(1)';
+    cap.textContent = '✦ Пять HCN собрались в аденин (C₅H₅N₅). Азотистое основание, которое используется и в ДНК, и в РНК, и в АТФ.';
+  }, 900);
+}
+function resetAdenine() {
+  const floating = document.getElementById('hcn-floating');
+  const adenine = document.getElementById('adenine');
+  const cap = document.getElementById('cap3');
+  adenine.style.opacity = '0';
+  adenine.style.transform = 'scale(0.7)';
+  setTimeout(() => {
+    floating.style.transition = 'opacity 0.6s, transform 0.8s';
+    floating.style.transform = 'scale(1) translate(0,0)';
+    floating.style.opacity = '1';
+    cap.textContent = '5 молекул циановодорода → одна молекула аденина. Атомы сходятся ровно.';
+  }, 500);
+}
+
+/* ============================================================
+   TOOLTIP (hover for molecule hints)
+   ============================================================ */
+const tooltip = document.getElementById('tooltip');
+const hoverables = [
+  { sel: '#svg-stars', text: 'Ядро звезды массой 8–25 Солнц живёт ~10 млн лет, затем взрывается сверхновой.' },
+  { sel: '#svg-adenine', text: 'Аденин — ключевое азотистое основание. Входит в ДНК, РНК и АТФ — универсальную «валюту» энергии.' },
+  { sel: '#svg-rna', text: 'Рибозимы могут копировать другие РНК — прямое экспериментальное подтверждение РНК-мира.' },
+  { sel: '#svg-dna', text: 'Каждая клетка человека содержит ~2 метра ДНК, свёрнутой в ядро диаметром 6 мкм.' },
+];
+hoverables.forEach(h => {
+  const el = document.querySelector(h.sel);
+  if (!el) return;
+  el.addEventListener('mousemove', (e) => {
+    tooltip.textContent = h.text;
+    tooltip.classList.add('show');
+    tooltip.style.left = (e.pageX + 15) + 'px';
+    tooltip.style.top = (e.pageY + 15) + 'px';
+  });
+  el.addEventListener('mouseleave', () => {
+    tooltip.classList.remove('show');
+  });
+});
+
+/* ============================================================
+   Add lipids to protocell svg dynamically
+   ============================================================ */
+(function() {
+  const g = document.querySelector('#svg-proto #lipids');
+  if (!g) return;
+  const cx = 150, cy = 150, r = 105;
+  const n = 28;
+  for (let i = 0; i < n; i++) {
+    const angle = (i / n) * Math.PI * 2;
+    const x = cx + Math.cos(angle) * r;
+    const y = cy + Math.sin(angle) * r;
+    // Head circle
+    const head = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    head.setAttribute('cx', x);
+    head.setAttribute('cy', y);
+    head.setAttribute('r', '3');
+    head.setAttribute('fill', '#88ffaa');
+    head.setAttribute('opacity', '0.85');
+    // Tail line (inward)
+    const tx = cx + Math.cos(angle) * (r - 14);
+    const ty = cy + Math.sin(angle) * (r - 14);
+    const tail = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    tail.setAttribute('x1', x);
+    tail.setAttribute('y1', y);
+    tail.setAttribute('x2', tx);
+    tail.setAttribute('y2', ty);
+    tail.setAttribute('stroke', '#88ffaa');
+    tail.setAttribute('stroke-width', '1.2');
+    tail.setAttribute('opacity', '0.6');
+    g.appendChild(tail);
+    g.appendChild(head);
+  }
+})();
+
+/* ============================================================
+   Intersection observer — stagger stage entry
+   ============================================================ */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.style.opacity = '1';
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.stage').forEach(s => {
+  io.observe(s);
+});
+</script>
+
+</body>
+</html>
