@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Путешествие по неокортексу · Теория тысячи мозгов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:              #0a0d14;
+  --bg-panel:        #10141f;
+  --bg-elev:         #161b2a;
+  --grid:            #1f2738;
+  --line:            #2a3449;
+  --text:            #f0e6d2;
+  --text-dim:        #9aa3b8;
+  --text-faint:      #5a6479;
+  --accent:          #ff7a45;
+  --accent-2:        #7dd3fc;
+  --accent-3:        #c084fc;
+  --frontal:         #ff6b6b;
+  --parietal:        #ffd93d;
+  --temporal:        #6bcb77;
+  --occipital:       #4d96ff;
+  --cerebellum:      #c884ff;
+  --brainstem:       #ff8fab;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(125, 211, 252, 0.06), transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(255, 122, 69, 0.05), transparent 50%),
+    linear-gradient(var(--bg), var(--bg));
+  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============ HEADER ============ */
+header {
+  position: relative;
+  z-index: 10;
+  padding: 28px 48px 20px;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 32px;
+  background: rgba(10,13,20,0.6);
+  backdrop-filter: blur(8px);
+}
+
+.brand {
+  font-family: 'Instrument Serif', serif;
+  font-size: 28px;
+  letter-spacing: 0.01em;
+}
+
+.brand .ital {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: right;
+  line-height: 1.8;
+}
+
+.meta span { color: var(--accent-2); }
+
+/* ============ MAIN LAYOUT ============ */
+main {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 220px 1fr 360px;
+  min-height: calc(100vh - 92px);
+}
+
+/* ============ LEFT RAIL — LEVELS ============ */
+.rail {
+  border-right: 1px solid var(--line);
+  padding: 32px 0;
+  background: var(--bg-panel);
+}
+
+.rail-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding: 0 24px 16px;
+}
+
+.level-btn {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 18px 24px;
+  background: transparent;
+  border: none;
+  border-left: 2px solid transparent;
+  color: var(--text-dim);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(.2,.8,.3,1);
+  font-family: inherit;
+  position: relative;
+}
+
+.level-btn:hover {
+  background: var(--bg-elev);
+  color: var(--text);
+}
+
+.level-btn.active {
+  background: var(--bg-elev);
+  color: var(--text);
+  border-left-color: var(--accent);
+}
+
+.level-btn.active .level-num {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.level-num {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  color: var(--text-faint);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  transition: inherit;
+  font-style: italic;
+}
+
+.level-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 17px;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+.level-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-top: 3px;
+}
+
+.rail-footer {
+  margin-top: 48px;
+  padding: 24px;
+  border-top: 1px dashed var(--line);
+}
+
+.rail-footer p {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.rail-footer cite {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  display: block;
+  margin-top: 12px;
+  font-style: normal;
+}
+
+/* ============ CENTER CANVAS ============ */
+.canvas {
+  position: relative;
+  padding: 32px 40px;
+  overflow: hidden;
+}
+
+.scene {
+  display: none;
+  animation: fadeIn 0.6s cubic-bezier(.2,.8,.3,1);
+}
+
+.scene.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.scene-head {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.scene-roman {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 48px;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.scene-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 34px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.scene-note {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* ============ SVG CANVAS ============ */
+.stage {
+  position: relative;
+  background: radial-gradient(ellipse at center, rgba(22,27,42,0.8), rgba(10,13,20,0.4));
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  min-height: 520px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.stage svg { display: block; max-width: 100%; height: auto; }
+
+/* Brain regions */
+.region {
+  fill: var(--bg-elev);
+  stroke: var(--line);
+  stroke-width: 1.2;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(.2,.8,.3,1);
+}
+
+.region:hover, .region.selected {
+  stroke-width: 2;
+  filter: drop-shadow(0 0 12px currentColor);
+}
+
+.region.frontal    { color: var(--frontal);    }
+.region.parietal   { color: var(--parietal);   }
+.region.temporal   { color: var(--temporal);   }
+.region.occipital  { color: var(--occipital);  }
+.region.cerebellum { color: var(--cerebellum); }
+.region.brainstem  { color: var(--brainstem);  }
+
+.region:hover, .region.selected {
+  fill: color-mix(in srgb, currentColor 18%, var(--bg-elev));
+  stroke: currentColor;
+}
+
+.region-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  fill: var(--text-dim);
+  pointer-events: none;
+}
+
+.region-tick {
+  stroke: var(--text-faint);
+  stroke-width: 0.8;
+  stroke-dasharray: 2 3;
+}
+
+/* Columns grid */
+.col-dot {
+  fill: var(--line);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.col-dot:hover { fill: var(--accent-2); r: 3.5; }
+.col-dot.voted-a { fill: var(--accent-2);  }
+.col-dot.voted-b { fill: var(--accent);    }
+.col-dot.voted-c { fill: var(--accent-3);  }
+.col-dot.consensus { fill: var(--accent-2); r: 3; }
+
+.vote-line {
+  stroke: var(--accent-2);
+  stroke-width: 0.5;
+  opacity: 0;
+  fill: none;
+}
+
+/* Column layers (L1-L6) */
+.layer-band {
+  stroke: var(--line);
+  stroke-width: 1;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.layer-band:hover { filter: brightness(1.4); }
+.layer-band.active { stroke: var(--accent); stroke-width: 2; }
+
+.neuron {
+  fill: var(--text-faint);
+  transition: fill 0.2s;
+}
+.neuron.firing { fill: var(--accent); }
+
+.axon {
+  stroke: var(--text-faint);
+  stroke-width: 0.6;
+  fill: none;
+  opacity: 0.5;
+}
+
+.signal-dot {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 4px var(--accent));
+}
+
+.layer-label-en {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--text);
+  letter-spacing: 0.08em;
+}
+.layer-label-ru {
+  font-family: 'Newsreader', serif;
+  font-size: 12px;
+  fill: var(--text-dim);
+  font-style: italic;
+}
+
+/* Pathway diagram */
+.pathway-node {
+  fill: var(--bg-elev);
+  stroke: var(--line);
+  stroke-width: 1.2;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.pathway-node:hover, .pathway-node.active {
+  stroke: var(--accent);
+  fill: color-mix(in srgb, var(--accent) 15%, var(--bg-elev));
+}
+.pathway-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  fill: var(--text);
+  text-anchor: middle;
+}
+.pathway-sublabel {
+  font-family: 'Newsreader', serif;
+  font-size: 10px;
+  font-style: italic;
+  fill: var(--text-dim);
+  text-anchor: middle;
+}
+.pathway-edge {
+  stroke: var(--line);
+  stroke-width: 1.5;
+  fill: none;
+}
+.pathway-edge.feedback { stroke-dasharray: 4 4; stroke: var(--accent-3); }
+
+/* ============ CONTROLS ============ */
+.controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.ctrl {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  padding: 10px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+}
+.ctrl:hover { background: var(--line); color: var(--text); }
+.ctrl.primary { border-color: var(--accent); color: var(--accent); }
+.ctrl.primary:hover { background: var(--accent); color: var(--bg); }
+
+/* ============ RIGHT PANEL — INFO ============ */
+.info {
+  background: var(--bg-panel);
+  border-left: 1px solid var(--line);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.info-head {
+  padding-bottom: 20px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.info-kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  margin-bottom: 8px;
+}
+
+.info-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.info-block h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+
+.info-block p {
+  font-family: 'Newsreader', serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text);
+  font-weight: 300;
+}
+
+.info-block p + p { margin-top: 10px; }
+
+.info-block em {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Stats rows */
+.stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px dotted var(--line);
+}
+.stat:last-child { border-bottom: none; }
+.stat-label {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.stat-val {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  color: var(--text);
+}
+.stat-val .unit {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  margin-left: 6px;
+  letter-spacing: 0.08em;
+}
+
+/* Legend / list */
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.legend-item {
+  display: grid;
+  grid-template-columns: 14px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--bg-elev);
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.legend-item:hover { border-color: var(--line); }
+.legend-item.selected { border-color: currentColor; background: color-mix(in srgb, currentColor 10%, var(--bg-elev)); }
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.legend-name {
+  font-family: 'Newsreader', serif;
+  font-size: 14px;
+  color: var(--text);
+}
+.legend-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  letter-spacing: 0.08em;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1100px) {
+  main { grid-template-columns: 72px 1fr; }
+  .info { display: none; }
+  .level-title, .level-sub, .rail-label, .rail-footer { display: none; }
+  .level-btn { grid-template-columns: 1fr; justify-items: center; padding: 16px 8px; }
+}
+
+@media (max-width: 720px) {
+  header { padding: 20px 24px 16px; grid-template-columns: 1fr; gap: 8px; }
+  .meta { text-align: left; }
+  .canvas { padding: 20px; }
+  .scene-head { flex-wrap: wrap; gap: 12px; }
+  .scene-roman { font-size: 36px; }
+  .scene-title { font-size: 24px; }
+}
+
+/* ============ MISC ============ */
+.pulse { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+.spinning { animation: spin 8s linear infinite; transform-origin: center; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<header>
+  <div class="brand">
+    Путешествие по <span class="ital">неокортексу</span>
+  </div>
+  <div class="subtitle">— по мотивам «Тысячи мозгов» Джеффа Хокинса</div>
+  <div class="meta">
+    <div>Модуль <span id="lvl-meta">I / IV</span></div>
+    <div>Интерактивный атлас · v1.0</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ LEFT RAIL ============ -->
+  <aside class="rail">
+    <div class="rail-label">Уровни</div>
+
+    <button class="level-btn active" data-level="macro">
+      <span class="level-num">I</span>
+      <span>
+        <span class="level-title">Доли мозга</span>
+        <span class="level-sub">Macro · 10² см²</span>
+      </span>
+    </button>
+
+    <button class="level-btn" data-level="mezo">
+      <span class="level-num">II</span>
+      <span>
+        <span class="level-title">Колонки и голосование</span>
+        <span class="level-sub">Mezo · 10⁵ units</span>
+      </span>
+    </button>
+
+    <button class="level-btn" data-level="micro">
+      <span class="level-num">III</span>
+      <span>
+        <span class="level-title">Шесть слоёв</span>
+        <span class="level-sub">Micro · 2.5 mm</span>
+      </span>
+    </button>
+
+    <button class="level-btn" data-level="path">
+      <span class="level-num">IV</span>
+      <span>
+        <span class="level-title">Путь сигнала</span>
+        <span class="level-sub">Connections</span>
+      </span>
+    </button>
+
+    <div class="rail-footer">
+      <p>«Неокортекс выглядит одинаково повсюду, потому что везде делает одно и то же — моделирует мир.»</p>
+      <cite>Джефф Хокинс, 2021</cite>
+    </div>
+  </aside>
+
+  <!-- ============ CENTER CANVAS ============ -->
+  <section class="canvas">
+
+    <!-- ===== SCENE I — MACRO ===== -->
+    <div class="scene active" id="scene-macro">
+      <div class="scene-head">
+        <div class="scene-roman">I</div>
+        <div class="scene-title">Обзор долей коры<br><span style="font-style:italic;color:var(--text-dim);font-size:20px;">боковой вид левого полушария</span></div>
+        <div class="scene-note">Наведите на долю<br>↳ факты справа</div>
+      </div>
+
+      <div class="stage">
+        <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Brain diagram">
+          <defs>
+            <filter id="glow"><feGaussianBlur stdDeviation="3"/></filter>
+          </defs>
+
+          <!-- Grid -->
+          <g stroke="var(--grid)" stroke-width="0.4" opacity="0.6">
+            <line x1="0" y1="260" x2="900" y2="260"/>
+            <line x1="450" y1="0" x2="450" y2="520"/>
+          </g>
+
+          <!-- Brain silhouette as overall outline -->
+          <path d="M 180 260
+                   C 180 140, 280 80, 420 75
+                   C 580 70, 720 130, 760 220
+                   C 790 270, 780 310, 735 320
+                   C 740 370, 710 410, 650 420
+                   L 640 440
+                   L 620 440
+                   L 615 425
+                   C 540 440, 420 440, 340 425
+                   L 330 440
+                   L 310 440
+                   L 300 420
+                   C 230 400, 185 350, 180 260 Z"
+                fill="none" stroke="var(--line)" stroke-width="0.8" stroke-dasharray="3 4"/>
+
+          <!-- Frontal lobe -->
+          <path class="region frontal" data-region="frontal"
+                d="M 180 260 C 180 140, 280 80, 420 75 C 460 75, 480 100, 470 160 C 460 210, 440 245, 400 260 C 340 270, 240 275, 180 260 Z"/>
+
+          <!-- Parietal lobe -->
+          <path class="region parietal" data-region="parietal"
+                d="M 420 75 C 580 70, 680 120, 700 180 C 690 210, 640 230, 570 225 C 510 220, 475 200, 470 160 C 480 100, 460 75, 420 75 Z"/>
+
+          <!-- Occipital lobe -->
+          <path class="region occipital" data-region="occipital"
+                d="M 700 180 C 760 180, 790 240, 760 280 C 720 310, 660 300, 640 270 C 630 240, 650 210, 700 180 Z"/>
+
+          <!-- Temporal lobe -->
+          <path class="region temporal" data-region="temporal"
+                d="M 400 260 C 480 270, 570 275, 640 270 C 660 300, 670 340, 640 380 C 560 400, 440 390, 360 360 C 340 320, 360 280, 400 260 Z"/>
+
+          <!-- Cerebellum -->
+          <path class="region cerebellum" data-region="cerebellum"
+                d="M 640 380 C 700 380, 740 400, 740 430 C 740 455, 700 465, 660 455 C 630 445, 620 420, 640 380 Z"/>
+
+          <!-- Brainstem -->
+          <path class="region brainstem" data-region="brainstem"
+                d="M 460 395 C 490 400, 520 410, 525 440 C 530 470, 510 490, 485 490 C 460 490, 445 470, 450 440 C 450 420, 450 405, 460 395 Z"/>
+
+          <!-- Labels with ticks -->
+          <g>
+            <line class="region-tick" x1="280" y1="160" x2="280" y2="30"/>
+            <text class="region-label" x="280" y="22" text-anchor="middle">01 · Лобная</text>
+
+            <line class="region-tick" x1="570" y1="140" x2="570" y2="30"/>
+            <text class="region-label" x="570" y="22" text-anchor="middle">02 · Теменная</text>
+
+            <line class="region-tick" x1="720" y1="250" x2="860" y2="250"/>
+            <text class="region-label" x="860" y="246" text-anchor="end">03 · Затылочная</text>
+
+            <line class="region-tick" x1="500" y1="340" x2="500" y2="500"/>
+            <text class="region-label" x="500" y="512" text-anchor="middle">04 · Височная</text>
+
+            <line class="region-tick" x1="700" y1="420" x2="860" y2="420"/>
+            <text class="region-label" x="860" y="416" text-anchor="end">05 · Мозжечок</text>
+
+            <line class="region-tick" x1="485" y1="470" x2="60" y2="470"/>
+            <text class="region-label" x="60" y="466" text-anchor="start">06 · Ствол</text>
+          </g>
+
+          <!-- Orientation -->
+          <g transform="translate(50,50)">
+            <text class="region-label" fill="var(--text-faint)" y="0">← ВПЕРЁД (rostral)</text>
+            <text class="region-label" fill="var(--text-faint)" y="16">ВНИЗ ↓ (ventral)</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl" data-action="highlight-all">Подсветить все доли</button>
+        <button class="ctrl primary" data-level="mezo">Следующий уровень →</button>
+      </div>
+    </div>
+
+    <!-- ===== SCENE II — MEZO ===== -->
+    <div class="scene" id="scene-mezo">
+      <div class="scene-head">
+        <div class="scene-roman">II</div>
+        <div class="scene-title">Кортикальные колонки<br><span style="font-style:italic;color:var(--text-dim);font-size:20px;">~150 000 моделей мира, которые голосуют</span></div>
+        <div class="scene-note">Нажмите «Начать голосование»</div>
+      </div>
+
+      <div class="stage">
+        <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" id="svg-mezo">
+          <defs>
+            <pattern id="weave" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M0,5 L10,5" stroke="var(--grid)" stroke-width="0.3"/>
+              <path d="M5,0 L5,10" stroke="var(--grid)" stroke-width="0.3"/>
+            </pattern>
+          </defs>
+
+          <!-- Cortex sheet frame -->
+          <rect x="80" y="80" width="740" height="360" fill="url(#weave)" stroke="var(--line)" stroke-width="1"/>
+
+          <!-- Label -->
+          <text class="region-label" x="80" y="70">Развёрнутый лист коры · ≈ 2500 см²</text>
+          <text class="region-label" x="820" y="458" text-anchor="end" fill="var(--text-faint)">Каждая точка = 1 колонка</text>
+
+          <!-- Columns grid generated by JS -->
+          <g id="col-group"></g>
+
+          <!-- Consensus indicator -->
+          <g id="consensus-box" opacity="0">
+            <rect x="330" y="220" width="240" height="80" fill="var(--bg-elev)" stroke="var(--accent-2)" stroke-width="1.5" rx="2"/>
+            <text x="450" y="250" text-anchor="middle" class="region-label" fill="var(--accent-2)">Консенсус достигнут</text>
+            <text x="450" y="280" text-anchor="middle" fill="var(--text)" font-family="Instrument Serif" font-size="22" font-style="italic">→ кофейная чашка</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl primary" id="btn-vote">▶ Начать голосование</button>
+        <button class="ctrl" id="btn-reset-mezo">Сбросить</button>
+        <button class="ctrl" data-level="micro">В колонку →</button>
+      </div>
+    </div>
+
+    <!-- ===== SCENE III — MICRO ===== -->
+    <div class="scene" id="scene-micro">
+      <div class="scene-head">
+        <div class="scene-roman">III</div>
+        <div class="scene-title">Шесть слоёв колонки<br><span style="font-style:italic;color:var(--text-dim);font-size:20px;">толщина — 2.5 мм, как лист плотной бумаги</span></div>
+        <div class="scene-note">Кликайте по слоям</div>
+      </div>
+
+      <div class="stage">
+        <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" id="svg-micro">
+          <!-- scale bar -->
+          <g transform="translate(60,60)">
+            <line x1="0" y1="0" x2="0" y2="400" stroke="var(--text-faint)" stroke-width="1"/>
+            <line x1="-5" y1="0" x2="5" y2="0" stroke="var(--text-faint)"/>
+            <line x1="-5" y1="400" x2="5" y2="400" stroke="var(--text-faint)"/>
+            <text x="-12" y="4" class="region-label" text-anchor="end" fill="var(--text-faint)">0.0 мм</text>
+            <text x="-12" y="404" class="region-label" text-anchor="end" fill="var(--text-faint)">2.5 мм</text>
+          </g>
+
+          <!-- Column cross-section -->
+          <g transform="translate(200,60)">
+
+            <!-- L1 Molecular -->
+            <rect class="layer-band" data-layer="L1" x="0" y="0"   width="320" height="40"
+                  fill="color-mix(in srgb, var(--accent-3) 15%, var(--bg-elev))"/>
+            <!-- L2/3 -->
+            <rect class="layer-band" data-layer="L23" x="0" y="40"  width="320" height="110"
+                  fill="color-mix(in srgb, var(--accent-2) 18%, var(--bg-elev))"/>
+            <!-- L4 -->
+            <rect class="layer-band" data-layer="L4" x="0" y="150" width="320" height="60"
+                  fill="color-mix(in srgb, var(--accent) 22%, var(--bg-elev))"/>
+            <!-- L5 -->
+            <rect class="layer-band" data-layer="L5" x="0" y="210" width="320" height="90"
+                  fill="color-mix(in srgb, var(--temporal) 18%, var(--bg-elev))"/>
+            <!-- L6 -->
+            <rect class="layer-band" data-layer="L6" x="0" y="300" width="320" height="100"
+                  fill="color-mix(in srgb, var(--parietal) 14%, var(--bg-elev))"/>
+
+            <!-- Layer labels -->
+            <g>
+              <text class="layer-label-en" x="-80" y="25">L1</text>
+              <text class="layer-label-ru" x="-60" y="25">Молекулярный</text>
+
+              <text class="layer-label-en" x="-80" y="100">L2/3</text>
+              <text class="layer-label-ru" x="-60" y="100">Ассоциативный</text>
+
+              <text class="layer-label-en" x="-80" y="185">L4</text>
+              <text class="layer-label-ru" x="-60" y="185">Вход (таламус)</text>
+
+              <text class="layer-label-en" x="-80" y="260">L5</text>
+              <text class="layer-label-ru" x="-60" y="260">Выход моторный</text>
+
+              <text class="layer-label-en" x="-80" y="355">L6</text>
+              <text class="layer-label-ru" x="-60" y="355">Обратная связь</text>
+            </g>
+
+            <!-- Right annotations -->
+            <g transform="translate(340,0)">
+              <text class="region-label" x="0" y="25" fill="var(--accent-3)">атрибуты</text>
+              <text class="region-label" x="0" y="100" fill="var(--accent-2)">reference frames</text>
+              <text class="region-label" x="0" y="185" fill="var(--accent)">сенсорный сигнал</text>
+              <text class="region-label" x="0" y="260" fill="var(--temporal)">к мышцам</text>
+              <text class="region-label" x="0" y="355" fill="var(--parietal)">к таламусу</text>
+            </g>
+
+            <!-- Neurons (pyramidal cells) -->
+            <g id="neurons">
+              <!-- L2/3 pyramidals -->
+              <polygon class="neuron" points="50,90 46,80 54,80" data-l="L23"/>
+              <polygon class="neuron" points="90,95 86,85 94,85" data-l="L23"/>
+              <polygon class="neuron" points="140,88 136,78 144,78" data-l="L23"/>
+              <polygon class="neuron" points="190,100 186,90 194,90" data-l="L23"/>
+              <polygon class="neuron" points="240,85 236,75 244,75" data-l="L23"/>
+              <polygon class="neuron" points="285,95 281,85 289,85" data-l="L23"/>
+              <!-- L4 granule -->
+              <circle class="neuron" cx="60"  cy="180" r="2.5" data-l="L4"/>
+              <circle class="neuron" cx="100" cy="178" r="2.5" data-l="L4"/>
+              <circle class="neuron" cx="150" cy="185" r="2.5" data-l="L4"/>
+              <circle class="neuron" cx="200" cy="180" r="2.5" data-l="L4"/>
+              <circle class="neuron" cx="250" cy="182" r="2.5" data-l="L4"/>
+              <circle class="neuron" cx="290" cy="178" r="2.5" data-l="L4"/>
+              <!-- L5 big pyramidals -->
+              <polygon class="neuron" points="70,260 62,240 78,240" data-l="L5"/>
+              <polygon class="neuron" points="150,265 142,245 158,245" data-l="L5"/>
+              <polygon class="neuron" points="230,258 222,238 238,238" data-l="L5"/>
+              <!-- L6 -->
+              <polygon class="neuron" points="80,360 74,348 86,348" data-l="L6"/>
+              <polygon class="neuron" points="160,362 154,350 166,350" data-l="L6"/>
+              <polygon class="neuron" points="240,358 234,346 246,346" data-l="L6"/>
+            </g>
+
+            <!-- Apical dendrites (simplified) -->
+            <g class="axon">
+              <path d="M 70 260 Q 70 200 70 100 Q 70 60 70 20"/>
+              <path d="M 150 265 Q 150 180 150 90 Q 150 50 150 15"/>
+              <path d="M 230 258 Q 230 190 230 100 Q 230 55 230 18"/>
+            </g>
+
+            <!-- Input axon from thalamus -->
+            <path class="axon" d="M -100 420 Q -40 420 0 180" stroke-width="1" opacity="0.6"/>
+            <!-- Output axon -->
+            <path class="axon" d="M 320 260 Q 360 260 420 420" stroke-width="1" opacity="0.6"/>
+
+            <!-- Signal animation target -->
+            <circle id="signal" class="signal-dot" cx="-50" cy="420" r="4" opacity="0"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl primary" id="btn-signal">▶ Запустить сигнал</button>
+        <button class="ctrl" id="btn-fire">Возбудить нейроны</button>
+        <button class="ctrl" data-level="path">К связям →</button>
+      </div>
+    </div>
+
+    <!-- ===== SCENE IV — CONNECTIONS ===== -->
+    <div class="scene" id="scene-path">
+      <div class="scene-head">
+        <div class="scene-roman">IV</div>
+        <div class="scene-title">Путь зрительного сигнала<br><span style="font-style:italic;color:var(--text-dim);font-size:20px;">от сетчатки до осознания — за 150 мс</span></div>
+        <div class="scene-note">Наведите на этап</div>
+      </div>
+
+      <div class="stage">
+        <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" id="svg-path">
+
+          <!-- edges first (underneath) -->
+          <g id="edges">
+            <path class="pathway-edge" d="M 115 260 L 235 260"/>
+            <path class="pathway-edge" d="M 315 260 L 415 260"/>
+            <path class="pathway-edge" d="M 495 260 L 595 260"/>
+            <path class="pathway-edge" d="M 675 260 L 775 260"/>
+            <!-- feedback -->
+            <path class="pathway-edge feedback" d="M 775 290 Q 550 380 375 320"/>
+            <path class="pathway-edge feedback" d="M 595 290 Q 420 360 275 300"/>
+          </g>
+
+          <!-- nodes -->
+          <g>
+            <g class="pathway-group" data-node="eye">
+              <circle class="pathway-node" cx="75" cy="260" r="40"/>
+              <text class="pathway-label" x="75" y="262">👁</text>
+              <text class="pathway-sublabel" x="75" y="325">Сетчатка</text>
+              <text class="pathway-sublabel" x="75" y="340" style="font-size:9px;">retina</text>
+            </g>
+
+            <g class="pathway-group" data-node="thalamus">
+              <circle class="pathway-node" cx="275" cy="260" r="40"/>
+              <text class="pathway-label" x="275" y="258">LGN</text>
+              <text class="pathway-label" x="275" y="272" style="font-size:8px;">таламус</text>
+              <text class="pathway-sublabel" x="275" y="325">Латеральное</text>
+              <text class="pathway-sublabel" x="275" y="340">коленчатое тело</text>
+            </g>
+
+            <g class="pathway-group" data-node="v1">
+              <circle class="pathway-node" cx="455" cy="260" r="40"/>
+              <text class="pathway-label" x="455" y="262">V1</text>
+              <text class="pathway-sublabel" x="455" y="325">Первичная</text>
+              <text class="pathway-sublabel" x="455" y="340">зрит. кора</text>
+            </g>
+
+            <g class="pathway-group" data-node="v2">
+              <circle class="pathway-node" cx="635" cy="260" r="40"/>
+              <text class="pathway-label" x="635" y="262">V2/V4</text>
+              <text class="pathway-sublabel" x="635" y="325">Формы,</text>
+              <text class="pathway-sublabel" x="635" y="340">цвета</text>
+            </g>
+
+            <g class="pathway-group" data-node="it">
+              <circle class="pathway-node" cx="815" cy="260" r="40"/>
+              <text class="pathway-label" x="815" y="262">IT</text>
+              <text class="pathway-sublabel" x="815" y="325">Объекты,</text>
+              <text class="pathway-sublabel" x="815" y="340">узнавание</text>
+            </g>
+          </g>
+
+          <!-- moving signals -->
+          <circle id="sig1" class="signal-dot" cx="115" cy="260" r="5" opacity="0"/>
+
+          <!-- annotations -->
+          <g>
+            <text class="region-label" x="450" y="60" text-anchor="middle" fill="var(--text-dim)">Прямой поток · feedforward</text>
+            <line x1="120" y1="80" x2="780" y2="80" stroke="var(--line)" stroke-dasharray="3 3"/>
+            <polygon points="780,80 772,75 772,85" fill="var(--line)"/>
+
+            <text class="region-label" x="450" y="470" text-anchor="middle" fill="var(--accent-3)">Обратные связи · предсказания</text>
+            <line x1="780" y1="450" x2="120" y2="450" stroke="var(--accent-3)" stroke-dasharray="4 4" opacity="0.6"/>
+            <polygon points="120,450 128,445 128,455" fill="var(--accent-3)"/>
+          </g>
+
+          <!-- latency scale -->
+          <g transform="translate(60,420)">
+            <text class="region-label" x="0" y="0" fill="var(--text-faint)">0 мс</text>
+            <text class="region-label" x="200" y="0" fill="var(--text-faint)">40</text>
+            <text class="region-label" x="380" y="0" fill="var(--text-faint)">60</text>
+            <text class="region-label" x="560" y="0" fill="var(--text-faint)">100</text>
+            <text class="region-label" x="740" y="0" fill="var(--text-faint)">150 мс</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl primary" id="btn-path">▶ Пустить сигнал</button>
+        <button class="ctrl" data-level="macro">← К началу</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============ RIGHT INFO PANEL ============ -->
+  <aside class="info" id="info-panel">
+    <!-- filled by JS -->
+  </aside>
+
+</main>
+
+<script>
+/* ============================================
+   DATA
+   ============================================ */
+const REGION_DATA = {
+  frontal: {
+    name: 'Лобная доля',
+    color: 'var(--frontal)',
+    area: '≈ 41 % коры',
+    neurons: '≈ 7 млрд',
+    desc: 'Планирование, решения, движение, язык (Брока). <em>Дирижёр оркестра.</em>',
+    fun: 'Окончательно созревает только к 25 годам — именно поэтому подросткам иногда трудно с импульсами.'
+  },
+  parietal: {
+    name: 'Теменная доля',
+    color: 'var(--parietal)',
+    area: '≈ 19 %',
+    neurons: '≈ 3 млрд',
+    desc: 'Осязание, пространство, внимание. Здесь живут <em>reference frames</em> — системы отсчёта Хокинса.',
+    fun: 'Закрой глаза и коснись носа — эта доля делает это возможным.'
+  },
+  temporal: {
+    name: 'Височная доля',
+    color: 'var(--temporal)',
+    area: '≈ 22 %',
+    neurons: '≈ 4 млрд',
+    desc: 'Слух, речь (Вернике), распознавание лиц и объектов, память.',
+    fun: 'Область FFA распознаёт лица. Если её повредить — лица перестают узнаваться (прозопагнозия).'
+  },
+  occipital: {
+    name: 'Затылочная доля',
+    color: 'var(--occipital)',
+    area: '≈ 18 %',
+    neurons: '≈ 3 млрд',
+    desc: 'Зрение. От простых линий (V1) до цельных сцен (V4). <em>Кинотеатр мозга.</em>',
+    fun: 'V1 содержит "карту" сетчатки — соседние точки зрения = соседние нейроны.'
+  },
+  cerebellum: {
+    name: 'Мозжечок',
+    color: 'var(--cerebellum)',
+    area: 'отдельная структура',
+    neurons: '≈ 69 млрд (!) ',
+    desc: 'Координация движений, точность, обучение моторике. Не входит в неокортекс, но содержит <em>больше нейронов, чем весь остальной мозг</em>.',
+    fun: 'Когда учишься кататься на велосипеде — это мозжечок запоминает навык.'
+  },
+  brainstem: {
+    name: 'Ствол мозга',
+    color: 'var(--brainstem)',
+    area: 'древняя структура',
+    neurons: '~ сотни млн',
+    desc: 'Дыхание, сердцебиение, сон. <em>«Старый мозг»</em> Хокинса — эволюционно древнее неокортекса.',
+    fun: 'Работает без твоего сознательного участия. Вот прямо сейчас.'
+  }
+};
+
+const DEFAULT_INFO = {
+  macro: {
+    kicker: 'Уровень I · макроструктура',
+    title: 'Четыре доли, один алгоритм',
+    blocks: [
+      { h: 'Главная идея Хокинса', p: 'Кора выглядит одинаково везде — шесть слоёв, одинаковая толщина, одинаковые колонки. Разные доли просто получают разные сигналы: глаза, уши, кожу. Но считают они <em>одинаково</em>.' },
+      { h: 'Масштаб', p: 'Если развернуть кору — получится лист ~2500 см², толщиной 2.5 мм. Примерно как большая льняная салфетка.' },
+      { h: 'Попробуй', p: 'Наведи курсор на любую долю — справа появятся её функции и забавный факт.' }
+    ]
+  },
+  mezo: {
+    kicker: 'Уровень II · тысячи моделей',
+    title: 'Голосующие колонки',
+    blocks: [
+      { h: 'Кортикальная колонка', p: 'Вертикальный столбик коры ≈ 1 мм². В ней ~10 000 нейронов. Колонка — <em>полноценная модель</em> какой-то части мира.' },
+      { h: 'Зачем их много', p: 'Каждая колонка видит свой кусочек. Кофейная чашка для одной — ручка, для другой — ободок, для третьей — цвет. Чтобы понять «это чашка», <em>колонки голосуют</em> через длинные горизонтальные связи.' },
+      { h: 'Попробуй', p: 'Запусти голосование — и увидишь, как 600 точек (≈ 1/250 реального числа) сходятся к единому ответу.' }
+    ]
+  },
+  micro: {
+    kicker: 'Уровень III · внутри колонки',
+    title: 'Шесть слоёв — шесть ролей',
+    blocks: [
+      { h: 'Снизу — вверх', p: 'Сигнал от таламуса входит в <em>L4</em>, поднимается в <em>L2/3</em> для обработки, уходит вниз к мышцам через <em>L5</em> и обратно к таламусу через <em>L6</em>.' },
+      { h: 'Пирамидные нейроны', p: 'Главные клетки коры. Их дендриты тянутся вверх, как стволы деревьев — через все слои. Хокинс считает, что именно они кодируют <em>reference frames</em>.' },
+      { h: 'Попробуй', p: 'Запусти сигнал и смотри, как он проходит через слои. Кликни на слой — он выделится.' }
+    ]
+  },
+  path: {
+    kicker: 'Уровень IV · путь сигнала',
+    title: 'От сетчатки до узнавания',
+    blocks: [
+      { h: 'Прямой поток', p: 'Свет → сетчатка → LGN (таламус) → V1 → V2 → IT. <em>150 миллисекунд</em> — и ты узнаёшь лицо друга.' },
+      { h: 'Обратные связи', p: 'Пунктирные стрелки — <em>предсказания</em>. Кора не ждёт сигнал пассивно: она постоянно угадывает, что увидит, и сверяется. Несовпадение = удивление = обучение.' },
+      { h: 'Попробуй', p: 'Пусти сигнал — смотри за оранжевой точкой. Наведи на любой узел — он подсветится.' }
+    ]
+  }
+};
+
+/* ============================================
+   LEVEL SWITCHING
+   ============================================ */
+const scenes = document.querySelectorAll('.scene');
+const levelBtns = document.querySelectorAll('.level-btn');
+const infoPanel = document.getElementById('info-panel');
+const lvlMeta = document.getElementById('lvl-meta');
+
+const romanMap = { macro: 'I / IV', mezo: 'II / IV', micro: 'III / IV', path: 'IV / IV' };
+
+function renderInfo(level, custom) {
+  const data = custom || DEFAULT_INFO[level];
+  let html = `
+    <div class="info-head">
+      <div class="info-kicker">${data.kicker}</div>
+      <div class="info-title">${data.title}</div>
+    </div>`;
+
+  (data.blocks || []).forEach(b => {
+    html += `<div class="info-block"><h4>${b.h}</h4><p>${b.p}</p></div>`;
+  });
+
+  if (data.stats) {
+    html += '<div class="info-block">';
+    data.stats.forEach(s => {
+      html += `<div class="stat"><span class="stat-label">${s.label}</span><span class="stat-val">${s.val}<span class="unit">${s.unit||''}</span></span></div>`;
+    });
+    html += '</div>';
+  }
+
+  if (data.legend) {
+    html += '<div class="legend">';
+    data.legend.forEach(l => {
+      html += `<div class="legend-item" style="color:${l.color}" data-region="${l.key||''}"><span class="legend-dot"></span><span class="legend-name">${l.name}</span><span class="legend-code">${l.code||''}</span></div>`;
+    });
+    html += '</div>';
+  }
+
+  infoPanel.innerHTML = html;
+
+  // attach legend clicks
+  infoPanel.querySelectorAll('.legend-item[data-region]').forEach(el => {
+    el.addEventListener('click', () => {
+      const key = el.dataset.region;
+      if (key && REGION_DATA[key]) selectRegion(key);
+    });
+  });
+}
+
+function switchLevel(level) {
+  scenes.forEach(s => s.classList.toggle('active', s.id === `scene-${level}`));
+  levelBtns.forEach(b => b.classList.toggle('active', b.dataset.level === level));
+  lvlMeta.textContent = romanMap[level];
+
+  // reset region-selected state
+  document.querySelectorAll('.region.selected').forEach(r => r.classList.remove('selected'));
+
+  if (level === 'macro') {
+    renderInfo('macro', {
+      kicker: DEFAULT_INFO.macro.kicker,
+      title: DEFAULT_INFO.macro.title,
+      blocks: DEFAULT_INFO.macro.blocks,
+      legend: [
+        { name: 'Лобная',      code: '01', color: 'var(--frontal)',    key: 'frontal' },
+        { name: 'Теменная',    code: '02', color: 'var(--parietal)',   key: 'parietal' },
+        { name: 'Затылочная',  code: '03', color: 'var(--occipital)',  key: 'occipital' },
+        { name: 'Височная',    code: '04', color: 'var(--temporal)',   key: 'temporal' },
+        { name: 'Мозжечок',    code: '05', color: 'var(--cerebellum)', key: 'cerebellum' },
+        { name: 'Ствол',       code: '06', color: 'var(--brainstem)',  key: 'brainstem' }
+      ]
+    });
+  } else if (level === 'mezo') {
+    renderInfo('mezo', {
+      ...DEFAULT_INFO.mezo,
+      stats: [
+        { label: 'Колонок в коре', val: '150', unit: '× 10³' },
+        { label: 'Нейронов в колонке', val: '10', unit: '× 10³' },
+        { label: 'Диаметр колонки', val: '0.5', unit: 'мм' },
+        { label: 'Голосование', val: '~20', unit: 'мс' }
+      ]
+    });
+  } else if (level === 'micro') {
+    renderInfo('micro', DEFAULT_INFO.micro);
+  } else if (level === 'path') {
+    renderInfo('path', {
+      ...DEFAULT_INFO.path,
+      stats: [
+        { label: 'Сетчатка → LGN', val: '40', unit: 'мс' },
+        { label: 'LGN → V1',       val: '20', unit: 'мс' },
+        { label: 'V1 → IT',        val: '90', unit: 'мс' },
+        { label: 'Итог до узнавания', val: '150', unit: 'мс' }
+      ]
+    });
+  }
+}
+
+levelBtns.forEach(b => b.addEventListener('click', () => switchLevel(b.dataset.level)));
+document.querySelectorAll('[data-level]').forEach(el => {
+  if (!el.classList.contains('level-btn')) {
+    el.addEventListener('click', () => switchLevel(el.dataset.level));
+  }
+});
+
+/* ============================================
+   SCENE I — region interaction
+   ============================================ */
+function selectRegion(key) {
+  document.querySelectorAll('.region').forEach(r => r.classList.remove('selected'));
+  const el = document.querySelector(`.region[data-region="${key}"]`);
+  if (el) el.classList.add('selected');
+
+  const d = REGION_DATA[key];
+  if (!d) return;
+
+  renderInfo('macro', {
+    kicker: 'Доля коры · фокус',
+    title: d.name,
+    blocks: [
+      { h: 'Что делает', p: d.desc },
+      { h: 'Любопытный факт', p: d.fun }
+    ],
+    stats: [
+      { label: 'Площадь', val: d.area.replace(/[≈%млрд]/g,'').trim().split(' ')[0] || '—', unit: '%' },
+      { label: 'Нейронов', val: d.neurons }
+    ]
+  });
+}
+
+document.querySelectorAll('.region').forEach(r => {
+  r.addEventListener('click', () => selectRegion(r.dataset.region));
+  r.addEventListener('mouseenter', () => {
+    if (!document.querySelector('.region.selected')) {
+      const d = REGION_DATA[r.dataset.region];
+      if (d) {
+        infoPanel.querySelector('.info-title') && (infoPanel.querySelector('.info-title').textContent = d.name);
+      }
+    }
+  });
+});
+
+document.querySelector('[data-action="highlight-all"]')?.addEventListener('click', () => {
+  document.querySelectorAll('.region').forEach((r,i) => {
+    setTimeout(() => {
+      r.classList.add('selected');
+      setTimeout(() => r.classList.remove('selected'), 600);
+    }, i * 140);
+  });
+});
+
+/* ============================================
+   SCENE II — columns grid + voting
+   ============================================ */
+const colGroup = document.getElementById('col-group');
+const ROWS = 18, COLS = 34;
+const startX = 100, startY = 100, gap = 20;
+const dots = [];
+
+for (let r = 0; r < ROWS; r++) {
+  for (let c = 0; c < COLS; c++) {
+    const cx = startX + c * gap;
+    const cy = startY + r * gap;
+    const d = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    d.setAttribute('cx', cx);
+    d.setAttribute('cy', cy);
+    d.setAttribute('r', 2.5);
+    d.setAttribute('class', 'col-dot');
+    colGroup.appendChild(d);
+    dots.push(d);
+  }
+}
+
+function resetVote() {
+  dots.forEach(d => { d.classList.remove('voted-a','voted-b','voted-c','consensus'); });
+  document.getElementById('consensus-box').setAttribute('opacity', 0);
+}
+
+function startVote() {
+  resetVote();
+  // Phase 1: random initial votes
+  dots.forEach((d, i) => {
+    setTimeout(() => {
+      const cls = ['voted-a','voted-b','voted-c'][Math.floor(Math.random()*3)];
+      d.classList.add(cls);
+    }, Math.random() * 1200);
+  });
+  // Phase 2: consensus sweep
+  setTimeout(() => {
+    dots.forEach((d, i) => {
+      setTimeout(() => {
+        d.classList.remove('voted-a','voted-b','voted-c');
+        d.classList.add('consensus');
+      }, Math.random() * 1500);
+    });
+    setTimeout(() => {
+      document.getElementById('consensus-box').setAttribute('opacity', 1);
+    }, 1600);
+  }, 1800);
+}
+
+document.getElementById('btn-vote')?.addEventListener('click', startVote);
+document.getElementById('btn-reset-mezo')?.addEventListener('click', resetVote);
+
+/* ============================================
+   SCENE III — layers + signal
+   ============================================ */
+const layerInfo = {
+  L1: { name: 'Слой I · Молекулярный', desc: 'Почти нет клеточных тел. Здесь встречаются <em>apical dendrites</em> из нижних слоёв и обратные сигналы.' },
+  L23: { name: 'Слои II/III · Ассоциативные', desc: 'Главные "вычислительные" слои. Именно здесь, по Хокинсу, колонки <em>голосуют друг с другом</em> через длинные горизонтальные связи.' },
+  L4: { name: 'Слой IV · Входной', desc: 'Получает сигналы от таламуса (глаза, уши, кожа). В зрительной коре здесь миллионы крошечных "звёздчатых" клеток.' },
+  L5: { name: 'Слой V · Моторный выход', desc: 'Огромные пирамидные нейроны. Отправляют команды <em>прямо в спинной мозг и мышцы</em>.' },
+  L6: { name: 'Слой VI · Обратная связь', desc: 'Посылает сигналы <em>обратно в таламус</em> — это контур предсказания. Именно так кора говорит: "я ожидаю увидеть X".' }
+};
+
+document.querySelectorAll('.layer-band').forEach(band => {
+  band.addEventListener('click', () => {
+    document.querySelectorAll('.layer-band').forEach(b => b.classList.remove('active'));
+    band.classList.add('active');
+    const info = layerInfo[band.dataset.layer];
+    if (info) {
+      renderInfo('micro', {
+        kicker: 'Шесть слоёв · фокус',
+        title: info.name,
+        blocks: [
+          { h: 'Что здесь происходит', p: info.desc },
+          { h: 'Совет', p: 'Кликни по другим слоям или запусти сигнал — увидишь, как он проходит снизу вверх.' }
+        ]
+      });
+    }
+  });
+});
+
+function animateSignal() {
+  const signal = document.getElementById('signal');
+  if (!signal) return;
+
+  // Path: from thalamus (-50,420) → L4 (near x=0, y=180) → L2/3 (y=100) → L5 out (x=320, y=260)
+  const keyframes = [
+    { cx: -50, cy: 420, opacity: 0 },
+    { cx: -20, cy: 400, opacity: 1 },
+    { cx: 0,   cy: 180, opacity: 1 },
+    { cx: 70,  cy: 180, opacity: 1 },
+    { cx: 70,  cy: 95,  opacity: 1 },
+    { cx: 150, cy: 95,  opacity: 1 },
+    { cx: 230, cy: 100, opacity: 1 },
+    { cx: 230, cy: 260, opacity: 1 },
+    { cx: 320, cy: 260, opacity: 1 },
+    { cx: 360, cy: 320, opacity: 1 },
+    { cx: 400, cy: 420, opacity: 0 }
+  ];
+
+  let i = 0;
+  function step() {
+    if (i >= keyframes.length) return;
+    const k = keyframes[i];
+    signal.setAttribute('cx', k.cx);
+    signal.setAttribute('cy', k.cy);
+    signal.setAttribute('opacity', k.opacity);
+    i++;
+    setTimeout(step, 220);
+  }
+  step();
+}
+
+document.getElementById('btn-signal')?.addEventListener('click', animateSignal);
+
+document.getElementById('btn-fire')?.addEventListener('click', () => {
+  const neurons = document.querySelectorAll('.neuron');
+  neurons.forEach((n, i) => {
+    setTimeout(() => {
+      n.classList.add('firing');
+      setTimeout(() => n.classList.remove('firing'), 300);
+    }, i * 60);
+  });
+});
+
+/* ============================================
+   SCENE IV — pathway animation
+   ============================================ */
+const pathNodes = {
+  eye:      { name: 'Сетчатка', desc: 'Свет превращается в электрический импульс. 126 млн фоторецепторов — палочки и колбочки.' },
+  thalamus: { name: 'Таламус (LGN)', desc: 'Главный <em>переключатель</em> мозга. Каждый сенсорный сигнал (кроме обоняния) проходит через него. Получает и обратные предсказания из коры.' },
+  v1:       { name: 'V1 · первичная', desc: 'Первая кортикальная станция. Нейроны V1 распознают <em>простые линии под определёнными углами</em>. Открытие Хьюбела и Визеля (Нобелевка 1981).' },
+  v2:       { name: 'V2/V4', desc: 'Собирает из линий — углы, формы, цвета. Начинают появляться "признаки объектов".' },
+  it:       { name: 'Нижневисочная кора (IT)', desc: 'Здесь рождается <em>узнавание</em>: "это лицо бабушки". Целостные объекты, инвариантные к повороту и размеру.' }
+};
+
+document.querySelectorAll('.pathway-group').forEach(g => {
+  g.addEventListener('click', () => {
+    document.querySelectorAll('.pathway-node').forEach(n => n.classList.remove('active'));
+    g.querySelector('.pathway-node').classList.add('active');
+    const d = pathNodes[g.dataset.node];
+    if (d) {
+      renderInfo('path', {
+        kicker: 'Путь сигнала · этап',
+        title: d.name,
+        blocks: [
+          { h: 'Роль', p: d.desc },
+          { h: 'Двусторонность', p: 'По каждому пути сигналы идут в <em>обе стороны</em>: сенсорный сигнал — вперёд, предсказания коры — назад. Это ключ к теории Хокинса.' }
+        ]
+      });
+    }
+  });
+});
+
+function animatePath() {
+  const sig = document.getElementById('sig1');
+  if (!sig) return;
+  const points = [
+    [115,260],[175,260],[235,260],
+    [275,260],
+    [315,260],[375,260],[415,260],
+    [455,260],
+    [495,260],[555,260],[595,260],
+    [635,260],
+    [675,260],[735,260],[775,260],
+    [815,260]
+  ];
+  let i = 0;
+  sig.setAttribute('opacity', 1);
+  function step() {
+    if (i >= points.length) {
+      setTimeout(() => sig.setAttribute('opacity', 0), 400);
+      return;
+    }
+    sig.setAttribute('cx', points[i][0]);
+    sig.setAttribute('cy', points[i][1]);
+    i++;
+    setTimeout(step, 120);
+  }
+  step();
+}
+
+document.getElementById('btn-path')?.addEventListener('click', animatePath);
+
+/* ============================================
+   INIT
+   ============================================ */
+switchLevel('macro');
+</script>
+
+</body>
+</html>
