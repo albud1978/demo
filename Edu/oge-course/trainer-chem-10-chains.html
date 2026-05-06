@@ -175,26 +175,26 @@ var QUESTIONS = [
     chain: ['S', 'SO<sub>2</sub>', 'X', 'Na<sub>2</sub>SO<sub>4</sub>'],
     xIdx: 2,
     pool: [
-      { id:'b1', formula:'H<sub>2</sub>SO<sub>4</sub>', correct:true, note:'SO₂ → SO₃ → H₂SO₄ → Na₂SO₄. Связь: окисление SO₂ до SO₃, затем SO₃ + H₂O → H₂SO₄, затем H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O.' },
-      { id:'b2', formula:'H<sub>2</sub>S', correct:false, note:'Сероводород — низшая СО серы (-2), здесь нужна высшая, чтобы соответствовать сульфату.' },
-      { id:'b3', formula:'CO<sub>2</sub>', correct:false, note:'Углекислый газ не из этой серии.' },
-      { id:'b4', formula:'NaCl', correct:false, note:'Не содержит серы.' },
-      { id:'b5', formula:'SO<sub>2</sub>', correct:false, note:'Это уже предыдущее звено цепочки.' }
+      { id:'b1', formula:'SO<sub>3</sub>', correct:true, note:'S + O₂ → SO₂. Затем 2SO₂ + O₂ → 2SO₃ (катализатор V₂O₅, нагрев). Затем SO₃ + 2NaOH → Na₂SO₄ + H₂O. Каждое звено — одна реакция.' },
+      { id:'b2', formula:'H<sub>2</sub>SO<sub>4</sub>', correct:false, note:'Из SO₂ напрямую H₂SO₄ не получить — нужен промежуточный SO₃ (а у вас X стоит между SO₂ и натриевой солью).' },
+      { id:'b3', formula:'H<sub>2</sub>S', correct:false, note:'Сероводород — низшая СО серы (-2), здесь нужна высшая, чтобы соответствовать сульфату.' },
+      { id:'b4', formula:'CO<sub>2</sub>', correct:false, note:'Углекислый газ не из этой серии.' },
+      { id:'b5', formula:'NaCl', correct:false, note:'Не содержит серы.' }
     ],
-    fullChain: 'S → SO<sub>2</sub> → H<sub>2</sub>SO<sub>4</sub> → Na<sub>2</sub>SO<sub>4</sub>'
+    fullChain: 'S → SO<sub>2</sub> → SO<sub>3</sub> → Na<sub>2</sub>SO<sub>4</sub>'
   },
   {
     id:'na-chain',
-    chain: ['Na', 'X', 'NaOH', 'Na<sub>2</sub>SO<sub>4</sub>'],
-    xIdx: 1,
+    chain: ['Na', 'NaOH', 'X', 'BaSO<sub>4</sub>'],
+    xIdx: 2,
     pool: [
-      { id:'c1', formula:'Na<sub>2</sub>O', correct:true, note:'4Na + O₂ → 2Na₂O. Затем Na₂O + H₂O → 2NaOH. Затем 2NaOH + H₂SO₄ → Na₂SO₄ + 2H₂O.' },
-      { id:'c2', formula:'NaCl', correct:false, note:'Из NaCl получается не NaOH (без электролиза), а другие соли.' },
-      { id:'c3', formula:'NaH', correct:false, note:'Гидрид, не оксид. Цепочка не школьная.' },
-      { id:'c4', formula:'Na<sub>2</sub>CO<sub>3</sub>', correct:false, note:'Из Na не получается напрямую карбонат.' },
-      { id:'c5', formula:'NaNO<sub>3</sub>', correct:false, note:'Не подходит к цепочке через NaOH.' }
+      { id:'c1', formula:'Na<sub>2</sub>SO<sub>4</sub>', correct:true, note:'2Na + 2H₂O → 2NaOH + H₂↑. Затем 2NaOH + H₂SO₄ → Na₂SO₄ + 2H₂O. Затем Na₂SO₄ + BaCl₂ → BaSO₄↓ + 2NaCl.' },
+      { id:'c2', formula:'NaCl', correct:false, note:'NaCl + BaCl₂ — реакция не идёт (растворимые соли без образования осадка).' },
+      { id:'c3', formula:'Na<sub>2</sub>CO<sub>3</sub>', correct:false, note:'Na₂CO₃ + BaCl₂ → BaCO₃↓ (карбонат бария, белый), но не BaSO₄.' },
+      { id:'c4', formula:'NaNO<sub>3</sub>', correct:false, note:'NaNO₃ + BaCl₂ — все соли растворимы, реакции нет.' },
+      { id:'c5', formula:'Na<sub>2</sub>O', correct:false, note:'Из NaOH не получается оксид Na₂O в стандартных условиях. Кроме того, Na₂O + BaCl₂ — нет осадка BaSO₄.' }
     ],
-    fullChain: 'Na → Na<sub>2</sub>O → NaOH → Na<sub>2</sub>SO<sub>4</sub>'
+    fullChain: 'Na → NaOH → Na<sub>2</sub>SO<sub>4</sub> → BaSO<sub>4</sub>'
   },
   {
     id:'fe-chain',
