@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №7 · Классификация неорганических веществ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #F2EDE2; --bg-card: #FAF6EC; --ink: #1B1814; --ink-soft: #4A453D; --ink-faint: #7A736A;
+  --rule: #C8BFAE; --rule-soft: #DCD3BF; --accent: #2D4A2B; --accent-soft: rgba(45, 74, 43, 0.08);
+  --good: #16A34A; --good-bg: #DCFCE7; --bad: #B91C1C; --bad-bg: #FEE2E2; --warn: #D97706;
+  --serif: "Fraunces", "Times New Roman", Georgia, serif;
+  --body: "Spectral", "Georgia", serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { background-image: radial-gradient(circle at 25% 10%, rgba(45, 74, 43, 0.04), transparent 40%); }
+.wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+.head { border-top: 3px solid var(--ink); padding-top: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+.head-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); flex-wrap: wrap; gap: 10px; }
+.head-meta .accent { color: var(--accent); }
+h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; letter-spacing: -0.015em; margin-top: 16px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
+.subtitle { font-size: 16px; color: var(--ink-soft); margin-top: 12px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 32px; }
+@media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--bg-card); padding: 14px 16px; }
+.stat .num { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1; color: var(--accent); }
+.stat .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 6px; }
+.stat.streak .num.hot { color: var(--warn); }
+.question-card { background: var(--bg-card); border: 1px solid var(--rule); border-left: 4px solid var(--accent); padding: 24px 28px; margin-bottom: 24px; }
+.question-text { font-family: var(--serif); font-size: 18px; font-weight: 400; line-height: 1.45; }
+.question-text .role { font-weight: 600; color: var(--accent); padding: 2px 8px; background: var(--accent-soft); border-radius: 1px; }
+
+.role-slots { display: flex; gap: 16px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+.role-slot { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.role-slot .lbl { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-faint); }
+.role-slot .lbl b { color: var(--accent); }
+.role-slot .box { width: 110px; height: 56px; border: 2px dashed var(--rule); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-family: "Cambria Math", serif; font-size: 19px; cursor: pointer; transition: all 0.15s ease; }
+.role-slot .box:hover:not(.locked) { border-color: var(--accent); }
+.role-slot .box.filled { border-style: solid; border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.role-slot .box.locked { cursor: default; }
+.role-slot .box.correct-slot { border-color: var(--good); background: var(--good-bg); color: #14532D; }
+.role-slot .box.wrong-slot { border-color: var(--bad); background: var(--bad-bg); color: #7F1D1D; }
+.role-slot .box sub, .role-slot .box sup { font-size: 0.7em; }
+
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 22px; }
+@media (max-width: 600px) { .choices { grid-template-columns: 1fr; } }
+.choice { background: var(--bg-card); border: 1px solid var(--rule); padding: 14px 18px 14px 50px; cursor: pointer; transition: all 0.15s ease; position: relative; user-select: none; font-family: "Cambria Math", serif; font-size: 19px; }
+.choice:hover:not(.locked):not(.placed) { border-color: var(--ink); }
+.choice .num { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--ink-faint); border: 1px solid var(--rule); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+.choice .desc { display: none; font-family: var(--body); font-size: 13px; color: var(--ink-soft); margin-top: 6px; line-height: 1.4; }
+.choice.locked .desc { display: block; }
+.choice.placed { opacity: 0.35; cursor: default; }
+.choice.locked { cursor: default; }
+.choice.correct-pick { border-color: var(--good); background: var(--good-bg); }
+.choice.wrong-pick { border-color: var(--bad); background: var(--bad-bg); }
+.choice sub, .choice sup { font-size: 0.7em; }
+
+.actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.btn { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 14px 28px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); cursor: pointer; border-radius: 1px; transition: all 0.15s ease; }
+.btn:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.btn:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-faint); cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.btn.next { background: var(--accent); border-color: var(--accent); }
+.result { display: none; margin-top: 24px; padding: 20px 24px; border-left: 4px solid; font-family: var(--serif); font-size: 18px; font-weight: 500; }
+.result.shown { display: block; }
+.result.win { background: var(--good-bg); border-color: var(--good); color: #14532D; }
+.result.lose { background: var(--bad-bg); border-color: var(--bad); color: #7F1D1D; }
+.result-line1 { font-size: 19px; }
+.result-line2 { font-family: var(--body); font-size: 14.5px; font-weight: 400; margin-top: 10px; line-height: 1.55; opacity: 0.92; }
+.result-line2 b { font-family: var(--mono); font-weight: 700; }
+.cheat { margin-top: 56px; padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; }
+.cheat h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin-bottom: 16px; }
+.cheat p { font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 8px; }
+.cheat p b { color: var(--ink); }
+.classes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+@media (max-width: 600px) { .classes { grid-template-columns: 1fr; } }
+.class-card { padding: 12px 14px; background: var(--bg); border: 1px solid var(--rule-soft); border-left: 3px solid var(--accent); }
+.class-card h5 { font-family: var(--serif); font-weight: 600; font-size: 16px; margin-bottom: 4px; color: var(--accent); }
+.class-card p { font-size: 13px; color: var(--ink-soft); margin: 4px 0; }
+.class-card .ex { font-family: "Cambria Math", serif; font-size: 13.5px; color: var(--ink); margin-top: 4px; }
+.class-card .ex sub { font-size: 0.7em; }
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--ink-faint); text-align: center; }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+
+<header class="head">
+  <div class="head-meta">
+    <span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №7</span>
+    <span>1 балл · краткий ответ</span>
+  </div>
+  <h1>Классификация <em>веществ</em></h1>
+  <p class="subtitle">Тренажёр на распознавание классов неорганических соединений: оксиды (основные / кислотные / амфотерные / несолеобразующие), кислоты, основания (щёлочи / нерастворимые), соли. Найди в перечне два указанных класса.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего вопросов</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">правильно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности</div></div>
+</div>
+
+<div class="question-card">
+  <p class="question-text" id="question-text"></p>
+  <div class="role-slots" id="role-slots"></div>
+  <div class="choices" id="choices"></div>
+</div>
+
+<div class="actions">
+  <button class="btn" id="check-btn" disabled>Проверить</button>
+  <button class="btn ghost" id="clear-btn">Сбросить</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующий вопрос</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<section class="cheat">
+  <h3>Классы неорганических веществ</h3>
+  <div class="classes">
+    <div class="class-card">
+      <h5>Основные оксиды</h5>
+      <p>Оксиды металлов с СО +1, +2 (кроме амфотерных).</p>
+      <div class="ex">Na<sub>2</sub>O, K<sub>2</sub>O, CaO, MgO, BaO, CuO, FeO, Cu<sub>2</sub>O</div>
+    </div>
+    <div class="class-card">
+      <h5>Кислотные оксиды</h5>
+      <p>Оксиды неметаллов и металлов в высоких СО (+5, +6, +7).</p>
+      <div class="ex">SO<sub>2</sub>, SO<sub>3</sub>, CO<sub>2</sub>, P<sub>2</sub>O<sub>5</sub>, N<sub>2</sub>O<sub>5</sub>, SiO<sub>2</sub>, CrO<sub>3</sub>, Mn<sub>2</sub>O<sub>7</sub></div>
+    </div>
+    <div class="class-card">
+      <h5>Амфотерные оксиды</h5>
+      <p>BeO, Al<sub>2</sub>O<sub>3</sub>, ZnO, Cr<sub>2</sub>O<sub>3</sub>, Fe<sub>2</sub>O<sub>3</sub>, PbO, SnO. <b>Запомни их перечень!</b></p>
+      <div class="ex">Реагируют и с кислотами, и со щелочами</div>
+    </div>
+    <div class="class-card">
+      <h5>Несолеобразующие оксиды</h5>
+      <p>Не образуют солей: <b>CO, NO, N<sub>2</sub>O, SiO</b>.</p>
+      <div class="ex">SO<sub>2</sub> и SO<sub>3</sub> — солеобразующие, не путать!</div>
+    </div>
+    <div class="class-card">
+      <h5>Кислоты</h5>
+      <p>Содержат <b>H</b> в начале формулы. Бескислородные: HCl, HBr, HI, H<sub>2</sub>S. Кислородные: H<sub>2</sub>SO<sub>4</sub>, HNO<sub>3</sub>, H<sub>3</sub>PO<sub>4</sub>, H<sub>2</sub>CO<sub>3</sub>.</p>
+    </div>
+    <div class="class-card">
+      <h5>Основания</h5>
+      <p>Содержат группу <b>OH</b>. Щёлочи (растворимые): NaOH, KOH, Ca(OH)<sub>2</sub>, Ba(OH)<sub>2</sub>. Нерастворимые: Cu(OH)<sub>2</sub>, Fe(OH)<sub>3</sub>, Mg(OH)<sub>2</sub>.</p>
+    </div>
+    <div class="class-card">
+      <h5>Соли</h5>
+      <p>Металл + кислотный остаток. <b>Аммонийные</b> соли (NH<sub>4</sub><sup>+</sup>) тоже соли: NH<sub>4</sub>Cl, (NH<sub>4</sub>)<sub>2</sub>SO<sub>4</sub>.</p>
+      <div class="ex">NaCl, K<sub>2</sub>SO<sub>4</sub>, FeCl<sub>3</sub>, Ca(NO<sub>3</sub>)<sub>2</sub>, Na<sub>3</sub>PO<sub>4</sub></div>
+    </div>
+    <div class="class-card">
+      <h5>Амфотерные гидроксиды</h5>
+      <p>Гидроксиды тех же металлов, что и амф. оксиды: <b>Al(OH)<sub>3</sub>, Zn(OH)<sub>2</sub>, Be(OH)<sub>2</sub>, Cr(OH)<sub>3</sub>, Fe(OH)<sub>3</sub></b>.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Источник: демоверсия ОГЭ-2026 ФИПИ ·
+  <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a>
+</footer>
+
+</div>
+
+<script>
+// ============================================================
+//  БАЗА ВОПРОСОВ
+//  Каждый вопрос: 5 веществ из разных классов + 2 целевые роли (role1, role2)
+//  Для каждого вещества указан класс. Совпадение определяется по строке класса.
+// ============================================================
+var QUESTIONS = [
+  // Демо ФИПИ: PCl3, FeO, NH4Cl, Ca(OH)2, ZnO — соль и амфотерный оксид
+  {
+    id:'demo-fipi',
+    role1: 'соль',
+    role2: 'амфотерный оксид',
+    pool: [
+      { id:'a1', formula:'PCl<sub>3</sub>',           cls:'кислотный оксид',    note:'Это галогенид неметалла, ведёт себя как кислотный галогенид (с водой даёт H₃PO₃ и HCl). Не относится ни к солям, ни к амфотерным оксидам.' },
+      { id:'a2', formula:'FeO',                       cls:'основный оксид',     note:'Оксид железа(II) — типичный основный оксид (низкая СО железа +2). Не амфотерный.' },
+      { id:'a3', formula:'NH<sub>4</sub>Cl',          cls:'соль',               note:'Хлорид аммония — соль (катион NH₄⁺ + анион Cl⁻).' },
+      { id:'a4', formula:'Ca(OH)<sub>2</sub>',        cls:'основание',          note:'Гидроксид кальция — щёлочь.' },
+      { id:'a5', formula:'ZnO',                       cls:'амфотерный оксид',   note:'Оксид цинка — типичный амфотерный оксид. Реагирует и с кислотами, и со щелочами.' }
+    ]
+  },
+  {
+    id:'salt-base-1',
+    role1: 'соль',
+    role2: 'основание',
+    pool: [
+      { id:'b1', formula:'CO<sub>2</sub>',            cls:'кислотный оксид',   note:'Углекислый газ — кислотный оксид.' },
+      { id:'b2', formula:'NaOH',                      cls:'основание',         note:'Гидроксид натрия — щёлочь.' },
+      { id:'b3', formula:'K<sub>2</sub>SO<sub>4</sub>', cls:'соль',            note:'Сульфат калия — соль.' },
+      { id:'b4', formula:'HCl',                       cls:'кислота',           note:'Соляная кислота.' },
+      { id:'b5', formula:'Al<sub>2</sub>O<sub>3</sub>', cls:'амфотерный оксид', note:'Оксид алюминия — амфотерный.' }
+    ]
+  },
+  {
+    id:'acid-base-oxide-1',
+    role1: 'кислотный оксид',
+    role2: 'основный оксид',
+    pool: [
+      { id:'c1', formula:'SO<sub>3</sub>',            cls:'кислотный оксид',   note:'Триоксид серы — кислотный оксид (даёт H₂SO₄).' },
+      { id:'c2', formula:'CaO',                       cls:'основный оксид',    note:'Оксид кальция — типичный основный оксид (даёт щёлочь Ca(OH)₂).' },
+      { id:'c3', formula:'ZnO',                       cls:'амфотерный оксид',  note:'Оксид цинка — амфотерный.' },
+      { id:'c4', formula:'NaCl',                      cls:'соль',              note:'Хлорид натрия — соль.' },
+      { id:'c5', formula:'NaOH',                      cls:'основание',         note:'Гидроксид натрия — щёлочь.' }
+    ]
+  },
+  {
+    id:'acid-salt-1',
+    role1: 'кислота',
+    role2: 'соль',
+    pool: [
+      { id:'d1', formula:'H<sub>2</sub>SO<sub>4</sub>', cls:'кислота',         note:'Серная кислота.' },
+      { id:'d2', formula:'CaCO<sub>3</sub>',          cls:'соль',              note:'Карбонат кальция (мрамор, мел) — соль.' },
+      { id:'d3', formula:'Ca(OH)<sub>2</sub>',        cls:'основание',         note:'Гидроксид кальция — щёлочь.' },
+      { id:'d4', formula:'CO<sub>2</sub>',            cls:'кислотный оксид',   note:'Кислотный оксид.' },
+      { id:'d5', formula:'Cu(OH)<sub>2</sub>',        cls:'основание',         note:'Гидроксид меди(II) — нерастворимое основание.' }
+    ]
+  },
+  {
+    id:'amph-oxide-acid-1',
+    role1: 'амфотерный оксид',
+    role2: 'кислота',
+    pool: [
+      { id:'e1', formula:'Al<sub>2</sub>O<sub>3</sub>', cls:'амфотерный оксид', note:'Оксид алюминия — амфотерный.' },
+      { id:'e2', formula:'HNO<sub>3</sub>',           cls:'кислота',           note:'Азотная кислота.' },
+      { id:'e3', formula:'CuO',                       cls:'основный оксид',    note:'Оксид меди(II) — основный оксид.' },
+      { id:'e4', formula:'NaCl',                      cls:'соль',              note:'Хлорид натрия — соль.' },
+      { id:'e5', formula:'KOH',                       cls:'основание',         note:'Гидроксид калия — щёлочь.' }
+    ]
+  },
+  {
+    id:'base-acid-1',
+    role1: 'основание',
+    role2: 'кислота',
+    pool: [
+      { id:'f1', formula:'Mg(OH)<sub>2</sub>',        cls:'основание',         note:'Гидроксид магния — нерастворимое основание.' },
+      { id:'f2', formula:'H<sub>3</sub>PO<sub>4</sub>', cls:'кислота',         note:'Фосфорная кислота.' },
+      { id:'f3', formula:'Fe<sub>2</sub>O<sub>3</sub>', cls:'амфотерный оксид', note:'Оксид железа(III) — формально амфотерный (амфотерные свойства слабые).' },
+      { id:'f4', formula:'Na<sub>3</sub>PO<sub>4</sub>', cls:'соль',           note:'Фосфат натрия — соль.' },
+      { id:'f5', formula:'SO<sub>2</sub>',            cls:'кислотный оксид',   note:'Кислотный оксид.' }
+    ]
+  },
+  {
+    id:'salt-acid-oxide-1',
+    role1: 'соль',
+    role2: 'кислотный оксид',
+    pool: [
+      { id:'g1', formula:'Fe(NO<sub>3</sub>)<sub>3</sub>', cls:'соль',         note:'Нитрат железа(III) — соль.' },
+      { id:'g2', formula:'P<sub>2</sub>O<sub>5</sub>', cls:'кислотный оксид', note:'Оксид фосфора(V) — кислотный оксид (даёт H₃PO₄).' },
+      { id:'g3', formula:'KOH',                       cls:'основание',         note:'Щёлочь.' },
+      { id:'g4', formula:'Cu',                        cls:'простое вещество',  note:'Простое вещество — медь, металл. Не сложное.' },
+      { id:'g5', formula:'BaO',                       cls:'основный оксид',    note:'Оксид бария — основный оксид.' }
+    ]
+  },
+  {
+    id:'amph-base-1',
+    role1: 'амфотерный гидроксид',
+    role2: 'основание',
+    pool: [
+      { id:'h1', formula:'Al(OH)<sub>3</sub>',        cls:'амфотерный гидроксид', note:'Гидроксид алюминия — амфотерный.' },
+      { id:'h2', formula:'KOH',                       cls:'основание',         note:'Щёлочь — типичное растворимое основание.' },
+      { id:'h3', formula:'Zn(OH)<sub>2</sub>',        cls:'амфотерный гидроксид', note:'Гидроксид цинка — тоже амфотерный (но мы выбираем из всех — берём один).' },
+      { id:'h4', formula:'HBr',                       cls:'кислота',           note:'Бромоводородная кислота.' },
+      { id:'h5', formula:'CO',                        cls:'несолеобразующий оксид', note:'Угарный газ — несолеобразующий оксид.' }
+    ],
+    altCorrect: { role1: ['h3'] }  // Zn(OH)2 — тоже амфотерный гидроксид, альтернатива
+  },
+  {
+    id:'salt-amph-1',
+    role1: 'соль',
+    role2: 'амфотерный оксид',
+    pool: [
+      { id:'i1', formula:'CuSO<sub>4</sub>',          cls:'соль',              note:'Сульфат меди(II) — соль.' },
+      { id:'i2', formula:'BeO',                       cls:'амфотерный оксид',  note:'Оксид бериллия — амфотерный.' },
+      { id:'i3', formula:'NH<sub>3</sub>',            cls:'водородное соединение неметалла', note:'Аммиак — водородное соединение неметалла, не соль и не оксид.' },
+      { id:'i4', formula:'H<sub>2</sub>SO<sub>3</sub>', cls:'кислота',         note:'Сернистая кислота.' },
+      { id:'i5', formula:'CO',                        cls:'несолеобразующий оксид', note:'Несолеобразующий оксид.' }
+    ]
+  },
+  {
+    id:'base-salt-1',
+    role1: 'основание',
+    role2: 'соль',
+    pool: [
+      { id:'j1', formula:'Ba(OH)<sub>2</sub>',        cls:'основание',         note:'Гидроксид бария — щёлочь.' },
+      { id:'j2', formula:'AgNO<sub>3</sub>',          cls:'соль',              note:'Нитрат серебра — соль.' },
+      { id:'j3', formula:'N<sub>2</sub>O<sub>5</sub>', cls:'кислотный оксид', note:'Оксид азота(V) — кислотный (даёт HNO₃).' },
+      { id:'j4', formula:'Fe',                        cls:'простое вещество',  note:'Железо — простое вещество (металл).' },
+      { id:'j5', formula:'HF',                        cls:'кислота',           note:'Плавиковая кислота.' }
+    ]
+  }
+];
+
+var state = { total: 0, correct: 0, streak: 0, current: null, locked: false, recentIds: [] };
+
+function pickQuestion() {
+  var pool = QUESTIONS.filter(function(q){ return state.recentIds.indexOf(q.id) < 0; });
+  if (pool.length === 0) pool = QUESTIONS;
+  var q = pool[Math.floor(Math.random() * pool.length)];
+  state.recentIds.push(q.id);
+  if (state.recentIds.length > 5) state.recentIds.shift();
+  return q;
+}
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function el(tag, props, children) {
+  var e = document.createElement(tag);
+  if (props) for (var k in props) {
+    if (k === 'class') e.className = props[k];
+    else if (k === 'html') e.innerHTML = props[k];
+    else if (k.indexOf('on') === 0) e.addEventListener(k.substring(2).toLowerCase(), props[k]);
+    else e.setAttribute(k, props[k]);
+  }
+  if (children != null) {
+    if (!Array.isArray(children)) children = [children];
+    for (var i = 0; i < children.length; i++) {
+      var c = children[i];
+      if (c == null) continue;
+      e.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(c) : c);
+    }
+  }
+  return e;
+}
+
+function getValidIds(q, role) {
+  // valid for a role: items whose cls === role
+  return q.pool.filter(function(p){ return p.cls === role; }).map(function(p){ return p.id; });
+}
+
+function renderQuestion() {
+  var q = state.current.question;
+  document.getElementById('question-text').innerHTML =
+    'Из перечня веществ выберите <span class="role">' + q.role1 + '</span> и <span class="role">' + q.role2 + '</span>. Запиши <b>сначала номер ' + q.role1 + '</b>, затем — ' + q.role2 + '.';
+
+  var rs = document.getElementById('role-slots');
+  rs.innerHTML = '';
+  ['role1', 'role2'].forEach(function(r, i) {
+    var slot = el('div', { class:'role-slot' });
+    slot.appendChild(el('div', { class:'lbl' }, [(i+1)+'. ', el('b', null, q[r])]));
+    var box = el('div', { class:'box', 'data-role': r });
+    box.addEventListener('click', (function(role){ return function(){ onSlotClick(role); }; })(r));
+    slot.appendChild(box);
+    rs.appendChild(slot);
+  });
+}
+
+function renderChoices() {
+  var c = document.getElementById('choices');
+  c.innerHTML = '';
+  state.current.displayed.forEach(function(item, i) {
+    var card = el('div', { class:'choice', 'data-id': item.id });
+    card.addEventListener('click', function(){ onChoiceClick(item.id); });
+    var num = el('div', { class:'num' });
+    num.appendChild(el('span', null, String(i+1)));
+    card.appendChild(num);
+    var name = el('div');
+    name.innerHTML = item.formula;
+    card.appendChild(name);
+    var desc = el('div', { class:'desc' });
+    desc.innerHTML = '<i>'+item.cls+'.</i> '+item.note;
+    card.appendChild(desc);
+    c.appendChild(card);
+  });
+  updatePoolVisibility();
+}
+
+function updateSlotsDisplay() {
+  ['role1', 'role2'].forEach(function(r) {
+    var box = document.querySelector('.role-slot .box[data-role="'+r+'"]');
+    box.innerHTML = '';
+    box.classList.remove('filled');
+    var id = state.current.placement[r];
+    if (id) {
+      box.classList.add('filled');
+      var item = state.current.question.pool.find(function(p){ return p.id === id; });
+      box.innerHTML = item.formula;
+    }
+  });
+}
+
+function updatePoolVisibility() {
+  var placedIds = [state.current.placement.role1, state.current.placement.role2].filter(function(x){ return x; });
+  document.querySelectorAll('.choice').forEach(function(card) {
+    var id = card.getAttribute('data-id');
+    card.classList.toggle('placed', placedIds.indexOf(id) >= 0);
+  });
+  document.getElementById('check-btn').disabled = !(state.current.placement.role1 && state.current.placement.role2);
+}
+
+function onChoiceClick(id) {
+  if (state.locked) return;
+  var p = state.current.placement;
+  if (p.role1 === id || p.role2 === id) return;
+  // place into first empty slot
+  if (!p.role1) p.role1 = id;
+  else if (!p.role2) p.role2 = id;
+  updateSlotsDisplay();
+  updatePoolVisibility();
+}
+
+function onSlotClick(role) {
+  if (state.locked) return;
+  if (state.current.placement[role]) {
+    state.current.placement[role] = null;
+    updateSlotsDisplay();
+    updatePoolVisibility();
+  }
+}
+
+function clearAll() {
+  if (state.locked) return;
+  state.current.placement = { role1: null, role2: null };
+  updateSlotsDisplay();
+  updatePoolVisibility();
+}
+
+function checkAnswer() {
+  if (state.locked) return;
+  var q = state.current.question;
+  var p = state.current.placement;
+
+  var validForRole1 = q.pool.find(function(it){ return it.id === p.role1; });
+  var validForRole2 = q.pool.find(function(it){ return it.id === p.role2; });
+  var role1Ok = validForRole1 && validForRole1.cls === q.role1;
+  var role2Ok = validForRole2 && validForRole2.cls === q.role2;
+  var isCorrect = role1Ok && role2Ok;
+
+  state.total++;
+  if (isCorrect) { state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  updateStats();
+  state.locked = true;
+
+  // Mark slots
+  var slot1 = document.querySelector('.role-slot .box[data-role="role1"]');
+  var slot2 = document.querySelector('.role-slot .box[data-role="role2"]');
+  slot1.classList.add('locked', role1Ok ? 'correct-slot' : 'wrong-slot');
+  slot2.classList.add('locked', role2Ok ? 'correct-slot' : 'wrong-slot');
+
+  // Mark all choices: which is which
+  document.querySelectorAll('.choice').forEach(function(card) {
+    var id = card.getAttribute('data-id');
+    var item = q.pool.find(function(it){ return it.id === id; });
+    card.classList.add('locked');
+    if (id === p.role1 && role1Ok) card.classList.add('correct-pick');
+    else if (id === p.role2 && role2Ok) card.classList.add('correct-pick');
+    else if (id === p.role1 || id === p.role2) card.classList.add('wrong-pick');
+  });
+
+  // Show what was the correct answer
+  var displayedIds = state.current.displayed.map(function(d){ return d.id; });
+  var correct1 = getValidIds(q, q.role1)[0];
+  var correct2 = getValidIds(q, q.role2)[0];
+  var ans = (displayedIds.indexOf(correct1) + 1) + '' + (displayedIds.indexOf(correct2) + 1);
+
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + (isCorrect ? 'win' : 'lose');
+  if (isCorrect) {
+    r.innerHTML = '<div class="result-line1">✓ Верно!</div>' +
+      '<div class="result-line2">Один из правильных ответов в формате ОГЭ: <b>'+ans+'</b>. Сначала номер ' + q.role1 + ', затем ' + q.role2 + '.</div>';
+  } else {
+    var diag = '';
+    if (!role1Ok) diag += 'В качестве ' + q.role1 + ' выбрано неподходящее вещество. ';
+    if (!role2Ok) diag += 'В качестве ' + q.role2 + ' выбрано неподходящее вещество. ';
+    r.innerHTML = '<div class="result-line1">✗ Неверно.</div>' +
+      '<div class="result-line2">'+diag+'Один из правильных ответов: <b>'+ans+'</b>.</div>';
+  }
+
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('clear-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+
+function nextQuestion() {
+  var q = pickQuestion();
+  state.current = {
+    question: q,
+    displayed: shuffle(q.pool.slice()),
+    placement: { role1: null, role2: null }
+  };
+  state.locked = false;
+  renderQuestion();
+  renderChoices();
+  document.getElementById('result').className = 'result';
+  document.getElementById('check-btn').style.display = '';
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('clear-btn').style.display = '';
+  document.getElementById('skip-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function skipQuestion() {
+  state.streak = 0;
+  updateStats();
+  nextQuestion();
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var streakEl = document.getElementById('stat-streak');
+  streakEl.textContent = state.streak;
+  streakEl.classList.toggle('hot', state.streak >= 3);
+  var pctEl = document.getElementById('stat-pct');
+  pctEl.textContent = state.total === 0 ? '—' : Math.round(100 * state.correct / state.total) + '%';
+}
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('clear-btn').addEventListener('click', clearAll);
+document.getElementById('next-btn').addEventListener('click', nextQuestion);
+document.getElementById('skip-btn').addEventListener('click', skipQuestion);
+
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'Enter') {
+    if (state.locked) nextQuestion();
+    else if (!document.getElementById('check-btn').disabled) checkAnswer();
+  } else if (e.key >= '1' && e.key <= '5' && !state.locked) {
+    var idx = parseInt(e.key, 10) - 1;
+    if (idx < state.current.displayed.length) {
+      onChoiceClick(state.current.displayed[idx].id);
+    }
+  }
+});
+
+nextQuestion();
+</script>
+</body>
+</html>

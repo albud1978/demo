@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №5 · Виды химической связи</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #F2EDE2; --bg-card: #FAF6EC; --ink: #1B1814; --ink-soft: #4A453D; --ink-faint: #7A736A;
+  --rule: #C8BFAE; --rule-soft: #DCD3BF; --accent: #2D4A2B; --accent-soft: rgba(45, 74, 43, 0.08);
+  --good: #16A34A; --good-bg: #DCFCE7; --bad: #B91C1C; --bad-bg: #FEE2E2; --warn: #D97706;
+  --serif: "Fraunces", "Times New Roman", Georgia, serif;
+  --body: "Spectral", "Georgia", serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { background-image: radial-gradient(circle at 25% 10%, rgba(45, 74, 43, 0.04), transparent 40%); }
+.wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.head { border-top: 3px solid var(--ink); padding-top: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+.head-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); flex-wrap: wrap; gap: 10px; }
+.head-meta .accent { color: var(--accent); }
+h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; letter-spacing: -0.015em; margin-top: 16px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
+.subtitle { font-size: 16px; color: var(--ink-soft); margin-top: 12px; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 32px; }
+@media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--bg-card); padding: 14px 16px; }
+.stat .num { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1; color: var(--accent); }
+.stat .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 6px; }
+.stat.streak .num.hot { color: var(--warn); }
+
+.question-card { background: var(--bg-card); border: 1px solid var(--rule); border-left: 4px solid var(--accent); padding: 24px 28px; margin-bottom: 24px; }
+.question-text { font-family: var(--serif); font-size: 19px; font-weight: 400; line-height: 1.45; }
+.question-text .target { font-weight: 600; color: var(--accent); padding: 2px 8px; background: var(--accent-soft); border-radius: 1px; }
+
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 24px; }
+@media (max-width: 600px) { .choices { grid-template-columns: 1fr; } }
+.choice { background: var(--bg-card); border: 1px solid var(--rule); padding: 16px 18px 16px 50px; cursor: pointer; transition: all 0.15s ease; position: relative; user-select: none; font-family: "Cambria Math", "Cambria", "Times New Roman", serif; font-size: 19px; }
+.choice:hover:not(.locked) { border-color: var(--ink); }
+.choice .num { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--ink-faint); border: 1px solid var(--rule); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease; background: var(--bg); }
+.choice .desc { display: none; font-family: var(--body); font-size: 13px; color: var(--ink-soft); margin-top: 6px; line-height: 1.4; }
+.choice.locked .desc { display: block; }
+
+.choice.selected { border-color: var(--accent); background: var(--accent-soft); }
+.choice.selected .num { background: var(--accent); color: white; border-color: var(--accent); }
+.choice.locked { cursor: default; }
+.choice.locked:hover { border-color: var(--rule); }
+.choice.correct-pick { border-color: var(--good); background: var(--good-bg); }
+.choice.correct-pick .num { background: var(--good); color: white; border-color: var(--good); }
+.choice.correct-pick .num::after { content: '✓'; font-size: 14px; }
+.choice.correct-pick .num span { display: none; }
+.choice.wrong-pick { border-color: var(--bad); background: var(--bad-bg); }
+.choice.wrong-pick .num { background: var(--bad); color: white; border-color: var(--bad); }
+.choice.wrong-pick .num::after { content: '✗'; font-size: 14px; }
+.choice.wrong-pick .num span { display: none; }
+.choice.missed { border-color: var(--good); border-style: dashed; }
+.choice.missed .num { color: var(--good); border-color: var(--good); }
+
+.actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.btn { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 14px 28px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); cursor: pointer; border-radius: 1px; transition: all 0.15s ease; }
+.btn:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.btn:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-faint); cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.btn.next { background: var(--accent); border-color: var(--accent); }
+.btn.next:hover { background: var(--ink); border-color: var(--ink); }
+
+.result { display: none; margin-top: 24px; padding: 20px 24px; border-left: 4px solid; font-family: var(--serif); font-size: 18px; font-weight: 500; }
+.result.shown { display: block; }
+.result.win { background: var(--good-bg); border-color: var(--good); color: #14532D; }
+.result.lose { background: var(--bad-bg); border-color: var(--bad); color: #7F1D1D; }
+.result-line1 { font-size: 19px; }
+.result-line2 { font-family: var(--body); font-size: 14.5px; font-weight: 400; margin-top: 10px; line-height: 1.55; opacity: 0.92; }
+.result-line2 b { font-family: var(--mono); font-weight: 700; }
+
+.cheat { margin-top: 56px; padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; }
+.cheat h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin-bottom: 16px; }
+.cheat .types { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .cheat .types { grid-template-columns: 1fr; } }
+.type-card { padding: 14px 18px; background: var(--bg); border: 1px solid var(--rule-soft); border-left: 3px solid var(--accent); }
+.type-card h5 { font-family: var(--serif); font-weight: 600; font-size: 17px; margin-bottom: 6px; color: var(--accent); }
+.type-card p { font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; margin-top: 4px; }
+.type-card p b { color: var(--ink); font-family: "Cambria Math", serif; }
+.type-card .examples { font-family: "Cambria Math", serif; font-size: 14px; color: var(--ink); margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--rule-soft); }
+.type-card .examples sub { font-size: 0.7em; }
+
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--ink-faint); text-align: center; }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+
+<header class="head">
+  <div class="head-meta">
+    <span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №5</span>
+    <span>1 балл · краткий ответ</span>
+  </div>
+  <h1>Виды химической <em>связи</em></h1>
+  <p class="subtitle">Тренажёр на определение типа химической связи: ковалентная (полярная или неполярная), ионная или металлическая. Выбери из перечня вещества с указанным типом связи.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего вопросов</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">правильно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности</div></div>
+</div>
+
+<div class="question-card">
+  <p class="question-text" id="question-text"></p>
+  <div class="choices" id="choices"></div>
+</div>
+
+<div class="actions">
+  <button class="btn" id="check-btn" disabled>Проверить</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующий вопрос</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<section class="cheat">
+  <h3>Виды химической связи — определение</h3>
+  <div class="types">
+    <div class="type-card">
+      <h5>Ковалентная неполярная</h5>
+      <p>Между атомами <b>одного и того же неметалла</b>. Электроны общие, поделены поровну.</p>
+      <div class="examples">примеры: H<sub>2</sub>, O<sub>2</sub>, N<sub>2</sub>, Cl<sub>2</sub>, F<sub>2</sub>, P<sub>4</sub>, S<sub>8</sub>, алмаз C, графит C</div>
+    </div>
+    <div class="type-card">
+      <h5>Ковалентная полярная</h5>
+      <p>Между <b>разными неметаллами</b> (атомы с разной электроотрицательностью). Электроны общие, но смещены к более ЭО атому.</p>
+      <div class="examples">примеры: HCl, H<sub>2</sub>O, NH<sub>3</sub>, CO<sub>2</sub>, SO<sub>3</sub>, SiO<sub>2</sub>, H<sub>2</sub>S</div>
+    </div>
+    <div class="type-card">
+      <h5>Ионная</h5>
+      <p>Между <b>металлом и неметаллом</b> (типичные металлы IA, IIA групп + неметаллы). Электрон передан полностью — образуются ионы.</p>
+      <div class="examples">примеры: NaCl, KBr, CaO, MgF<sub>2</sub>, Na<sub>2</sub>O, K<sub>2</sub>S, CaCl<sub>2</sub>, NH<sub>4</sub>Cl (ион. между NH<sub>4</sub><sup>+</sup> и Cl<sup>−</sup>)</div>
+    </div>
+    <div class="type-card">
+      <h5>Металлическая</h5>
+      <p>В <b>простых веществах-металлах</b> и сплавах. «Электронный газ» свободно движется между ионами металлов.</p>
+      <div class="examples">примеры: Na, K, Mg, Al, Fe, Cu, Zn (любой простой металл), сплавы (латунь, сталь)</div>
+    </div>
+  </div>
+  <p style="margin-top:16px;font-size:14px;color:var(--ink-soft)"><b style="color:var(--ink)">Алгоритм:</b> 1) если вещество — простое и из неметалла → неполярная; 2) если простое и из металла → металлическая; 3) если сложное и есть металл + неметалл → ионная; 4) если сложное и только неметаллы → ковалентная полярная.</p>
+</section>
+
+<footer>
+  Источник: демоверсия и спецификация ОГЭ-2026 ФИПИ ·
+  <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a>
+</footer>
+
+</div>
+
+<script>
+// ============================================================
+//  БАЗА ВОПРОСОВ
+//  Каждый вопрос: целевой тип связи + 5 веществ, у каждого тип связи.
+//  Правильные = у которых bondType совпадает с target. Их обычно 2.
+// ============================================================
+var BOND_TYPES = {
+  ionic: 'ионная',
+  covPolar: 'ковалентная полярная',
+  covNonpolar: 'ковалентная неполярная',
+  metallic: 'металлическая'
+};
+
+var QUESTIONS = [
+  {
+    id: 'q-ionic-1', target: 'ionic',
+    pool: [
+      { id:'a1', formula:'NaCl',   type:'ionic',      explain:'металл Na + неметалл Cl' },
+      { id:'a2', formula:'H<sub>2</sub>O', type:'covPolar', explain:'два разных неметалла' },
+      { id:'a3', formula:'O<sub>2</sub>',  type:'covNonpolar', explain:'два одинаковых атома неметалла' },
+      { id:'a4', formula:'CaF<sub>2</sub>', type:'ionic',      explain:'металл Ca + неметалл F' },
+      { id:'a5', formula:'Cu',     type:'metallic',   explain:'простое вещество — металл' }
+    ]
+  },
+  {
+    id: 'q-ionic-2', target: 'ionic',
+    pool: [
+      { id:'b1', formula:'KBr',    type:'ionic',      explain:'металл K + неметалл Br' },
+      { id:'b2', formula:'HCl',    type:'covPolar',   explain:'два разных неметалла' },
+      { id:'b3', formula:'N<sub>2</sub>', type:'covNonpolar', explain:'два одинаковых атома N' },
+      { id:'b4', formula:'Fe',     type:'metallic',   explain:'простой металл' },
+      { id:'b5', formula:'Na<sub>2</sub>O', type:'ionic',      explain:'металл Na + неметалл O' }
+    ]
+  },
+  {
+    id: 'q-covPolar-1', target: 'covPolar',
+    pool: [
+      { id:'c1', formula:'NH<sub>3</sub>',  type:'covPolar', explain:'разные неметаллы N и H' },
+      { id:'c2', formula:'CO<sub>2</sub>',  type:'covPolar', explain:'разные неметаллы C и O' },
+      { id:'c3', formula:'KCl',             type:'ionic',    explain:'металл K + неметалл Cl' },
+      { id:'c4', formula:'F<sub>2</sub>',    type:'covNonpolar', explain:'два одинаковых атома F' },
+      { id:'c5', formula:'Mg',              type:'metallic', explain:'простой металл' }
+    ]
+  },
+  {
+    id: 'q-covPolar-2', target: 'covPolar',
+    pool: [
+      { id:'d1', formula:'H<sub>2</sub>O', type:'covPolar', explain:'разные неметаллы H и O' },
+      { id:'d2', formula:'HBr',            type:'covPolar', explain:'разные неметаллы H и Br' },
+      { id:'d3', formula:'Cl<sub>2</sub>', type:'covNonpolar', explain:'два одинаковых атома Cl' },
+      { id:'d4', formula:'Li<sub>2</sub>O',type:'ionic',    explain:'металл Li + неметалл O' },
+      { id:'d5', formula:'Al',             type:'metallic', explain:'простой металл' }
+    ]
+  },
+  {
+    id: 'q-covNonpolar-1', target: 'covNonpolar',
+    pool: [
+      { id:'e1', formula:'O<sub>2</sub>',  type:'covNonpolar', explain:'два атома O — одинаковых' },
+      { id:'e2', formula:'Cl<sub>2</sub>', type:'covNonpolar', explain:'два атома Cl — одинаковых' },
+      { id:'e3', formula:'HCl',            type:'covPolar',    explain:'два разных неметалла' },
+      { id:'e4', formula:'NaCl',           type:'ionic',       explain:'металл + неметалл' },
+      { id:'e5', formula:'Cu',             type:'metallic',    explain:'простой металл' }
+    ]
+  },
+  {
+    id: 'q-metallic-1', target: 'metallic',
+    pool: [
+      { id:'f1', formula:'Na',     type:'metallic', explain:'простое вещество — щ. металл' },
+      { id:'f2', formula:'Fe',     type:'metallic', explain:'простое вещество — металл' },
+      { id:'f3', formula:'NaCl',   type:'ionic',    explain:'это уже соль (металл + неметалл)' },
+      { id:'f4', formula:'O<sub>2</sub>', type:'covNonpolar', explain:'неметалл — кислород' },
+      { id:'f5', formula:'CO<sub>2</sub>', type:'covPolar',  explain:'два разных неметалла' }
+    ]
+  },
+  {
+    id: 'q-ionic-3', target: 'ionic',
+    pool: [
+      { id:'g1', formula:'CaO',    type:'ionic',    explain:'металл Ca + неметалл O' },
+      { id:'g2', formula:'K<sub>2</sub>S', type:'ionic', explain:'металл K + неметалл S' },
+      { id:'g3', formula:'CO',     type:'covPolar', explain:'два разных неметалла C и O' },
+      { id:'g4', formula:'P<sub>4</sub>', type:'covNonpolar', explain:'4 одинаковых атома P' },
+      { id:'g5', formula:'Zn',     type:'metallic', explain:'простой металл' }
+    ]
+  },
+  {
+    id: 'q-covPolar-3', target: 'covPolar',
+    pool: [
+      { id:'h1', formula:'H<sub>2</sub>S', type:'covPolar', explain:'разные неметаллы H и S' },
+      { id:'h2', formula:'SO<sub>2</sub>', type:'covPolar', explain:'разные неметаллы S и O' },
+      { id:'h3', formula:'I<sub>2</sub>',  type:'covNonpolar', explain:'два одинаковых атома I' },
+      { id:'h4', formula:'CaCl<sub>2</sub>', type:'ionic',     explain:'металл + неметалл' },
+      { id:'h5', formula:'K',              type:'metallic',  explain:'простой металл' }
+    ]
+  },
+  {
+    id: 'q-covNonpolar-2', target: 'covNonpolar',
+    pool: [
+      { id:'i1', formula:'H<sub>2</sub>',   type:'covNonpolar', explain:'два одинаковых атома H' },
+      { id:'i2', formula:'N<sub>2</sub>',   type:'covNonpolar', explain:'два одинаковых атома N' },
+      { id:'i3', formula:'NaF',             type:'ionic',       explain:'металл + неметалл' },
+      { id:'i4', formula:'PCl<sub>3</sub>', type:'covPolar',    explain:'разные неметаллы P и Cl' },
+      { id:'i5', formula:'Ba',              type:'metallic',    explain:'простой металл' }
+    ]
+  },
+  {
+    id: 'q-metallic-2', target: 'metallic',
+    pool: [
+      { id:'j1', formula:'Al',  type:'metallic', explain:'простое вещество — металл' },
+      { id:'j2', formula:'Cu',  type:'metallic', explain:'простое вещество — металл' },
+      { id:'j3', formula:'AlCl<sub>3</sub>', type:'ionic', explain:'металл + неметалл' },
+      { id:'j4', formula:'CuSO<sub>4</sub>', type:'ionic', explain:'соль — между Cu²⁺ и SO₄²⁻ ионная' },
+      { id:'j5', formula:'CO<sub>2</sub>',   type:'covPolar', explain:'разные неметаллы' }
+    ]
+  }
+];
+
+var state = { total: 0, correct: 0, streak: 0, current: null, locked: false, recentIds: [] };
+
+function pickQuestion() {
+  var pool = QUESTIONS.filter(function(q){ return state.recentIds.indexOf(q.id) < 0; });
+  if (pool.length === 0) pool = QUESTIONS;
+  var q = pool[Math.floor(Math.random() * pool.length)];
+  state.recentIds.push(q.id);
+  if (state.recentIds.length > 5) state.recentIds.shift();
+  return q;
+}
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function el(tag, props, children) {
+  var e = document.createElement(tag);
+  if (props) for (var k in props) {
+    if (k === 'class') e.className = props[k];
+    else if (k === 'html') e.innerHTML = props[k];
+    else if (k.indexOf('on') === 0) e.addEventListener(k.substring(2).toLowerCase(), props[k]);
+    else e.setAttribute(k, props[k]);
+  }
+  if (children != null) {
+    if (!Array.isArray(children)) children = [children];
+    for (var i = 0; i < children.length; i++) {
+      var c = children[i];
+      if (c == null) continue;
+      e.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(c) : c);
+    }
+  }
+  return e;
+}
+
+function renderQuestion(q) {
+  document.getElementById('question-text').innerHTML =
+    'Из перечня выберите все вещества, в которых имеется <span class="target">' + BOND_TYPES[q.target] + '</span> связь:';
+}
+
+function renderChoices() {
+  var c = document.getElementById('choices');
+  c.innerHTML = '';
+  state.current.displayed.forEach(function(item, i) {
+    var card = el('div', { class:'choice', 'data-id': item.id });
+    card.addEventListener('click', function(){ onChoiceClick(item.id); });
+    var num = el('div', { class:'num' });
+    num.appendChild(el('span', null, String(i+1)));
+    card.appendChild(num);
+    var name = el('div');
+    name.innerHTML = item.formula;
+    card.appendChild(name);
+    var desc = el('div', { class:'desc' });
+    desc.innerHTML = '<i>' + BOND_TYPES[item.type] + '</i> · ' + item.explain;
+    card.appendChild(desc);
+    c.appendChild(card);
+  });
+}
+
+function onChoiceClick(id) {
+  if (state.locked) return;
+  var pos = state.current.selectedIds.indexOf(id);
+  if (pos >= 0) state.current.selectedIds.splice(pos, 1);
+  else state.current.selectedIds.push(id);
+  updateSelection();
+}
+
+function updateSelection() {
+  document.querySelectorAll('.choice').forEach(function(card) {
+    var id = card.getAttribute('data-id');
+    card.classList.toggle('selected', state.current.selectedIds.indexOf(id) >= 0);
+  });
+  document.getElementById('check-btn').disabled = state.current.selectedIds.length === 0;
+}
+
+function checkAnswer() {
+  if (state.locked) return;
+  var q = state.current.question;
+  var correctIds = q.pool.filter(function(p){ return p.type === q.target; }).map(function(p){ return p.id; });
+  var sel = state.current.selectedIds.slice().sort();
+  var corr = correctIds.slice().sort();
+  var isCorrect = sel.length === corr.length && sel.every(function(id, i){ return id === corr[i]; });
+
+  state.total++;
+  if (isCorrect) { state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  updateStats();
+  state.locked = true;
+
+  document.querySelectorAll('.choice').forEach(function(card) {
+    var id = card.getAttribute('data-id');
+    card.classList.add('locked');
+    card.classList.remove('selected');
+    var isSel = sel.indexOf(id) >= 0;
+    var isCorrId = corr.indexOf(id) >= 0;
+    if (isSel && isCorrId) card.classList.add('correct-pick');
+    else if (isSel && !isCorrId) card.classList.add('wrong-pick');
+    else if (!isSel && isCorrId) card.classList.add('missed');
+  });
+
+  // For ОГЭ format: indices in displayed order
+  var displayedOrder = state.current.displayed.map(function(d){ return d.id; });
+  var correctNumbers = correctIds.map(function(id){ return displayedOrder.indexOf(id) + 1; }).sort(function(a,b){return a-b;}).join('');
+
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + (isCorrect ? 'win' : 'lose');
+  if (isCorrect) {
+    r.innerHTML = '<div class="result-line1">✓ Верно!</div>' +
+      '<div class="result-line2">В формате ОГЭ ответ записывается без разделителей: <b>'+correctNumbers+'</b>.</div>';
+  } else {
+    r.innerHTML = '<div class="result-line1">✗ Неверно.</div>' +
+      '<div class="result-line2">Правильный ответ: <b>'+correctNumbers+'</b>. Зелёным помечены вещества с искомым типом связи, красным — с другими типами связи.</div>';
+  }
+
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+
+function nextQuestion() {
+  var q = pickQuestion();
+  state.current = {
+    question: q,
+    displayed: shuffle(q.pool.slice()),
+    selectedIds: []
+  };
+  state.locked = false;
+  renderQuestion(q);
+  renderChoices();
+  document.getElementById('result').className = 'result';
+  document.getElementById('check-btn').style.display = '';
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('skip-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function skipQuestion() {
+  state.streak = 0;
+  updateStats();
+  nextQuestion();
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var streakEl = document.getElementById('stat-streak');
+  streakEl.textContent = state.streak;
+  streakEl.classList.toggle('hot', state.streak >= 3);
+  var pctEl = document.getElementById('stat-pct');
+  pctEl.textContent = state.total === 0 ? '—' : Math.round(100 * state.correct / state.total) + '%';
+}
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('next-btn').addEventListener('click', nextQuestion);
+document.getElementById('skip-btn').addEventListener('click', skipQuestion);
+
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key >= '1' && e.key <= '5' && !state.locked) {
+    var idx = parseInt(e.key, 10) - 1;
+    if (idx < state.current.displayed.length) {
+      onChoiceClick(state.current.displayed[idx].id);
+    }
+  } else if (e.key === 'Enter') {
+    if (state.locked) nextQuestion();
+    else if (!document.getElementById('check-btn').disabled) checkAnswer();
+  }
+});
+
+nextQuestion();
+</script>
+</body>
+</html>

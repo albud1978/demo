@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Курс ОГЭ-2026 · открытый бесплатный курс</title>
+<meta name="description" content="Бесплатные интерактивные тренажёры для подготовки к ОГЭ-2026. По состоянию на май 2026 — 17 тренажёров по химии, остальные предметы в разработке." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #F2EDE2;
+  --bg-card: #FAF6EC;
+  --bg-deep: #1A1815;
+  --ink: #1B1814;
+  --ink-soft: #4A453D;
+  --ink-faint: #7A736A;
+  --rule: #C8BFAE;
+  --rule-soft: #DCD3BF;
+  --chemistry: #2D4A2B;
+  --biology: #A05B0F;
+  --math: #1B3A5E;
+  --russian: #7A1F2B;
+  --shadow: 0 1px 0 rgba(27, 24, 20, 0.04), 0 8px 24px -12px rgba(27, 24, 20, 0.18);
+  --serif: "Fraunces", "Times New Roman", Georgia, serif;
+  --body: "Spectral", "Georgia", serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body {
+  background-image:
+    radial-gradient(circle at 25% 10%, rgba(45, 74, 43, 0.04), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(160, 91, 15, 0.03), transparent 50%);
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 56px 32px 120px; }
+
+.masthead { border-top: 3px solid var(--ink); padding: 18px 0 36px; margin-bottom: 56px; border-bottom: 1px solid var(--rule); }
+.masthead-top { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); flex-wrap: wrap; gap: 12px; }
+.masthead-top .left { display: flex; gap: 24px; flex-wrap: wrap; }
+.masthead-top .dot { color: var(--chemistry); }
+h1.title { font-family: var(--serif); font-weight: 400; font-size: clamp(48px, 8vw, 96px); line-height: 0.95; letter-spacing: -0.02em; margin-top: 32px; }
+h1.title em { font-style: italic; font-weight: 300; color: var(--chemistry); }
+.subtitle { font-family: var(--body); font-weight: 400; font-size: 19px; line-height: 1.5; color: var(--ink-soft); max-width: 720px; margin-top: 28px; }
+.subtitle b { color: var(--ink); font-weight: 500; }
+
+.lede-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--rule-soft); }
+@media (max-width: 600px) { .lede-grid { grid-template-columns: repeat(2, 1fr); } }
+.lede-stat { font-family: var(--mono); }
+.lede-stat .num { font-family: var(--serif); font-size: 36px; font-weight: 500; line-height: 1; color: var(--chemistry); }
+.lede-stat .lbl { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-top: 8px; line-height: 1.3; }
+
+.section-head { display: flex; justify-content: space-between; align-items: baseline; margin-top: 80px; margin-bottom: 32px; padding-bottom: 14px; border-bottom: 1px solid var(--rule); flex-wrap: wrap; gap: 12px; }
+.section-head h2 { font-family: var(--serif); font-weight: 500; font-size: 32px; letter-spacing: -0.01em; }
+.section-head .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+
+.subjects { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 900px) { .subjects { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .subjects { grid-template-columns: 1fr; } }
+.subject-card { background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; padding: 22px 20px 20px; position: relative; overflow: hidden; }
+.subject-card.ready { border-color: var(--ink); }
+.subject-card.coming { opacity: 0.55; }
+.subject-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--bar); }
+.subject-card-name { font-family: var(--serif); font-weight: 500; font-size: 22px; letter-spacing: -0.01em; color: var(--bar); }
+.subject-card-status { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 4px; }
+.subject-card.ready .subject-card-status { color: var(--bar); font-weight: 700; }
+.subject-card-stats { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin-top: 14px; line-height: 1.6; }
+.subject-card-stats b { font-family: var(--serif); font-weight: 500; font-size: 14px; color: var(--ink); }
+.subject-card-tally { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--rule-soft); font-family: var(--mono); font-size: 11px; color: var(--ink-soft); }
+.subject-card-tally b { color: var(--bar); font-weight: 700; }
+
+.intro-note { padding: 22px 28px; background: var(--bg-card); border: 1px solid var(--rule); border-left: 3px solid var(--chemistry); margin-top: 24px; }
+.intro-note p { font-size: 15px; line-height: 1.6; color: var(--ink-soft); }
+.intro-note p + p { margin-top: 10px; }
+.intro-note p b { color: var(--ink); }
+
+.block { margin-top: 56px; }
+.block-head { padding-bottom: 12px; border-bottom: 1px solid var(--rule-soft); margin-bottom: 20px; }
+.block-num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+.block-title { font-family: var(--serif); font-weight: 500; font-size: 26px; line-height: 1.15; letter-spacing: -0.01em; margin-top: 4px; color: var(--chemistry); }
+.block-blurb { font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; max-width: 760px; margin-top: 8px; }
+.block-blurb b { color: var(--ink); }
+
+.trainers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+@media (max-width: 760px) { .trainers { grid-template-columns: 1fr; } }
+.trainer-card {
+  display: flex; flex-direction: column;
+  padding: 18px 22px;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  text-decoration: none;
+  color: var(--ink);
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.trainer-card:hover { border-color: var(--chemistry); box-shadow: var(--shadow); transform: translateY(-1px); }
+.trainer-card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+.trainer-num {
+  font-family: var(--mono); font-weight: 700; font-size: 11px; letter-spacing: 0.06em;
+  padding: 3px 8px; background: var(--chemistry); color: white; border-radius: 1px;
+  white-space: nowrap;
+}
+.trainer-tag {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.trainer-title { font-family: var(--serif); font-weight: 500; font-size: 18px; line-height: 1.3; letter-spacing: -0.005em; }
+.trainer-blurb { font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; margin-top: 8px; flex: 1; }
+.trainer-card-foot {
+  display: flex; justify-content: space-between; align-items: center; margin-top: 12px;
+  padding-top: 10px; border-top: 1px dashed var(--rule-soft);
+  font-family: var(--mono); font-size: 11px;
+}
+.trainer-card-foot .qcount { color: var(--ink-faint); }
+.trainer-card-foot .open {
+  color: var(--chemistry); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.trainer-card:hover .open::after { content: ' →'; }
+
+.coming-section { margin-top: 24px; padding: 28px 32px; background: var(--bg-card); border: 1px dashed var(--rule); border-radius: 2px; }
+.coming-section + .coming-section { margin-top: 16px; }
+.coming-section h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; color: var(--ink); }
+.coming-section h3 em { font-style: italic; font-weight: 300; }
+.coming-section p { font-size: 14.5px; color: var(--ink-soft); margin-top: 8px; line-height: 1.55; max-width: 700px; }
+.coming-section .label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-faint); margin-bottom: 6px;
+}
+
+.about { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 28px; }
+@media (max-width: 760px) { .about { grid-template-columns: 1fr; } }
+.about-card { padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; }
+.about-card h4 { font-family: var(--serif); font-weight: 500; font-size: 20px; margin-bottom: 12px; }
+.about-card p { color: var(--ink-soft); font-size: 14.5px; line-height: 1.6; }
+.about-card p + p { margin-top: 10px; }
+.about-card p b { color: var(--ink); }
+
+footer {
+  margin-top: 96px; padding-top: 28px; border-top: 1px solid var(--rule);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-faint);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+footer a { color: var(--chemistry); text-decoration: none; border-bottom: 1px solid currentColor; }
+footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="left">
+      <span>ОГЭ-2026 <span class="dot">●</span> открытый бесплатный курс</span>
+      <span>v0.3.0</span>
+    </div>
+    <span>обновлено 2026-05-06</span>
+  </div>
+  <h1 class="title">ОГЭ-2026<br/><em>тренажёры</em></h1>
+  <p class="subtitle">Бесплатные интерактивные тренажёры для самостоятельной подготовки к ОГЭ. <b>Каждый тренажёр</b> — отдельный HTML-файл, открывается двойным кликом, работает офлайн, без регистрации и подписок. Содержание сверено со <b>спецификацией ФИПИ 2026 года</b>.</p>
+  <div class="lede-grid">
+    <div class="lede-stat"><div class="num">17</div><div class="lbl">тренажёров<br/>готовы</div></div>
+    <div class="lede-stat"><div class="num">4</div><div class="lbl">предмета<br/>в плане</div></div>
+    <div class="lede-stat"><div class="num">170+</div><div class="lbl">уникальных<br/>заданий</div></div>
+    <div class="lede-stat"><div class="num">0&nbsp;₽</div><div class="lbl">стоимость<br/>и навсегда</div></div>
+  </div>
+</header>
+
+<section>
+  <div class="section-head">
+    <h2>Предметы</h2>
+    <span class="meta">статус по состоянию на 2026-05-06</span>
+  </div>
+  <div class="subjects">
+    <div class="subject-card ready" style="--bar: #2D4A2B">
+      <div class="subject-card-name">Химия</div>
+      <div class="subject-card-status">17 тренажёров</div>
+      <div class="subject-card-stats">
+        <b>23 задания</b> · 38 баллов · 180 мин<br/>
+        <span style="color:var(--ink-faint)">часть 1: 19 кратких + часть 2: 4 развёрнутых</span>
+      </div>
+      <div class="subject-card-tally"><b>Покрыто:</b> вся часть 1 кроме №18, 19</div>
+    </div>
+    <div class="subject-card coming" style="--bar: #A05B0F">
+      <div class="subject-card-name">Биология</div>
+      <div class="subject-card-status">в планах</div>
+      <div class="subject-card-stats">
+        <b>26 заданий</b> · 47 баллов · 150 мин<br/>
+        <span style="color:var(--ink-faint)">часть 1: 21 краткий + часть 2: 5 развёрнутых</span>
+      </div>
+      <div class="subject-card-tally">скоро</div>
+    </div>
+    <div class="subject-card coming" style="--bar: #1B3A5E">
+      <div class="subject-card-name">Математика</div>
+      <div class="subject-card-status">в планах</div>
+      <div class="subject-card-stats">
+        <b>25 заданий</b> · 31 балл · 235 мин<br/>
+        <span style="color:var(--ink-faint)">блок 1–5 + алгебра + геометрия</span>
+      </div>
+      <div class="subject-card-tally">скоро</div>
+    </div>
+    <div class="subject-card coming" style="--bar: #7A1F2B">
+      <div class="subject-card-name">Русский язык</div>
+      <div class="subject-card-status">в планах</div>
+      <div class="subject-card-stats">
+        <b>13 заданий</b> · 37 баллов · 235 мин<br/>
+        <span style="color:var(--ink-faint)">изложение + тесты + сочинение</span>
+      </div>
+      <div class="subject-card-tally">скоро</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <h2>Химия — все тренажёры</h2>
+    <span class="meta">17 файлов · вся часть 1</span>
+  </div>
+
+  <div class="intro-note">
+    <p>Тренажёры сгруппированы по <b>методическим блокам</b>, а не по номерам в КИМ. Это значит, что задания из <b>одного блока</b> рекомендуется проходить вместе, потому что они опираются на общие концепты. Например, №1, №2, №3 и №6 в КИМ разнесены, но методически — это <b>один большой блок «строение атома и Периодический закон»</b>.</p>
+    <p>Если хотите идти строго по номерам экзамена — открывайте тренажёры в порядке № 1 → 2 → 3 → ... → 17. Если хотите идти по концептам — следуйте порядку блоков ниже.</p>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Блок I</div>
+      <h3 class="block-title">Строение атома и Периодический закон</h3>
+      <p class="block-blurb">Фундамент всей химии. Сначала разбираемся, как устроен атом, потом — как от его строения зависят свойства простого вещества. Без этого блока остальные не дадут результата.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-chem-01-element-or-substance.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№1 КИМ</span>
+          <span class="trainer-tag">множ. выбор · 1 балл</span>
+        </div>
+        <div class="trainer-title">Элемент vs простое вещество</div>
+        <div class="trainer-blurb">Какие из утверждений говорят о веществе как о простом, а не как об элементе. 15 веществ × 12 фактов — все с маркерами.</div>
+        <div class="trainer-card-foot"><span class="qcount">180+ суждений</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-02-nucleus-period.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№2 КИМ</span>
+          <span class="trainer-tag">SVG · 1 балл</span>
+        </div>
+        <div class="trainer-title">Модель ядра атома → период и заряд</div>
+        <div class="trainer-blurb">Дана модель ядра с протонами и нейтронами — посчитай заряд и определи период. Все 20 элементов от H до Ca.</div>
+        <div class="trainer-card-foot"><span class="qcount">20 элементов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-03-periodic-trends.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№3 КИМ</span>
+          <span class="trainer-tag">drag-and-drop · 1 балл</span>
+        </div>
+        <div class="trainer-title">Закономерности в Периодической системе</div>
+        <div class="trainer-blurb">Расположи элементы в порядке усиления / ослабления свойств: радиус, электроотрицательность, металлические или неметаллические свойства.</div>
+        <div class="trainer-card-foot"><span class="qcount">18 вопросов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-06-common-properties.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№6 КИМ</span>
+          <span class="trainer-tag">множ. выбор · 1 балл</span>
+        </div>
+        <div class="trainer-title">Общие свойства двух элементов</div>
+        <div class="trainer-blurb">Выбери два утверждения, верных одновременно для двух элементов. Тренирует системную работу с Периодическим законом.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 пар</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Блок II</div>
+      <h3 class="block-title">Химическая связь и степень окисления</h3>
+      <p class="block-blurb">От атома к молекуле. Тип связи определяет, как считать степень окисления, как ведут себя вещества в реакциях, какая у них кристаллическая решётка.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-chem-04-oxidation-state.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№4 КИМ</span>
+          <span class="trainer-tag">соответствие · 1 балл</span>
+        </div>
+        <div class="trainer-title">Степень окисления</div>
+        <div class="trainer-blurb">Сопоставь формулы с степенью окисления элемента-цели. 10 вопросов — Cl, N, S, C, P, Fe, Mn, Cr.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 вопросов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-05-bond-types.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№5 КИМ</span>
+          <span class="trainer-tag">множ. выбор · 1 балл</span>
+        </div>
+        <div class="trainer-title">Виды химической связи</div>
+        <div class="trainer-blurb">Из 5 веществ выбери те, где связь заданного типа: ионная / ковалентная полярная / неполярная / металлическая.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 вопросов</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Блок III</div>
+      <h3 class="block-title">Классы неорганических веществ</h3>
+      <p class="block-blurb">Оксиды, кислоты, основания, соли — и связи между ними. После этого блока становится понятно, какие реакции возможны между конкретными веществами.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-chem-07-classification.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№7 КИМ</span>
+          <span class="trainer-tag">множ. выбор · 1 балл</span>
+        </div>
+        <div class="trainer-title">Классификация веществ</div>
+        <div class="trainer-blurb">Выбери из перечня вещества двух заданных классов в правильном порядке: соль и амфотерный оксид, кислота и основный оксид, и т.д.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 вопросов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-12-class-relations.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№12 КИМ</span>
+          <span class="trainer-tag">соответствие · 2 балла</span>
+        </div>
+        <div class="trainer-title">Взаимосвязь классов веществ</div>
+        <div class="trainer-blurb">Сопоставь пару реагентов с продуктом реакции. Ключ к пониманию «что во что превращается» в задаче №21 части 2.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 вопросов</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Блок IV</div>
+      <h3 class="block-title">Реакции с участием простых и сложных веществ</h3>
+      <p class="block-blurb">Самый большой блок. Здесь учимся предсказывать продукты реакций, классифицировать сами реакции и составлять цепочки превращений.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-chem-08-simple-substance-reactions.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№8 КИМ</span>
+          <span class="trainer-tag">множ. выбор · 1 балл</span>
+        </div>
+        <div class="trainer-title">Реакции простых веществ</div>
+        <div class="trainer-blurb">С какими веществами реагирует данное простое вещество (S, Cl₂, Cu, Fe и др.). По 5 кандидатов в каждом вопросе.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 вопросов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-09-complex-substance-reactions.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№9 КИМ</span>
+          <span class="trainer-tag">множ. выбор · 1 балл</span>
+        </div>
+        <div class="trainer-title">Реакции сложных веществ</div>
+        <div class="trainer-blurb">То же, но для кислот, оснований, солей, оксидов. HCl, NaOH, H₂SO₄, CuSO₄ и другие — с какими веществами в растворе реагируют.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 вопросов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-10-chains.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№10 КИМ</span>
+          <span class="trainer-tag">выбор · 1 балл</span>
+        </div>
+        <div class="trainer-title">Цепочки превращений</div>
+        <div class="trainer-blurb">Дана цепочка A → B → X → C. Определи X. Тренирует генетическую связь между классами веществ.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 цепочек</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-11-reaction-classification.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№11 КИМ</span>
+          <span class="trainer-tag">соответствие · 2 балла</span>
+        </div>
+        <div class="trainer-title">Классификация реакций</div>
+        <div class="trainer-blurb">Соединение / разложение / замещение / обмен. Какие реакции относятся к данному типу? Включая ОВР как самостоятельный признак.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 вопросов</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Блок V</div>
+      <h3 class="block-title">Растворы, ТЭД и окислительно-восстановительные реакции</h3>
+      <p class="block-blurb">Электролитическая диссоциация, ионы в растворе, реакции ионного обмена с условиями протекания, ОВР с электронным балансом.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-chem-13-dissociation.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№13 КИМ</span>
+          <span class="trainer-tag">множ. выбор · 1 балл</span>
+        </div>
+        <div class="trainer-title">Электролитическая диссоциация</div>
+        <div class="trainer-blurb">Какие ионы и в каком количестве образуются при растворении 1 моль вещества (Na₂SO₄, FeCl₃, K₃PO₄ и др.).</div>
+        <div class="trainer-card-foot"><span class="qcount">10 веществ</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-14-ion-exchange.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№14 КИМ</span>
+          <span class="trainer-tag">множ. выбор · 2 балла</span>
+        </div>
+        <div class="trainer-title">Реакции ионного обмена</div>
+        <div class="trainer-blurb">Дано сокращённое ионное уравнение — выбери два исходных вещества, реакция между которыми ему соответствует. Особенно важно для №21.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 уравнений</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-15-redox.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№15 КИМ</span>
+          <span class="trainer-tag">соответствие · 2 балла</span>
+        </div>
+        <div class="trainer-title">Окислительно-восстановительные реакции</div>
+        <div class="trainer-blurb">Дано уравнение ОВР — определи, какие частицы окислитель и восстановитель, рассчитай электронный баланс.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 уравнений</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Блок VI</div>
+      <h3 class="block-title">Лабораторная практика и расчёты</h3>
+      <p class="block-blurb">Прикладные задания: правила безопасной работы и количественные расчёты по уравнениям. Эти темы дают «лёгкие баллы», если знать алгоритм.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-chem-16-lab-safety.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№16 КИМ</span>
+          <span class="trainer-tag">множ. выбор · 1 балл</span>
+        </div>
+        <div class="trainer-title">Безопасная работа с веществами</div>
+        <div class="trainer-blurb">Какие из суждений о работе в лаборатории верны: с кислотами, щелочами, активными металлами, газами, спиртовкой, индикаторами.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 тем</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-17-calculations.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№17 КИМ</span>
+          <span class="trainer-tag">числовой ввод · 1 балл</span>
+        </div>
+        <div class="trainer-title">Расчёты по уравнениям реакций</div>
+        <div class="trainer-blurb">Найди массу / объём / количество вещества по данным реакции. Zn + HCl → ZnCl₂, разложение H₂O₂, горение CH₄ и т.д.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 расчётов</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="intro-note" style="margin-top:48px;border-left-color:var(--ink-faint)">
+    <p style="font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px">не покрыто пока</p>
+    <p><b>Часть 1:</b> №18, №19 — связанные расчётные задачи по тексту (один сюжет, два связанных вопроса). Особый формат, требует отдельного тренажёра.</p>
+    <p><b>Часть 2:</b> №20–23 — развёрнутые ответы. Требуется ввод химических уравнений с проверкой против эталона + допустимые альтернативы. Это следующий этап разработки.</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <h2>Остальные предметы</h2>
+    <span class="meta">в разработке</span>
+  </div>
+
+  <div class="coming-section" style="border-left: 4px solid var(--biology)">
+    <div class="label" style="color:var(--biology)">в разработке</div>
+    <h3>Биология <em>— скоро</em></h3>
+    <p>Самый большой по баллам предмет ОГЭ (47 баллов). 26 заданий, 7 модулей кодификатора: от клетки до экосистемы. Планируются тренажёры на анатомию, систематику, экологические сети, цикл веществ.</p>
+  </div>
+
+  <div class="coming-section" style="border-left: 4px solid var(--math)">
+    <div class="label" style="color:var(--math)">в разработке</div>
+    <h3>Математика <em>— скоро</em></h3>
+    <p>Обязательный предмет. 25 заданий, два модуля — алгебра и геометрия + практико-ориентированный сюжетный блок (1–5: шины, печки, ОСАГО, тарифы, квартиры). Планируются интерактивные геометрические задачи и графические тренажёры функций.</p>
+  </div>
+
+  <div class="coming-section" style="border-left: 4px solid var(--russian)">
+    <div class="label" style="color:var(--russian)">в разработке</div>
+    <h3>Русский язык <em>— скоро</em></h3>
+    <p>Обязательный предмет. 13 заданий: сжатое изложение, тестовая часть, сочинение-рассуждение на выбор. Планируются тренажёры на синтаксический и пунктуационный анализ, орфографию, лексику.</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <h2>О проекте</h2>
+    <span class="meta">принципы и методология</span>
+  </div>
+
+  <div class="about">
+    <div class="about-card">
+      <h4>Технические принципы</h4>
+      <p><b>Каждый тренажёр — один HTML-файл.</b> Открывается двойным кликом, работает офлайн, без установок и регистраций. Можно открыть на телефоне, планшете, ноутбуке — везде одинаково.</p>
+      <p><b>Без отслеживания.</b> Ни Google Analytics, ни счётчиков, ни куков. Файл загружается один раз и работает локально.</p>
+      <p><b>Никаких подписок.</b> Это полностью бесплатный ресурс и навсегда останется таким. Можно скачать любой файл и использовать без интернета.</p>
+    </div>
+    <div class="about-card">
+      <h4>Методические принципы</h4>
+      <p><b>Тренажёр должен учить, а не только проверять.</b> После каждого ответа — разбор: почему правильно, что значит, какие правила работают. Если ошибка — конкретная диагностика, а не «попробуй ещё раз».</p>
+      <p><b>Содержание сверено с ФИПИ.</b> Тренажёры построены на формате актуальной демоверсии и спецификации 2026 года. Где есть концептуальные сложности — формулировки даны без неоднозначностей.</p>
+      <p><b>Антизубрилка.</b> Вопросы в случайном порядке, варианты ответов перемешиваются, недавние вопросы не повторяются — приходится понимать, а не запоминать «третий пункт правильный».</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>ОГЭ-2026 · v0.3.0 · открытый бесплатный курс · 2026-05-06</span>
+  <div class="right">
+    <span>источники: <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a></span>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

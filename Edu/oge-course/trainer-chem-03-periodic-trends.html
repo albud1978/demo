@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №3 · Закономерности в Периодической системе</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #F2EDE2; --bg-card: #FAF6EC; --ink: #1B1814; --ink-soft: #4A453D; --ink-faint: #7A736A;
+  --rule: #C8BFAE; --rule-soft: #DCD3BF; --accent: #2D4A2B; --accent-soft: rgba(45, 74, 43, 0.08);
+  --good: #16A34A; --good-bg: #DCFCE7; --bad: #B91C1C; --bad-bg: #FEE2E2; --warn: #D97706;
+  --serif: "Fraunces", "Times New Roman", Georgia, serif;
+  --body: "Spectral", "Georgia", serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { background-image: radial-gradient(circle at 25% 10%, rgba(45, 74, 43, 0.04), transparent 40%); }
+.wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.head { border-top: 3px solid var(--ink); padding-top: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+.head-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); flex-wrap: wrap; gap: 10px; }
+.head-meta .accent { color: var(--accent); }
+h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; letter-spacing: -0.015em; margin-top: 16px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
+.subtitle { font-size: 16px; color: var(--ink-soft); margin-top: 12px; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 32px; }
+@media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--bg-card); padding: 14px 16px; }
+.stat .num { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1; color: var(--accent); }
+.stat .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 6px; }
+.stat.streak .num.hot { color: var(--warn); }
+
+.question-card { background: var(--bg-card); border: 1px solid var(--rule); border-left: 4px solid var(--accent); padding: 24px 28px; margin-bottom: 24px; }
+.question-text { font-family: var(--serif); font-size: 19px; font-weight: 400; line-height: 1.45; }
+.question-text .target { font-weight: 600; color: var(--accent); border-bottom: 2px solid currentColor; padding-bottom: 1px; }
+
+.elements-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 26px; padding: 12px 0; }
+.elem-btn { font-family: "Fraunces", serif; font-weight: 500; background: var(--bg); border: 2px solid var(--rule); border-radius: 2px; padding: 14px 18px; cursor: pointer; transition: all 0.15s ease; min-width: 92px; text-align: center; user-select: none; position: relative; }
+.elem-btn:hover:not(.locked):not(.placed) { border-color: var(--ink); transform: translateY(-1px); }
+.elem-btn .symbol { display: block; font-size: 32px; line-height: 1; color: var(--accent); }
+.elem-btn .name { display: block; font-family: var(--body); font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
+.elem-btn .z { font-family: var(--mono); font-size: 10px; color: var(--ink-faint); position: absolute; top: 4px; right: 6px; }
+.elem-btn.placed { opacity: 0.3; cursor: default; }
+.elem-btn.locked { cursor: default; }
+
+.slots-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 24px; padding: 16px 0; border-top: 1px dashed var(--rule); border-bottom: 1px dashed var(--rule); }
+.slot { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.slot-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+.slot-box { width: 88px; height: 88px; border: 2px dashed var(--rule); border-radius: 2px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s ease; }
+.slot-box:hover:not(.locked) { border-color: var(--accent); }
+.slot-box.filled { border-style: solid; border-color: var(--accent); background: var(--accent-soft); }
+.slot-box.filled .symbol { font-family: "Fraunces", serif; font-weight: 500; font-size: 28px; color: var(--accent); }
+.slot-box.locked { cursor: default; }
+.slot-box.correct-slot { border-color: var(--good); background: var(--good-bg); }
+.slot-box.correct-slot .symbol { color: #14532D; }
+.slot-box.wrong-slot { border-color: var(--bad); background: var(--bad-bg); }
+.slot-box.wrong-slot .symbol { color: #7F1D1D; }
+.slot-arrow { font-family: var(--serif); font-size: 28px; color: var(--ink-faint); align-self: center; padding-top: 14px; }
+
+.actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.btn { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 14px 28px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); cursor: pointer; border-radius: 1px; transition: all 0.15s ease; }
+.btn:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.btn:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-faint); cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.btn.next { background: var(--accent); border-color: var(--accent); }
+.btn.next:hover { background: var(--ink); border-color: var(--ink); }
+
+.result { display: none; margin-top: 24px; padding: 20px 24px; border-left: 4px solid; font-family: var(--serif); font-size: 18px; font-weight: 500; }
+.result.shown { display: block; }
+.result.win { background: var(--good-bg); border-color: var(--good); color: #14532D; }
+.result.lose { background: var(--bad-bg); border-color: var(--bad); color: #7F1D1D; }
+.result-line1 { font-size: 19px; }
+.result-line2 { font-family: var(--body); font-size: 14.5px; font-weight: 400; margin-top: 10px; line-height: 1.55; opacity: 0.92; }
+.result-line2 b { font-family: var(--mono); font-weight: 700; }
+
+.solution { display: none; margin-top: 18px; padding: 18px 22px; background: var(--bg-card); border: 1px solid var(--rule-soft); }
+.solution.shown { display: block; }
+.solution h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 12px; }
+.solution p { font-size: 14.5px; line-height: 1.55; margin: 8px 0; color: var(--ink); }
+.solution p b { font-family: "Fraunces", serif; color: var(--accent); }
+.solution .order { font-family: "Fraunces", serif; font-size: 18px; padding: 8px 0; color: var(--accent); font-weight: 600; }
+
+.cheat { margin-top: 56px; padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; }
+.cheat h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin-bottom: 16px; }
+.cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 600px) { .cheat-grid { grid-template-columns: 1fr; } }
+.cheat-col h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 10px; }
+.cheat-col p { font-size: 14px; color: var(--ink-soft); line-height: 1.55; margin: 6px 0; }
+.cheat-col p b { color: var(--ink); font-family: var(--mono); font-weight: 600; }
+.arrow-table { font-family: var(--mono); font-size: 13px; line-height: 1.7; }
+.arrow-table b { font-family: "Fraunces", serif; color: var(--accent); font-weight: 600; }
+
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--ink-faint); text-align: center; }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+
+<header class="head">
+  <div class="head-meta">
+    <span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №3</span>
+    <span>1 балл · краткий ответ</span>
+  </div>
+  <h1>Расположите элементы<br/><em>в порядке</em> изменения свойств</h1>
+  <p class="subtitle">Тренажёр на закономерности Периодической системы. Даны три элемента — расставь их в правильном порядке по радиусу атома, электроотрицательности, металлическим или неметаллическим свойствам.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего вопросов</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">правильно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности</div></div>
+</div>
+
+<div class="question-card">
+  <p class="question-text" id="question-text"></p>
+  <div class="elements-row" id="elements-pool"></div>
+  <div class="slots-row" id="slots-row"></div>
+</div>
+
+<div class="actions">
+  <button class="btn" id="check-btn" disabled>Проверить</button>
+  <button class="btn ghost" id="clear-btn">Сбросить</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующий вопрос</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+
+<div class="result" id="result"></div>
+<div class="solution" id="solution"></div>
+
+<section class="cheat">
+  <h3>Закономерности в Периодической системе</h3>
+  <div class="cheat-grid">
+    <div class="cheat-col">
+      <h4>По периоду слева направо ⟶</h4>
+      <div class="arrow-table">
+        Радиус атома: <b>уменьшается ⬇</b><br/>
+        Электроотрицательность: <b>увеличивается ⬆</b><br/>
+        Металлические свойства: <b>ослабевают ⬇</b><br/>
+        Неметаллические свойства: <b>усиливаются ⬆</b>
+      </div>
+      <p style="margin-top:12px"><b>Почему:</b> заряд ядра растёт, число электронных слоёв то же — атом «втягивается» к ядру, отдавать электроны становится труднее.</p>
+    </div>
+    <div class="cheat-col">
+      <h4>Сверху вниз по группе ⬇</h4>
+      <div class="arrow-table">
+        Радиус атома: <b>увеличивается ⬆</b><br/>
+        Электроотрицательность: <b>уменьшается ⬇</b><br/>
+        Металлические свойства: <b>усиливаются ⬆</b><br/>
+        Неметаллические свойства: <b>ослабевают ⬇</b>
+      </div>
+      <p style="margin-top:12px"><b>Почему:</b> добавляются электронные слои, валентные электроны дальше от ядра, легче отдаются — больше «металличности».</p>
+    </div>
+  </div>
+  <p style="margin-top:16px;font-size:14px;color:var(--ink-soft)"><b style="color:var(--ink)">Ключевая интуиция:</b> «фтор — самый правый верхний» = максимум неметаллических свойств и электроотрицательности; «франций / цезий — самый левый нижний» = максимум металлических свойств и радиуса атома.</p>
+</section>
+
+<footer>
+  Источник: демоверсия и спецификация ОГЭ-2026 ФИПИ ·
+  <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a>
+</footer>
+
+</div>
+
+<script>
+var ELEMENTS = {
+  H:  { z:1,  symbol:'H',  name:'водород',  period:1, group:1,  radius:53,  en:2.20 },
+  Li: { z:3,  symbol:'Li', name:'литий',    period:2, group:1,  radius:152, en:0.98 },
+  Be: { z:4,  symbol:'Be', name:'бериллий', period:2, group:2,  radius:112, en:1.57 },
+  B:  { z:5,  symbol:'B',  name:'бор',      period:2, group:13, radius:85,  en:2.04 },
+  C:  { z:6,  symbol:'C',  name:'углерод',  period:2, group:14, radius:77,  en:2.55 },
+  N:  { z:7,  symbol:'N',  name:'азот',     period:2, group:15, radius:75,  en:3.04 },
+  O:  { z:8,  symbol:'O',  name:'кислород', period:2, group:16, radius:73,  en:3.44 },
+  F:  { z:9,  symbol:'F',  name:'фтор',     period:2, group:17, radius:71,  en:3.98 },
+  Na: { z:11, symbol:'Na', name:'натрий',   period:3, group:1,  radius:186, en:0.93 },
+  Mg: { z:12, symbol:'Mg', name:'магний',   period:3, group:2,  radius:160, en:1.31 },
+  Al: { z:13, symbol:'Al', name:'алюминий', period:3, group:13, radius:143, en:1.61 },
+  Si: { z:14, symbol:'Si', name:'кремний',  period:3, group:14, radius:117, en:1.90 },
+  P:  { z:15, symbol:'P',  name:'фосфор',   period:3, group:15, radius:110, en:2.19 },
+  S:  { z:16, symbol:'S',  name:'сера',     period:3, group:16, radius:104, en:2.58 },
+  Cl: { z:17, symbol:'Cl', name:'хлор',     period:3, group:17, radius:99,  en:3.16 },
+  K:  { z:19, symbol:'K',  name:'калий',    period:4, group:1,  radius:227, en:0.82 },
+  Ca: { z:20, symbol:'Ca', name:'кальций',  period:4, group:2,  radius:197, en:1.00 },
+  Br: { z:35, symbol:'Br', name:'бром',     period:4, group:17, radius:114, en:2.96 }
+};
+
+var QUESTIONS = [
+  // По периоду 2
+  { id:'p2-radius-inc',   triple:['F','C','Li'],  property:'radius',     direction:'inc' },
+  { id:'p2-en-inc',       triple:['Li','C','F'],  property:'en',         direction:'inc' },
+  { id:'p2-nonmetal-inc', triple:['B','N','F'],   property:'nonmetallic',direction:'inc' },
+  { id:'p2-metal-dec',    triple:['Li','C','F'],  property:'metallic',   direction:'dec' },
+  // По периоду 3
+  { id:'p3-radius-dec',   triple:['Cl','Si','Na'],property:'radius',     direction:'dec' },
+  { id:'p3-metal-dec',    triple:['Na','Al','S'], property:'metallic',   direction:'dec' },
+  { id:'p3-nonmetal-inc', triple:['Mg','Si','Cl'],property:'nonmetallic',direction:'inc' },
+  { id:'p3-en-dec',       triple:['Cl','P','Mg'], property:'en',         direction:'dec' },
+  // По I группе
+  { id:'g1-radius-inc',   triple:['Li','Na','K'], property:'radius',     direction:'inc' },
+  { id:'g1-metal-inc',    triple:['Li','Na','K'], property:'metallic',   direction:'inc' },
+  { id:'g1-en-dec',       triple:['Li','Na','K'], property:'en',         direction:'dec' },
+  // По II группе
+  { id:'g2-radius-inc',   triple:['Be','Mg','Ca'],property:'radius',     direction:'inc' },
+  { id:'g2-metal-inc',    triple:['Be','Mg','Ca'],property:'metallic',   direction:'inc' },
+  // По VII группе (галогены)
+  { id:'g17-en-inc',      triple:['Br','Cl','F'], property:'en',         direction:'inc' },
+  { id:'g17-nonmetal-inc',triple:['Br','Cl','F'], property:'nonmetallic',direction:'inc' },
+  // Смешанные
+  { id:'mix-radius-1',    triple:['F','Cl','Na'], property:'radius',     direction:'inc' },
+  { id:'mix-metal-1',     triple:['Mg','Al','Na'],property:'metallic',   direction:'inc' },
+  { id:'mix-en-1',        triple:['K','Mg','Cl'], property:'en',         direction:'inc' }
+];
+
+var state = {
+  total: 0, correct: 0, streak: 0,
+  current: null,
+  locked: false,
+  recentIds: []
+};
+
+function pickQuestion() {
+  var pool = QUESTIONS.filter(function(q){ return state.recentIds.indexOf(q.id) < 0; });
+  if (pool.length === 0) pool = QUESTIONS;
+  var q = pool[Math.floor(Math.random() * pool.length)];
+  state.recentIds.push(q.id);
+  if (state.recentIds.length > 5) state.recentIds.shift();
+  return q;
+}
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function getCorrectOrder(q) {
+  var elems = q.triple.map(function(k){ return ELEMENTS[k]; });
+  var sorted;
+  if (q.property === 'radius') {
+    sorted = elems.slice().sort(function(a,b){ return a.radius - b.radius; });
+  } else if (q.property === 'en') {
+    sorted = elems.slice().sort(function(a,b){ return a.en - b.en; });
+  } else if (q.property === 'metallic') {
+    // metallic усиливается обратно EN
+    sorted = elems.slice().sort(function(a,b){ return b.en - a.en; });
+  } else if (q.property === 'nonmetallic') {
+    sorted = elems.slice().sort(function(a,b){ return a.en - b.en; });
+  }
+  if (q.direction === 'dec') sorted.reverse();
+  return sorted.map(function(e){ return e.symbol; });
+}
+
+function getQuestionText(q) {
+  var propText = {
+    radius: 'атомного радиуса',
+    en: 'электроотрицательности',
+    metallic: 'металлических свойств',
+    nonmetallic: 'неметаллических свойств'
+  }[q.property];
+  var directionText = q.direction === 'inc' ? 'усиления' : 'ослабления';
+  return 'Расположите три химических элемента в порядке <span class="target">' + directionText + ' ' + propText + '</span>:';
+}
+
+function el(tag, props, children) {
+  var e = document.createElement(tag);
+  if (props) for (var k in props) {
+    if (k === 'class') e.className = props[k];
+    else if (k === 'html') e.innerHTML = props[k];
+    else if (k.indexOf('on') === 0) e.addEventListener(k.substring(2).toLowerCase(), props[k]);
+    else e.setAttribute(k, props[k]);
+  }
+  if (children != null) {
+    if (!Array.isArray(children)) children = [children];
+    for (var i = 0; i < children.length; i++) {
+      var c = children[i];
+      if (c == null) continue;
+      e.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(c) : c);
+    }
+  }
+  return e;
+}
+
+function renderQuestion(q) {
+  document.getElementById('question-text').innerHTML = getQuestionText(q);
+}
+
+function renderPool() {
+  var c = document.getElementById('elements-pool');
+  c.innerHTML = '';
+  state.current.displayed.forEach(function(symKey) {
+    var elData = ELEMENTS[symKey];
+    var btn = el('div', { class:'elem-btn', 'data-key':symKey });
+    btn.appendChild(el('span', { class:'z' }, String(elData.z)));
+    btn.appendChild(el('span', { class:'symbol' }, elData.symbol));
+    btn.appendChild(el('span', { class:'name' }, elData.name));
+    btn.addEventListener('click', function(){ onElementClick(symKey); });
+    c.appendChild(btn);
+  });
+  updatePoolVisibility();
+}
+
+function renderSlots() {
+  var c = document.getElementById('slots-row');
+  c.innerHTML = '';
+  for (var i = 0; i < 3; i++) {
+    var slot = el('div', { class:'slot' });
+    slot.appendChild(el('div', { class:'slot-label' }, i === 0 ? 'меньше / слабее' : i === 2 ? 'больше / сильнее' : '·'));
+    var box = el('div', { class:'slot-box', 'data-slot':String(i) });
+    box.addEventListener('click', (function(idx){ return function(){ onSlotClick(idx); }; })(i));
+    slot.appendChild(box);
+    c.appendChild(slot);
+    if (i < 2) c.appendChild(el('div', { class:'slot-arrow' }, '⟶'));
+  }
+  updateSlotsDisplay();
+}
+
+function updateSlotsDisplay() {
+  for (var i = 0; i < 3; i++) {
+    var box = document.querySelector('.slot-box[data-slot="'+i+'"]');
+    box.innerHTML = '';
+    box.classList.remove('filled');
+    var key = state.current.placement[i];
+    if (key) {
+      box.classList.add('filled');
+      box.appendChild(el('span', { class:'symbol' }, ELEMENTS[key].symbol));
+    }
+  }
+}
+
+function updatePoolVisibility() {
+  document.querySelectorAll('.elem-btn').forEach(function(btn) {
+    var key = btn.getAttribute('data-key');
+    var placed = state.current.placement.indexOf(key) >= 0;
+    btn.classList.toggle('placed', placed);
+  });
+  var allFilled = state.current.placement.every(function(p){ return p !== null; });
+  document.getElementById('check-btn').disabled = !allFilled;
+}
+
+function onElementClick(symKey) {
+  if (state.locked) return;
+  if (state.current.placement.indexOf(symKey) >= 0) return;
+  for (var i = 0; i < 3; i++) {
+    if (state.current.placement[i] === null) {
+      state.current.placement[i] = symKey;
+      updateSlotsDisplay();
+      updatePoolVisibility();
+      return;
+    }
+  }
+}
+
+function onSlotClick(idx) {
+  if (state.locked) return;
+  if (state.current.placement[idx]) {
+    state.current.placement[idx] = null;
+    updateSlotsDisplay();
+    updatePoolVisibility();
+  }
+}
+
+function clearAll() {
+  if (state.locked) return;
+  state.current.placement = [null, null, null];
+  updateSlotsDisplay();
+  updatePoolVisibility();
+}
+
+function checkAnswer() {
+  if (state.locked) return;
+  var q = state.current.question;
+  var correctOrder = getCorrectOrder(q);
+  var userOrder = state.current.placement;
+  var isCorrect = userOrder[0] === correctOrder[0] && userOrder[1] === correctOrder[1] && userOrder[2] === correctOrder[2];
+
+  state.total++;
+  if (isCorrect) { state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  updateStats();
+
+  state.locked = true;
+
+  for (var i = 0; i < 3; i++) {
+    var box = document.querySelector('.slot-box[data-slot="'+i+'"]');
+    box.classList.add('locked');
+    if (userOrder[i] === correctOrder[i]) {
+      box.classList.add('correct-slot');
+    } else {
+      box.classList.add('wrong-slot');
+    }
+  }
+  document.querySelectorAll('.elem-btn').forEach(function(b){ b.classList.add('locked'); });
+
+  var displayedOrder = state.current.displayed;
+  var answerDigits = correctOrder.map(function(sym){
+    return (displayedOrder.indexOf(sym) + 1).toString();
+  }).join('');
+
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + (isCorrect ? 'win' : 'lose');
+  if (isCorrect) {
+    r.innerHTML = '<div class="result-line1">✓ Верно!</div>' +
+      '<div class="result-line2">Правильный порядок: <b>' +
+      correctOrder.join(' → ') +
+      '</b>. В формате ОГЭ — <b>'+answerDigits+'</b>.</div>';
+  } else {
+    r.innerHTML = '<div class="result-line1">✗ Неверно.</div>' +
+      '<div class="result-line2">Правильный порядок: <b>' +
+      correctOrder.join(' → ') +
+      '</b>. В формате ОГЭ — <b>'+answerDigits+'</b>.</div>';
+  }
+
+  var s = document.getElementById('solution');
+  s.className = 'solution shown';
+  s.innerHTML = '<h4>Разбор</h4>' + buildExplanation(q, correctOrder);
+
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('clear-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+
+function buildExplanation(q, correctOrder) {
+  var els = correctOrder.map(function(s){ return ELEMENTS[s]; });
+  var samePeriod = els[0].period === els[1].period && els[1].period === els[2].period;
+  var sameGroup = els[0].group === els[1].group && els[1].group === els[2].group;
+  var rule = '';
+
+  if (samePeriod) {
+    if (q.property === 'radius') {
+      rule = '<p>Все три элемента находятся в <b>'+els[0].period+'-м периоде</b>. По периоду слева направо <b>радиус атома уменьшается</b> (заряд ядра растёт, электронные слои те же — атом «сжимается»).</p>';
+    } else if (q.property === 'en') {
+      rule = '<p>Все три элемента — в <b>'+els[0].period+'-м периоде</b>. По периоду слева направо <b>электроотрицательность растёт</b>: чем правее, тем сильнее атом притягивает электроны.</p>';
+    } else if (q.property === 'metallic') {
+      rule = '<p>В <b>'+els[0].period+'-м периоде</b> при движении слева направо <b>металлические свойства ослабевают</b>: типичные металлы — слева, типичные неметаллы — справа.</p>';
+    } else if (q.property === 'nonmetallic') {
+      rule = '<p>В <b>'+els[0].period+'-м периоде</b> слева направо <b>неметаллические свойства усиливаются</b>: атому легче принять недостающие электроны до завершённой оболочки.</p>';
+    }
+  } else if (sameGroup) {
+    if (q.property === 'radius') {
+      rule = '<p>Все три элемента — в <b>'+els[0].group+'-й группе</b>. Сверху вниз по группе <b>радиус атома увеличивается</b>: добавляются новые электронные слои.</p>';
+    } else if (q.property === 'en') {
+      rule = '<p>В <b>'+els[0].group+'-й группе</b> сверху вниз <b>электроотрицательность уменьшается</b>: внешние электроны дальше от ядра, ядро их притягивает слабее.</p>';
+    } else if (q.property === 'metallic') {
+      rule = '<p>В <b>'+els[0].group+'-й группе</b> сверху вниз <b>металлические свойства усиливаются</b>: атомы крупнее, валентные электроны легче отрываются.</p>';
+    } else if (q.property === 'nonmetallic') {
+      rule = '<p>В <b>'+els[0].group+'-й группе</b> сверху вниз <b>неметаллические свойства ослабевают</b>.</p>';
+    }
+  } else {
+    rule = '<p>Элементы из разных периодов и групп — нужно сравнивать <b>попарно</b>: по периоду слева направо радиус уменьшается / ЭО растёт; сверху вниз по группе — наоборот.</p>';
+  }
+
+  var positions = els.map(function(e){
+    return e.symbol + ' (' + e.name + ', период ' + e.period + ', группа ' + e.group + ')';
+  });
+  var orderHtml = '<div class="order">' + positions.join('  →  ') + '</div>';
+
+  return rule + orderHtml + '<p>Запоминай: <b>F</b> — самый правый верхний угол ПС, у него <b>максимум электроотрицательности и минимум радиуса</b>. <b>K, Cs</b> — самые левые нижние, у них <b>максимум металлических свойств и максимальный радиус</b>.</p>';
+}
+
+function nextQuestion() {
+  var q = pickQuestion();
+  state.current = {
+    question: q,
+    displayed: shuffle(q.triple.slice()),
+    placement: [null, null, null]
+  };
+  state.locked = false;
+  renderQuestion(q);
+  renderPool();
+  renderSlots();
+  document.getElementById('result').className = 'result';
+  document.getElementById('solution').className = 'solution';
+  document.getElementById('check-btn').style.display = '';
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('clear-btn').style.display = '';
+  document.getElementById('skip-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function skipQuestion() {
+  state.streak = 0;
+  updateStats();
+  nextQuestion();
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var streakEl = document.getElementById('stat-streak');
+  streakEl.textContent = state.streak;
+  streakEl.classList.toggle('hot', state.streak >= 3);
+  var pctEl = document.getElementById('stat-pct');
+  pctEl.textContent = state.total === 0 ? '—' : Math.round(100 * state.correct / state.total) + '%';
+}
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('clear-btn').addEventListener('click', clearAll);
+document.getElementById('next-btn').addEventListener('click', nextQuestion);
+document.getElementById('skip-btn').addEventListener('click', skipQuestion);
+
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'Enter') {
+    if (state.locked) nextQuestion();
+    else if (!document.getElementById('check-btn').disabled) checkAnswer();
+  } else if (e.key >= '1' && e.key <= '3' && !state.locked) {
+    var idx = parseInt(e.key, 10) - 1;
+    if (idx < state.current.displayed.length) {
+      onElementClick(state.current.displayed[idx]);
+    }
+  } else if (e.key === 'Backspace' && !state.locked) {
+    for (var i = 2; i >= 0; i--) {
+      if (state.current.placement[i]) {
+        state.current.placement[i] = null;
+        updateSlotsDisplay();
+        updatePoolVisibility();
+        break;
+      }
+    }
+  }
+});
+
+nextQuestion();
+</script>
+</body>
+</html>

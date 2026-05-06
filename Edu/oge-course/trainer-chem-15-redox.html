@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №15 · ОВР, окислитель и восстановитель</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #F2EDE2; --bg-card: #FAF6EC; --ink: #1B1814; --ink-soft: #4A453D; --ink-faint: #7A736A;
+  --rule: #C8BFAE; --rule-soft: #DCD3BF; --accent: #2D4A2B; --accent-soft: rgba(45, 74, 43, 0.08);
+  --good: #16A34A; --good-bg: #DCFCE7; --bad: #B91C1C; --bad-bg: #FEE2E2; --warn: #D97706;
+  --serif: "Fraunces", "Times New Roman", Georgia, serif;
+  --body: "Spectral", "Georgia", serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { background-image: radial-gradient(circle at 25% 10%, rgba(45, 74, 43, 0.04), transparent 40%); }
+.wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+.head { border-top: 3px solid var(--ink); padding-top: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+.head-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); flex-wrap: wrap; gap: 10px; }
+.head-meta .accent { color: var(--accent); }
+h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; letter-spacing: -0.015em; margin-top: 16px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
+.subtitle { font-size: 16px; color: var(--ink-soft); margin-top: 12px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 32px; }
+@media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--bg-card); padding: 14px 16px; }
+.stat .num { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1; color: var(--accent); }
+.stat .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 6px; }
+.stat.streak .num.hot { color: var(--warn); }
+.question-card { background: var(--bg-card); border: 1px solid var(--rule); border-left: 4px solid var(--accent); padding: 24px 28px; margin-bottom: 24px; }
+.question-text { font-family: var(--serif); font-size: 18px; font-weight: 400; line-height: 1.45; }
+.equation { display: block; padding: 18px 24px; margin: 18px 0; background: var(--bg); border: 2px solid var(--accent); text-align: center; font-family: "Cambria Math", serif; font-size: 22px; border-radius: 2px; }
+.equation sub, .equation sup { font-size: 0.7em; }
+.choices { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 18px; }
+.choice { background: var(--bg-card); border: 1px solid var(--rule); padding: 16px 18px 16px 50px; cursor: pointer; transition: all 0.15s ease; position: relative; user-select: none; font-family: var(--body); font-size: 16px; }
+.choice:hover:not(.locked) { border-color: var(--ink); }
+.choice .num { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--ink-faint); border: 1px solid var(--rule); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+.choice .text { font-size: 16px; line-height: 1.5; }
+.choice .text sub, .choice .text sup { font-size: 0.7em; }
+.choice .desc { display: none; font-family: var(--mono); font-size: 12.5px; color: var(--ink-soft); margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--rule); line-height: 1.5; }
+.choice.locked .desc { display: block; }
+.choice.selected { border-color: var(--accent); background: var(--accent-soft); }
+.choice.selected .num { background: var(--accent); color: white; border-color: var(--accent); }
+.choice.locked { cursor: default; }
+.choice.correct-pick { border-color: var(--good); background: var(--good-bg); }
+.choice.correct-pick .num { background: var(--good); color: white; border-color: var(--good); }
+.choice.correct-pick .num::after { content: '✓'; font-size: 14px; }
+.choice.correct-pick .num span { display: none; }
+.choice.wrong-pick { border-color: var(--bad); background: var(--bad-bg); }
+.choice.wrong-pick .num { background: var(--bad); color: white; border-color: var(--bad); }
+.choice.wrong-pick .num::after { content: '✗'; font-size: 14px; }
+.choice.wrong-pick .num span { display: none; }
+.choice.missed { border-color: var(--good); border-style: dashed; }
+.choice.missed .num { color: var(--good); border-color: var(--good); }
+.actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.btn { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 14px 28px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); cursor: pointer; border-radius: 1px; transition: all 0.15s ease; }
+.btn:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.btn:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-faint); cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.btn.next { background: var(--accent); border-color: var(--accent); }
+.result { display: none; margin-top: 24px; padding: 20px 24px; border-left: 4px solid; font-family: var(--serif); font-size: 18px; font-weight: 500; }
+.result.shown { display: block; }
+.result.win { background: var(--good-bg); border-color: var(--good); color: #14532D; }
+.result.lose { background: var(--bad-bg); border-color: var(--bad); color: #7F1D1D; }
+.result-line1 { font-size: 19px; }
+.result-line2 { font-family: var(--body); font-size: 14.5px; font-weight: 400; margin-top: 10px; line-height: 1.55; opacity: 0.92; }
+.result-line2 b { font-family: var(--mono); font-weight: 700; }
+.solution { display: none; margin-top: 18px; padding: 18px 22px; background: var(--bg-card); border: 1px solid var(--rule-soft); }
+.solution.shown { display: block; }
+.solution h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 12px; }
+.solution .balance { font-family: "Cambria Math", serif; font-size: 16px; padding: 10px 14px; background: var(--bg); border-left: 3px solid var(--accent); margin: 10px 0; line-height: 1.8; }
+.solution .balance sub, .solution .balance sup { font-size: 0.75em; }
+.solution .balance .red { color: #7F1D1D; }
+.solution .balance .blue { color: #1E3A8A; }
+.solution p { font-size: 14px; line-height: 1.55; margin: 8px 0; color: var(--ink-soft); }
+.cheat { margin-top: 56px; padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; }
+.cheat h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin-bottom: 16px; }
+.cheat p { font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 8px; }
+.cheat p b { color: var(--ink); }
+.cheat .terms { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+@media (max-width: 600px) { .cheat .terms { grid-template-columns: 1fr; } }
+.term-card { padding: 12px 14px; background: var(--bg); border: 1px solid var(--rule-soft); border-left: 3px solid var(--accent); }
+.term-card h5 { font-family: var(--serif); font-weight: 600; font-size: 16px; margin-bottom: 4px; color: var(--accent); }
+.term-card p { font-size: 13px; color: var(--ink-soft); margin: 4px 0; }
+.term-card .ex { font-family: "Cambria Math", serif; font-size: 13.5px; color: var(--ink); margin-top: 4px; }
+.term-card .ex sub, .term-card .ex sup { font-size: 0.7em; }
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--ink-faint); text-align: center; }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+
+<header class="head">
+  <div class="head-meta">
+    <span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №15</span>
+    <span>1 балл · краткий ответ</span>
+  </div>
+  <h1>ОВР · окислитель и <em>восстановитель</em></h1>
+  <p class="subtitle">Тренажёр на окислительно-восстановительные реакции. Дано уравнение реакции — выбери два верных утверждения о ней (что является окислителем/восстановителем, как меняется СО, сколько электронов передано).</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего вопросов</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">правильно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности</div></div>
+</div>
+
+<div class="question-card">
+  <p class="question-text">Дано уравнение окислительно-восстановительной реакции:</p>
+  <div class="equation" id="equation"></div>
+  <p class="question-text">Какие <b>два утверждения</b> об этой реакции верны?</p>
+  <div class="choices" id="choices"></div>
+</div>
+
+<div class="actions">
+  <button class="btn" id="check-btn" disabled>Проверить</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующий вопрос</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+
+<div class="result" id="result"></div>
+<div class="solution" id="solution"></div>
+
+<section class="cheat">
+  <h3>ОВР — главное</h3>
+  <div class="terms">
+    <div class="term-card">
+      <h5>Окислитель</h5>
+      <p>Принимает электроны, его СО <b>уменьшается</b>. Сам <b>восстанавливается</b>.</p>
+      <div class="ex">Cu<sup>+2</sup> + 2e⁻ → Cu<sup>0</sup>: Cu²⁺ — окислитель</div>
+    </div>
+    <div class="term-card">
+      <h5>Восстановитель</h5>
+      <p>Отдаёт электроны, его СО <b>увеличивается</b>. Сам <b>окисляется</b>.</p>
+      <div class="ex">Fe<sup>0</sup> − 2e⁻ → Fe<sup>+2</sup>: Fe — восстановитель</div>
+    </div>
+    <div class="term-card">
+      <h5>Восстановление</h5>
+      <p>Процесс <b>принятия</b> электронов (СО ↓).</p>
+      <div class="ex">Cl<sub>2</sub><sup>0</sup> + 2e⁻ → 2Cl<sup>−1</sup></div>
+    </div>
+    <div class="term-card">
+      <h5>Окисление</h5>
+      <p>Процесс <b>отдачи</b> электронов (СО ↑).</p>
+      <div class="ex">Zn<sup>0</sup> − 2e⁻ → Zn<sup>+2</sup></div>
+    </div>
+  </div>
+  <p style="margin-top:14px"><b>Алгоритм:</b></p>
+  <ul style="list-style:none;padding-left:0">
+    <li style="font-size:13.5px;padding:4px 0;color:var(--ink-soft)">1. Расставь СО над всеми элементами.</li>
+    <li style="font-size:13.5px;padding:4px 0;color:var(--ink-soft)">2. Найди элементы, у которых СО изменилась.</li>
+    <li style="font-size:13.5px;padding:4px 0;color:var(--ink-soft)">3. Тот, у кого СО увеличилась — <b>восстановитель</b> (отдаёт e⁻). Тот, у кого СО уменьшилась — <b>окислитель</b> (принимает e⁻).</li>
+    <li style="font-size:13.5px;padding:4px 0;color:var(--ink-soft)">4. Подсчитай число отданных/принятых электронов на 1 атом.</li>
+  </ul>
+  <p style="margin-top:8px;font-size:13.5px;color:var(--ink-faint)"><b style="color:var(--ink)">Запомни:</b> в простых веществах СО = 0. Если в реакции есть простое вещество — это почти наверняка ОВР.</p>
+</section>
+
+<footer>
+  Источник: спецификация ОГЭ-2026 ФИПИ ·
+  <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a>
+</footer>
+
+</div>
+
+<script>
+// База вопросов: уравнение + 5 утверждений с match=true/false + балансовая запись для разбора
+var QUESTIONS = [
+  {
+    id:'q-zn-cuso4',
+    eq:'Zn + CuSO<sub>4</sub> = ZnSO<sub>4</sub> + Cu',
+    balance:'<span class="red">Zn<sup>0</sup> − 2e⁻ → Zn<sup>+2</sup></span> &nbsp;|&nbsp; восстановитель, окисляется<br/><span class="blue">Cu<sup>+2</sup> + 2e⁻ → Cu<sup>0</sup></span> &nbsp;|&nbsp; окислитель, восстанавливается',
+    statements: [
+      { id:'s1', text:'Цинк является восстановителем',                  match:true,  note:'Zn⁰ → Zn²⁺, СО увеличивается, отдаёт 2e⁻ — восстановитель.' },
+      { id:'s2', text:'Ион Cu²⁺ является окислителем',                  match:true,  note:'Cu²⁺ → Cu⁰, СО уменьшается, принимает 2e⁻ — окислитель.' },
+      { id:'s3', text:'Цинк является окислителем',                      match:false, note:'Окислитель — тот, у кого СО уменьшается. У Zn — увеличивается.' },
+      { id:'s4', text:'СО серы изменяется в ходе реакции',              match:false, note:'СО S в SO₄²⁻ остаётся +6 — не меняется.' },
+      { id:'s5', text:'Цинк отдаёт 1 электрон',                         match:false, note:'Zn⁰ → Zn²⁺ — это потеря 2 электронов.' }
+    ]
+  },
+  {
+    id:'q-fe-hcl',
+    eq:'Fe + 2HCl = FeCl<sub>2</sub> + H<sub>2</sub>↑',
+    balance:'<span class="red">Fe<sup>0</sup> − 2e⁻ → Fe<sup>+2</sup></span> &nbsp;|&nbsp; восстановитель<br/><span class="blue">2H<sup>+1</sup> + 2e⁻ → H<sub>2</sub><sup>0</sup></span> &nbsp;|&nbsp; окислитель',
+    statements: [
+      { id:'s1', text:'Железо является восстановителем',                match:true,  note:'Fe⁰ → Fe²⁺ — отдаёт 2 электрона.' },
+      { id:'s2', text:'Ионы H⁺ являются окислителем',                   match:true,  note:'2H⁺ + 2e⁻ → H₂⁰ — принимают электроны.' },
+      { id:'s3', text:'СО хлора меняется в ходе реакции',               match:false, note:'Cl⁻ как был, так и остался — СО не меняется.' },
+      { id:'s4', text:'Железо принимает электроны',                     match:false, note:'Fe их отдаёт, а не принимает.' },
+      { id:'s5', text:'Это реакция обмена',                             match:false, note:'Это реакция замещения (Fe вытесняет H₂ из кислоты).' }
+    ]
+  },
+  {
+    id:'q-c-o2',
+    eq:'C + O<sub>2</sub> = CO<sub>2</sub>',
+    balance:'<span class="red">C<sup>0</sup> − 4e⁻ → C<sup>+4</sup></span> &nbsp;|&nbsp; восстановитель<br/><span class="blue">O<sub>2</sub><sup>0</sup> + 4e⁻ → 2O<sup>−2</sup></span> &nbsp;|&nbsp; окислитель',
+    statements: [
+      { id:'s1', text:'Углерод — восстановитель',                       match:true,  note:'C⁰ → C⁺⁴ — отдаёт 4 электрона.' },
+      { id:'s2', text:'Углерод отдаёт 4 электрона',                     match:true,  note:'СО изменяется с 0 до +4, разница 4.' },
+      { id:'s3', text:'Кислород — восстановитель',                      match:false, note:'O₂⁰ → O⁻², принимает электроны — это окислитель.' },
+      { id:'s4', text:'Углерод восстанавливается',                      match:false, note:'СО углерода увеличивается → он окисляется (а не восстанавливается).' },
+      { id:'s5', text:'Это не ОВР',                                      match:false, note:'Простые вещества участвуют → ОВР.' }
+    ]
+  },
+  {
+    id:'q-h2-cl2',
+    eq:'H<sub>2</sub> + Cl<sub>2</sub> = 2HCl',
+    balance:'<span class="red">H<sub>2</sub><sup>0</sup> − 2e⁻ → 2H<sup>+1</sup></span> &nbsp;|&nbsp; восстановитель<br/><span class="blue">Cl<sub>2</sub><sup>0</sup> + 2e⁻ → 2Cl<sup>−1</sup></span> &nbsp;|&nbsp; окислитель',
+    statements: [
+      { id:'s1', text:'Хлор — окислитель',                              match:true,  note:'Cl⁰ → Cl⁻¹ — принимает электроны.' },
+      { id:'s2', text:'Водород — восстановитель',                       match:true,  note:'H⁰ → H⁺¹ — отдаёт электроны.' },
+      { id:'s3', text:'Хлор отдаёт 2 электрона',                        match:false, note:'Cl₂ электроны принимает, а не отдаёт.' },
+      { id:'s4', text:'СО водорода уменьшается',                        match:false, note:'СО водорода увеличивается с 0 до +1.' },
+      { id:'s5', text:'Это реакция обмена',                              match:false, note:'Это соединение (2 → 1).' }
+    ]
+  },
+  {
+    id:'q-2na-cl2',
+    eq:'2Na + Cl<sub>2</sub> = 2NaCl',
+    balance:'<span class="red">Na<sup>0</sup> − 1e⁻ → Na<sup>+1</sup></span> ×2 &nbsp;|&nbsp; восстановитель<br/><span class="blue">Cl<sub>2</sub><sup>0</sup> + 2e⁻ → 2Cl<sup>−1</sup></span> ×1 &nbsp;|&nbsp; окислитель',
+    statements: [
+      { id:'s1', text:'Натрий — восстановитель',                        match:true,  note:'Na⁰ → Na⁺¹ — отдаёт 1 электрон.' },
+      { id:'s2', text:'Хлор — окислитель',                              match:true,  note:'Cl⁰ → Cl⁻¹ — принимает электроны.' },
+      { id:'s3', text:'Каждый атом натрия отдаёт 2 электрона',          match:false, note:'Каждый атом Na отдаёт 1 электрон (СО меняется с 0 до +1).' },
+      { id:'s4', text:'Хлор окисляется',                                match:false, note:'СО хлора уменьшается → он восстанавливается.' },
+      { id:'s5', text:'Это реакция разложения',                         match:false, note:'Это реакция соединения (2 → 1).' }
+    ]
+  },
+  {
+    id:'q-cuo-h2',
+    eq:'CuO + H<sub>2</sub> = Cu + H<sub>2</sub>O',
+    balance:'<span class="red">H<sub>2</sub><sup>0</sup> − 2e⁻ → 2H<sup>+1</sup></span> &nbsp;|&nbsp; восстановитель<br/><span class="blue">Cu<sup>+2</sup> + 2e⁻ → Cu<sup>0</sup></span> &nbsp;|&nbsp; окислитель',
+    statements: [
+      { id:'s1', text:'Водород — восстановитель',                       match:true,  note:'H⁰ → H⁺¹, отдаёт электроны.' },
+      { id:'s2', text:'CuO — окислитель',                               match:true,  note:'Cu²⁺ принимает электроны, восстанавливается до Cu⁰. CuO играет роль окислителя.' },
+      { id:'s3', text:'СО кислорода меняется',                          match:false, note:'O⁻² как было, так и осталось.' },
+      { id:'s4', text:'Это реакция обмена',                             match:false, note:'Это замещение (или восстановление металла).' },
+      { id:'s5', text:'Cu²⁺ окисляется',                                match:false, note:'Cu²⁺ восстанавливается (СО уменьшается).' }
+    ]
+  },
+  {
+    id:'q-2kclo3',
+    eq:'2KClO<sub>3</sub> = 2KCl + 3O<sub>2</sub>↑',
+    balance:'<span class="red">2O<sup>−2</sup> − 4e⁻ → O<sub>2</sub><sup>0</sup></span> &nbsp;|&nbsp; восстановитель<br/><span class="blue">Cl<sup>+5</sup> + 6e⁻ → Cl<sup>−1</sup></span> &nbsp;|&nbsp; окислитель',
+    statements: [
+      { id:'s1', text:'СО хлора изменяется с +5 до −1',                 match:true,  note:'В KClO₃: Cl⁺⁵ → в KCl: Cl⁻¹.' },
+      { id:'s2', text:'Кислород — восстановитель',                      match:true,  note:'O⁻² → O⁰ — отдаёт электроны.' },
+      { id:'s3', text:'СО калия меняется',                              match:false, note:'K⁺¹ остаётся +1.' },
+      { id:'s4', text:'Хлор окисляется',                                match:false, note:'СО хлора уменьшается с +5 до −1 → он восстанавливается.' },
+      { id:'s5', text:'Это реакция замещения',                          match:false, note:'Это реакция разложения (1 → 2).' }
+    ]
+  },
+  {
+    id:'q-mg-o2',
+    eq:'2Mg + O<sub>2</sub> = 2MgO',
+    balance:'<span class="red">Mg<sup>0</sup> − 2e⁻ → Mg<sup>+2</sup></span> &nbsp;|&nbsp; восстановитель<br/><span class="blue">O<sub>2</sub><sup>0</sup> + 4e⁻ → 2O<sup>−2</sup></span> &nbsp;|&nbsp; окислитель',
+    statements: [
+      { id:'s1', text:'Магний — восстановитель',                        match:true,  note:'Mg⁰ → Mg⁺² — отдаёт 2 электрона.' },
+      { id:'s2', text:'Кислород — окислитель',                          match:true,  note:'O⁰ → O⁻² — принимает электроны.' },
+      { id:'s3', text:'Магний восстанавливается',                       match:false, note:'СО магния увеличивается → он окисляется.' },
+      { id:'s4', text:'Каждый атом Mg отдаёт 1 электрон',               match:false, note:'Каждый атом Mg отдаёт 2 электрона (СО с 0 до +2).' },
+      { id:'s5', text:'СО элементов не изменяется',                     match:false, note:'И Mg, и O меняют СО — это ОВР.' }
+    ]
+  },
+  {
+    id:'q-fe-cuso4',
+    eq:'Fe + CuSO<sub>4</sub> = FeSO<sub>4</sub> + Cu',
+    balance:'<span class="red">Fe<sup>0</sup> − 2e⁻ → Fe<sup>+2</sup></span> &nbsp;|&nbsp; восстановитель<br/><span class="blue">Cu<sup>+2</sup> + 2e⁻ → Cu<sup>0</sup></span> &nbsp;|&nbsp; окислитель',
+    statements: [
+      { id:'s1', text:'Fe — восстановитель',                            match:true,  note:'Fe⁰ → Fe⁺², отдаёт 2 электрона.' },
+      { id:'s2', text:'Cu²⁺ — окислитель',                              match:true,  note:'Cu²⁺ → Cu⁰, принимает 2 электрона.' },
+      { id:'s3', text:'СО серы меняется',                               match:false, note:'S в SO₄²⁻ как +6, так и +6.' },
+      { id:'s4', text:'Cu²⁺ окисляется',                                match:false, note:'Cu²⁺ восстанавливается (СО уменьшается).' },
+      { id:'s5', text:'Каждый атом железа отдаёт 4 электрона',          match:false, note:'Fe отдаёт 2 электрона.' }
+    ]
+  },
+  {
+    id:'q-2hgo',
+    eq:'2HgO = 2Hg + O<sub>2</sub>↑',
+    balance:'<span class="red">2O<sup>−2</sup> − 4e⁻ → O<sub>2</sub><sup>0</sup></span> &nbsp;|&nbsp; восстановитель<br/><span class="blue">Hg<sup>+2</sup> + 2e⁻ → Hg<sup>0</sup></span> &nbsp;|&nbsp; окислитель',
+    statements: [
+      { id:'s1', text:'Hg²⁺ — окислитель',                              match:true,  note:'Hg²⁺ → Hg⁰, принимает электроны.' },
+      { id:'s2', text:'O⁻² — восстановитель',                           match:true,  note:'O⁻² → O⁰, отдаёт электроны.' },
+      { id:'s3', text:'Это не ОВР',                                      match:false, note:'СО ртути и кислорода меняются — это ОВР.' },
+      { id:'s4', text:'Это реакция соединения',                         match:false, note:'Это разложение (1 → 2).' },
+      { id:'s5', text:'Hg⁺² окисляется',                                match:false, note:'СО Hg уменьшается → восстанавливается.' }
+    ]
+  }
+];
+
+var state = { total:0, correct:0, streak:0, current:null, locked:false, recentIds:[] };
+
+function pickQuestion() {
+  var pool = QUESTIONS.filter(function(q){ return state.recentIds.indexOf(q.id) < 0; });
+  if (pool.length === 0) pool = QUESTIONS;
+  var q = pool[Math.floor(Math.random() * pool.length)];
+  state.recentIds.push(q.id);
+  if (state.recentIds.length > 5) state.recentIds.shift();
+  return q;
+}
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function el(tag, props, children) {
+  var e = document.createElement(tag);
+  if (props) for (var k in props) {
+    if (k === 'class') e.className = props[k];
+    else if (k === 'html') e.innerHTML = props[k];
+    else if (k.indexOf('on') === 0) e.addEventListener(k.substring(2).toLowerCase(), props[k]);
+    else e.setAttribute(k, props[k]);
+  }
+  if (children != null) {
+    if (!Array.isArray(children)) children = [children];
+    for (var i = 0; i < children.length; i++) {
+      var c = children[i];
+      if (c == null) continue;
+      e.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(c) : c);
+    }
+  }
+  return e;
+}
+
+function renderQuestion() {
+  var q = state.current.question;
+  document.getElementById('equation').innerHTML = q.eq;
+}
+
+function renderChoices() {
+  var c = document.getElementById('choices');
+  c.innerHTML = '';
+  state.current.displayed.forEach(function(item, i) {
+    var card = el('div', { class:'choice', 'data-id': item.id });
+    card.addEventListener('click', function(){ onChoiceClick(item.id); });
+    var num = el('div', { class:'num' });
+    num.appendChild(el('span', null, String(i+1)));
+    card.appendChild(num);
+    var name = el('div', { class:'text' });
+    name.innerHTML = item.text;
+    card.appendChild(name);
+    var desc = el('div', { class:'desc' });
+    desc.innerHTML = item.note;
+    card.appendChild(desc);
+    c.appendChild(card);
+  });
+}
+
+function onChoiceClick(id) {
+  if (state.locked) return;
+  var pos = state.current.selectedIds.indexOf(id);
+  if (pos >= 0) state.current.selectedIds.splice(pos, 1);
+  else {
+    if (state.current.selectedIds.length >= 2) return;
+    state.current.selectedIds.push(id);
+  }
+  updateSelection();
+}
+
+function updateSelection() {
+  document.querySelectorAll('.choice').forEach(function(card) {
+    var id = card.getAttribute('data-id');
+    card.classList.toggle('selected', state.current.selectedIds.indexOf(id) >= 0);
+  });
+  document.getElementById('check-btn').disabled = state.current.selectedIds.length !== 2;
+}
+
+function checkAnswer() {
+  if (state.locked) return;
+  var q = state.current.question;
+  var correctIds = q.statements.filter(function(s){ return s.match; }).map(function(s){ return s.id; });
+  var sel = state.current.selectedIds.slice().sort();
+  var corr = correctIds.slice().sort();
+  var isCorrect = sel.length === corr.length && sel.every(function(id, i){ return id === corr[i]; });
+
+  state.total++;
+  if (isCorrect) { state.correct++; state.streak++; } else { state.streak = 0; }
+  updateStats();
+  state.locked = true;
+
+  document.querySelectorAll('.choice').forEach(function(card) {
+    var id = card.getAttribute('data-id');
+    card.classList.add('locked');
+    card.classList.remove('selected');
+    var isSel = sel.indexOf(id) >= 0;
+    var isCorrId = corr.indexOf(id) >= 0;
+    if (isSel && isCorrId) card.classList.add('correct-pick');
+    else if (isSel && !isCorrId) card.classList.add('wrong-pick');
+    else if (!isSel && isCorrId) card.classList.add('missed');
+  });
+
+  var displayedOrder = state.current.displayed.map(function(d){ return d.id; });
+  var correctNumbers = correctIds.map(function(id){ return displayedOrder.indexOf(id) + 1; }).sort(function(a,b){return a-b;}).join('');
+
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + (isCorrect ? 'win' : 'lose');
+  if (isCorrect) {
+    r.innerHTML = '<div class="result-line1">✓ Верно!</div><div class="result-line2">Ответ в формате ОГЭ: <b>'+correctNumbers+'</b>.</div>';
+  } else {
+    r.innerHTML = '<div class="result-line1">✗ Неверно.</div><div class="result-line2">Правильный ответ: <b>'+correctNumbers+'</b>.</div>';
+  }
+
+  var s = document.getElementById('solution');
+  s.className = 'solution shown';
+  s.innerHTML = '<h4>Электронный баланс</h4><div class="balance">'+q.balance+'</div>';
+
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+
+function nextQuestion() {
+  var q = pickQuestion();
+  state.current = { question: q, displayed: shuffle(q.statements.slice()), selectedIds: [] };
+  state.locked = false;
+  renderQuestion();
+  renderChoices();
+  document.getElementById('result').className = 'result';
+  document.getElementById('solution').className = 'solution';
+  document.getElementById('check-btn').style.display = '';
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('skip-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function skipQuestion() { state.streak=0; updateStats(); nextQuestion(); }
+function updateStats() {
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var streakEl = document.getElementById('stat-streak');
+  streakEl.textContent = state.streak;
+  streakEl.classList.toggle('hot', state.streak >= 3);
+  var pctEl = document.getElementById('stat-pct');
+  pctEl.textContent = state.total === 0 ? '—' : Math.round(100 * state.correct / state.total) + '%';
+}
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('next-btn').addEventListener('click', nextQuestion);
+document.getElementById('skip-btn').addEventListener('click', skipQuestion);
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key >= '1' && e.key <= '5' && !state.locked) {
+    var idx = parseInt(e.key, 10) - 1;
+    if (idx < state.current.displayed.length) onChoiceClick(state.current.displayed[idx].id);
+  } else if (e.key === 'Enter') {
+    if (state.locked) nextQuestion();
+    else if (!document.getElementById('check-btn').disabled) checkAnswer();
+  }
+});
+nextQuestion();
+</script>
+</body>
+</html>

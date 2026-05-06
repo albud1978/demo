@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №9 · Свойства сложных веществ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #F2EDE2; --bg-card: #FAF6EC; --ink: #1B1814; --ink-soft: #4A453D; --ink-faint: #7A736A;
+  --rule: #C8BFAE; --rule-soft: #DCD3BF; --accent: #2D4A2B; --accent-soft: rgba(45, 74, 43, 0.08);
+  --good: #16A34A; --good-bg: #DCFCE7; --bad: #B91C1C; --bad-bg: #FEE2E2; --warn: #D97706;
+  --serif: "Fraunces", "Times New Roman", Georgia, serif;
+  --body: "Spectral", "Georgia", serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { background-image: radial-gradient(circle at 25% 10%, rgba(45, 74, 43, 0.04), transparent 40%); }
+.wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+.head { border-top: 3px solid var(--ink); padding-top: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+.head-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); flex-wrap: wrap; gap: 10px; }
+.head-meta .accent { color: var(--accent); }
+h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; letter-spacing: -0.015em; margin-top: 16px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
+.subtitle { font-size: 16px; color: var(--ink-soft); margin-top: 12px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 32px; }
+@media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--bg-card); padding: 14px 16px; }
+.stat .num { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1; color: var(--accent); }
+.stat .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 6px; }
+.stat.streak .num.hot { color: var(--warn); }
+.question-card { background: var(--bg-card); border: 1px solid var(--rule); border-left: 4px solid var(--accent); padding: 24px 28px; margin-bottom: 24px; }
+.question-text { font-family: var(--serif); font-size: 19px; font-weight: 400; line-height: 1.45; }
+.target-pill { display: inline-block; padding: 4px 14px; background: var(--accent); color: white; font-family: "Cambria Math", serif; font-weight: 600; border-radius: 1px; font-size: 22px; margin: 0 4px; }
+.target-pill sub, .target-pill sup { font-size: 0.7em; }
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 22px; }
+@media (max-width: 600px) { .choices { grid-template-columns: 1fr; } }
+.choice { background: var(--bg-card); border: 1px solid var(--rule); padding: 16px 18px 16px 50px; cursor: pointer; transition: all 0.15s ease; position: relative; user-select: none; font-family: "Cambria Math", serif; font-size: 19px; }
+.choice:hover:not(.locked) { border-color: var(--ink); }
+.choice .num { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--ink-faint); border: 1px solid var(--rule); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+.choice .desc { display: none; font-family: var(--body); font-size: 13px; color: var(--ink-soft); margin-top: 6px; line-height: 1.4; }
+.choice.locked .desc { display: block; }
+.choice.selected { border-color: var(--accent); background: var(--accent-soft); }
+.choice.selected .num { background: var(--accent); color: white; border-color: var(--accent); }
+.choice.locked { cursor: default; }
+.choice.correct-pick { border-color: var(--good); background: var(--good-bg); }
+.choice.correct-pick .num { background: var(--good); color: white; border-color: var(--good); }
+.choice.correct-pick .num::after { content: '✓'; font-size: 14px; }
+.choice.correct-pick .num span { display: none; }
+.choice.wrong-pick { border-color: var(--bad); background: var(--bad-bg); }
+.choice.wrong-pick .num { background: var(--bad); color: white; border-color: var(--bad); }
+.choice.wrong-pick .num::after { content: '✗'; font-size: 14px; }
+.choice.wrong-pick .num span { display: none; }
+.choice.missed { border-color: var(--good); border-style: dashed; }
+.choice.missed .num { color: var(--good); border-color: var(--good); }
+.choice sub, .choice sup { font-size: 0.7em; }
+.actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.btn { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 14px 28px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); cursor: pointer; border-radius: 1px; transition: all 0.15s ease; }
+.btn:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.btn:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-faint); cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.btn.next { background: var(--accent); border-color: var(--accent); }
+.result { display: none; margin-top: 24px; padding: 20px 24px; border-left: 4px solid; font-family: var(--serif); font-size: 18px; font-weight: 500; }
+.result.shown { display: block; }
+.result.win { background: var(--good-bg); border-color: var(--good); color: #14532D; }
+.result.lose { background: var(--bad-bg); border-color: var(--bad); color: #7F1D1D; }
+.result-line1 { font-size: 19px; }
+.result-line2 { font-family: var(--body); font-size: 14.5px; font-weight: 400; margin-top: 10px; line-height: 1.55; opacity: 0.92; }
+.result-line2 b { font-family: var(--mono); font-weight: 700; }
+.cheat { margin-top: 56px; padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; }
+.cheat h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin-bottom: 16px; }
+.cheat p { font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 8px; }
+.cheat p b { color: var(--ink); }
+.cheat ul { list-style: none; padding-left: 0; }
+.cheat li { font-size: 13.5px; padding: 4px 0 4px 16px; position: relative; line-height: 1.5; color: var(--ink-soft); }
+.cheat li::before { content: '·'; position: absolute; left: 4px; font-weight: 700; color: var(--ink); }
+.cheat li b { font-family: "Cambria Math", serif; }
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--ink-faint); text-align: center; }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+
+<header class="head">
+  <div class="head-meta">
+    <span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №9</span>
+    <span>1 балл · краткий ответ</span>
+  </div>
+  <h1>Свойства <em>сложных веществ</em></h1>
+  <p class="subtitle">Тренажёр на химические свойства оксидов, кислот, оснований и солей. Дано вещество — выбери из перечня те, которые с ним реагируют.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего вопросов</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">правильно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности</div></div>
+</div>
+
+<div class="question-card">
+  <p class="question-text" id="question-text"></p>
+  <div class="choices" id="choices"></div>
+</div>
+
+<div class="actions">
+  <button class="btn" id="check-btn" disabled>Проверить</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующий вопрос</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<section class="cheat">
+  <h3>С кем реагируют сложные вещества</h3>
+  <p><b>Кислоты (HCl, H<sub>2</sub>SO<sub>4</sub>, HNO<sub>3</sub> и т.п.) реагируют с:</b></p>
+  <ul>
+    <li><b>Металлами</b> (до H в ряду активности): Mg + 2HCl → MgCl<sub>2</sub> + H<sub>2</sub>↑</li>
+    <li><b>Основными и амф. оксидами</b>: CaO + 2HCl → CaCl<sub>2</sub> + H<sub>2</sub>O</li>
+    <li><b>Основаниями</b>: NaOH + HCl → NaCl + H<sub>2</sub>O</li>
+    <li><b>Солями</b> (если получается осадок, газ или вода): Na<sub>2</sub>CO<sub>3</sub> + 2HCl → 2NaCl + CO<sub>2</sub>↑ + H<sub>2</sub>O</li>
+  </ul>
+  <p style="margin-top:10px"><b>Щёлочи (NaOH, KOH, Ca(OH)<sub>2</sub>, Ba(OH)<sub>2</sub>) реагируют с:</b></p>
+  <ul>
+    <li><b>Кислотами</b> и кислотными оксидами: 2NaOH + CO<sub>2</sub> → Na<sub>2</sub>CO<sub>3</sub> + H<sub>2</sub>O</li>
+    <li><b>Амфотерными оксидами и гидроксидами</b>: Al(OH)<sub>3</sub> + NaOH → Na[Al(OH)<sub>4</sub>]</li>
+    <li><b>Солями</b> (если выпадет осадок основания): CuSO<sub>4</sub> + 2NaOH → Cu(OH)<sub>2</sub>↓ + Na<sub>2</sub>SO<sub>4</sub></li>
+    <li>Амфотерными металлами: Al, Zn (с выделением H<sub>2</sub>)</li>
+  </ul>
+  <p style="margin-top:10px"><b>Соли реагируют с:</b></p>
+  <ul>
+    <li>Кислотами (если выделяется газ или образуется осадок)</li>
+    <li>Щелочами (если катион даёт нерастворимое основание)</li>
+    <li>Другими солями (если оба растворимы и образуется осадок)</li>
+    <li>Металлами (более активный вытесняет менее активный)</li>
+  </ul>
+</section>
+
+<footer>
+  Источник: демоверсия ОГЭ-2026 ФИПИ ·
+  <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a>
+</footer>
+
+</div>
+
+<script>
+var QUESTIONS = [
+  {
+    id:'hcl-1', target:'HCl(p-p)', targetName:'раствором соляной кислоты',
+    pool: [
+      { id:'a1', formula:'NaOH',                      reacts:true,  note:'NaOH + HCl → NaCl + H₂O (нейтрализация).' },
+      { id:'a2', formula:'Zn',                        reacts:true,  note:'Zn до H в ряду активности: Zn + 2HCl → ZnCl₂ + H₂↑.' },
+      { id:'a3', formula:'Cu',                        reacts:false, note:'Cu стоит после H — с разб. HCl не реагирует.' },
+      { id:'a4', formula:'NaCl',                      reacts:false, note:'Реакция NaCl + HCl не идёт — нет осадка/газа/воды.' },
+      { id:'a5', formula:'CO<sub>2</sub>',            reacts:false, note:'Кислотный оксид + кислота — не реагируют.' }
+    ]
+  },
+  {
+    id:'naoh-1', target:'NaOH(p-p)', targetName:'раствором гидроксида натрия',
+    pool: [
+      { id:'b1', formula:'CO<sub>2</sub>',            reacts:true,  note:'2NaOH + CO₂ → Na₂CO₃ + H₂O.' },
+      { id:'b2', formula:'CuSO<sub>4</sub>',          reacts:true,  note:'2NaOH + CuSO₄ → Cu(OH)₂↓ + Na₂SO₄ (голубой осадок).' },
+      { id:'b3', formula:'NaCl',                      reacts:false, note:'NaCl с щёлочью не реагирует.' },
+      { id:'b4', formula:'CaO',                       reacts:false, note:'Основный оксид + щёлочь — не реагируют (оба основной природы).' },
+      { id:'b5', formula:'KNO<sub>3</sub>',           reacts:false, note:'KNO₃ — соль с щёлочью не даёт осадка.' }
+    ]
+  },
+  {
+    id:'h2so4-1', target:'H<sub>2</sub>SO<sub>4</sub>(p-p)', targetName:'раствором серной кислоты',
+    pool: [
+      { id:'c1', formula:'BaCl<sub>2</sub>',          reacts:true,  note:'BaCl₂ + H₂SO₄ → BaSO₄↓ + 2HCl (белый осадок BaSO₄ — качественная реакция на сульфат).' },
+      { id:'c2', formula:'KOH',                       reacts:true,  note:'2KOH + H₂SO₄ → K₂SO₄ + 2H₂O (нейтрализация).' },
+      { id:'c3', formula:'Ag',                        reacts:false, note:'Ag стоит после H — с разб. H₂SO₄ не реагирует.' },
+      { id:'c4', formula:'NaCl',                      reacts:false, note:'NaCl + H₂SO₄(разб) — реакции в школьном курсе нет (с конц. кислотой да, но это исключение).' },
+      { id:'c5', formula:'CO<sub>2</sub>',            reacts:false, note:'Кислотный оксид + кислота — не реагируют.' }
+    ]
+  },
+  {
+    id:'cuso4-1', target:'CuSO<sub>4</sub>(p-p)', targetName:'раствором сульфата меди(II)',
+    pool: [
+      { id:'d1', formula:'Fe',                        reacts:true,  note:'Fe + CuSO₄ → FeSO₄ + Cu↓ (вытеснение Cu более активным Fe).' },
+      { id:'d2', formula:'NaOH',                      reacts:true,  note:'CuSO₄ + 2NaOH → Cu(OH)₂↓ + Na₂SO₄.' },
+      { id:'d3', formula:'Ag',                        reacts:false, note:'Ag менее активен, чем Cu — не вытесняет медь.' },
+      { id:'d4', formula:'NaCl',                      reacts:false, note:'Между растворами CuSO₄ и NaCl нет осадка/газа.' },
+      { id:'d5', formula:'HCl',                       reacts:false, note:'CuSO₄ + HCl — не идёт, нет ни осадка, ни газа, ни слабого электролита.' }
+    ]
+  },
+  {
+    id:'agno3-1', target:'AgNO<sub>3</sub>(p-p)', targetName:'раствором нитрата серебра',
+    pool: [
+      { id:'e1', formula:'NaCl',                      reacts:true,  note:'AgNO₃ + NaCl → AgCl↓ + NaNO₃ (белый творожистый осадок).' },
+      { id:'e2', formula:'KBr',                       reacts:true,  note:'AgNO₃ + KBr → AgBr↓ + KNO₃ (светло-жёлтый осадок).' },
+      { id:'e3', formula:'KNO<sub>3</sub>',           reacts:false, note:'Реакции нет — оба нитрата растворимы.' },
+      { id:'e4', formula:'Na<sub>2</sub>SO<sub>4</sub>', reacts:false, note:'Ag₂SO₄ малорастворим, в школьной программе берут как «не реагирует» в простых реакциях.' },
+      { id:'e5', formula:'NaOH',                      reacts:false, note:'2AgNO₃ + 2NaOH → Ag₂O + H₂O + 2NaNO₃ — формально реакция идёт (бурый осадок Ag₂O), но в типовых заданиях ОГЭ обычно её не используют. Лучше выбрать NaCl и KBr — эталонные реакции.' }
+    ]
+  },
+  {
+    id:'feoh3-1', target:'Fe(OH)<sub>3</sub>', targetName:'гидроксидом железа(III)',
+    pool: [
+      { id:'f1', formula:'HCl',                       reacts:true,  note:'Fe(OH)₃ + 3HCl → FeCl₃ + 3H₂O.' },
+      { id:'f2', formula:'H<sub>2</sub>SO<sub>4</sub>', reacts:true,  note:'2Fe(OH)₃ + 3H₂SO₄ → Fe₂(SO₄)₃ + 6H₂O.' },
+      { id:'f3', formula:'NaCl',                      reacts:false, note:'NaCl с нерастворимым основанием не реагирует.' },
+      { id:'f4', formula:'NaOH',                      reacts:false, note:'Fe(OH)₃ — слабоамфотерное основание, в школьной программе обычно «не реагирует со щёлочью» (амфотерность Fe(OH)₃ не рассматривается на ОГЭ).' },
+      { id:'f5', formula:'KNO<sub>3</sub>',           reacts:false, note:'Соль с нерастворимым основанием не реагирует.' }
+    ]
+  },
+  {
+    id:'cuo-1', target:'CuO', targetName:'оксидом меди(II)',
+    pool: [
+      { id:'g1', formula:'HCl',                       reacts:true,  note:'CuO + 2HCl → CuCl₂ + H₂O (основный оксид + кислота).' },
+      { id:'g2', formula:'H<sub>2</sub>',             reacts:true,  note:'CuO + H₂ → Cu + H₂O (восстановление при нагревании).' },
+      { id:'g3', formula:'NaOH',                      reacts:false, note:'Основный оксид со щёлочью не реагирует.' },
+      { id:'g4', formula:'CaO',                       reacts:false, note:'Два основных оксида не реагируют.' },
+      { id:'g5', formula:'NaCl',                      reacts:false, note:'CuO с NaCl не реагирует.' }
+    ]
+  },
+  {
+    id:'na2co3-1', target:'Na<sub>2</sub>CO<sub>3</sub>(p-p)', targetName:'раствором карбоната натрия',
+    pool: [
+      { id:'h1', formula:'HCl',                       reacts:true,  note:'Na₂CO₃ + 2HCl → 2NaCl + CO₂↑ + H₂O (выделение газа).' },
+      { id:'h2', formula:'CaCl<sub>2</sub>',          reacts:true,  note:'Na₂CO₃ + CaCl₂ → CaCO₃↓ + 2NaCl (белый осадок).' },
+      { id:'h3', formula:'KOH',                       reacts:false, note:'Карбонат с щёлочью не реагирует.' },
+      { id:'h4', formula:'NaCl',                      reacts:false, note:'Между растворимыми солями без образования осадка/газа реакции нет.' },
+      { id:'h5', formula:'KNO<sub>3</sub>',           reacts:false, note:'KNO₃ + Na₂CO₃ — реакции нет.' }
+    ]
+  },
+  {
+    id:'so2-1', target:'SO<sub>2</sub>', targetName:'диоксидом серы',
+    pool: [
+      { id:'i1', formula:'NaOH',                      reacts:true,  note:'2NaOH + SO₂ → Na₂SO₃ + H₂O (кислотный оксид + щёлочь).' },
+      { id:'i2', formula:'H<sub>2</sub>O',            reacts:true,  note:'SO₂ + H₂O ⇌ H₂SO₃ (образуется сернистая кислота).' },
+      { id:'i3', formula:'CO<sub>2</sub>',            reacts:false, note:'Два кислотных оксида не реагируют.' },
+      { id:'i4', formula:'HCl',                       reacts:false, note:'Кислотный оксид + кислота — не реагируют.' },
+      { id:'i5', formula:'NaCl',                      reacts:false, note:'SO₂ с NaCl не реагирует.' }
+    ]
+  },
+  {
+    id:'cao-1', target:'CaO', targetName:'оксидом кальция',
+    pool: [
+      { id:'j1', formula:'H<sub>2</sub>O',            reacts:true,  note:'CaO + H₂O → Ca(OH)₂ (бурно, гашение извести).' },
+      { id:'j2', formula:'CO<sub>2</sub>',            reacts:true,  note:'CaO + CO₂ → CaCO₃ (основный оксид + кислотный).' },
+      { id:'j3', formula:'NaOH',                      reacts:false, note:'Основный оксид со щёлочью не реагирует.' },
+      { id:'j4', formula:'NaCl',                      reacts:false, note:'CaO с NaCl не реагирует.' },
+      { id:'j5', formula:'O<sub>2</sub>',             reacts:false, note:'Ca уже окислен (СО +2), дальше окисляться нечему.' }
+    ]
+  }
+];
+
+var state = { total: 0, correct: 0, streak: 0, current: null, locked: false, recentIds: [] };
+
+function pickQuestion() {
+  var pool = QUESTIONS.filter(function(q){ return state.recentIds.indexOf(q.id) < 0; });
+  if (pool.length === 0) pool = QUESTIONS;
+  var q = pool[Math.floor(Math.random() * pool.length)];
+  state.recentIds.push(q.id);
+  if (state.recentIds.length > 5) state.recentIds.shift();
+  return q;
+}
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function el(tag, props, children) {
+  var e = document.createElement(tag);
+  if (props) for (var k in props) {
+    if (k === 'class') e.className = props[k];
+    else if (k === 'html') e.innerHTML = props[k];
+    else if (k.indexOf('on') === 0) e.addEventListener(k.substring(2).toLowerCase(), props[k]);
+    else e.setAttribute(k, props[k]);
+  }
+  if (children != null) {
+    if (!Array.isArray(children)) children = [children];
+    for (var i = 0; i < children.length; i++) {
+      var c = children[i];
+      if (c == null) continue;
+      e.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(c) : c);
+    }
+  }
+  return e;
+}
+
+function renderQuestion() {
+  var q = state.current.question;
+  document.getElementById('question-text').innerHTML =
+    'Какие <b>два</b> из перечисленных веществ вступают в реакцию с <span class="target-pill">'+q.target+'</span>?';
+}
+
+function renderChoices() {
+  var c = document.getElementById('choices');
+  c.innerHTML = '';
+  state.current.displayed.forEach(function(item, i) {
+    var card = el('div', { class:'choice', 'data-id': item.id });
+    card.addEventListener('click', function(){ onChoiceClick(item.id); });
+    var num = el('div', { class:'num' });
+    num.appendChild(el('span', null, String(i+1)));
+    card.appendChild(num);
+    var name = el('div');
+    name.innerHTML = item.formula;
+    card.appendChild(name);
+    var desc = el('div', { class:'desc' });
+    desc.innerHTML = item.note;
+    card.appendChild(desc);
+    c.appendChild(card);
+  });
+}
+
+function onChoiceClick(id) {
+  if (state.locked) return;
+  var pos = state.current.selectedIds.indexOf(id);
+  if (pos >= 0) state.current.selectedIds.splice(pos, 1);
+  else {
+    if (state.current.selectedIds.length >= 2) return;
+    state.current.selectedIds.push(id);
+  }
+  updateSelection();
+}
+
+function updateSelection() {
+  document.querySelectorAll('.choice').forEach(function(card) {
+    var id = card.getAttribute('data-id');
+    card.classList.toggle('selected', state.current.selectedIds.indexOf(id) >= 0);
+  });
+  document.getElementById('check-btn').disabled = state.current.selectedIds.length !== 2;
+}
+
+function checkAnswer() {
+  if (state.locked) return;
+  var q = state.current.question;
+  var correctIds = q.pool.filter(function(p){ return p.reacts; }).map(function(p){ return p.id; });
+  var sel = state.current.selectedIds.slice().sort();
+  var corr = correctIds.slice().sort();
+  var isCorrect = sel.length === corr.length && sel.every(function(id, i){ return id === corr[i]; });
+
+  state.total++;
+  if (isCorrect) { state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  updateStats();
+  state.locked = true;
+
+  document.querySelectorAll('.choice').forEach(function(card) {
+    var id = card.getAttribute('data-id');
+    card.classList.add('locked');
+    card.classList.remove('selected');
+    var isSel = sel.indexOf(id) >= 0;
+    var isCorrId = corr.indexOf(id) >= 0;
+    if (isSel && isCorrId) card.classList.add('correct-pick');
+    else if (isSel && !isCorrId) card.classList.add('wrong-pick');
+    else if (!isSel && isCorrId) card.classList.add('missed');
+  });
+
+  var displayedOrder = state.current.displayed.map(function(d){ return d.id; });
+  var correctNumbers = correctIds.map(function(id){ return displayedOrder.indexOf(id) + 1; }).sort(function(a,b){return a-b;}).join('');
+
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + (isCorrect ? 'win' : 'lose');
+  if (isCorrect) {
+    r.innerHTML = '<div class="result-line1">✓ Верно!</div><div class="result-line2">В формате ОГЭ ответ: <b>'+correctNumbers+'</b>.</div>';
+  } else {
+    r.innerHTML = '<div class="result-line1">✗ Неверно.</div><div class="result-line2">Правильный ответ: <b>'+correctNumbers+'</b>. Зелёным помечены вещества, реагирующие с '+q.targetName+'.</div>';
+  }
+
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+
+function nextQuestion() {
+  var q = pickQuestion();
+  state.current = { question: q, displayed: shuffle(q.pool.slice()), selectedIds: [] };
+  state.locked = false;
+  renderQuestion();
+  renderChoices();
+  document.getElementById('result').className = 'result';
+  document.getElementById('check-btn').style.display = '';
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('skip-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function skipQuestion() { state.streak = 0; updateStats(); nextQuestion(); }
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var streakEl = document.getElementById('stat-streak');
+  streakEl.textContent = state.streak;
+  streakEl.classList.toggle('hot', state.streak >= 3);
+  var pctEl = document.getElementById('stat-pct');
+  pctEl.textContent = state.total === 0 ? '—' : Math.round(100 * state.correct / state.total) + '%';
+}
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('next-btn').addEventListener('click', nextQuestion);
+document.getElementById('skip-btn').addEventListener('click', skipQuestion);
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key >= '1' && e.key <= '5' && !state.locked) {
+    var idx = parseInt(e.key, 10) - 1;
+    if (idx < state.current.displayed.length) onChoiceClick(state.current.displayed[idx].id);
+  } else if (e.key === 'Enter') {
+    if (state.locked) nextQuestion();
+    else if (!document.getElementById('check-btn').disabled) checkAnswer();
+  }
+});
+nextQuestion();
+</script>
+</body>
+</html>

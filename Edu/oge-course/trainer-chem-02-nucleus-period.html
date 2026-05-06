@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №2 · Модель ядра атома</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #F2EDE2;
+  --bg-card: #FAF6EC;
+  --bg-deep: #1A1815;
+  --ink: #1B1814;
+  --ink-soft: #4A453D;
+  --ink-faint: #7A736A;
+  --rule: #C8BFAE;
+  --rule-soft: #DCD3BF;
+  --accent: #2D4A2B;
+  --accent-soft: rgba(45, 74, 43, 0.08);
+  --proton: #D97706;
+  --proton-bg: #FCD34D;
+  --neutron: #6B7280;
+  --neutron-bg: #D1D5DB;
+  --good: #16A34A;
+  --good-bg: #DCFCE7;
+  --bad: #B91C1C;
+  --bad-bg: #FEE2E2;
+  --warn: #D97706;
+  --serif: "Fraunces", "Times New Roman", Georgia, serif;
+  --body: "Spectral", "Georgia", serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { background-image: radial-gradient(circle at 25% 10%, rgba(45, 74, 43, 0.04), transparent 40%), radial-gradient(circle at 80% 80%, rgba(217, 119, 6, 0.03), transparent 50%); }
+.wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.head { border-top: 3px solid var(--ink); padding-top: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+.head-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); flex-wrap: wrap; gap: 10px; }
+.head-meta .accent { color: var(--accent); }
+h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; letter-spacing: -0.015em; margin-top: 16px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
+.subtitle { font-size: 16px; color: var(--ink-soft); margin-top: 12px; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 32px; }
+@media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--bg-card); padding: 14px 16px; }
+.stat .num { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1; color: var(--accent); }
+.stat .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 6px; }
+.stat.streak .num.hot { color: var(--warn); }
+
+/* === Question card === */
+.question-card { background: var(--bg-card); border: 1px solid var(--rule); border-left: 4px solid var(--accent); padding: 24px 28px; margin-bottom: 24px; }
+.question-text { font-family: var(--serif); font-size: 19px; font-weight: 400; line-height: 1.45; }
+
+/* === Nucleus + legend === */
+.nucleus-block { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; padding: 32px 0; border-top: 1px solid var(--rule-soft); border-bottom: 1px solid var(--rule-soft); margin: 24px 0; }
+@media (max-width: 600px) { .nucleus-block { grid-template-columns: 1fr; gap: 16px; } .nucleus-block .legend { justify-self: center; } }
+
+.nucleus-svg { display: block; margin: 0 auto; max-width: 320px; width: 100%; height: auto; }
+.legend { display: flex; flex-direction: column; gap: 12px; font-family: var(--mono); font-size: 13px; }
+.legend-item { display: flex; align-items: center; gap: 10px; }
+.legend-circle { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+.legend-circle.proton { background: var(--proton-bg); color: var(--proton); border: 1.5px solid var(--proton); }
+.legend-circle.neutron { background: var(--neutron-bg); border: 1.5px solid var(--neutron); }
+
+/* === Answer inputs === */
+.answer-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: end; max-width: 560px; margin: 0 auto; padding-top: 8px; }
+@media (max-width: 480px) { .answer-row { grid-template-columns: 1fr; } .answer-row .sep { display: none; } }
+.answer-cell { text-align: center; }
+.answer-cell label { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px; }
+.answer-cell label b { color: var(--accent); font-family: var(--serif); font-size: 14px; }
+.answer-cell input { font-family: var(--serif); font-size: 36px; font-weight: 500; text-align: center; width: 100%; max-width: 140px; padding: 10px 8px; border: 2px solid var(--rule); border-radius: 2px; background: var(--bg); color: var(--ink); transition: all 0.15s ease; }
+.answer-cell input:focus { outline: none; border-color: var(--accent); }
+.answer-cell input.correct-input { border-color: var(--good); background: var(--good-bg); color: #14532D; }
+.answer-cell input.wrong-input { border-color: var(--bad); background: var(--bad-bg); color: #7F1D1D; }
+.answer-cell input:disabled { opacity: 0.95; cursor: default; }
+.answer-cell .hint { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); margin-top: 6px; }
+.answer-row .sep { font-family: var(--serif); font-size: 32px; color: var(--ink-faint); padding-bottom: 18px; }
+
+/* === Buttons === */
+.actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; justify-content: center; }
+.btn { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 14px 28px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); cursor: pointer; border-radius: 1px; transition: all 0.15s ease; }
+.btn:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.btn:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-faint); cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.btn.next { background: var(--accent); border-color: var(--accent); }
+.btn.next:hover { background: var(--ink); border-color: var(--ink); }
+
+/* === Result === */
+.result { display: none; margin-top: 24px; padding: 20px 24px; border-left: 4px solid; font-family: var(--serif); font-size: 18px; font-weight: 500; }
+.result.shown { display: block; }
+.result.win { background: var(--good-bg); border-color: var(--good); color: #14532D; }
+.result.lose { background: var(--bad-bg); border-color: var(--bad); color: #7F1D1D; }
+.result-line1 { font-size: 19px; }
+.result-line2 { font-family: var(--body); font-size: 14.5px; font-weight: 400; margin-top: 10px; line-height: 1.55; opacity: 0.92; }
+.result-line2 b { font-family: var(--mono); font-weight: 700; }
+
+/* === Solution steps === */
+.solution { display: none; margin-top: 18px; padding: 18px 22px; background: var(--bg-card); border: 1px solid var(--rule-soft); }
+.solution.shown { display: block; }
+.solution h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 12px; }
+.solution ol { padding-left: 22px; }
+.solution li { font-size: 14.5px; line-height: 1.55; margin-bottom: 6px; color: var(--ink); }
+.solution li b { font-family: var(--mono); color: var(--accent); }
+.solution .formula { font-family: var(--serif); font-style: italic; }
+
+/* === Cheatsheet === */
+.cheat { margin-top: 56px; padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; }
+.cheat h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin-bottom: 16px; }
+.cheat p { font-size: 14.5px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 14px; }
+.cheat p b { color: var(--ink); font-family: var(--mono); font-size: 13px; padding: 1px 6px; background: var(--bg); border: 1px solid var(--rule); border-radius: 1px; }
+
+.periods-grid { display: grid; grid-template-columns: 60px 1fr; gap: 4px 14px; margin-top: 12px; font-family: var(--mono); font-size: 13px; align-items: center; }
+.periods-grid .pn { text-align: right; font-weight: 700; color: var(--accent); padding: 8px 0; }
+.periods-grid .pe { padding: 8px 0; border-bottom: 1px solid var(--rule-soft); }
+.periods-grid .pe .el { display: inline-block; padding: 2px 8px; margin: 2px 4px 2px 0; background: var(--bg); border: 1px solid var(--rule); border-radius: 1px; }
+.periods-grid .pe .el b { color: var(--accent); }
+.periods-grid .pe .el .z { font-size: 10px; color: var(--ink-faint); }
+
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--ink-faint); text-align: center; }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+
+<header class="head">
+  <div class="head-meta">
+    <span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №2</span>
+    <span>1 балл · краткий ответ</span>
+  </div>
+  <h1>Модель ядра <em>→</em> период и заряд</h1>
+  <p class="subtitle">Тренажёр на определение элемента по составу атомного ядра. Считаешь протоны → находишь элемент → определяешь период по числу электронных слоёв.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего вопросов</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">правильно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности</div></div>
+</div>
+
+<div class="question-card">
+  <p class="question-text">На рисунке изображена модель строения ядра атома некоторого химического элемента. Запишите номер периода (<b style="color:var(--accent)">X</b>), в котором данный химический элемент расположен в Периодической системе химических элементов Д.И. Менделеева, и величину заряда ядра (<b style="color:var(--accent)">Y</b>) его атома.</p>
+
+  <div class="nucleus-block">
+    <svg class="nucleus-svg" id="nucleus-svg" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-circle proton">+</div>
+        <span>протоны</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-circle neutron"></div>
+        <span>нейтроны</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="answer-row">
+    <div class="answer-cell">
+      <label><b>X</b> — номер периода</label>
+      <input type="text" id="input-x" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" />
+      <div class="hint">от 1 до 4</div>
+    </div>
+    <div class="sep">·</div>
+    <div class="answer-cell">
+      <label><b>Y</b> — заряд ядра</label>
+      <input type="text" id="input-y" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" />
+      <div class="hint">от 1 до 20</div>
+    </div>
+  </div>
+</div>
+
+<div class="actions">
+  <button class="btn" id="check-btn" disabled>Проверить</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующий вопрос</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+
+<div class="result" id="result"></div>
+<div class="solution" id="solution"></div>
+
+<section class="cheat">
+  <h3>Шпаргалка: алгоритм решения</h3>
+  <p>1. Посчитай количество <b style="background:var(--proton-bg);border-color:var(--proton);color:var(--proton)">+</b> на рисунке — это <b>число протонов</b>.</p>
+  <p>2. Число протонов равно <b>Y — заряду ядра</b> (он же порядковый номер элемента).</p>
+  <p>3. Найди элемент в Периодической системе по этому номеру и определи его период (строку).</p>
+
+  <h3 style="margin-top:24px">Элементы первых 4 периодов до Ca</h3>
+  <div class="periods-grid">
+    <div class="pn">1 период</div>
+    <div class="pe"><span class="el"><b>H</b> <span class="z">1</span></span><span class="el"><b>He</b> <span class="z">2</span></span></div>
+    <div class="pn">2 период</div>
+    <div class="pe"><span class="el"><b>Li</b> <span class="z">3</span></span><span class="el"><b>Be</b> <span class="z">4</span></span><span class="el"><b>B</b> <span class="z">5</span></span><span class="el"><b>C</b> <span class="z">6</span></span><span class="el"><b>N</b> <span class="z">7</span></span><span class="el"><b>O</b> <span class="z">8</span></span><span class="el"><b>F</b> <span class="z">9</span></span><span class="el"><b>Ne</b> <span class="z">10</span></span></div>
+    <div class="pn">3 период</div>
+    <div class="pe"><span class="el"><b>Na</b> <span class="z">11</span></span><span class="el"><b>Mg</b> <span class="z">12</span></span><span class="el"><b>Al</b> <span class="z">13</span></span><span class="el"><b>Si</b> <span class="z">14</span></span><span class="el"><b>P</b> <span class="z">15</span></span><span class="el"><b>S</b> <span class="z">16</span></span><span class="el"><b>Cl</b> <span class="z">17</span></span><span class="el"><b>Ar</b> <span class="z">18</span></span></div>
+    <div class="pn">4 период</div>
+    <div class="pe"><span class="el"><b>K</b> <span class="z">19</span></span><span class="el"><b>Ca</b> <span class="z">20</span></span><span style="color:var(--ink-faint);font-size:11px;margin-left:6px">(в задании №2 ОГЭ ограничиваются K и Ca из 4-го периода)</span></div>
+  </div>
+</section>
+
+<footer>
+  Источник: демоверсия и спецификация ОГЭ-2026 ФИПИ ·
+  <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a>
+</footer>
+
+</div>
+
+<script>
+// ============================================================
+//  БАЗА ЭЛЕМЕНТОВ
+//  Z = заряд ядра = число протонов
+//  N = число нейтронов в самом распространённом изотопе
+//  period = номер периода в ПС
+// ============================================================
+var ELEMENTS = [
+  { Z:1,  N:0,  symbol:'H',  name:'водород',   period:1 },
+  { Z:2,  N:2,  symbol:'He', name:'гелий',     period:1 },
+  { Z:3,  N:4,  symbol:'Li', name:'литий',     period:2 },
+  { Z:4,  N:5,  symbol:'Be', name:'бериллий',  period:2 },
+  { Z:5,  N:6,  symbol:'B',  name:'бор',       period:2 },
+  { Z:6,  N:6,  symbol:'C',  name:'углерод',   period:2 },
+  { Z:7,  N:7,  symbol:'N',  name:'азот',      period:2 },
+  { Z:8,  N:8,  symbol:'O',  name:'кислород',  period:2 },
+  { Z:9,  N:10, symbol:'F',  name:'фтор',      period:2 },
+  { Z:10, N:10, symbol:'Ne', name:'неон',      period:2 },
+  { Z:11, N:12, symbol:'Na', name:'натрий',    period:3 },
+  { Z:12, N:12, symbol:'Mg', name:'магний',    period:3 },
+  { Z:13, N:14, symbol:'Al', name:'алюминий',  period:3 },
+  { Z:14, N:14, symbol:'Si', name:'кремний',   period:3 },
+  { Z:15, N:16, symbol:'P',  name:'фосфор',    period:3 },
+  { Z:16, N:16, symbol:'S',  name:'сера',      period:3 },
+  { Z:17, N:18, symbol:'Cl', name:'хлор',      period:3 },
+  { Z:18, N:22, symbol:'Ar', name:'аргон',     period:3 },
+  { Z:19, N:20, symbol:'K',  name:'калий',     period:4 },
+  { Z:20, N:20, symbol:'Ca', name:'кальций',   period:4 }
+];
+
+// ============================================================
+//  СОСТОЯНИЕ
+// ============================================================
+var state = {
+  total: 0, correct: 0, streak: 0,
+  current: null,
+  locked: false,
+  recentZ: []  // anti-repeat buffer
+};
+
+function pickElement() {
+  var pool = ELEMENTS.filter(function(e){ return state.recentZ.indexOf(e.Z) < 0; });
+  if (pool.length === 0) pool = ELEMENTS;
+  var pick = pool[Math.floor(Math.random() * pool.length)];
+  state.recentZ.push(pick.Z);
+  if (state.recentZ.length > 5) state.recentZ.shift();
+  return pick;
+}
+
+// ============================================================
+//  ОТРИСОВКА ЯДРА (SVG)
+//  Алгоритм: размещаем Z+N точек внутри круга радиуса R,
+//  используя простой push-apart с фиксированными итерациями
+// ============================================================
+function generateNucleusPositions(total) {
+  // Радиус ядра масштабируется под количество частиц.
+  // Целевая плотность ~70% (rho), упаковка плотнее, без пустот.
+  // π·R² · rho = total · π·r_dot²  →  R = r_dot · sqrt(total/rho)
+  var r_dot = 18;
+  var R_outer = Math.max(40, Math.min(115, r_dot * Math.sqrt(total / 0.70) + 4));
+  var center = { x: 160, y: 160 };
+  var positions = [];
+
+  // Генерируем случайные позиции внутри круга
+  for (var i = 0; i < total; i++) {
+    var angle = Math.random() * 2 * Math.PI;
+    var dist = Math.sqrt(Math.random()) * (R_outer - r_dot);
+    positions.push({
+      x: center.x + dist * Math.cos(angle),
+      y: center.y + dist * Math.sin(angle)
+    });
+  }
+
+  // Push-apart: 80 итераций релаксации (чуть больше, чтобы плотные ядра успокоились)
+  var minDist = r_dot * 1.85;
+  for (var iter = 0; iter < 80; iter++) {
+    for (var i = 0; i < total; i++) {
+      for (var j = i + 1; j < total; j++) {
+        var dx = positions[j].x - positions[i].x;
+        var dy = positions[j].y - positions[i].y;
+        var d = Math.sqrt(dx*dx + dy*dy);
+        if (d < minDist && d > 0.01) {
+          var push = (minDist - d) / 2;
+          var ux = dx / d, uy = dy / d;
+          positions[i].x -= ux * push;
+          positions[i].y -= uy * push;
+          positions[j].x += ux * push;
+          positions[j].y += uy * push;
+        }
+      }
+    }
+    // Возвращаем в пределы круга
+    for (var i = 0; i < total; i++) {
+      var dx = positions[i].x - center.x;
+      var dy = positions[i].y - center.y;
+      var d = Math.sqrt(dx*dx + dy*dy);
+      var maxR = R_outer - r_dot;
+      if (d > maxR && d > 0.01) {
+        positions[i].x = center.x + dx / d * maxR;
+        positions[i].y = center.y + dy / d * maxR;
+      }
+    }
+  }
+
+  return { positions: positions, R: R_outer };
+}
+
+function renderNucleus(element) {
+  var svg = document.getElementById('nucleus-svg');
+  svg.innerHTML = '';
+
+  var total = element.Z + element.N;
+  var result = generateNucleusPositions(total);
+  var positions = result.positions;
+  var R = result.R;
+
+  // Перемешиваем массив "ролей": Z протонов + N нейтронов
+  var roles = [];
+  for (var i = 0; i < element.Z; i++) roles.push('p');
+  for (var i = 0; i < element.N; i++) roles.push('n');
+  for (var i = roles.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = roles[i]; roles[i] = roles[j]; roles[j] = t;
+  }
+
+  // Контурный круг ядра (пунктир, как на демо ФИПИ) — масштабируется под реальный размер
+  var bg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  bg.setAttribute('cx', '160');
+  bg.setAttribute('cy', '160');
+  bg.setAttribute('r', String(R + 8));
+  bg.setAttribute('fill', 'none');
+  bg.setAttribute('stroke', '#1B1814');
+  bg.setAttribute('stroke-width', '1.5');
+  bg.setAttribute('stroke-dasharray', '4 3');
+  bg.setAttribute('opacity', '0.5');
+  svg.appendChild(bg);
+
+  // Частицы
+  for (var i = 0; i < total; i++) {
+    var pos = positions[i];
+    var role = roles[i];
+
+    var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', pos.x);
+    circle.setAttribute('cy', pos.y);
+    circle.setAttribute('r', '17');
+    if (role === 'p') {
+      circle.setAttribute('fill', '#FCD34D');
+      circle.setAttribute('stroke', '#D97706');
+      circle.setAttribute('stroke-width', '1.5');
+    } else {
+      circle.setAttribute('fill', '#D1D5DB');
+      circle.setAttribute('stroke', '#6B7280');
+      circle.setAttribute('stroke-width', '1.5');
+    }
+    svg.appendChild(circle);
+
+    if (role === 'p') {
+      var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', pos.x);
+      text.setAttribute('y', pos.y);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('dominant-baseline', 'central');
+      text.setAttribute('fill', '#92400E');
+      text.setAttribute('font-family', 'JetBrains Mono, monospace');
+      text.setAttribute('font-size', '18');
+      text.setAttribute('font-weight', '700');
+      text.textContent = '+';
+      svg.appendChild(text);
+    }
+  }
+}
+
+// ============================================================
+//  ВОПРОСЫ
+// ============================================================
+function nextQuestion() {
+  state.current = pickElement();
+  state.locked = false;
+  renderNucleus(state.current);
+
+  var inX = document.getElementById('input-x');
+  var inY = document.getElementById('input-y');
+  inX.value = '';
+  inY.value = '';
+  inX.disabled = false;
+  inY.disabled = false;
+  inX.classList.remove('correct-input', 'wrong-input');
+  inY.classList.remove('correct-input', 'wrong-input');
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('check-btn').style.display = '';
+  document.getElementById('skip-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('result').className = 'result';
+  document.getElementById('solution').className = 'solution';
+
+  setTimeout(function(){ inX.focus(); }, 50);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function checkAnswer() {
+  if (state.locked) return;
+  var x = parseInt(document.getElementById('input-x').value, 10);
+  var y = parseInt(document.getElementById('input-y').value, 10);
+  var e = state.current;
+  if (isNaN(x) || isNaN(y)) return;
+
+  state.locked = true;
+  var inX = document.getElementById('input-x');
+  var inY = document.getElementById('input-y');
+  inX.disabled = true;
+  inY.disabled = true;
+
+  var xOk = (x === e.period);
+  var yOk = (y === e.Z);
+  var fullOk = xOk && yOk;
+
+  inX.classList.add(xOk ? 'correct-input' : 'wrong-input');
+  inY.classList.add(yOk ? 'correct-input' : 'wrong-input');
+
+  state.total++;
+  if (fullOk) { state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  updateStats();
+
+  // Result banner
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + (fullOk ? 'win' : 'lose');
+  if (fullOk) {
+    r.innerHTML = '<div class="result-line1">✓ Верно!</div>' +
+      '<div class="result-line2">Это <b>'+e.symbol+'</b> ('+e.name+'). В бланк ответа записывается без разделителей: <b>'+e.period+''+e.Z+'</b> &nbsp;<span style="opacity:0.7;font-size:12px">(X='+e.period+', Y='+e.Z+')</span></div>';
+  } else {
+    var msg = '';
+    if (!xOk && !yOk) msg = 'Оба значения неверно.';
+    else if (!yOk) msg = 'Период определён правильно, но число протонов посчитано неверно.';
+    else msg = 'Заряд ядра правильный, но период определён неверно.';
+    r.innerHTML = '<div class="result-line1">✗ '+msg+'</div>' +
+      '<div class="result-line2">Правильный ответ: <b>X='+e.period+'</b>, <b>Y='+e.Z+'</b>. Это <b>'+e.symbol+'</b> ('+e.name+'). В бланк — <b>'+e.period+''+e.Z+'</b> без разделителей.</div>';
+  }
+
+  // Solution
+  var s = document.getElementById('solution');
+  s.className = 'solution shown';
+  s.innerHTML = '<h4>Разбор</h4><ol>' +
+    '<li>На рисунке <b>'+e.Z+' протон'+protonWord(e.Z)+'</b> (жёлтых кружков с «+») и <b>'+e.N+' нейтрон'+neutronWord(e.N)+'</b> (серых кружков).</li>' +
+    '<li>Заряд ядра <span class="formula">Y = число протонов = '+e.Z+'</span>.</li>' +
+    '<li>В Периодической системе элемент №'+e.Z+' — это <b>'+e.symbol+'</b> ('+e.name+').</li>' +
+    '<li><b>'+e.symbol+'</b> расположен в <b>'+e.period+'-м периоде</b>, значит <span class="formula">X = '+e.period+'</span>.</li>' +
+    '</ol>';
+
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+
+function protonWord(n) {
+  var rem10 = n % 10, rem100 = n % 100;
+  if (rem100 >= 11 && rem100 <= 14) return 'ов';
+  if (rem10 === 1) return '';
+  if (rem10 >= 2 && rem10 <= 4) return 'а';
+  return 'ов';
+}
+function neutronWord(n) {
+  var rem10 = n % 10, rem100 = n % 100;
+  if (rem100 >= 11 && rem100 <= 14) return 'ов';
+  if (rem10 === 1) return '';
+  if (rem10 >= 2 && rem10 <= 4) return 'а';
+  return 'ов';
+}
+
+function skipQuestion() {
+  state.streak = 0;
+  updateStats();
+  nextQuestion();
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var streakEl = document.getElementById('stat-streak');
+  streakEl.textContent = state.streak;
+  streakEl.classList.toggle('hot', state.streak >= 3);
+  var pctEl = document.getElementById('stat-pct');
+  pctEl.textContent = state.total === 0 ? '—' : Math.round(100 * state.correct / state.total) + '%';
+}
+
+// ============================================================
+//  EVENT WIRING
+// ============================================================
+function checkInputsValid() {
+  var x = document.getElementById('input-x').value;
+  var y = document.getElementById('input-y').value;
+  document.getElementById('check-btn').disabled = !(x.length > 0 && y.length > 0 && /^\d+$/.test(x) && /^\d+$/.test(y));
+}
+
+document.getElementById('input-x').addEventListener('input', function(e) {
+  e.target.value = e.target.value.replace(/[^\d]/g, '').slice(0, 1);
+  checkInputsValid();
+  if (e.target.value.length === 1) document.getElementById('input-y').focus();
+});
+document.getElementById('input-y').addEventListener('input', function(e) {
+  e.target.value = e.target.value.replace(/[^\d]/g, '').slice(0, 2);
+  checkInputsValid();
+});
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('next-btn').addEventListener('click', nextQuestion);
+document.getElementById('skip-btn').addEventListener('click', skipQuestion);
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    if (state.locked) nextQuestion();
+    else if (!document.getElementById('check-btn').disabled) checkAnswer();
+  }
+});
+
+// start
+nextQuestion();
+</script>
+</body>
+</html>

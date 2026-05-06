@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №10 · Взаимосвязь классов веществ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #F2EDE2; --bg-card: #FAF6EC; --ink: #1B1814; --ink-soft: #4A453D; --ink-faint: #7A736A;
+  --rule: #C8BFAE; --rule-soft: #DCD3BF; --accent: #2D4A2B; --accent-soft: rgba(45, 74, 43, 0.08);
+  --good: #16A34A; --good-bg: #DCFCE7; --bad: #B91C1C; --bad-bg: #FEE2E2; --warn: #D97706;
+  --serif: "Fraunces", "Times New Roman", Georgia, serif;
+  --body: "Spectral", "Georgia", serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { background-image: radial-gradient(circle at 25% 10%, rgba(45, 74, 43, 0.04), transparent 40%); }
+.wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+.head { border-top: 3px solid var(--ink); padding-top: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+.head-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); flex-wrap: wrap; gap: 10px; }
+.head-meta .accent { color: var(--accent); }
+h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; letter-spacing: -0.015em; margin-top: 16px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
+.subtitle { font-size: 16px; color: var(--ink-soft); margin-top: 12px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 32px; }
+@media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--bg-card); padding: 14px 16px; }
+.stat .num { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1; color: var(--accent); }
+.stat .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 6px; }
+.stat.streak .num.hot { color: var(--warn); }
+.question-card { background: var(--bg-card); border: 1px solid var(--rule); border-left: 4px solid var(--accent); padding: 24px 28px; margin-bottom: 24px; }
+.question-text { font-family: var(--serif); font-size: 18px; font-weight: 400; line-height: 1.45; }
+
+.chain { display: flex; gap: 14px; align-items: center; justify-content: center; flex-wrap: wrap; padding: 22px 0; margin: 14px 0; border-top: 1px dashed var(--rule); border-bottom: 1px dashed var(--rule); }
+.chain-node { background: var(--bg); border: 2px solid var(--accent); padding: 12px 18px; min-width: 100px; text-align: center; font-family: "Cambria Math", serif; font-size: 22px; border-radius: 2px; }
+.chain-node.unknown { background: var(--accent); color: white; font-weight: 700; }
+.chain-node sub, .chain-node sup { font-size: 0.7em; }
+.chain-arrow { font-family: var(--serif); font-size: 28px; color: var(--ink-faint); }
+
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+@media (max-width: 600px) { .choices { grid-template-columns: 1fr; } }
+.choice { background: var(--bg-card); border: 1px solid var(--rule); padding: 16px 18px 16px 50px; cursor: pointer; transition: all 0.15s ease; position: relative; user-select: none; font-family: "Cambria Math", serif; font-size: 19px; }
+.choice:hover:not(.locked) { border-color: var(--ink); }
+.choice .num { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--ink-faint); border: 1px solid var(--rule); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+.choice .desc { display: none; font-family: var(--body); font-size: 13px; color: var(--ink-soft); margin-top: 6px; line-height: 1.4; }
+.choice.locked .desc { display: block; }
+.choice.selected { border-color: var(--accent); background: var(--accent-soft); }
+.choice.selected .num { background: var(--accent); color: white; border-color: var(--accent); }
+.choice.locked { cursor: default; }
+.choice.correct-pick { border-color: var(--good); background: var(--good-bg); }
+.choice.correct-pick .num { background: var(--good); color: white; border-color: var(--good); }
+.choice.correct-pick .num::after { content: '✓'; font-size: 14px; }
+.choice.correct-pick .num span { display: none; }
+.choice.wrong-pick { border-color: var(--bad); background: var(--bad-bg); }
+.choice.wrong-pick .num { background: var(--bad); color: white; border-color: var(--bad); }
+.choice.wrong-pick .num::after { content: '✗'; font-size: 14px; }
+.choice.wrong-pick .num span { display: none; }
+.choice.missed { border-color: var(--good); border-style: dashed; }
+.choice.missed .num { color: var(--good); border-color: var(--good); }
+.choice sub, .choice sup { font-size: 0.7em; }
+
+.actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.btn { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 14px 28px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); cursor: pointer; border-radius: 1px; transition: all 0.15s ease; }
+.btn:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.btn:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-faint); cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.btn.next { background: var(--accent); border-color: var(--accent); }
+.result { display: none; margin-top: 24px; padding: 20px 24px; border-left: 4px solid; font-family: var(--serif); font-size: 18px; font-weight: 500; }
+.result.shown { display: block; }
+.result.win { background: var(--good-bg); border-color: var(--good); color: #14532D; }
+.result.lose { background: var(--bad-bg); border-color: var(--bad); color: #7F1D1D; }
+.result-line1 { font-size: 19px; }
+.result-line2 { font-family: var(--body); font-size: 14.5px; font-weight: 400; margin-top: 10px; line-height: 1.55; opacity: 0.92; }
+.result-line2 b { font-family: var(--mono); font-weight: 700; }
+.result .full-chain { font-family: "Cambria Math", serif; font-size: 16px; padding: 8px 0; margin-top: 8px; color: var(--ink); border-left: 2px solid currentColor; padding-left: 12px; }
+.result .full-chain sub, .result .full-chain sup { font-size: 0.7em; }
+
+.cheat { margin-top: 56px; padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; }
+.cheat h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin-bottom: 16px; }
+.cheat p { font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 8px; }
+.cheat p b { color: var(--ink); }
+.cheat ul { list-style: none; padding-left: 0; }
+.cheat li { font-size: 13.5px; padding: 4px 0 4px 16px; position: relative; line-height: 1.5; color: var(--ink-soft); }
+.cheat li::before { content: '·'; position: absolute; left: 4px; font-weight: 700; color: var(--ink); }
+.cheat li b { font-family: "Cambria Math", serif; }
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--ink-faint); text-align: center; }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+
+<header class="head">
+  <div class="head-meta">
+    <span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №10</span>
+    <span>1 балл · краткий ответ</span>
+  </div>
+  <h1>Цепочки <em>превращений</em></h1>
+  <p class="subtitle">Тренажёр на взаимосвязь классов неорганических веществ. Дана цепочка превращений с пропуском — определи неизвестное вещество.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего вопросов</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">правильно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности</div></div>
+</div>
+
+<div class="question-card">
+  <p class="question-text">Дана схема превращений. Определи, какое вещество <b>X</b> участвует в цепочке.</p>
+  <div class="chain" id="chain"></div>
+  <p class="question-text" style="font-size:16px;color:var(--ink-soft);margin-top:8px">Выбери из перечня:</p>
+  <div class="choices" id="choices"></div>
+</div>
+
+<div class="actions">
+  <button class="btn" id="check-btn" disabled>Проверить</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующий вопрос</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<section class="cheat">
+  <h3>Логика цепочек превращений</h3>
+  <p><b>Типичная цепочка металла:</b> металл → оксид → гидроксид (или соль) → другая соль → новый гидроксид</p>
+  <ul>
+    <li><b>Cu → CuO → CuSO<sub>4</sub> → Cu(OH)<sub>2</sub></b>: 1) горение Cu в O<sub>2</sub>; 2) CuO + H<sub>2</sub>SO<sub>4</sub>; 3) CuSO<sub>4</sub> + 2NaOH</li>
+    <li><b>Na → Na<sub>2</sub>O → NaOH → Na<sub>2</sub>CO<sub>3</sub></b>: 1) Na + O<sub>2</sub>; 2) Na<sub>2</sub>O + H<sub>2</sub>O; 3) 2NaOH + CO<sub>2</sub></li>
+  </ul>
+  <p style="margin-top:10px"><b>Типичная цепочка неметалла:</b> неметалл → оксид → кислота → соль</p>
+  <ul>
+    <li><b>S → SO<sub>2</sub> → SO<sub>3</sub> → H<sub>2</sub>SO<sub>4</sub> → Na<sub>2</sub>SO<sub>4</sub></b></li>
+    <li><b>C → CO<sub>2</sub> → H<sub>2</sub>CO<sub>3</sub> → Na<sub>2</sub>CO<sub>3</sub></b></li>
+  </ul>
+  <p style="margin-top:10px"><b>Подсказка:</b> ищи логику — какой класс получается из предыдущего? (металл → оксид; оксид + H<sub>2</sub>O → гидроксид; гидроксид + кислота → соль; соль + щёлочь → другая соль или нерастворимое основание).</p>
+</section>
+
+<footer>
+  Источник: демоверсия ОГЭ-2026 ФИПИ ·
+  <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a>
+</footer>
+
+</div>
+
+<script>
+// Каждый вопрос — цепочка из 3-4 шагов с одним пропуском (X)
+// chain: массив звеньев, где xIdx — индекс пропуска
+// pool — 5 формул, одна из них правильная
+var QUESTIONS = [
+  {
+    id:'cu-chain',
+    chain: ['Cu', 'CuO', 'X', 'Cu(OH)<sub>2</sub>'],
+    xIdx: 2,
+    pool: [
+      { id:'a1', formula:'CuSO<sub>4</sub>', correct:true,  note:'CuO + H₂SO₄ → CuSO₄ + H₂O. Затем CuSO₄ + 2NaOH → Cu(OH)₂↓ + Na₂SO₄. Подходит.' },
+      { id:'a2', formula:'CuCl', correct:false, note:'Cu(I) — необычная СО, такая цепочка нелогична.' },
+      { id:'a3', formula:'NaOH', correct:false, note:'Из CuO нельзя получить NaOH — разные элементы.' },
+      { id:'a4', formula:'Cu', correct:false, note:'Это начало цепочки, не середина.' },
+      { id:'a5', formula:'CO<sub>2</sub>', correct:false, note:'Не содержит меди — не подходит.' }
+    ],
+    fullChain: 'Cu → CuO → CuSO<sub>4</sub> → Cu(OH)<sub>2</sub>'
+  },
+  {
+    id:'s-chain',
+    chain: ['S', 'SO<sub>2</sub>', 'X', 'Na<sub>2</sub>SO<sub>4</sub>'],
+    xIdx: 2,
+    pool: [
+      { id:'b1', formula:'H<sub>2</sub>SO<sub>4</sub>', correct:true, note:'SO₂ → SO₃ → H₂SO₄ → Na₂SO₄. Связь: окисление SO₂ до SO₃, затем SO₃ + H₂O → H₂SO₄, затем H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O.' },
+      { id:'b2', formula:'H<sub>2</sub>S', correct:false, note:'Сероводород — низшая СО серы (-2), здесь нужна высшая, чтобы соответствовать сульфату.' },
+      { id:'b3', formula:'CO<sub>2</sub>', correct:false, note:'Углекислый газ не из этой серии.' },
+      { id:'b4', formula:'NaCl', correct:false, note:'Не содержит серы.' },
+      { id:'b5', formula:'SO<sub>2</sub>', correct:false, note:'Это уже предыдущее звено цепочки.' }
+    ],
+    fullChain: 'S → SO<sub>2</sub> → H<sub>2</sub>SO<sub>4</sub> → Na<sub>2</sub>SO<sub>4</sub>'
+  },
+  {
+    id:'na-chain',
+    chain: ['Na', 'X', 'NaOH', 'Na<sub>2</sub>SO<sub>4</sub>'],
+    xIdx: 1,
+    pool: [
+      { id:'c1', formula:'Na<sub>2</sub>O', correct:true, note:'4Na + O₂ → 2Na₂O. Затем Na₂O + H₂O → 2NaOH. Затем 2NaOH + H₂SO₄ → Na₂SO₄ + 2H₂O.' },
+      { id:'c2', formula:'NaCl', correct:false, note:'Из NaCl получается не NaOH (без электролиза), а другие соли.' },
+      { id:'c3', formula:'NaH', correct:false, note:'Гидрид, не оксид. Цепочка не школьная.' },
+      { id:'c4', formula:'Na<sub>2</sub>CO<sub>3</sub>', correct:false, note:'Из Na не получается напрямую карбонат.' },
+      { id:'c5', formula:'NaNO<sub>3</sub>', correct:false, note:'Не подходит к цепочке через NaOH.' }
+    ],
+    fullChain: 'Na → Na<sub>2</sub>O → NaOH → Na<sub>2</sub>SO<sub>4</sub>'
+  },
+  {
+    id:'fe-chain',
+    chain: ['Fe', 'FeCl<sub>3</sub>', 'X', 'Fe<sub>2</sub>O<sub>3</sub>'],
+    xIdx: 2,
+    pool: [
+      { id:'d1', formula:'Fe(OH)<sub>3</sub>', correct:true, note:'2Fe + 3Cl₂ → 2FeCl₃. Затем FeCl₃ + 3NaOH → Fe(OH)₃↓ + 3NaCl. Прокаливание: 2Fe(OH)₃ → Fe₂O₃ + 3H₂O.' },
+      { id:'d2', formula:'FeO', correct:false, note:'FeO — не образуется из FeCl₃ напрямую (СО железа другая).' },
+      { id:'d3', formula:'Fe(OH)<sub>2</sub>', correct:false, note:'Из FeCl₃ образуется Fe(OH)₃ (Fe³⁺), а не Fe(OH)₂.' },
+      { id:'d4', formula:'FeSO<sub>4</sub>', correct:false, note:'FeSO₄ — соль Fe(II), в цепочке нужна Fe(III).' },
+      { id:'d5', formula:'Fe', correct:false, note:'Это начало цепочки.' }
+    ],
+    fullChain: 'Fe → FeCl<sub>3</sub> → Fe(OH)<sub>3</sub> → Fe<sub>2</sub>O<sub>3</sub>'
+  },
+  {
+    id:'c-chain',
+    chain: ['C', 'CO<sub>2</sub>', 'X', 'Na<sub>2</sub>CO<sub>3</sub>'],
+    xIdx: 2,
+    pool: [
+      { id:'e1', formula:'H<sub>2</sub>CO<sub>3</sub>', correct:true, note:'C + O₂ → CO₂. CO₂ + H₂O ⇌ H₂CO₃. H₂CO₃ + 2NaOH → Na₂CO₃ + 2H₂O.' },
+      { id:'e2', formula:'CO', correct:false, note:'Угарный газ — несолеобразующий, не даёт карбонатов.' },
+      { id:'e3', formula:'CaCO<sub>3</sub>', correct:false, note:'Содержит кальций, нелогично между CO₂ и Na₂CO₃.' },
+      { id:'e4', formula:'NaOH', correct:false, note:'Не содержит углерода.' },
+      { id:'e5', formula:'CH<sub>4</sub>', correct:false, note:'Метан — органика, не входит в цепочку неорганических классов.' }
+    ],
+    fullChain: 'C → CO<sub>2</sub> → H<sub>2</sub>CO<sub>3</sub> → Na<sub>2</sub>CO<sub>3</sub>'
+  },
+  {
+    id:'al-chain',
+    chain: ['Al', 'X', 'AlCl<sub>3</sub>', 'Al(OH)<sub>3</sub>'],
+    xIdx: 1,
+    pool: [
+      { id:'f1', formula:'Al<sub>2</sub>O<sub>3</sub>', correct:true, note:'4Al + 3O₂ → 2Al₂O₃. Al₂O₃ + 6HCl → 2AlCl₃ + 3H₂O. AlCl₃ + 3NaOH → Al(OH)₃↓ + 3NaCl.' },
+      { id:'f2', formula:'Al(OH)<sub>3</sub>', correct:false, note:'Это конец цепочки, не середина.' },
+      { id:'f3', formula:'AlH<sub>3</sub>', correct:false, note:'Не школьное соединение.' },
+      { id:'f4', formula:'Na[Al(OH)<sub>4</sub>]', correct:false, note:'Это комплексная соль, не оксид.' },
+      { id:'f5', formula:'Al', correct:false, note:'Это начало цепочки.' }
+    ],
+    fullChain: 'Al → Al<sub>2</sub>O<sub>3</sub> → AlCl<sub>3</sub> → Al(OH)<sub>3</sub>'
+  },
+  {
+    id:'ca-chain',
+    chain: ['CaCO<sub>3</sub>', 'CaO', 'X', 'CaCl<sub>2</sub>'],
+    xIdx: 2,
+    pool: [
+      { id:'g1', formula:'Ca(OH)<sub>2</sub>', correct:true, note:'CaCO₃ → CaO + CO₂↑ (прокаливание). CaO + H₂O → Ca(OH)₂. Ca(OH)₂ + 2HCl → CaCl₂ + 2H₂O.' },
+      { id:'g2', formula:'Ca', correct:false, note:'Чистый кальций нельзя получить из CaO простыми реакциями (только электролизом).' },
+      { id:'g3', formula:'CaCO<sub>3</sub>', correct:false, note:'Это начало цепочки.' },
+      { id:'g4', formula:'Ca(NO<sub>3</sub>)<sub>2</sub>', correct:false, note:'Эта соль из цепочки не следует.' },
+      { id:'g5', formula:'CaSO<sub>4</sub>', correct:false, note:'Из CaSO₄ хлорид не получается ионным обменом.' }
+    ],
+    fullChain: 'CaCO<sub>3</sub> → CaO → Ca(OH)<sub>2</sub> → CaCl<sub>2</sub>'
+  },
+  {
+    id:'p-chain',
+    chain: ['P', 'P<sub>2</sub>O<sub>5</sub>', 'X', 'Na<sub>3</sub>PO<sub>4</sub>'],
+    xIdx: 2,
+    pool: [
+      { id:'h1', formula:'H<sub>3</sub>PO<sub>4</sub>', correct:true, note:'4P + 5O₂ → 2P₂O₅. P₂O₅ + 3H₂O → 2H₃PO₄. H₃PO₄ + 3NaOH → Na₃PO₄ + 3H₂O.' },
+      { id:'h2', formula:'PH<sub>3</sub>', correct:false, note:'Фосфин — низшая СО фосфора (-3), не даёт фосфаты.' },
+      { id:'h3', formula:'P<sub>2</sub>O<sub>3</sub>', correct:false, note:'Оксид P(III), не подходит к натриевому ортофосфату.' },
+      { id:'h4', formula:'NaCl', correct:false, note:'Не содержит фосфора.' },
+      { id:'h5', formula:'Na<sub>2</sub>HPO<sub>4</sub>', correct:false, note:'Кислая соль — но в цепочке нужна именно кислота.' }
+    ],
+    fullChain: 'P → P<sub>2</sub>O<sub>5</sub> → H<sub>3</sub>PO<sub>4</sub> → Na<sub>3</sub>PO<sub>4</sub>'
+  },
+  {
+    id:'zn-chain',
+    chain: ['Zn', 'ZnO', 'X', 'Zn(OH)<sub>2</sub>'],
+    xIdx: 2,
+    pool: [
+      { id:'i1', formula:'ZnSO<sub>4</sub>', correct:true, note:'2Zn + O₂ → 2ZnO. ZnO + H₂SO₄ → ZnSO₄ + H₂O. ZnSO₄ + 2NaOH → Zn(OH)₂↓ + Na₂SO₄.' },
+      { id:'i2', formula:'ZnS', correct:false, note:'Сульфид — но из ZnO напрямую не получается.' },
+      { id:'i3', formula:'NaOH', correct:false, note:'Не содержит цинка.' },
+      { id:'i4', formula:'Zn', correct:false, note:'Это начало цепочки.' },
+      { id:'i5', formula:'Na<sub>2</sub>[Zn(OH)<sub>4</sub>]', correct:false, note:'Комплексная соль — не подходит.' }
+    ],
+    fullChain: 'Zn → ZnO → ZnSO<sub>4</sub> → Zn(OH)<sub>2</sub>'
+  },
+  {
+    id:'cu2-chain',
+    chain: ['CuO', 'X', 'Cu(OH)<sub>2</sub>', 'CuO'],
+    xIdx: 1,
+    pool: [
+      { id:'j1', formula:'CuCl<sub>2</sub>', correct:true, note:'CuO + 2HCl → CuCl₂ + H₂O. CuCl₂ + 2NaOH → Cu(OH)₂↓ + 2NaCl. Прокаливание: Cu(OH)₂ → CuO + H₂O.' },
+      { id:'j2', formula:'Cu', correct:false, note:'Из чистой меди не образуется Cu(OH)₂ напрямую.' },
+      { id:'j3', formula:'CuS', correct:false, note:'CuS со щёлочью не реагирует — Cu(OH)₂ не получится.' },
+      { id:'j4', formula:'CuO', correct:false, note:'Это уже исходное вещество.' },
+      { id:'j5', formula:'Cu(NO<sub>3</sub>)<sub>2</sub>', correct:true, note:'Альтернативный вариант: CuO + 2HNO₃ → Cu(NO₃)₂ + H₂O. Затем Cu(NO₃)₂ + 2NaOH → Cu(OH)₂↓ + 2NaNO₃. Тоже работает.' }
+    ],
+    fullChain: 'CuO → CuCl<sub>2</sub> (или Cu(NO<sub>3</sub>)<sub>2</sub>) → Cu(OH)<sub>2</sub> → CuO'
+  }
+];
+
+var state = { total: 0, correct: 0, streak: 0, current: null, locked: false, recentIds: [] };
+
+function pickQuestion() {
+  var pool = QUESTIONS.filter(function(q){ return state.recentIds.indexOf(q.id) < 0; });
+  if (pool.length === 0) pool = QUESTIONS;
+  var q = pool[Math.floor(Math.random() * pool.length)];
+  state.recentIds.push(q.id);
+  if (state.recentIds.length > 5) state.recentIds.shift();
+  return q;
+}
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function el(tag, props, children) {
+  var e = document.createElement(tag);
+  if (props) for (var k in props) {
+    if (k === 'class') e.className = props[k];
+    else if (k === 'html') e.innerHTML = props[k];
+    else if (k.indexOf('on') === 0) e.addEventListener(k.substring(2).toLowerCase(), props[k]);
+    else e.setAttribute(k, props[k]);
+  }
+  if (children != null) {
+    if (!Array.isArray(children)) children = [children];
+    for (var i = 0; i < children.length; i++) {
+      var c = children[i];
+      if (c == null) continue;
+      e.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(c) : c);
+    }
+  }
+  return e;
+}
+
+function renderChain() {
+  var q = state.current.question;
+  var c = document.getElementById('chain');
+  c.innerHTML = '';
+  q.chain.forEach(function(node, i) {
+    if (i > 0) c.appendChild(el('div', { class:'chain-arrow' }, '⟶'));
+    var n = el('div', { class:'chain-node' + (i === q.xIdx ? ' unknown' : '') });
+    n.innerHTML = i === q.xIdx ? 'X' : node;
+    c.appendChild(n);
+  });
+}
+
+function renderChoices() {
+  var c = document.getElementById('choices');
+  c.innerHTML = '';
+  state.current.displayed.forEach(function(item, i) {
+    var card = el('div', { class:'choice', 'data-id': item.id });
+    card.addEventListener('click', function(){ onChoiceClick(item.id); });
+    var num = el('div', { class:'num' });
+    num.appendChild(el('span', null, String(i+1)));
+    card.appendChild(num);
+    var name = el('div');
+    name.innerHTML = item.formula;
+    card.appendChild(name);
+    var desc = el('div', { class:'desc' });
+    desc.innerHTML = item.note;
+    card.appendChild(desc);
+    c.appendChild(card);
+  });
+}
+
+function onChoiceClick(id) {
+  if (state.locked) return;
+  state.current.selectedId = (state.current.selectedId === id) ? null : id;
+  document.querySelectorAll('.choice').forEach(function(card) {
+    card.classList.toggle('selected', card.getAttribute('data-id') === state.current.selectedId);
+  });
+  document.getElementById('check-btn').disabled = !state.current.selectedId;
+}
+
+function checkAnswer() {
+  if (state.locked) return;
+  var q = state.current.question;
+  var sel = state.current.selectedId;
+  var item = q.pool.find(function(p){ return p.id === sel; });
+  var isCorrect = item && item.correct;
+
+  state.total++;
+  if (isCorrect) { state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  updateStats();
+  state.locked = true;
+
+  document.querySelectorAll('.choice').forEach(function(card) {
+    var id = card.getAttribute('data-id');
+    var it = q.pool.find(function(p){ return p.id === id; });
+    card.classList.add('locked');
+    card.classList.remove('selected');
+    var isSel = id === sel;
+    if (isSel && it.correct) card.classList.add('correct-pick');
+    else if (isSel && !it.correct) card.classList.add('wrong-pick');
+    else if (!isSel && it.correct) card.classList.add('missed');
+  });
+
+  var displayedOrder = state.current.displayed.map(function(d){ return d.id; });
+  var correctIdx = q.pool.findIndex(function(p){ return p.correct; });
+  var correctNum = displayedOrder.indexOf(q.pool[correctIdx].id) + 1;
+
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + (isCorrect ? 'win' : 'lose');
+  if (isCorrect) {
+    r.innerHTML = '<div class="result-line1">✓ Верно!</div><div class="result-line2">В формате ОГЭ ответ: <b>'+correctNum+'</b>. Полная цепочка:</div><div class="full-chain">'+q.fullChain+'</div>';
+  } else {
+    r.innerHTML = '<div class="result-line1">✗ Неверно.</div><div class="result-line2">Правильный ответ: <b>'+correctNum+'</b>. Полная цепочка:</div><div class="full-chain">'+q.fullChain+'</div>';
+  }
+
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+
+function nextQuestion() {
+  var q = pickQuestion();
+  state.current = { question: q, displayed: shuffle(q.pool.slice()), selectedId: null };
+  state.locked = false;
+  renderChain();
+  renderChoices();
+  document.getElementById('result').className = 'result';
+  document.getElementById('check-btn').style.display = '';
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('skip-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function skipQuestion() { state.streak = 0; updateStats(); nextQuestion(); }
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var streakEl = document.getElementById('stat-streak');
+  streakEl.textContent = state.streak;
+  streakEl.classList.toggle('hot', state.streak >= 3);
+  var pctEl = document.getElementById('stat-pct');
+  pctEl.textContent = state.total === 0 ? '—' : Math.round(100 * state.correct / state.total) + '%';
+}
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('next-btn').addEventListener('click', nextQuestion);
+document.getElementById('skip-btn').addEventListener('click', skipQuestion);
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key >= '1' && e.key <= '5' && !state.locked) {
+    var idx = parseInt(e.key, 10) - 1;
+    if (idx < state.current.displayed.length) onChoiceClick(state.current.displayed[idx].id);
+  } else if (e.key === 'Enter') {
+    if (state.locked) nextQuestion();
+    else if (!document.getElementById('check-btn').disabled) checkAnswer();
+  }
+});
+nextQuestion();
+</script>
+</body>
+</html>

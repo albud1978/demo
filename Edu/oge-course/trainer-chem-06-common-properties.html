@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №6 · Характеристика двух элементов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #F2EDE2; --bg-card: #FAF6EC; --ink: #1B1814; --ink-soft: #4A453D; --ink-faint: #7A736A;
+  --rule: #C8BFAE; --rule-soft: #DCD3BF; --accent: #2D4A2B; --accent-soft: rgba(45, 74, 43, 0.08);
+  --good: #16A34A; --good-bg: #DCFCE7; --bad: #B91C1C; --bad-bg: #FEE2E2; --warn: #D97706;
+  --serif: "Fraunces", "Times New Roman", Georgia, serif;
+  --body: "Spectral", "Georgia", serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { background-image: radial-gradient(circle at 25% 10%, rgba(45, 74, 43, 0.04), transparent 40%); }
+.wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.head { border-top: 3px solid var(--ink); padding-top: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+.head-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); flex-wrap: wrap; gap: 10px; }
+.head-meta .accent { color: var(--accent); }
+h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; letter-spacing: -0.015em; margin-top: 16px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
+.subtitle { font-size: 16px; color: var(--ink-soft); margin-top: 12px; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 32px; }
+@media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--bg-card); padding: 14px 16px; }
+.stat .num { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1; color: var(--accent); }
+.stat .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 6px; }
+.stat.streak .num.hot { color: var(--warn); }
+
+.question-card { background: var(--bg-card); border: 1px solid var(--rule); border-left: 4px solid var(--accent); padding: 24px 28px; margin-bottom: 24px; }
+.question-text { font-family: var(--serif); font-size: 19px; font-weight: 400; line-height: 1.45; }
+
+.elements-pair { display: flex; gap: 16px; justify-content: center; margin: 22px 0; }
+.elem-tile { background: var(--bg); border: 2px solid var(--accent); border-radius: 2px; padding: 14px 24px; text-align: center; min-width: 110px; }
+.elem-tile .symbol { display: block; font-family: "Fraunces", serif; font-weight: 500; font-size: 36px; color: var(--accent); line-height: 1; }
+.elem-tile .name { display: block; font-family: var(--body); font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+.elem-tile .pos { display: block; font-family: var(--mono); font-size: 10px; color: var(--ink-faint); margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--rule); }
+
+.statements { display: grid; gap: 10px; margin-top: 18px; }
+.stmt { background: var(--bg-card); border: 1px solid var(--rule); padding: 16px 18px 16px 52px; cursor: pointer; transition: all 0.15s ease; position: relative; user-select: none; }
+.stmt:hover:not(.locked) { border-color: var(--ink); }
+.stmt .num { position: absolute; left: 14px; top: 16px; font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--ink-faint); border: 1px solid var(--rule); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease; background: var(--bg); }
+.stmt .text { font-size: 16px; line-height: 1.5; }
+.stmt .verdict { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--rule); font-family: var(--mono); font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); }
+.stmt.locked .verdict { display: block; }
+.stmt .verdict .tag { display: inline-block; padding: 2px 8px; border-radius: 1px; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; margin-right: 6px; }
+.stmt .verdict .tag.both { background: #14532D; color: #ECFDF5; }
+.stmt .verdict .tag.left { background: #6B3F1F; color: #FFFBEB; }
+.stmt .verdict .tag.right { background: #1E3A8A; color: #DBEAFE; }
+.stmt .verdict .tag.neither { background: #7F1D1D; color: #FEE2E2; }
+
+.stmt.selected { border-color: var(--accent); background: var(--accent-soft); }
+.stmt.selected .num { background: var(--accent); color: white; border-color: var(--accent); }
+.stmt.locked { cursor: default; }
+.stmt.locked:hover { border-color: var(--rule); }
+.stmt.correct-pick { border-color: var(--good); background: var(--good-bg); }
+.stmt.correct-pick .num { background: var(--good); color: white; border-color: var(--good); }
+.stmt.correct-pick .num::after { content: '✓'; font-size: 14px; }
+.stmt.correct-pick .num span { display: none; }
+.stmt.wrong-pick { border-color: var(--bad); background: var(--bad-bg); }
+.stmt.wrong-pick .num { background: var(--bad); color: white; border-color: var(--bad); }
+.stmt.wrong-pick .num::after { content: '✗'; font-size: 14px; }
+.stmt.wrong-pick .num span { display: none; }
+.stmt.missed { border-color: var(--good); border-style: dashed; }
+.stmt.missed .num { color: var(--good); border-color: var(--good); }
+
+.actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.btn { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 14px 28px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); cursor: pointer; border-radius: 1px; transition: all 0.15s ease; }
+.btn:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.btn:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-faint); cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.btn.next { background: var(--accent); border-color: var(--accent); }
+.btn.next:hover { background: var(--ink); border-color: var(--ink); }
+
+.result { display: none; margin-top: 24px; padding: 20px 24px; border-left: 4px solid; font-family: var(--serif); font-size: 18px; font-weight: 500; }
+.result.shown { display: block; }
+.result.win { background: var(--good-bg); border-color: var(--good); color: #14532D; }
+.result.lose { background: var(--bad-bg); border-color: var(--bad); color: #7F1D1D; }
+.result-line1 { font-size: 19px; }
+.result-line2 { font-family: var(--body); font-size: 14.5px; font-weight: 400; margin-top: 10px; line-height: 1.55; opacity: 0.92; }
+.result-line2 b { font-family: var(--mono); font-weight: 700; }
+
+.cheat { margin-top: 56px; padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; }
+.cheat h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin-bottom: 16px; }
+.cheat p { font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 8px; }
+.cheat p b { color: var(--ink); }
+.cheat ul { list-style: none; padding-left: 0; }
+.cheat li { font-size: 13.5px; padding: 4px 0 4px 16px; position: relative; line-height: 1.5; color: var(--ink-soft); }
+.cheat li::before { content: '·'; position: absolute; left: 4px; font-weight: 700; color: var(--ink); }
+
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--ink-faint); text-align: center; }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+
+<header class="head">
+  <div class="head-meta">
+    <span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №6</span>
+    <span>1 балл · краткий ответ</span>
+  </div>
+  <h1>Общие свойства <em>двух элементов</em></h1>
+  <p class="subtitle">Тренажёр на сравнение характеристик двух элементов. Из пяти утверждений выбери два, верных одновременно для обоих указанных элементов.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего вопросов</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">правильно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности</div></div>
+</div>
+
+<div class="question-card">
+  <p class="question-text" id="question-text"></p>
+  <div class="elements-pair" id="elements-pair"></div>
+  <div class="statements" id="statements"></div>
+</div>
+
+<div class="actions">
+  <button class="btn" id="check-btn" disabled>Проверить</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующий вопрос</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<section class="cheat">
+  <h3>Что нужно проверять</h3>
+  <p>Утверждение верно для обоих элементов, только если оно <b>одновременно</b> верно для каждого из них. Проверяй каждое отдельно.</p>
+  <p><b>Что обычно спрашивают:</b></p>
+  <ul>
+    <li>Число электронных слоёв в атоме (= номер периода)</li>
+    <li>Число электронов на внешнем уровне (= номер группы для главных подгрупп)</li>
+    <li>Сравнение радиусов атомов</li>
+    <li>Тип простого вещества (металл / неметалл / двухатомная молекула)</li>
+    <li>Высшая степень окисления / валентность</li>
+    <li>Формула высшего оксида (Э<sub>2</sub>O — для I группы, ЭO — для II, Э<sub>2</sub>O<sub>3</sub> — для III, ЭO<sub>2</sub> — для IV, и т.д.)</li>
+    <li>Тип образуемых гидроксидов (основный / амфотерный / кислотный)</li>
+  </ul>
+  <p style="margin-top:12px;font-size:13.5px;color:var(--ink-faint)"><b style="color:var(--ink)">Подсказка:</b> ловушка #1 — утверждение верно для одного элемента и неверно для другого. Ловушка #2 — утверждение про простое вещество (например, «двухатомная молекула»), которое верно только для одного из пары.</p>
+</section>
+
+<footer>
+  Источник: демоверсия и спецификация ОГЭ-2026 ФИПИ ·
+  <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a>
+</footer>
+
+</div>
+
+<script>
+// База вопросов: каждое утверждение помечено leftOk/rightOk
+// Правильные ответы = leftOk && rightOk (обычно их 2)
+var QUESTIONS = [
+  {
+    id: 'al-si',
+    left:  { symbol:'Al', name:'алюминий', period:3, group:13 },
+    right: { symbol:'Si', name:'кремний',  period:3, group:14 },
+    statements: [
+      { id:'s1', text:'Все электроны в атоме элемента в основном состоянии расположены на трёх электронных слоях.', leftOk:true, rightOk:true,
+        explain:'Оба элемента в 3-м периоде → 3 электронных слоя.' },
+      { id:'s2', text:'Атомный радиус элемента меньше атомного радиуса натрия.', leftOk:true, rightOk:true,
+        explain:'Al и Si — правее Na в 3-м периоде. По периоду слева направо радиус уменьшается.' },
+      { id:'s3', text:'Простое вещество существует в виде двухатомных молекул.', leftOk:false, rightOk:false,
+        explain:'Al — металл с металлической решёткой; Si — атомное кристаллическое вещество. Двухатомных молекул не образуют.' },
+      { id:'s4', text:'Элемент образует амфотерные гидроксиды.', leftOk:true, rightOk:false,
+        explain:'Только Al образует амфотерный Al(OH)₃. Гидроксид Si — H₂SiO₃ — слабая кислота, а не амфотерное основание.' },
+      { id:'s5', text:'Элемент образует высший оксид состава Э₂O₃.', leftOk:true, rightOk:false,
+        explain:'Высший оксид Al — Al₂O₃. У Si — SiO₂ (формула ЭO₂, не Э₂O₃).' }
+    ]
+  },
+  {
+    id: 'na-mg',
+    left:  { symbol:'Na', name:'натрий', period:3, group:1 },
+    right: { symbol:'Mg', name:'магний', period:3, group:2 },
+    statements: [
+      { id:'s1', text:'Атом элемента содержит 3 электронных слоя.', leftOk:true, rightOk:true,
+        explain:'Оба в 3-м периоде → по 3 электронных слоя.' },
+      { id:'s2', text:'Простое вещество — типичный металл.', leftOk:true, rightOk:true,
+        explain:'И Na, и Mg — типичные металлы.' },
+      { id:'s3', text:'На внешнем электронном слое атома находится 1 электрон.', leftOk:true, rightOk:false,
+        explain:'У Na — 1 электрон (I группа), у Mg — 2 электрона (II группа).' },
+      { id:'s4', text:'Элемент образует высший оксид состава ЭO.', leftOk:false, rightOk:true,
+        explain:'Высший оксид Na — Na₂O (Э₂O), а у Mg — MgO (ЭO).' },
+      { id:'s5', text:'Простое вещество тяжелее воды.', leftOk:false, rightOk:true,
+        explain:'Плотность Na = 0,97 г/см³ — легче воды. Mg ≈ 1,74 г/см³ — тяжелее.' }
+    ]
+  },
+  {
+    id: 'n-p',
+    left:  { symbol:'N', name:'азот', period:2, group:15 },
+    right: { symbol:'P', name:'фосфор', period:3, group:15 },
+    statements: [
+      { id:'s1', text:'Атом элемента содержит 5 электронов на внешнем электронном слое.', leftOk:true, rightOk:true,
+        explain:'Оба — V группа главной подгруппы → 5 валентных электронов.' },
+      { id:'s2', text:'Высшая степень окисления элемента в соединениях равна +5.', leftOk:true, rightOk:true,
+        explain:'У N — в HNO₃ (+5), у P — в H₃PO₄ (+5). Высшая СО = номеру группы.' },
+      { id:'s3', text:'Простое вещество в обычных условиях — газ.', leftOk:true, rightOk:false,
+        explain:'N₂ — газ при н.у., P (белый или красный) — твёрдое вещество.' },
+      { id:'s4', text:'В атоме элемента 3 электронных слоя.', leftOk:false, rightOk:true,
+        explain:'У N — 2 слоя (2-й период), у P — 3 слоя (3-й период).' },
+      { id:'s5', text:'В атоме элемента содержится 7 нейтронов в ядре наиболее распространённого изотопа.', leftOk:true, rightOk:false,
+        explain:'У ¹⁴N (наиболее распространённый изотоп N) — 7 протонов и 7 нейтронов. У ³¹P — 15 протонов и 16 нейтронов. Не совпадает.' }
+    ]
+  },
+  {
+    id: 'cl-br',
+    left:  { symbol:'Cl', name:'хлор', period:3, group:17 },
+    right: { symbol:'Br', name:'бром', period:4, group:17 },
+    statements: [
+      { id:'s1', text:'Элемент находится в VII группе главной подгруппы.', leftOk:true, rightOk:true,
+        explain:'Оба — галогены (VIIA группа).' },
+      { id:'s2', text:'Простое вещество существует в виде двухатомных молекул.', leftOk:true, rightOk:true,
+        explain:'Cl₂ и Br₂ — оба двухатомные.' },
+      { id:'s3', text:'Атом элемента имеет на внешнем уровне 7 электронов и 3 электронных слоя.', leftOk:true, rightOk:false,
+        explain:'У Cl — 3 слоя (3-й период) и 7 электронов; у Br — 4 слоя (4-й период) и 7 электронов. Совпадает по числу электронов на внешнем, но не по числу слоёв.' },
+      { id:'s4', text:'При обычных условиях простое вещество — жидкость.', leftOk:false, rightOk:true,
+        explain:'Cl₂ — газ, Br₂ — единственный жидкий неметалл при н.у.' },
+      { id:'s5', text:'Элемент находится во втором периоде.', leftOk:false, rightOk:false,
+        explain:'Cl — в 3-м периоде, Br — в 4-м.' }
+    ]
+  },
+  {
+    id: 'c-si',
+    left:  { symbol:'C', name:'углерод', period:2, group:14 },
+    right: { symbol:'Si', name:'кремний', period:3, group:14 },
+    statements: [
+      { id:'s1', text:'Атом элемента содержит 4 электрона на внешнем уровне.', leftOk:true, rightOk:true,
+        explain:'Оба — IVA группа → 4 валентных электрона.' },
+      { id:'s2', text:'Высшая степень окисления элемента равна +4.', leftOk:true, rightOk:true,
+        explain:'CO₂ и SiO₂ — оба со СО +4. Высшая = номеру группы.' },
+      { id:'s3', text:'Высший оксид элемента — газ при обычных условиях.', leftOk:true, rightOk:false,
+        explain:'CO₂ — газ, SiO₂ — твёрдое (песок, кварц).' },
+      { id:'s4', text:'Простое вещество может проводить электрический ток (одна из аллотропных модификаций).', leftOk:true, rightOk:false,
+        explain:'Графит (форма C) хорошо проводит ток. У Si проводимость — полупроводниковая, существенно ниже металлической, поэтому в школьном курсе его относят к полупроводникам, а не к проводникам.' },
+      { id:'s5', text:'В атоме элемента 2 электронных слоя.', leftOk:true, rightOk:false,
+        explain:'У C — 2 слоя (2-й период), у Si — 3 слоя (3-й период).' }
+    ]
+  },
+  {
+    id: 'li-na',
+    left:  { symbol:'Li', name:'литий', period:2, group:1 },
+    right: { symbol:'Na', name:'натрий', period:3, group:1 },
+    statements: [
+      { id:'s1', text:'Простое вещество — щелочной металл.', leftOk:true, rightOk:true,
+        explain:'Оба элемента — щелочные металлы (IA группа).' },
+      { id:'s2', text:'Атом элемента имеет 1 электрон на внешнем уровне.', leftOk:true, rightOk:true,
+        explain:'Все щелочные металлы имеют 1 валентный электрон.' },
+      { id:'s3', text:'Гидроксид элемента — нерастворимое в воде основание.', leftOk:false, rightOk:false,
+        explain:'И LiOH, и NaOH — растворимые в воде щёлочи (хотя LiOH хуже, но всё равно щёлочь). Нерастворимыми основаниями являются гидроксиды переходных металлов.' },
+      { id:'s4', text:'Атом элемента имеет 3 электронных слоя.', leftOk:false, rightOk:true,
+        explain:'У Li — 2 слоя, у Na — 3 слоя.' },
+      { id:'s5', text:'При горении на воздухе простое вещество образует оксид Э₂O.', leftOk:true, rightOk:false,
+        explain:'Li — единственный щелочной металл, при горении которого образуется только оксид Li₂O. Na при горении даёт пероксид Na₂O₂ (а не оксид Na₂O).' }
+    ]
+  },
+  {
+    id: 'mg-ca',
+    left:  { symbol:'Mg', name:'магний', period:3, group:2 },
+    right: { symbol:'Ca', name:'кальций', period:4, group:2 },
+    statements: [
+      { id:'s1', text:'Элемент находится во II группе главной подгруппы.', leftOk:true, rightOk:true,
+        explain:'Оба — IIA группа.' },
+      { id:'s2', text:'Атом элемента имеет 2 электрона на внешнем уровне.', leftOk:true, rightOk:true,
+        explain:'IIA группа → 2 валентных электрона.' },
+      { id:'s3', text:'Простое вещество существует в виде двухатомных молекул.', leftOk:false, rightOk:false,
+        explain:'И Mg, и Ca — типичные металлы с металлической кристаллической решёткой, двухатомных молекул не образуют.' },
+      { id:'s4', text:'Высший оксид при н.у. бурно реагирует с водой с образованием щёлочи.', leftOk:false, rightOk:true,
+        explain:'CaO бурно реагирует с водой: CaO + H₂O → Ca(OH)₂. MgO с водой реагирует значительно медленнее, и Mg(OH)₂ — слабая щёлочь, малорастворимая.' },
+      { id:'s5', text:'Атом элемента содержит 3 электронных слоя.', leftOk:true, rightOk:false,
+        explain:'У Mg — 3 слоя (3-й период), у Ca — 4 слоя (4-й период).' }
+    ]
+  },
+  {
+    id: 'o-s',
+    left:  { symbol:'O', name:'кислород', period:2, group:16 },
+    right: { symbol:'S', name:'сера', period:3, group:16 },
+    statements: [
+      { id:'s1', text:'Атом элемента имеет 6 электронов на внешнем уровне.', leftOk:true, rightOk:true,
+        explain:'Оба — VIA группа → 6 валентных электронов.' },
+      { id:'s2', text:'Простое вещество — неметалл.', leftOk:true, rightOk:true,
+        explain:'O₂ и S — оба неметаллы.' },
+      { id:'s3', text:'Элемент образует высший оксид состава ЭO₃.', leftOk:false, rightOk:true,
+        explain:'У S — SO₃ (правильно). O — самый кислород, в положительных СО оксидов не образует.' },
+      { id:'s4', text:'Высшая степень окисления равна +6.', leftOk:false, rightOk:true,
+        explain:'У S — высшая +6 (в SO₃, H₂SO₄). У O — высшая степень окисления не положительная: O в большинстве соединений имеет −2 (см. правила).' },
+      { id:'s5', text:'Простое вещество в обычных условиях — газ.', leftOk:true, rightOk:false,
+        explain:'O₂ — газ, S (ромбическая) — жёлтое твёрдое вещество.' }
+    ]
+  },
+  {
+    id: 'k-ca',
+    left:  { symbol:'K', name:'калий', period:4, group:1 },
+    right: { symbol:'Ca', name:'кальций', period:4, group:2 },
+    statements: [
+      { id:'s1', text:'Атом элемента содержит 4 электронных слоя.', leftOk:true, rightOk:true,
+        explain:'Оба — в 4-м периоде → 4 электронных слоя.' },
+      { id:'s2', text:'Простое вещество — типичный металл.', leftOk:true, rightOk:true,
+        explain:'K — щелочной, Ca — щёлочно-земельный. Оба типичные металлы.' },
+      { id:'s3', text:'Атом элемента имеет 1 электрон на внешнем уровне.', leftOk:true, rightOk:false,
+        explain:'У K — 1 электрон (I группа), у Ca — 2 электрона (II группа).' },
+      { id:'s4', text:'Гидроксид элемента — щёлочь, при н.у. хорошо растворим в воде.', leftOk:true, rightOk:false,
+        explain:'KOH — едкое кали, очень хорошо растворим в воде. Ca(OH)₂ — известковая вода — малорастворим (на 100 г воды ~0,16 г Ca(OH)₂). По формальной классификации Ca(OH)₂ — щёлочь, но не «хорошо растворим».' },
+      { id:'s5', text:'Элемент образует высший оксид состава ЭO.', leftOk:false, rightOk:true,
+        explain:'У K — K₂O (Э₂O), у Ca — CaO (ЭO).' }
+    ]
+  },
+  {
+    id: 'f-cl',
+    left:  { symbol:'F', name:'фтор', period:2, group:17 },
+    right: { symbol:'Cl', name:'хлор', period:3, group:17 },
+    statements: [
+      { id:'s1', text:'Атом элемента имеет 7 электронов на внешнем уровне.', leftOk:true, rightOk:true,
+        explain:'Оба — галогены, VIIA группа.' },
+      { id:'s2', text:'Простое вещество жёлто-зелёного цвета.', leftOk:false, rightOk:true,
+        explain:'F₂ — светло-жёлтый газ. Cl₂ — жёлто-зелёный газ. Цвет совпадает только у хлора.' },
+      { id:'s3', text:'При обычных условиях простое вещество — газ.', leftOk:true, rightOk:true,
+        explain:'F₂ — светло-жёлтый газ, Cl₂ — жёлто-зелёный газ.' },
+      { id:'s4', text:'Высшая степень окисления элемента равна +7.', leftOk:false, rightOk:true,
+        explain:'У F — только −1 (он самый ЭО элемент, никогда не отдаёт электроны). У Cl — высшая +7 (например, в HClO₄).' },
+      { id:'s5', text:'Радиус атома больше, чем у атома кислорода.', leftOk:false, rightOk:true,
+        explain:'F (71 пм) — меньше O (73 пм). Cl (99 пм) — больше O. По периоду радиус уменьшается, поэтому F самый маленький из 2-го периода после Ne.' }
+    ]
+  }
+];
+
+var state = { total: 0, correct: 0, streak: 0, current: null, locked: false, recentIds: [] };
+
+function pickQuestion() {
+  var pool = QUESTIONS.filter(function(q){ return state.recentIds.indexOf(q.id) < 0; });
+  if (pool.length === 0) pool = QUESTIONS;
+  var q = pool[Math.floor(Math.random() * pool.length)];
+  state.recentIds.push(q.id);
+  if (state.recentIds.length > 5) state.recentIds.shift();
+  return q;
+}
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function el(tag, props, children) {
+  var e = document.createElement(tag);
+  if (props) for (var k in props) {
+    if (k === 'class') e.className = props[k];
+    else if (k === 'html') e.innerHTML = props[k];
+    else if (k.indexOf('on') === 0) e.addEventListener(k.substring(2).toLowerCase(), props[k]);
+    else e.setAttribute(k, props[k]);
+  }
+  if (children != null) {
+    if (!Array.isArray(children)) children = [children];
+    for (var i = 0; i < children.length; i++) {
+      var c = children[i];
+      if (c == null) continue;
+      e.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(c) : c);
+    }
+  }
+  return e;
+}
+
+function renderQuestion() {
+  var q = state.current.question;
+  document.getElementById('question-text').innerHTML =
+    'Какие <b>два утверждения</b> верны для характеристики как <b style="color:var(--accent)">' + q.left.name + '</b>, так и <b style="color:var(--accent)">' + q.right.name + '</b>?';
+
+  var pair = document.getElementById('elements-pair');
+  pair.innerHTML = '';
+  [q.left, q.right].forEach(function(e) {
+    var tile = el('div', { class:'elem-tile' });
+    tile.appendChild(el('span', { class:'symbol' }, e.symbol));
+    tile.appendChild(el('span', { class:'name' }, e.name));
+    tile.appendChild(el('span', { class:'pos' }, 'период ' + e.period + ' · группа ' + e.group));
+    pair.appendChild(tile);
+  });
+}
+
+function renderStatements() {
+  var c = document.getElementById('statements');
+  c.innerHTML = '';
+  state.current.displayed.forEach(function(s, i) {
+    var card = el('div', { class:'stmt', 'data-id': s.id });
+    card.addEventListener('click', function(){ onStatementClick(s.id); });
+    var num = el('div', { class:'num' });
+    num.appendChild(el('span', null, String(i+1)));
+    card.appendChild(num);
+    card.appendChild(el('div', { class:'text' }, s.text));
+    var verdict = el('div', { class:'verdict' });
+    var tagClass, tagText;
+    if (s.leftOk && s.rightOk) { tagClass = 'both'; tagText = 'для обоих верно'; }
+    else if (s.leftOk && !s.rightOk) { tagClass = 'left'; tagText = 'верно только для ' + state.current.question.left.symbol; }
+    else if (!s.leftOk && s.rightOk) { tagClass = 'right'; tagText = 'верно только для ' + state.current.question.right.symbol; }
+    else { tagClass = 'neither'; tagText = 'неверно для обоих'; }
+    verdict.innerHTML = '<span class="tag '+tagClass+'">'+tagText+'</span>' + s.explain;
+    card.appendChild(verdict);
+    c.appendChild(card);
+  });
+}
+
+function onStatementClick(id) {
+  if (state.locked) return;
+  var sel = state.current.selectedIds;
+  var pos = sel.indexOf(id);
+  if (pos >= 0) {
+    sel.splice(pos, 1);
+  } else {
+    if (sel.length >= 2) return;
+    sel.push(id);
+  }
+  updateSelection();
+}
+
+function updateSelection() {
+  document.querySelectorAll('.stmt').forEach(function(card) {
+    var id = card.getAttribute('data-id');
+    card.classList.toggle('selected', state.current.selectedIds.indexOf(id) >= 0);
+  });
+  document.getElementById('check-btn').disabled = state.current.selectedIds.length !== 2;
+}
+
+function checkAnswer() {
+  if (state.locked) return;
+  var q = state.current.question;
+  var correctIds = q.statements.filter(function(s){ return s.leftOk && s.rightOk; }).map(function(s){ return s.id; });
+  var sel = state.current.selectedIds.slice().sort();
+  var corr = correctIds.slice().sort();
+  var isCorrect = sel.length === corr.length && sel.every(function(id, i){ return id === corr[i]; });
+
+  state.total++;
+  if (isCorrect) { state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  updateStats();
+  state.locked = true;
+
+  document.querySelectorAll('.stmt').forEach(function(card) {
+    var id = card.getAttribute('data-id');
+    card.classList.add('locked');
+    card.classList.remove('selected');
+    var isSel = sel.indexOf(id) >= 0;
+    var isCorrId = corr.indexOf(id) >= 0;
+    if (isSel && isCorrId) card.classList.add('correct-pick');
+    else if (isSel && !isCorrId) card.classList.add('wrong-pick');
+    else if (!isSel && isCorrId) card.classList.add('missed');
+  });
+
+  var displayedOrder = state.current.displayed.map(function(d){ return d.id; });
+  var correctNumbers = correctIds.map(function(id){ return displayedOrder.indexOf(id) + 1; }).sort(function(a,b){return a-b;}).join('');
+
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + (isCorrect ? 'win' : 'lose');
+  if (isCorrect) {
+    r.innerHTML = '<div class="result-line1">✓ Верно!</div>' +
+      '<div class="result-line2">В формате ОГЭ ответ записывается без разделителей: <b>'+correctNumbers+'</b>.</div>';
+  } else {
+    r.innerHTML = '<div class="result-line1">✗ Неверно.</div>' +
+      '<div class="result-line2">Правильный ответ: <b>'+correctNumbers+'</b>. Зелёным помечены утверждения, верные одновременно для обоих элементов; красным — неверные; пунктиром — пропущенные правильные.</div>';
+  }
+
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+
+function nextQuestion() {
+  var q = pickQuestion();
+  state.current = {
+    question: q,
+    displayed: shuffle(q.statements.slice()),
+    selectedIds: []
+  };
+  state.locked = false;
+  renderQuestion();
+  renderStatements();
+  document.getElementById('result').className = 'result';
+  document.getElementById('check-btn').style.display = '';
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('skip-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function skipQuestion() {
+  state.streak = 0;
+  updateStats();
+  nextQuestion();
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var streakEl = document.getElementById('stat-streak');
+  streakEl.textContent = state.streak;
+  streakEl.classList.toggle('hot', state.streak >= 3);
+  var pctEl = document.getElementById('stat-pct');
+  pctEl.textContent = state.total === 0 ? '—' : Math.round(100 * state.correct / state.total) + '%';
+}
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('next-btn').addEventListener('click', nextQuestion);
+document.getElementById('skip-btn').addEventListener('click', skipQuestion);
+
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key >= '1' && e.key <= '5' && !state.locked) {
+    var idx = parseInt(e.key, 10) - 1;
+    if (idx < state.current.displayed.length) {
+      onStatementClick(state.current.displayed[idx].id);
+    }
+  } else if (e.key === 'Enter') {
+    if (state.locked) nextQuestion();
+    else if (!document.getElementById('check-btn').disabled) checkAnswer();
+  }
+});
+
+nextQuestion();
+</script>
+</body>
+</html>

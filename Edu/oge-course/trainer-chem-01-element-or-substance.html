@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №1 · Элемент vs простое вещество</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #F2EDE2;
+  --bg-card: #FAF6EC;
+  --bg-deep: #1A1815;
+  --ink: #1B1814;
+  --ink-soft: #4A453D;
+  --ink-faint: #7A736A;
+  --rule: #C8BFAE;
+  --rule-soft: #DCD3BF;
+  --accent: #2D4A2B;
+  --accent-soft: rgba(45, 74, 43, 0.08);
+  --good: #16A34A;
+  --good-bg: #DCFCE7;
+  --bad: #B91C1C;
+  --bad-bg: #FEE2E2;
+  --warn: #D97706;
+  --serif: "Fraunces", "Times New Roman", Georgia, serif;
+  --body: "Spectral", "Georgia", serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { background-image: radial-gradient(circle at 25% 10%, rgba(45, 74, 43, 0.04), transparent 40%), radial-gradient(circle at 80% 80%, rgba(160, 91, 15, 0.03), transparent 50%); }
+.wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+
+/* === Header === */
+.head { border-top: 3px solid var(--ink); padding-top: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+.head-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); flex-wrap: wrap; gap: 10px; }
+.head-meta .accent { color: var(--accent); }
+h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; letter-spacing: -0.015em; margin-top: 16px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
+.subtitle { font-size: 16px; color: var(--ink-soft); margin-top: 12px; }
+
+/* === Stats === */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 32px; }
+@media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--bg-card); padding: 14px 16px; }
+.stat .num { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1; color: var(--accent); }
+.stat .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 6px; }
+.stat.streak .num.hot { color: var(--warn); }
+
+/* === Substance card === */
+.substance { background: var(--bg-card); border: 1px solid var(--rule); border-left: 4px solid var(--accent); padding: 20px 24px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.substance .name { font-family: var(--serif); font-size: 28px; font-weight: 500; }
+.substance .name .label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); display: block; margin-bottom: 2px; }
+.substance .atom { display: flex; align-items: baseline; gap: 14px; }
+.substance .symbol { font-family: var(--serif); font-size: 44px; font-weight: 500; color: var(--accent); line-height: 1; }
+.substance .z { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); }
+.substance .z .num { font-family: var(--serif); font-size: 22px; color: var(--ink); display: block; line-height: 1; font-weight: 500; }
+
+/* === Question === */
+.question { font-family: var(--serif); font-size: 21px; font-weight: 400; line-height: 1.4; padding: 18px 0 24px; }
+.question .target { font-weight: 600; color: var(--accent); border-bottom: 2px solid currentColor; padding-bottom: 1px; }
+
+/* === Statement cards === */
+.statements { display: grid; gap: 10px; }
+.stmt { background: var(--bg-card); border: 1px solid var(--rule); padding: 16px 18px 16px 52px; cursor: pointer; transition: all 0.15s ease; position: relative; user-select: none; }
+.stmt:hover:not(.locked) { border-color: var(--ink); }
+.stmt .num { position: absolute; left: 14px; top: 16px; font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--ink-faint); border: 1px solid var(--rule); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease; }
+.stmt .text { font-size: 16px; line-height: 1.5; }
+.stmt.selected { border-color: var(--accent); background: var(--accent-soft); }
+.stmt.selected .num { background: var(--accent); color: white; border-color: var(--accent); }
+.stmt.locked { cursor: default; }
+.stmt.locked:hover { border-color: var(--rule); }
+
+.stmt.correct-pick { border-color: var(--good); background: var(--good-bg); }
+.stmt.correct-pick .num { background: var(--good); color: white; border-color: var(--good); }
+.stmt.correct-pick .num::after { content: '✓'; font-size: 14px; }
+.stmt.correct-pick .num span { display: none; }
+
+.stmt.wrong-pick { border-color: var(--bad); background: var(--bad-bg); }
+.stmt.wrong-pick .num { background: var(--bad); color: white; border-color: var(--bad); }
+.stmt.wrong-pick .num::after { content: '✗'; font-size: 14px; }
+.stmt.wrong-pick .num span { display: none; }
+
+.stmt.missed { border-color: var(--good); border-style: dashed; }
+.stmt.missed .num { color: var(--good); border-color: var(--good); }
+
+.stmt .marker { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--rule); font-family: var(--mono); font-size: 12px; line-height: 1.5; color: var(--ink-soft); }
+.stmt.locked .marker { display: block; }
+.stmt .marker .tag { display: inline-block; padding: 2px 7px; border-radius: 1px; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; margin-right: 6px; }
+.stmt .marker .tag.s { background: #1F4F3F; color: #ECFDF5; }
+.stmt .marker .tag.e { background: #6B3F1F; color: #FFFBEB; }
+
+/* === Buttons === */
+.actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.btn { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 14px 28px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); cursor: pointer; border-radius: 1px; transition: all 0.15s ease; }
+.btn:hover { background: var(--accent); border-color: var(--accent); }
+.btn:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-faint); cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover { background: var(--ink); color: var(--bg); }
+.btn.next { background: var(--accent); border-color: var(--accent); }
+.btn.next:hover { background: var(--ink); border-color: var(--ink); }
+
+/* === Result banner === */
+.result { display: none; margin-top: 24px; padding: 18px 24px; border-left: 4px solid; font-family: var(--serif); font-size: 19px; font-weight: 500; }
+.result.shown { display: block; }
+.result.win { background: var(--good-bg); border-color: var(--good); color: #14532D; }
+.result.lose { background: var(--bad-bg); border-color: var(--bad); color: #7F1D1D; }
+.result .small { display: block; font-family: var(--body); font-size: 14px; font-weight: 400; margin-top: 4px; opacity: 0.85; }
+
+/* === Cheatsheet === */
+.cheat { margin-top: 56px; padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; }
+.cheat h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin-bottom: 16px; }
+.cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 600px) { .cheat-grid { grid-template-columns: 1fr; } }
+.cheat-col h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+.cheat-col h4 .icon { display: inline-block; width: 8px; height: 8px; margin-right: 6px; vertical-align: middle; }
+.cheat-col.simple h4 .icon { background: var(--accent); }
+.cheat-col.element h4 .icon { background: #6B3F1F; }
+.cheat-col ul { list-style: none; }
+.cheat-col li { font-size: 14px; padding: 4px 0 4px 16px; position: relative; line-height: 1.5; color: var(--ink-soft); }
+.cheat-col li::before { content: '·'; position: absolute; left: 4px; color: var(--ink); font-weight: 700; }
+
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--ink-faint); text-align: center; }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+
+<header class="head">
+  <div class="head-meta">
+    <span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №1</span>
+    <span>1 балл · краткий ответ</span>
+  </div>
+  <h1>Элемент <em>или</em> простое вещество?</h1>
+  <p class="subtitle">Тренажёр на различение химического элемента и простого вещества — концептуальная основа первой главы химии и обязательный навык для ОГЭ.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего вопросов</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">правильно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности</div></div>
+</div>
+
+<div class="substance" id="substance"></div>
+<div class="question" id="question"></div>
+<div class="statements" id="statements"></div>
+
+<div class="actions">
+  <button class="btn" id="check-btn" disabled>Проверить</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующий вопрос</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<section class="cheat">
+  <h3>Шпаргалка маркёров</h3>
+  <div class="cheat-grid">
+    <div class="cheat-col simple">
+      <h4><span class="icon"></span>Простое вещество (X как субстанция)</h4>
+      <ul>
+        <li>Физические свойства: цвет, запах, агрегатное состояние, плотность, твёрдость, температура плавления</li>
+        <li>Получение в чистом виде: «получают перегонкой / электролизом / разложением»</li>
+        <li>Химические свойства как вещества: «горит», «реагирует с кислородом», «не растворяется в воде»</li>
+        <li>Применение: «используется при сварке / в быту / в промышленности»</li>
+        <li>Молекула / структура: «состоит из двух атомов», «имеет атомную решётку»</li>
+      </ul>
+    </div>
+    <div class="cheat-col element">
+      <h4><span class="icon" style="background:#6B3F1F"></span>Химический элемент (тип атомов X)</h4>
+      <ul>
+        <li>Содержание / распространённость: «в земной коре», «в почве», «во Вселенной»</li>
+        <li>Входит в состав: «составной частью белков / минералов / соединений»</li>
+        <li>Атомные характеристики: атомная масса, заряд ядра, электронная конфигурация</li>
+        <li>В соединениях: валентность, степень окисления, ион</li>
+        <li>Биологическая роль: «необходим для синтеза хлорофилла / гемоглобина»</li>
+        <li>Положение в Периодической системе</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Источник: демоверсия и спецификация ОГЭ-2026 ФИПИ ·
+  <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a>
+</footer>
+
+</div>
+
+<script>
+// ============================================================
+//  БАЗА УТВЕРЖДЕНИЙ
+//  type: 's' = простое вещество, 'e' = химический элемент
+//  marker: что именно делает утверждение относящимся к этому типу
+// ============================================================
+var SUBSTANCES = [
+  {
+    name: 'Азот', genitivePhrase: 'об азоте', symbol: 'N', Z: 7,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'При нормальных условиях бесцветный газ без запаха и вкуса.' },
+      { type:'s', marker:'способ получения', text:'В промышленности получают фракционной перегонкой жидкого воздуха.' },
+      { type:'s', marker:'физические свойства', text:'В жидком состоянии бесцветен и подвижен, как вода.' },
+      { type:'s', marker:'химические свойства', text:'Не поддерживает горение и дыхание.' },
+      { type:'s', marker:'применение', text:'Применяется как защитная атмосфера в металлургии и при хранении продуктов.' },
+      { type:'s', marker:'строение молекулы', text:'Молекула состоит из двух атомов, связанных тройной связью.' },
+      { type:'e', marker:'биологическая роль', text:'Необходим растениям для образования хлорофилла и других органических веществ.' },
+      { type:'e', marker:'распространённость', text:'Содержание в почвах колеблется от 0,07 до 0,5 %.' },
+      { type:'e', marker:'валентность атома', text:'Валентность в ионе аммония равна IV.' },
+      { type:'e', marker:'степень окисления', text:'Степень окисления в азотной кислоте равна +5.' },
+      { type:'e', marker:'входит в состав', text:'Входит в состав белков и нуклеиновых кислот.' },
+      { type:'e', marker:'положение в ПС', text:'Расположен во втором периоде V группе главной подгруппы.' }
+    ]
+  },
+  {
+    name: 'Кислород', genitivePhrase: 'о кислороде', symbol: 'O', Z: 8,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'При нормальных условиях бесцветный газ без запаха.' },
+      { type:'s', marker:'химические свойства', text:'Поддерживает горение и дыхание живых организмов.' },
+      { type:'s', marker:'способ получения', text:'В лаборатории получают разложением перманганата калия при нагревании.' },
+      { type:'s', marker:'физические свойства', text:'Немного тяжелее воздуха, плохо растворим в воде.' },
+      { type:'s', marker:'применение', text:'Применяется при газовой сварке и резке металлов.' },
+      { type:'s', marker:'строение молекулы', text:'Молекула состоит из двух атомов, связанных двойной связью.' },
+      { type:'e', marker:'распространённость', text:'Самый распространённый элемент в земной коре (около 47% массы).' },
+      { type:'e', marker:'входит в состав', text:'Входит в состав воды и большинства минералов.' },
+      { type:'e', marker:'степень окисления', text:'В большинстве оксидов имеет степень окисления −2.' },
+      { type:'e', marker:'биологическая роль', text:'Содержится во всех живых организмах, является основой воды клеток.' },
+      { type:'e', marker:'положение в ПС', text:'Расположен во втором периоде VI группе главной подгруппы.' },
+      { type:'e', marker:'атомная характеристика', text:'Относительная атомная масса равна 16.' }
+    ]
+  },
+  {
+    name: 'Водород', genitivePhrase: 'о водороде', symbol: 'H', Z: 1,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'Самый лёгкий газ, в 14,5 раз легче воздуха.' },
+      { type:'s', marker:'физические свойства', text:'Бесцветный газ без запаха и вкуса.' },
+      { type:'s', marker:'способ получения', text:'В лаборатории получают взаимодействием цинка с разбавленной серной кислотой.' },
+      { type:'s', marker:'химические свойства', text:'Горит синеватым пламенем с образованием воды.' },
+      { type:'s', marker:'химические свойства', text:'Образует взрывчатую гремучую смесь с кислородом.' },
+      { type:'s', marker:'применение', text:'Используется в производстве аммиака и метанола.' },
+      { type:'e', marker:'распространённость', text:'Самый распространённый элемент во Вселенной.' },
+      { type:'e', marker:'входит в состав', text:'Входит в состав воды и всех органических веществ.' },
+      { type:'e', marker:'степень окисления', text:'В соединениях с активными металлами имеет степень окисления −1.' },
+      { type:'e', marker:'валентность атома', text:'В большинстве соединений имеет валентность I.' },
+      { type:'e', marker:'положение в ПС', text:'Расположен в первой группе Периодической системы.' },
+      { type:'e', marker:'входит в состав', text:'Содержится в нефти и природном газе как часть углеводородов.' }
+    ]
+  },
+  {
+    name: 'Углерод', genitivePhrase: 'об углероде', symbol: 'C', Z: 6,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'Алмаз — самое твёрдое из природных веществ.' },
+      { type:'s', marker:'физические свойства', text:'Графит проводит электрический ток и имеет слоистую структуру.' },
+      { type:'s', marker:'применение', text:'Каменный уголь применяется как топливо в энергетике.' },
+      { type:'s', marker:'способ получения', text:'Сажу получают при неполном сгорании углеводородов.' },
+      { type:'s', marker:'химические свойства', text:'При нагревании в избытке кислорода сгорает с образованием углекислого газа.' },
+      { type:'s', marker:'применение', text:'Активированный уголь используется для очистки воды и воздуха.' },
+      { type:'e', marker:'входит в состав', text:'Входит в состав всех органических веществ.' },
+      { type:'e', marker:'входит в состав', text:'Содержится в природных карбонатах: меле, известняке, мраморе.' },
+      { type:'e', marker:'степень окисления', text:'В углекислом газе имеет степень окисления +4.' },
+      { type:'e', marker:'атомная характеристика', text:'Относительная атомная масса равна 12.' },
+      { type:'e', marker:'биологическая роль', text:'Является основным элементом, формирующим живую материю.' },
+      { type:'e', marker:'положение в ПС', text:'Расположен во втором периоде IV группе.' }
+    ]
+  },
+  {
+    name: 'Сера', genitivePhrase: 'о сере', symbol: 'S', Z: 16,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'Жёлтое кристаллическое вещество, хрупкое.' },
+      { type:'s', marker:'физические свойства', text:'Не растворяется в воде, но растворяется в сероуглероде.' },
+      { type:'s', marker:'химические свойства', text:'Горит синеватым пламенем с образованием диоксида.' },
+      { type:'s', marker:'применение', text:'Применяется в производстве серной кислоты.' },
+      { type:'s', marker:'применение', text:'Используется в резиновой промышленности (вулканизация каучука).' },
+      { type:'s', marker:'физические свойства', text:'Плавится при температуре около 113 °C.' },
+      { type:'e', marker:'биологическая роль', text:'Входит в состав белков (аминокислот цистеина и метионина).' },
+      { type:'e', marker:'входит в состав', text:'Содержится в природных минералах: пирите, гипсе, галените.' },
+      { type:'e', marker:'степень окисления', text:'В сероводороде H₂S имеет степень окисления −2.' },
+      { type:'e', marker:'степень окисления', text:'В серной кислоте имеет степень окисления +6.' },
+      { type:'e', marker:'положение в ПС', text:'Расположена в третьем периоде VI группе.' },
+      { type:'e', marker:'атомная характеристика', text:'Относительная атомная масса равна 32.' }
+    ]
+  },
+  {
+    name: 'Хлор', genitivePhrase: 'о хлоре', symbol: 'Cl', Z: 17,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'Жёлто-зелёный газ с резким удушливым запахом.' },
+      { type:'s', marker:'физические свойства', text:'Тяжелее воздуха в 2,5 раза.' },
+      { type:'s', marker:'применение', text:'Применяется для обеззараживания питьевой воды.' },
+      { type:'s', marker:'способ получения', text:'Получают электролизом раствора поваренной соли.' },
+      { type:'s', marker:'химические свойства', text:'Реагирует с водородом со взрывом на ярком свету.' },
+      { type:'s', marker:'химические свойства', text:'Является сильным окислителем, обесцвечивает многие красители.' },
+      { type:'e', marker:'входит в состав', text:'Входит в состав поваренной соли (хлорида натрия).' },
+      { type:'e', marker:'степень окисления', text:'В соединениях с металлами имеет степень окисления −1.' },
+      { type:'e', marker:'степень окисления', text:'В хлорной кислоте HClO₄ имеет степень окисления +7.' },
+      { type:'e', marker:'биологическая роль', text:'Содержится в желудочном соке в составе соляной кислоты.' },
+      { type:'e', marker:'положение в ПС', text:'Расположен в третьем периоде VII группе.' },
+      { type:'e', marker:'атомная характеристика', text:'Относительная атомная масса равна 35,5 (среднее по изотопам).' }
+    ]
+  },
+  {
+    name: 'Железо', genitivePhrase: 'о железе', symbol: 'Fe', Z: 26,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'Серебристо-серый металл с характерным металлическим блеском.' },
+      { type:'s', marker:'физические свойства', text:'Притягивается магнитом — проявляет ферромагнитные свойства.' },
+      { type:'s', marker:'физические свойства', text:'Хорошо проводит тепло и электрический ток.' },
+      { type:'s', marker:'химические свойства', text:'Корродирует во влажном воздухе с образованием ржавчины.' },
+      { type:'s', marker:'способ получения', text:'Получают восстановлением из железных руд в доменной печи.' },
+      { type:'s', marker:'применение', text:'Применяется в производстве сталей и чугуна.' },
+      { type:'e', marker:'биологическая роль', text:'Входит в состав гемоглобина крови человека.' },
+      { type:'e', marker:'входит в состав', text:'Содержится в природных минералах: гематите, магнетите, пирите.' },
+      { type:'e', marker:'степень окисления', text:'В оксиде Fe₂O₃ имеет степень окисления +3.' },
+      { type:'e', marker:'распространённость', text:'Является четвёртым по распространённости элементом в земной коре.' },
+      { type:'e', marker:'положение в ПС', text:'Расположено в четвёртом периоде VIII группе побочной подгруппы.' },
+      { type:'e', marker:'биологическая роль', text:'Необходимо для переноса кислорода от лёгких к тканям организма.' }
+    ]
+  },
+  {
+    name: 'Кальций', genitivePhrase: 'о кальции', symbol: 'Ca', Z: 20,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'Серебристо-белый мягкий металл, режется ножом.' },
+      { type:'s', marker:'химические свойства', text:'При комнатной температуре быстро тускнеет на воздухе.' },
+      { type:'s', marker:'химические свойства', text:'Активно реагирует с водой с выделением водорода.' },
+      { type:'s', marker:'способ получения', text:'Получают электролизом расплава хлорида кальция.' },
+      { type:'s', marker:'физические свойства', text:'Хранят под слоем керосина или минерального масла.' },
+      { type:'s', marker:'химические свойства', text:'Горит ярким красно-оранжевым пламенем.' },
+      { type:'e', marker:'биологическая роль', text:'Входит в состав костей и зубов человека.' },
+      { type:'e', marker:'входит в состав', text:'Содержится в природных карбонатах: меле, мраморе, известняке.' },
+      { type:'e', marker:'валентность атома', text:'В соединениях имеет валентность II.' },
+      { type:'e', marker:'степень окисления', text:'В большинстве соединений имеет степень окисления +2.' },
+      { type:'e', marker:'положение в ПС', text:'Расположен в четвёртом периоде II группе главной подгруппы.' },
+      { type:'e', marker:'биологическая роль', text:'Необходим для нормального сокращения мышц и работы нервной системы.' }
+    ]
+  },
+  {
+    name: 'Медь', genitivePhrase: 'о меди', symbol: 'Cu', Z: 29,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'Розово-красный металл с характерным металлическим блеском.' },
+      { type:'s', marker:'физические свойства', text:'По электропроводности уступает только серебру среди металлов.' },
+      { type:'s', marker:'физические свойства', text:'Пластична — легко вытягивается в проволоку и прокатывается в тонкие листы.' },
+      { type:'s', marker:'химические свойства', text:'На воздухе постепенно покрывается зелёным налётом — патиной.' },
+      { type:'s', marker:'способ получения', text:'Получают из сульфидных руд пирометаллургическим путём.' },
+      { type:'s', marker:'применение', text:'Применяется для производства электропроводов и сплавов: бронзы, латуни.' },
+      { type:'e', marker:'входит в состав', text:'Входит в состав минералов: халькопирита, малахита, азурита.' },
+      { type:'e', marker:'входит в состав', text:'Содержится в природных рудах халькозине и борните.' },
+      { type:'e', marker:'степень окисления', text:'В оксиде меди(II) имеет степень окисления +2.' },
+      { type:'e', marker:'валентность атома', text:'В соединениях проявляет валентности I и II.' },
+      { type:'e', marker:'положение в ПС', text:'Расположена в четвёртом периоде I группе побочной подгруппы.' },
+      { type:'e', marker:'биологическая роль', text:'Является микроэлементом организма человека, участвует в кроветворении.' }
+    ]
+  },
+  {
+    name: 'Цинк', genitivePhrase: 'о цинке', symbol: 'Zn', Z: 30,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'Голубовато-белый металл, на воздухе покрывается тонкой плёнкой оксида.' },
+      { type:'s', marker:'физические свойства', text:'Хрупкий при комнатной температуре, но пластичный при 100–150 °C.' },
+      { type:'s', marker:'химические свойства', text:'Реагирует с разбавленными кислотами с выделением водорода.' },
+      { type:'s', marker:'способ получения', text:'Получают электролизом раствора сульфата цинка.' },
+      { type:'s', marker:'применение', text:'Применяется для оцинковки железа — защиты от коррозии.' },
+      { type:'s', marker:'применение', text:'Используется в производстве сплава с медью — латуни.' },
+      { type:'e', marker:'входит в состав', text:'Содержится в природных минералах: сфалерите (цинковой обманке), смитсоните.' },
+      { type:'e', marker:'степень окисления', text:'В соединениях имеет степень окисления +2.' },
+      { type:'e', marker:'валентность атома', text:'В соединениях проявляет валентность II.' },
+      { type:'e', marker:'положение в ПС', text:'Расположен в четвёртом периоде II группе побочной подгруппы.' },
+      { type:'e', marker:'биологическая роль', text:'Является микроэлементом, входит в состав ферментов организма человека.' },
+      { type:'e', marker:'атомная характеристика', text:'Относительная атомная масса равна 65.' }
+    ]
+  },
+  {
+    name: 'Алюминий', genitivePhrase: 'об алюминии', symbol: 'Al', Z: 13,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'Серебристо-белый лёгкий металл с характерным блеском.' },
+      { type:'s', marker:'физические свойства', text:'Хорошо проводит электрический ток и тепло.' },
+      { type:'s', marker:'химические свойства', text:'На воздухе покрывается прочной защитной оксидной плёнкой.' },
+      { type:'s', marker:'способ получения', text:'Получают электролизом расплава оксида алюминия в криолите.' },
+      { type:'s', marker:'применение', text:'Применяется в авиа- и автомобилестроении благодаря низкой плотности.' },
+      { type:'s', marker:'применение', text:'Используется для производства бытовой посуды и фольги.' },
+      { type:'e', marker:'распространённость', text:'Третий по распространённости элемент в земной коре после кислорода и кремния.' },
+      { type:'e', marker:'входит в состав', text:'Входит в состав боксита, корунда (рубина и сапфира), глины.' },
+      { type:'e', marker:'степень окисления', text:'В соединениях имеет степень окисления +3.' },
+      { type:'e', marker:'валентность атома', text:'В соединениях проявляет валентность III.' },
+      { type:'e', marker:'положение в ПС', text:'Расположен в третьем периоде III группе главной подгруппы.' },
+      { type:'e', marker:'атомная характеристика', text:'Относительная атомная масса равна 27.' }
+    ]
+  },
+  {
+    name: 'Кремний', genitivePhrase: 'о кремнии', symbol: 'Si', Z: 14,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'Тёмно-серое кристаллическое вещество с металлическим блеском.' },
+      { type:'s', marker:'физические свойства', text:'Хрупкий, как алмаз, имеет тетраэдрическую кристаллическую решётку.' },
+      { type:'s', marker:'способ получения', text:'Получают восстановлением диоксида кремния магнием или углеродом.' },
+      { type:'s', marker:'химические свойства', text:'При нагревании реагирует с галогенами и щелочами.' },
+      { type:'s', marker:'применение', text:'Является полупроводником, применяется в электронике и микропроцессорах.' },
+      { type:'s', marker:'применение', text:'Используется в производстве солнечных батарей.' },
+      { type:'e', marker:'распространённость', text:'Второй по распространённости элемент в земной коре после кислорода.' },
+      { type:'e', marker:'входит в состав', text:'Входит в состав кварца, силикатных пород и обычного песка.' },
+      { type:'e', marker:'степень окисления', text:'В диоксиде имеет степень окисления +4.' },
+      { type:'e', marker:'входит в состав', text:'Содержится в природных минералах: гранитах, сланцах, полевых шпатах.' },
+      { type:'e', marker:'положение в ПС', text:'Расположен в третьем периоде IV группе главной подгруппы.' },
+      { type:'e', marker:'атомная характеристика', text:'Относительная атомная масса равна 28.' }
+    ]
+  },
+  {
+    name: 'Фосфор', genitivePhrase: 'о фосфоре', symbol: 'P', Z: 15,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'Белая модификация — мягкое воскообразное вещество, светящееся в темноте.' },
+      { type:'s', marker:'физические свойства', text:'Красная модификация — порошок тёмно-красного цвета, не светится.' },
+      { type:'s', marker:'способ получения', text:'Получают сплавлением фосфата кальция с песком и углём при высокой температуре.' },
+      { type:'s', marker:'химические свойства', text:'Белый фосфор самовоспламеняется на воздухе уже при температуре около 34 °C.' },
+      { type:'s', marker:'применение', text:'Красная модификация применяется в производстве спичек.' },
+      { type:'s', marker:'применение', text:'Используется в производстве удобрений после переработки в фосфорную кислоту.' },
+      { type:'e', marker:'биологическая роль', text:'Входит в состав костной ткани в виде фосфата кальция.' },
+      { type:'e', marker:'биологическая роль', text:'Содержится в нуклеиновых кислотах (ДНК и РНК) и молекулах АТФ.' },
+      { type:'e', marker:'степень окисления', text:'В фосфорной кислоте H₃PO₄ имеет степень окисления +5.' },
+      { type:'e', marker:'степень окисления', text:'В фосфине PH₃ имеет степень окисления −3.' },
+      { type:'e', marker:'положение в ПС', text:'Расположен в третьем периоде V группе главной подгруппы.' },
+      { type:'e', marker:'атомная характеристика', text:'Относительная атомная масса равна 31.' }
+    ]
+  },
+  {
+    name: 'Бром', genitivePhrase: 'о броме', symbol: 'Br', Z: 35,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'Тёмно-красная жидкость с резким удушливым запахом.' },
+      { type:'s', marker:'физические свойства', text:'Единственный неметалл, жидкий при комнатной температуре.' },
+      { type:'s', marker:'химические свойства', text:'Сильный окислитель, обесцвечивает многие органические красители.' },
+      { type:'s', marker:'физические свойства', text:'Растворим в воде с образованием бромной воды.' },
+      { type:'s', marker:'способ получения', text:'Получают окислением бромидов хлором.' },
+      { type:'s', marker:'строение молекулы', text:'Молекула состоит из двух атомов, связанных одинарной связью.' },
+      { type:'e', marker:'входит в состав', text:'Содержится в морской воде в виде бромидов.' },
+      { type:'e', marker:'входит в состав', text:'Входит в состав природных галогенидных солей и минералов.' },
+      { type:'e', marker:'степень окисления', text:'В соединениях с металлами имеет степень окисления −1.' },
+      { type:'e', marker:'степень окисления', text:'В бромноватистой кислоте HBrO имеет степень окисления +1.' },
+      { type:'e', marker:'положение в ПС', text:'Расположен в четвёртом периоде VII группе главной подгруппы.' },
+      { type:'e', marker:'атомная характеристика', text:'Относительная атомная масса равна 80.' }
+    ]
+  },
+  {
+    name: 'Калий', genitivePhrase: 'о калии', symbol: 'K', Z: 19,
+    facts: [
+      { type:'s', marker:'физические свойства', text:'Серебристо-белый мягкий металл, режется ножом.' },
+      { type:'s', marker:'физические свойства', text:'Один из самых лёгких металлов, легче воды.' },
+      { type:'s', marker:'химические свойства', text:'Бурно реагирует с водой с воспламенением выделяющегося водорода.' },
+      { type:'s', marker:'физические свойства', text:'Хранят под слоем керосина или минерального масла.' },
+      { type:'s', marker:'способ получения', text:'Получают восстановлением хлорида калия металлическим натрием при высокой температуре.' },
+      { type:'s', marker:'химические свойства', text:'Горит фиолетовым пламенем.' },
+      { type:'e', marker:'входит в состав', text:'Входит в состав минералов: сильвина, карналлита, ортоклаза.' },
+      { type:'e', marker:'входит в состав', text:'Содержится в растительной золе как зольный элемент.' },
+      { type:'e', marker:'степень окисления', text:'В соединениях имеет степень окисления +1.' },
+      { type:'e', marker:'валентность атома', text:'В соединениях проявляет валентность I.' },
+      { type:'e', marker:'положение в ПС', text:'Расположен в четвёртом периоде I группе главной подгруппы.' },
+      { type:'e', marker:'биологическая роль', text:'Необходим для нормальной работы сердечной мышцы и нервной системы.' }
+    ]
+  }
+];
+
+// ============================================================
+//  СОСТОЯНИЕ И ЛОГИКА
+// ============================================================
+var state = {
+  total: 0, correct: 0, streak: 0,
+  current: null,    // { substance, target, statements, correctIdx, selectedIdx }
+  locked: false
+};
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function pickRandom(arr, n) { return shuffle(arr).slice(0, n); }
+
+function generateQuestion() {
+  var sub = SUBSTANCES[Math.floor(Math.random() * SUBSTANCES.length)];
+  var target = Math.random() < 0.5 ? 's' : 'e';
+  var matching = sub.facts.filter(function(f){ return f.type === target; });
+  var opposite = sub.facts.filter(function(f){ return f.type !== target; });
+  var twoMatch = pickRandom(matching, 2);
+  var threeOpp = pickRandom(opposite, 3);
+  var combined = shuffle(twoMatch.concat(threeOpp));
+  var correctIdx = [];
+  combined.forEach(function(s, i) { if (s.type === target) correctIdx.push(i); });
+  return {
+    substance: sub,
+    target: target,
+    statements: combined,
+    correctIdx: correctIdx.sort(),
+    selectedIdx: []
+  };
+}
+
+function el(tag, props, children) {
+  var e = document.createElement(tag);
+  if (props) for (var k in props) {
+    if (k === 'class') e.className = props[k];
+    else if (k === 'html') e.innerHTML = props[k];
+    else if (k.indexOf('on') === 0) e.addEventListener(k.substring(2).toLowerCase(), props[k]);
+    else e.setAttribute(k, props[k]);
+  }
+  if (children != null) {
+    if (!Array.isArray(children)) children = [children];
+    for (var i = 0; i < children.length; i++) {
+      var c = children[i];
+      if (c == null) continue;
+      e.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(c) : c);
+    }
+  }
+  return e;
+}
+
+function renderSubstance(q) {
+  var c = document.getElementById('substance');
+  c.innerHTML = '';
+  c.appendChild(el('div', { class:'name' }, [
+    el('span', { class:'label' }, 'Вещество / элемент'),
+    q.substance.name
+  ]));
+  c.appendChild(el('div', { class:'atom' }, [
+    el('div', { class:'symbol' }, q.substance.symbol),
+    el('div', { class:'z' }, [
+      el('span', { class:'num' }, String(q.substance.Z)),
+      'Z, заряд ядра'
+    ])
+  ]));
+}
+
+function renderQuestion(q) {
+  var c = document.getElementById('question');
+  c.innerHTML = '';
+  var targetText = q.target === 's' ? 'простом веществе' : 'химическом элементе';
+  c.appendChild(document.createTextNode('Выберите два утверждения, в которых говорится '+q.substance.genitivePhrase+' как о '));
+  c.appendChild(el('span', { class:'target' }, targetText));
+  c.appendChild(document.createTextNode('.'));
+}
+
+function renderStatements(q) {
+  var c = document.getElementById('statements');
+  c.innerHTML = '';
+  q.statements.forEach(function(s, i) {
+    var card = el('div', { class:'stmt', 'data-idx': String(i) });
+    card.addEventListener('click', function() { onStatementClick(i); });
+    var num = el('div', { class:'num' });
+    num.appendChild(el('span', null, String(i+1)));
+    card.appendChild(num);
+    card.appendChild(el('div', { class:'text' }, s.text));
+    var marker = el('div', { class:'marker' });
+    var typeLabel = s.type === 's' ? 'простое вещество' : 'элемент';
+    var tagCls = s.type === 's' ? 's' : 'e';
+    marker.innerHTML = '<span class="tag '+tagCls+'">'+typeLabel+'</span> маркёр: <b>'+s.marker+'</b>';
+    card.appendChild(marker);
+    c.appendChild(card);
+  });
+}
+
+function onStatementClick(idx) {
+  if (state.locked) return;
+  var sel = state.current.selectedIdx;
+  var pos = sel.indexOf(idx);
+  if (pos >= 0) {
+    sel.splice(pos, 1);
+  } else {
+    if (sel.length >= 2) return; // max 2
+    sel.push(idx);
+  }
+  updateSelection();
+}
+
+function updateSelection() {
+  var sel = state.current.selectedIdx;
+  document.querySelectorAll('.stmt').forEach(function(card) {
+    var idx = parseInt(card.dataset.idx, 10);
+    card.classList.toggle('selected', sel.indexOf(idx) >= 0);
+  });
+  document.getElementById('check-btn').disabled = sel.length !== 2;
+}
+
+function checkAnswer() {
+  if (state.locked) return;
+  var sel = state.current.selectedIdx.slice().sort();
+  var corr = state.current.correctIdx;
+  var isCorrect = sel.length === 2 && sel[0] === corr[0] && sel[1] === corr[1];
+
+  state.total++;
+  if (isCorrect) { state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  updateStats();
+
+  // lock all cards and reveal markers
+  state.locked = true;
+  document.querySelectorAll('.stmt').forEach(function(card) {
+    var idx = parseInt(card.dataset.idx, 10);
+    card.classList.add('locked');
+    card.classList.remove('selected');
+    var isCorr = corr.indexOf(idx) >= 0;
+    var isSel = sel.indexOf(idx) >= 0;
+    if (isCorr && isSel) card.classList.add('correct-pick');
+    else if (!isCorr && isSel) card.classList.add('wrong-pick');
+    else if (isCorr && !isSel) card.classList.add('missed');
+  });
+
+  // result banner
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + (isCorrect ? 'win' : 'lose');
+  if (isCorrect) {
+    r.innerHTML = '✓ Верно!<span class="small">Правильный ответ: '+(corr[0]+1)+(corr[1]+1)+'. В формате ОГЭ записывается как «'+(corr[0]+1)+''+(corr[1]+1)+'».</span>';
+  } else {
+    r.innerHTML = '✗ Не угадали.<span class="small">Правильный ответ: '+(corr[0]+1)+(corr[1]+1)+'. Зелёным пунктиром обведены пропущенные верные утверждения, красным — выбранные неверно.</span>';
+  }
+
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+
+function nextQuestion() {
+  state.current = generateQuestion();
+  state.locked = false;
+  renderSubstance(state.current);
+  renderQuestion(state.current);
+  renderStatements(state.current);
+  document.getElementById('result').className = 'result';
+  document.getElementById('check-btn').style.display = '';
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('skip-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function skipQuestion() {
+  state.streak = 0;
+  updateStats();
+  nextQuestion();
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var streakEl = document.getElementById('stat-streak');
+  streakEl.textContent = state.streak;
+  streakEl.classList.toggle('hot', state.streak >= 3);
+  var pctEl = document.getElementById('stat-pct');
+  pctEl.textContent = state.total === 0 ? '—' : Math.round(100 * state.correct / state.total) + '%';
+}
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('next-btn').addEventListener('click', nextQuestion);
+document.getElementById('skip-btn').addEventListener('click', skipQuestion);
+
+// keyboard: 1-5 select, Enter check, N next
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key >= '1' && e.key <= '5' && !state.locked) {
+    onStatementClick(parseInt(e.key, 10) - 1);
+  } else if (e.key === 'Enter') {
+    if (state.locked) nextQuestion();
+    else if (!document.getElementById('check-btn').disabled) checkAnswer();
+  }
+});
+
+// start
+nextQuestion();
+</script>
+</body>
+</html>

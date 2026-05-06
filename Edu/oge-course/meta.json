@@ -1,0 +1,117 @@
+{
+  "name": "Курс ОГЭ-2026",
+  "description": "Бесплатные интерактивные тренажёры для подготовки к ОГЭ-2026. 17 тренажёров по химии (вся часть 1, кроме №18 и №19); биология, математика, русский — в разработке.",
+  "tags": ["Edu", "огэ", "огэ-2026", "химия", "тренажёры", "фипи", "интерактив"],
+  "version": "0.3.0",
+  "lastUpdate": "2026-05-06",
+  "sources": ["https://fipi.ru/oge"],
+  "files": {
+    "index.html": {
+      "title": "Курс ОГЭ-2026 — открытый бесплатный курс",
+      "description": "17 интерактивных тренажёров по химии в 6 методических блоках. Single-file HTML, работает офлайн.",
+      "tags": ["Edu", "огэ", "химия"]
+    },
+    "trainer-chem-01-element-or-substance.html": {
+      "title": "№1 КИМ — Элемент vs простое вещество",
+      "description": "Различие химического элемента и простого вещества",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-02-nucleus-period.html": {
+      "title": "№2 КИМ — Состав ядра и положение в периоде",
+      "description": "Протоны, нейтроны, электроны; период и группа",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-03-periodic-trends.html": {
+      "title": "№3 КИМ — Периодические закономерности",
+      "description": "Изменение свойств элементов по периоду и группе",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-04-oxidation-state.html": {
+      "title": "№4 КИМ — Степень окисления",
+      "description": "Определение степени окисления в соединениях",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-05-bond-types.html": {
+      "title": "№5 КИМ — Типы химической связи",
+      "description": "Ионная, ковалентная, металлическая связь",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-06-common-properties.html": {
+      "title": "№6 КИМ — Общие свойства элементов",
+      "description": "Сходство и различие элементов одной группы / периода",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-07-classification.html": {
+      "title": "№7 КИМ — Классы неорганических веществ",
+      "description": "Оксиды, кислоты, основания, соли",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-08-simple-substance-reactions.html": {
+      "title": "№8 КИМ — Реакции простых веществ",
+      "description": "Реакции металлов и неметаллов",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-09-complex-substance-reactions.html": {
+      "title": "№9 КИМ — Реакции сложных веществ",
+      "description": "Свойства оксидов, кислот, оснований, солей",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-10-chains.html": {
+      "title": "№10 КИМ — Химические цепочки превращений",
+      "description": "Восстановление пропущенного звена реакции",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-11-reaction-classification.html": {
+      "title": "№11 КИМ — Классификация реакций",
+      "description": "Соединения, разложения, замещения, обмена",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-12-class-relations.html": {
+      "title": "№12 КИМ — Генетическая связь классов",
+      "description": "Превращения между классами неорганических веществ",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-13-dissociation.html": {
+      "title": "№13 КИМ — Электролитическая диссоциация",
+      "description": "Сильные и слабые электролиты",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-14-ion-exchange.html": {
+      "title": "№14 КИМ — Ионный обмен",
+      "description": "Реакции ионного обмена и сокращённые ионные уравнения",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-15-redox.html": {
+      "title": "№15 КИМ — ОВР",
+      "description": "Окислительно-восстановительные реакции",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-16-lab-safety.html": {
+      "title": "№16 КИМ — Лабораторная практика",
+      "description": "Техника безопасности и приёмы лабораторной работы",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    },
+    "trainer-chem-17-calculations.html": {
+      "title": "№17 КИМ — Расчётные задачи",
+      "description": "Расчёты по уравнениям реакций и формулам",
+      "tags": ["Edu", "огэ", "химия"],
+      "hidden": true
+    }
+  }
+}

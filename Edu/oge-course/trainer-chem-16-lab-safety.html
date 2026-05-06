@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №16 · Безопасная работа с веществами</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#F2EDE2;--bg-card:#FAF6EC;--ink:#1B1814;--ink-soft:#4A453D;--ink-faint:#7A736A;--rule:#C8BFAE;--rule-soft:#DCD3BF;--accent:#2D4A2B;--accent-soft:rgba(45,74,43,0.08);--good:#16A34A;--good-bg:#DCFCE7;--bad:#B91C1C;--bad-bg:#FEE2E2;--warn:#D97706;--serif:"Fraunces","Times New Roman",Georgia,serif;--body:"Spectral","Georgia",serif;--mono:"JetBrains Mono","SFMono-Regular",Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body{background-image:radial-gradient(circle at 25% 10%,rgba(45,74,43,0.04),transparent 40%)}
+.wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+.head{border-top:3px solid var(--ink);padding-top:16px;padding-bottom:24px;border-bottom:1px solid var(--rule);margin-bottom:36px}
+.head-meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft);flex-wrap:wrap;gap:10px}
+.head-meta .accent{color:var(--accent)}
+h1{font-family:var(--serif);font-weight:500;font-size:clamp(30px,5vw,44px);line-height:1.05;letter-spacing:-0.015em;margin-top:16px}
+h1 em{font-style:italic;font-weight:400;color:var(--accent)}
+.subtitle{font-size:16px;color:var(--ink-soft);margin-top:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:32px}
+@media (max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--bg-card);padding:14px 16px}
+.stat .num{font-family:var(--serif);font-size:28px;font-weight:500;line-height:1;color:var(--accent)}
+.stat .lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px}
+.stat.streak .num.hot{color:var(--warn)}
+.question-card{background:var(--bg-card);border:1px solid var(--rule);border-left:4px solid var(--accent);padding:24px 28px;margin-bottom:24px}
+.question-text{font-family:var(--serif);font-size:18px;font-weight:400;line-height:1.5}
+.question-text b{color:var(--accent)}
+.statements{display:grid;gap:10px;margin-top:18px}
+.stmt{background:var(--bg-card);border:1px solid var(--rule);padding:14px 18px 14px 50px;cursor:pointer;transition:all 0.15s ease;position:relative;user-select:none}
+.stmt:hover:not(.locked){border-color:var(--ink)}
+.stmt .num{position:absolute;left:14px;top:14px;font-family:var(--mono);font-weight:700;font-size:14px;color:var(--ink-faint);border:1px solid var(--rule);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--bg)}
+.stmt .text{font-size:15.5px;line-height:1.5}
+.stmt .verdict{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--rule);font-family:var(--mono);font-size:12.5px;line-height:1.5;color:var(--ink-soft)}
+.stmt.locked .verdict{display:block}
+.stmt .verdict .tag{display:inline-block;padding:2px 8px;border-radius:1px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;font-weight:700;margin-right:6px}
+.stmt .verdict .tag.true{background:#14532D;color:#ECFDF5}
+.stmt .verdict .tag.false{background:#7F1D1D;color:#FEE2E2}
+.stmt.selected{border-color:var(--accent);background:var(--accent-soft)}
+.stmt.selected .num{background:var(--accent);color:white;border-color:var(--accent)}
+.stmt.locked{cursor:default}
+.stmt.correct-pick{border-color:var(--good);background:var(--good-bg)}
+.stmt.correct-pick .num{background:var(--good);color:white;border-color:var(--good)}
+.stmt.correct-pick .num::after{content:'✓';font-size:14px}
+.stmt.correct-pick .num span{display:none}
+.stmt.wrong-pick{border-color:var(--bad);background:var(--bad-bg)}
+.stmt.wrong-pick .num{background:var(--bad);color:white;border-color:var(--bad)}
+.stmt.wrong-pick .num::after{content:'✗';font-size:14px}
+.stmt.wrong-pick .num span{display:none}
+.stmt.missed{border-color:var(--good);border-style:dashed}
+.stmt.missed .num{color:var(--good);border-color:var(--good)}
+.actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:700;padding:14px 28px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer;border-radius:1px;transition:all 0.15s ease}
+.btn:hover:not(:disabled){background:var(--accent);border-color:var(--accent)}
+.btn:disabled{background:var(--rule);border-color:var(--rule);color:var(--ink-faint);cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover:not(:disabled){background:var(--ink);color:var(--bg)}
+.btn.next{background:var(--accent);border-color:var(--accent)}
+.result{display:none;margin-top:24px;padding:20px 24px;border-left:4px solid;font-family:var(--serif);font-size:18px;font-weight:500}
+.result.shown{display:block}
+.result.win{background:var(--good-bg);border-color:var(--good);color:#14532D}
+.result.lose{background:var(--bad-bg);border-color:var(--bad);color:#7F1D1D}
+.result-line2{font-family:var(--body);font-size:14.5px;font-weight:400;margin-top:10px;line-height:1.55;opacity:0.92}
+.result-line2 b{font-family:var(--mono);font-weight:700}
+.cheat{margin-top:56px;padding:24px 28px;background:var(--bg-card);border:1px solid var(--rule);border-radius:2px}
+.cheat h3{font-family:var(--serif);font-weight:500;font-size:22px;margin-bottom:16px}
+.cheat p{font-size:14.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:10px}
+.cheat p b{color:var(--ink);font-family:var(--mono)}
+.cheat .rules{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:600px){.cheat .rules{grid-template-columns:1fr}}
+.rule-card{padding:12px 16px;background:var(--bg);border:1px solid var(--rule-soft);border-left:3px solid var(--accent)}
+.rule-card h5{font-family:var(--serif);font-weight:600;font-size:15px;margin-bottom:6px;color:var(--accent)}
+.rule-card p{font-size:13px;color:var(--ink-soft);line-height:1.5;margin:4px 0}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-faint);text-align:center}
+footer a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+<header class="head">
+  <div class="head-meta"><span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №16</span><span>1 балл · краткий ответ</span></div>
+  <h1>Безопасная работа<br/><em>с веществами</em></h1>
+  <p class="subtitle">Тренажёр на правила безопасной работы в химической лаборатории. Из перечня выбери верные суждения о работе с конкретным веществом или процессом.</p>
+</header>
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">правильно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности</div></div>
+</div>
+<div class="question-card">
+  <p class="question-text" id="question-text"></p>
+  <div class="statements" id="statements"></div>
+</div>
+<div class="actions">
+  <button class="btn" id="check-btn" disabled>Проверить</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующий вопрос</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+<div class="result" id="result"></div>
+<section class="cheat">
+  <h3>Правила безопасной работы в лаборатории</h3>
+  <div class="rules">
+    <div class="rule-card"><h5>Запах вещества</h5><p>Нюхать — <b>осторожно</b>: рукой направлять пары к носу, <b>не приближать лицо к сосуду</b>.</p></div>
+    <div class="rule-card"><h5>Кислоты</h5><p>Лить <b>кислоту в воду</b>, не наоборот (иначе разбрызгивание). Растворы кислот не пробовать на вкус, не лить руками.</p></div>
+    <div class="rule-card"><h5>Щёлочи</h5><p>При попадании на кожу — <b>обильно промыть водой</b>, затем разбавленной борной/уксусной кислотой. Очень опасны для глаз.</p></div>
+    <div class="rule-card"><h5>Спиртовка / нагрев</h5><p>Гасить только <b>колпачком</b>, никогда не задувать. Пробирку держать <b>наклонно</b>, открытой стороной от себя и людей.</p></div>
+    <div class="rule-card"><h5>Хранение</h5><p>Кислоты — в плотно закрытых сосудах. Активные металлы (Na, K) — под слоем керосина (нельзя — на воздухе или в воде).</p></div>
+    <div class="rule-card"><h5>Утилизация</h5><p>Растворы солей, кислот, щелочей — в специальные склянки, не в раковину. Нерастворимые осадки — в твёрдые отходы.</p></div>
+  </div>
+  <p style="margin-top:14px;font-size:13.5px;color:var(--ink-faint)"><b style="color:var(--ink)">Базовый принцип:</b> в формулировке часто есть «руками брать», «нюхать прямо», «лить воду в кислоту», «гасить дуновением» — это всё ловушки. Если действие выглядит безопасно с точки зрения здравого смысла — скорее всего, оно правильное.</p>
+</section>
+<footer>Источник: демоверсия и спецификация ОГЭ-2026 ФИПИ · <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a></footer>
+</div>
+<script>
+// Каждый вопрос: тема + 5 суждений с флагом true/false. Правильно = выбрать все true.
+// В большинстве вопросов 2-3 верных суждения.
+var QUESTIONS = [
+  { id:'q-acids', topic:'работа с растворами кислот',
+    statements:[
+      { id:'a1', text:'Концентрированную серную кислоту следует приливать в воду тонкой струёй при перемешивании.', match:true,
+        note:'Так — это безопасный способ. Если налить воду в серную кислоту, произойдёт разбрызгивание из-за сильного выделения тепла.' },
+      { id:'a2', text:'Растворы кислот можно набирать в пипетку ртом без груши.', match:false,
+        note:'Категорически нет. Используют только грушу или дозатор. Иначе кислота попадёт в рот и пищевод.' },
+      { id:'a3', text:'При попадании кислоты на кожу нужно немедленно промыть это место большим количеством воды.', match:true,
+        note:'Так — главный приём первой помощи. Затем — слабым раствором соды.' },
+      { id:'a4', text:'Растворы соляной и серной кислот можно нюхать, поднеся склянку прямо к носу.', match:false,
+        note:'Нет. Пары кислот раздражают слизистую. Нюхают только направляя пары рукой к лицу с расстояния 15–20 см.' },
+      { id:'a5', text:'Сильную кислоту, попавшую на стол, можно вытереть влажной тряпкой без перчаток.', match:false,
+        note:'Сначала нейтрализовать содой или щёлочью, и только в перчатках вытирать.' }
+    ] },
+  { id:'q-alkali', topic:'работа с растворами щелочей',
+    statements:[
+      { id:'b1', text:'Для определения характера среды раствора щёлочи используют индикатор фенолфталеин (становится малиновым).', match:true,
+        note:'Верно. Фенолфталеин в щелочной среде даёт малиновую окраску.' },
+      { id:'b2', text:'Щелочи можно брать пинцетом или шпателем, но нельзя голыми руками.', match:true,
+        note:'Верно — твёрдые щёлочи (NaOH, KOH) сильно разъедают кожу. Берут только пинцетом или шпателем.' },
+      { id:'b3', text:'При попадании щёлочи в глаза следует протереть глаз сухой тканью.', match:false,
+        note:'Категорически нет. Нужно сразу промывать глаз большим количеством воды (не менее 10 минут) и обратиться к врачу.' },
+      { id:'b4', text:'Растворы щелочей можно сливать в раковину при сильной концентрации без разбавления.', match:false,
+        note:'Нет — концентрированные щёлочи нужно сначала нейтрализовать или сильно разбавить.' },
+      { id:'b5', text:'Щёлочи можно хранить в открытых стеклянных сосудах.', match:false,
+        note:'Нет. Щёлочи поглощают CO₂ из воздуха и теряют активность; кроме того, NaOH «разъедает» стекло. Хранят в плотно закрытых полиэтиленовых ёмкостях.' }
+    ] },
+  { id:'q-alkali-metals', topic:'работа со щелочными металлами (Na, K)',
+    statements:[
+      { id:'c1', text:'Натрий и калий хранят под слоем керосина или минерального масла.', match:true,
+        note:'Верно. На воздухе быстро окисляются, в воде бурно реагируют. Керосин не реагирует и изолирует от влаги.' },
+      { id:'c2', text:'Кусочки натрия можно резать ножом на воздухе с осторожностью.', match:true,
+        note:'Верно. Натрий — мягкий металл, режется ножом. На свежем срезе — серебристый, быстро тускнеет.' },
+      { id:'c3', text:'Натрий можно бросать в воду крупными кусками для эффектной демонстрации.', match:false,
+        note:'Нет — крупный кусок натрия в воде взрывается с разбрасыванием расплавленного металла. Берут только маленький кусочек.' },
+      { id:'c4', text:'Остатки натрия можно смыть в раковину водой.', match:false,
+        note:'Категорически нет. Реакция Na + H₂O даёт водород и щёлочь. Утилизируют, добавляя малыми порциями к спирту в специальной таре.' },
+      { id:'c5', text:'Калий ещё активнее натрия — самовоспламеняется в воде.', match:true,
+        note:'Верно. K + H₂O идёт настолько энергично, что выделяющийся водород воспламеняется. K активнее Na.' }
+    ] },
+  { id:'q-gas-collection', topic:'получение и собирание газов',
+    statements:[
+      { id:'d1', text:'Водород можно собирать вытеснением воды.', match:true,
+        note:'Верно. H₂ практически не растворим в воде, поэтому метод подходит. Также подходит для O₂.' },
+      { id:'d2', text:'Углекислый газ собирают в пробирку, опущенную вверх дном.', match:false,
+        note:'Нет. CO₂ тяжелее воздуха, поэтому пробирку держат вверх отверстием (CO₂ опускается вниз и заполняет её).' },
+      { id:'d3', text:'Аммиак собирают в пробирку, повёрнутую вверх дном.', match:true,
+        note:'Верно. NH₃ легче воздуха (M=17 г/моль), поэтому собирают в перевёрнутую пробирку.' },
+      { id:'d4', text:'Хлор можно собирать вытеснением воды.', match:false,
+        note:'Нет — Cl₂ хорошо растворим в воде. Собирают вытеснением воздуха в открытую вверх ёмкость (тяжелее воздуха).' },
+      { id:'d5', text:'Получать водород для опыта можно реакцией кислоты с активным металлом, например Zn + HCl.', match:true,
+        note:'Верно — это стандартный лабораторный способ.' }
+    ] },
+  { id:'q-flame', topic:'работа со спиртовкой и нагревом',
+    statements:[
+      { id:'e1', text:'Спиртовку гасят, накрывая колпачком сверху.', match:true,
+        note:'Верно. Воздух перекрывается, пламя гаснет без хлопка.' },
+      { id:'e2', text:'Спиртовку можно задувать, как свечу.', match:false,
+        note:'Нет. При задувании пары спирта могут вспыхнуть и разлиться.' },
+      { id:'e3', text:'При нагревании пробирки её держат строго вертикально.', match:false,
+        note:'Нет. Пробирку держат под небольшим углом, отверстием от себя и других людей, чтобы при выбросе содержимого никого не обжечь.' },
+      { id:'e4', text:'Пробирку с жидкостью при нагревании всё время равномерно прогревают, не задерживаясь на одном месте.', match:true,
+        note:'Верно — иначе пробирка лопнет от неравномерного нагрева, и жидкость может выплеснуться.' },
+      { id:'e5', text:'Дно пробирки во время нагрева можно касаться пальцем — это безопасно.', match:false,
+        note:'Категорически нет. Стекло нагревается до сотен градусов — будут серьёзные ожоги.' }
+    ] },
+  { id:'q-indicators', topic:'применение индикаторов',
+    statements:[
+      { id:'f1', text:'Лакмус в кислой среде становится красным, в щелочной — синим.', match:true,
+        note:'Верно. В нейтральной — фиолетовый. Самый известный «универсальный» индикатор.' },
+      { id:'f2', text:'Метилоранж в щелочной среде становится жёлтым, в кислой — красным.', match:true,
+        note:'Верно. Метилоранж: жёлтый в щёлочи, красный (точнее розовый) в кислоте, оранжевый в нейтральной.' },
+      { id:'f3', text:'Фенолфталеин в кислотах даёт ярко-малиновую окраску.', match:false,
+        note:'Нет. Всё наоборот: в щелочах — малиновый, в кислотах и нейтральной среде — бесцветный.' },
+      { id:'f4', text:'Индикаторы можно добавлять прямо в склянку с реактивом.', match:false,
+        note:'Нет. Нужно отбирать пробу в пробирку и добавлять индикатор там — иначе реактив будет испорчен.' },
+      { id:'f5', text:'Универсальная индикаторная бумага меняет цвет в зависимости от pH.', match:true,
+        note:'Верно. Универсальная — это смесь индикаторов; даёт цветовую шкалу от красного (кислая) до синего (щелочная).' }
+    ] },
+  { id:'q-handling', topic:'общие правила работы с реактивами',
+    statements:[
+      { id:'g1', text:'Реактивы нельзя пробовать на вкус.', match:true,
+        note:'Верно. Многие соли, кислоты, щёлочи, оксиды — ядовиты. Никогда не пробовать.' },
+      { id:'g2', text:'Сухие реактивы из банки берут чистым шпателем, после использования возвращают остатки в банку.', match:false,
+        note:'Нет. Остатки в банку не возвращают — это загрязнение. Их утилизируют отдельно.' },
+      { id:'g3', text:'В лаборатории нельзя есть и пить.', match:true,
+        note:'Верно. Реактивы могут попасть в пищу через руки, посуду, воздух.' },
+      { id:'g4', text:'Все реактивы можно сливать в общую раковину после опыта.', match:false,
+        note:'Нет. Сначала разбавляют/нейтрализуют. Тяжёлые металлы, органику, концентрированные кислоты/щёлочи сливают в специальные склянки.' },
+      { id:'g5', text:'При работе с легколетучими и едкими веществами используют вытяжной шкаф.', match:true,
+        note:'Верно — это базовое правило. Бром, концентрированный аммиак, хлор и т.п. — только в вытяжке.' }
+    ] },
+  { id:'q-fire', topic:'действия при возгорании в лаборатории',
+    statements:[
+      { id:'h1', text:'Загоревшийся спирт на столе тушат, накрывая ёмкость или плотной тканью.', match:true,
+        note:'Верно. Перекрытие доступа кислорода — основной способ.' },
+      { id:'h2', text:'Если загорелась одежда, нужно бежать к раковине.', match:false,
+        note:'Категорически нет. Бег раздувает пламя. Нужно остановиться, упасть, перекатываться или накрыть огонь плотной тканью.' },
+      { id:'h3', text:'Любой пожар можно тушить водой, в том числе горящие щелочные металлы.', match:false,
+        note:'Категорически нет. Натрий, калий в воде взрываются! Их тушат сухим песком или порошковым огнетушителем.' },
+      { id:'h4', text:'При возгорании следует немедленно сообщить учителю / лаборанту.', match:true,
+        note:'Верно. Самостоятельные попытки тушить серьёзный огонь — после немедленного сообщения и эвакуации.' },
+      { id:'h5', text:'Спиртовку при поджигании другой спиртовки от её пламени — это нормальная практика.', match:false,
+        note:'Нет. Можно опрокинуть спирт. Каждую спиртовку зажигают только спичкой.' }
+    ] },
+  { id:'q-mixing', topic:'смешивание и разбавление',
+    statements:[
+      { id:'i1', text:'Концентрированную серную кислоту разбавляют, доливая её к воде.', match:true,
+        note:'Верно. Кислота — в воду. Иначе мощное выделение тепла приведёт к разбрызгиванию.' },
+      { id:'i2', text:'Воду можно лить в концентрированную H₂SO₄ — главное лить медленно.', match:false,
+        note:'Нет. Это опасно при любой скорости — раствор закипит, кислота разбрызгается.' },
+      { id:'i3', text:'Растворы готовят в мерной колбе или мензурке.', match:true,
+        note:'Верно — для точного объёма используют мерную посуду.' },
+      { id:'i4', text:'Для перемешивания используется стеклянная палочка.', match:true,
+        note:'Верно. Стекло химически инертно к большинству реактивов.' },
+      { id:'i5', text:'Горячий раствор можно наливать в холодную сухую пробирку без подогрева.', match:false,
+        note:'Нет. Резкий перепад температур может разрушить стекло.' }
+    ] },
+  { id:'q-recognition', topic:'распознавание газов в лаборатории',
+    statements:[
+      { id:'j1', text:'Углекислый газ распознают, пропуская через известковую воду — выпадает белый осадок CaCO₃.', match:true,
+        note:'Верно. Качественная реакция: Ca(OH)₂ + CO₂ → CaCO₃↓ + H₂O.' },
+      { id:'j2', text:'Кислород распознают по поддержанию горения — тлеющая лучина вспыхивает.', match:true,
+        note:'Верно. Это базовая качественная проба на кислород.' },
+      { id:'j3', text:'Водород распознают, поджигая — горит со «свистом» или «лающим» звуком.', match:true,
+        note:'Верно. Чистый H₂ горит спокойно, смесь H₂ + O₂ ("гремучий газ") — со взрывом-хлопком.' },
+      { id:'j4', text:'Аммиак распознают по запаху, поднося горящую спиртовку к выходному отверстию пробирки.', match:false,
+        note:'Нет. Аммиак распознают по запаху (осторожно нюхать) или по посинению влажной красной лакмусовой бумажки.' },
+      { id:'j5', text:'Хлор имеет запах сладкого яблока и зелёный цвет.', match:false,
+        note:'Хлор — резкий удушающий запах, жёлто-зелёный (не сладкий!). Сладкий запах был у фосгена и других — но точно не у хлора.' }
+    ] }
+];
+
+var state = { total:0, correct:0, streak:0, current:null, locked:false, recentIds:[] };
+function pickQuestion(){
+  var pool = QUESTIONS.filter(function(q){return state.recentIds.indexOf(q.id)<0});
+  if(pool.length===0) pool = QUESTIONS;
+  var q = pool[Math.floor(Math.random()*pool.length)];
+  state.recentIds.push(q.id);
+  if(state.recentIds.length>5) state.recentIds.shift();
+  return q;
+}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function el(t,p,c){var e=document.createElement(t);if(p)for(var k in p){if(k==='class')e.className=p[k];else if(k==='html')e.innerHTML=p[k];else if(k.indexOf('on')===0)e.addEventListener(k.substring(2).toLowerCase(),p[k]);else e.setAttribute(k,p[k])}if(c!=null){if(!Array.isArray(c))c=[c];for(var i=0;i<c.length;i++){var x=c[i];if(x==null)continue;e.appendChild(typeof x==='string'||typeof x==='number'?document.createTextNode(x):x)}}return e}
+
+function renderQuestion(q){
+  document.getElementById('question-text').innerHTML = 'Какие из приведённых суждений о <b>'+q.topic+'</b> верны? Выбери все верные:';
+}
+function renderStatements(){
+  var c = document.getElementById('statements'); c.innerHTML = '';
+  state.current.displayed.forEach(function(s,i){
+    var card = el('div',{class:'stmt','data-id':s.id});
+    card.addEventListener('click',function(){onClick(s.id)});
+    var num = el('div',{class:'num'}); num.appendChild(el('span',null,String(i+1)));
+    card.appendChild(num);
+    card.appendChild(el('div',{class:'text'},s.text));
+    var v = el('div',{class:'verdict'});
+    var tag = s.match ? '<span class="tag true">верно</span>' : '<span class="tag false">неверно</span>';
+    v.innerHTML = tag + s.note;
+    card.appendChild(v);
+    c.appendChild(card);
+  });
+}
+function onClick(id){
+  if(state.locked) return;
+  var sel = state.current.selected;
+  var pos = sel.indexOf(id);
+  if(pos>=0) sel.splice(pos,1);
+  else sel.push(id);
+  document.querySelectorAll('.stmt').forEach(function(card){
+    card.classList.toggle('selected',sel.indexOf(card.getAttribute('data-id'))>=0);
+  });
+  document.getElementById('check-btn').disabled = sel.length === 0;
+}
+function checkAnswer(){
+  if(state.locked) return;
+  var q = state.current.question;
+  var correctIds = q.statements.filter(function(s){return s.match}).map(function(s){return s.id}).sort();
+  var sel = state.current.selected.slice().sort();
+  var isCorrect = sel.length === correctIds.length && sel.every(function(id,i){return id === correctIds[i]});
+
+  state.total++;
+  if(isCorrect){state.correct++;state.streak++}else{state.streak=0}
+  updateStats();
+  state.locked = true;
+
+  document.querySelectorAll('.stmt').forEach(function(card){
+    var id = card.getAttribute('data-id');
+    card.classList.add('locked');
+    card.classList.remove('selected');
+    var isSel = sel.indexOf(id)>=0;
+    var isCorrId = correctIds.indexOf(id)>=0;
+    if(isSel && isCorrId) card.classList.add('correct-pick');
+    else if(isSel && !isCorrId) card.classList.add('wrong-pick');
+    else if(!isSel && isCorrId) card.classList.add('missed');
+  });
+
+  var displayedIds = state.current.displayed.map(function(d){return d.id});
+  var correctNumbers = correctIds.map(function(id){return displayedIds.indexOf(id)+1}).sort(function(a,b){return a-b}).join('');
+
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + (isCorrect?'win':'lose');
+  if(isCorrect){
+    r.innerHTML = '<div>✓ Верно!</div><div class="result-line2">В формате ОГЭ ответ: <b>'+correctNumbers+'</b>.</div>';
+  } else {
+    r.innerHTML = '<div>✗ Неверно.</div><div class="result-line2">Правильный ответ: <b>'+correctNumbers+'</b>. Зелёным помечены верные суждения, красным — неверные, пунктиром — пропущенные.</div>';
+  }
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+function nextQuestion(){
+  var q = pickQuestion();
+  state.current = { question:q, displayed: shuffle(q.statements), selected: [] };
+  state.locked = false;
+  renderQuestion(q); renderStatements();
+  document.getElementById('result').className = 'result';
+  document.getElementById('check-btn').style.display = '';
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('skip-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function skipQuestion(){state.streak=0;updateStats();nextQuestion()}
+function updateStats(){
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var s = document.getElementById('stat-streak'); s.textContent = state.streak; s.classList.toggle('hot',state.streak>=3);
+  document.getElementById('stat-pct').textContent = state.total===0?'—':Math.round(100*state.correct/state.total)+'%';
+}
+document.getElementById('check-btn').addEventListener('click',checkAnswer);
+document.getElementById('next-btn').addEventListener('click',nextQuestion);
+document.getElementById('skip-btn').addEventListener('click',skipQuestion);
+document.addEventListener('keydown',function(e){
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  if(e.key>='1'&&e.key<='5'&&!state.locked){
+    var idx = parseInt(e.key,10)-1;
+    if(idx<state.current.displayed.length) onClick(state.current.displayed[idx].id);
+  } else if(e.key==='Enter'){
+    if(state.locked) nextQuestion();
+    else if(!document.getElementById('check-btn').disabled) checkAnswer();
+  }
+});
+nextQuestion();
+</script>
+</body>
+</html>

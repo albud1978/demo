@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №11 · Классификация химических реакций</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #F2EDE2; --bg-card: #FAF6EC; --ink: #1B1814; --ink-soft: #4A453D; --ink-faint: #7A736A;
+  --rule: #C8BFAE; --rule-soft: #DCD3BF; --accent: #2D4A2B; --accent-soft: rgba(45, 74, 43, 0.08);
+  --good: #16A34A; --good-bg: #DCFCE7; --bad: #B91C1C; --bad-bg: #FEE2E2; --warn: #D97706;
+  --serif: "Fraunces", "Times New Roman", Georgia, serif;
+  --body: "Spectral", "Georgia", serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { background-image: radial-gradient(circle at 25% 10%, rgba(45, 74, 43, 0.04), transparent 40%); }
+.wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+.head { border-top: 3px solid var(--ink); padding-top: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+.head-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); flex-wrap: wrap; gap: 10px; }
+.head-meta .accent { color: var(--accent); }
+h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; letter-spacing: -0.015em; margin-top: 16px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
+.subtitle { font-size: 16px; color: var(--ink-soft); margin-top: 12px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 32px; }
+@media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--bg-card); padding: 14px 16px; }
+.stat .num { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1; color: var(--accent); }
+.stat .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 6px; }
+.stat.streak .num.hot { color: var(--warn); }
+.question-card { background: var(--bg-card); border: 1px solid var(--rule); border-left: 4px solid var(--accent); padding: 24px 28px; margin-bottom: 24px; }
+.question-text { font-family: var(--serif); font-size: 19px; font-weight: 400; line-height: 1.45; }
+.target-pill { display: inline-block; padding: 4px 14px; background: var(--accent); color: white; font-family: var(--serif); font-weight: 600; border-radius: 1px; font-size: 18px; margin: 0 4px; }
+.choices { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 22px; }
+.choice { background: var(--bg-card); border: 1px solid var(--rule); padding: 16px 18px 16px 50px; cursor: pointer; transition: all 0.15s ease; position: relative; user-select: none; font-family: "Cambria Math", serif; font-size: 18px; }
+.choice:hover:not(.locked) { border-color: var(--ink); }
+.choice .num { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--ink-faint); border: 1px solid var(--rule); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+.choice .desc { display: none; font-family: var(--body); font-size: 13px; color: var(--ink-soft); margin-top: 6px; line-height: 1.4; }
+.choice.locked .desc { display: block; }
+.choice.selected { border-color: var(--accent); background: var(--accent-soft); }
+.choice.selected .num { background: var(--accent); color: white; border-color: var(--accent); }
+.choice.locked { cursor: default; }
+.choice.correct-pick { border-color: var(--good); background: var(--good-bg); }
+.choice.correct-pick .num { background: var(--good); color: white; border-color: var(--good); }
+.choice.correct-pick .num::after { content: '✓'; font-size: 14px; }
+.choice.correct-pick .num span { display: none; }
+.choice.wrong-pick { border-color: var(--bad); background: var(--bad-bg); }
+.choice.wrong-pick .num { background: var(--bad); color: white; border-color: var(--bad); }
+.choice.wrong-pick .num::after { content: '✗'; font-size: 14px; }
+.choice.wrong-pick .num span { display: none; }
+.choice.missed { border-color: var(--good); border-style: dashed; }
+.choice.missed .num { color: var(--good); border-color: var(--good); }
+.choice sub, .choice sup { font-size: 0.7em; }
+.actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.btn { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 14px 28px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); cursor: pointer; border-radius: 1px; transition: all 0.15s ease; }
+.btn:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.btn:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-faint); cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.btn.next { background: var(--accent); border-color: var(--accent); }
+.result { display: none; margin-top: 24px; padding: 20px 24px; border-left: 4px solid; font-family: var(--serif); font-size: 18px; font-weight: 500; }
+.result.shown { display: block; }
+.result.win { background: var(--good-bg); border-color: var(--good); color: #14532D; }
+.result.lose { background: var(--bad-bg); border-color: var(--bad); color: #7F1D1D; }
+.result-line1 { font-size: 19px; }
+.result-line2 { font-family: var(--body); font-size: 14.5px; font-weight: 400; margin-top: 10px; line-height: 1.55; opacity: 0.92; }
+.result-line2 b { font-family: var(--mono); font-weight: 700; }
+.cheat { margin-top: 56px; padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; }
+.cheat h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin-bottom: 16px; }
+.cheat .types-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .cheat .types-grid { grid-template-columns: 1fr; } }
+.type-card { padding: 12px 14px; background: var(--bg); border: 1px solid var(--rule-soft); border-left: 3px solid var(--accent); }
+.type-card h5 { font-family: var(--serif); font-weight: 600; font-size: 16px; margin-bottom: 4px; color: var(--accent); }
+.type-card p { font-size: 13px; color: var(--ink-soft); margin: 4px 0; }
+.type-card .ex { font-family: "Cambria Math", serif; font-size: 13.5px; color: var(--ink); margin-top: 4px; }
+.type-card .ex sub { font-size: 0.7em; }
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--ink-faint); text-align: center; }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+
+<header class="head">
+  <div class="head-meta">
+    <span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №11</span>
+    <span>1 балл · краткий ответ</span>
+  </div>
+  <h1>Классификация <em>химических реакций</em></h1>
+  <p class="subtitle">Тренажёр на типы реакций: по числу веществ (соединения, разложения, замещения, обмена), по тепловому эффекту (экзо/эндо), по изменению степеней окисления (ОВР или нет).</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего вопросов</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">правильно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности</div></div>
+</div>
+
+<div class="question-card">
+  <p class="question-text" id="question-text"></p>
+  <div class="choices" id="choices"></div>
+</div>
+
+<div class="actions">
+  <button class="btn" id="check-btn" disabled>Проверить</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующий вопрос</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<section class="cheat">
+  <h3>Типы химических реакций</h3>
+  <p style="margin-bottom:12px"><b>По числу и составу веществ:</b></p>
+  <div class="types-grid">
+    <div class="type-card">
+      <h5>Соединения</h5>
+      <p>Из <b>нескольких → одного</b>. A + B → AB</p>
+      <div class="ex">2H<sub>2</sub> + O<sub>2</sub> → 2H<sub>2</sub>O<br/>CaO + CO<sub>2</sub> → CaCO<sub>3</sub></div>
+    </div>
+    <div class="type-card">
+      <h5>Разложения</h5>
+      <p>Из <b>одного → нескольких</b>. AB → A + B</p>
+      <div class="ex">2H<sub>2</sub>O<sub>2</sub> → 2H<sub>2</sub>O + O<sub>2</sub><br/>CaCO<sub>3</sub> → CaO + CO<sub>2</sub>↑</div>
+    </div>
+    <div class="type-card">
+      <h5>Замещения</h5>
+      <p><b>Простое + сложное</b> → новое простое + новое сложное.</p>
+      <div class="ex">Zn + 2HCl → ZnCl<sub>2</sub> + H<sub>2</sub>↑<br/>Fe + CuSO<sub>4</sub> → FeSO<sub>4</sub> + Cu</div>
+    </div>
+    <div class="type-card">
+      <h5>Обмена</h5>
+      <p>Два сложных меняются «частями». AB + CD → AD + CB</p>
+      <div class="ex">NaOH + HCl → NaCl + H<sub>2</sub>O<br/>AgNO<sub>3</sub> + NaCl → AgCl↓ + NaNO<sub>3</sub></div>
+    </div>
+  </div>
+  <p style="margin-top:14px"><b>По изменению степеней окисления (ОВР):</b></p>
+  <ul style="list-style:none;padding-left:0">
+    <li style="font-size:13.5px;padding:4px 0;color:var(--ink-soft)"><b style="color:var(--ink)">ОВР</b> — изменяются СО атомов. Все реакции <b>замещения</b> — ОВР. Реакции с участием простых веществ обычно ОВР.</li>
+    <li style="font-size:13.5px;padding:4px 0;color:var(--ink-soft)"><b style="color:var(--ink)">Не ОВР</b> — реакции <b>обмена</b> между сложными веществами без простых; нейтрализация; ионные реакции с осадком/газом.</li>
+  </ul>
+  <p style="margin-top:10px"><b>По тепловому эффекту:</b> экзотермические (выделяют тепло, +Q или ΔH&lt;0) — горение, нейтрализация. Эндотермические (поглощают тепло, −Q) — разложение CaCO<sub>3</sub>, синтез NO.</p>
+</section>
+
+<footer>
+  Источник: спецификация ОГЭ-2026 ФИПИ ·
+  <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a>
+</footer>
+
+</div>
+
+<script>
+// Каждый вопрос: целевой тип реакции + 5 уравнений с tag — соответствует ли тип
+var TYPES = {
+  'соединения':    'реакция соединения',
+  'разложения':    'реакция разложения',
+  'замещения':     'реакция замещения',
+  'обмена':        'реакция обмена',
+  'овр':           'окислительно-восстановительная реакция (ОВР)',
+  'не-овр':        'реакция, идущая без изменения степеней окисления',
+  'экзо':          'экзотермическая реакция',
+  'эндо':          'эндотермическая реакция'
+};
+
+var QUESTIONS = [
+  {
+    id:'q-soed-1', target:'соединения',
+    pool: [
+      { id:'a1', formula:'2H<sub>2</sub> + O<sub>2</sub> = 2H<sub>2</sub>O',  match:true,  note:'Из 2 веществ → 1 вещество. Соединение.' },
+      { id:'a2', formula:'CaCO<sub>3</sub> = CaO + CO<sub>2</sub>↑',           match:false, note:'Из 1 → 2. Разложение.' },
+      { id:'a3', formula:'CaO + CO<sub>2</sub> = CaCO<sub>3</sub>',            match:true,  note:'Из 2 → 1. Соединение.' },
+      { id:'a4', formula:'Zn + 2HCl = ZnCl<sub>2</sub> + H<sub>2</sub>↑',      match:false, note:'Простое + сложное → новое простое + новое сложное. Замещение.' },
+      { id:'a5', formula:'NaOH + HCl = NaCl + H<sub>2</sub>O',                 match:false, note:'Сложное + сложное → 2 сложных. Обмен.' }
+    ]
+  },
+  {
+    id:'q-razl-1', target:'разложения',
+    pool: [
+      { id:'b1', formula:'2KClO<sub>3</sub> = 2KCl + 3O<sub>2</sub>↑',         match:true,  note:'Из 1 вещества → 2. Разложение.' },
+      { id:'b2', formula:'4P + 5O<sub>2</sub> = 2P<sub>2</sub>O<sub>5</sub>',  match:false, note:'2 простых → 1 сложное. Соединение.' },
+      { id:'b3', formula:'Cu(OH)<sub>2</sub> = CuO + H<sub>2</sub>O',          match:true,  note:'Прокаливание гидроксида: 1 → 2. Разложение.' },
+      { id:'b4', formula:'Fe + S = FeS',                                        match:false, note:'2 простых → 1. Соединение.' },
+      { id:'b5', formula:'BaCl<sub>2</sub> + Na<sub>2</sub>SO<sub>4</sub> = BaSO<sub>4</sub>↓ + 2NaCl', match:false, note:'Обмен.' }
+    ]
+  },
+  {
+    id:'q-zam-1', target:'замещения',
+    pool: [
+      { id:'c1', formula:'Fe + CuSO<sub>4</sub> = FeSO<sub>4</sub> + Cu',      match:true,  note:'Простое (Fe) + сложное (CuSO₄) → новое простое (Cu) + новое сложное (FeSO₄). Замещение.' },
+      { id:'c2', formula:'Mg + 2HCl = MgCl<sub>2</sub> + H<sub>2</sub>↑',      match:true,  note:'Простое + сложное → новое простое + новое сложное. Замещение.' },
+      { id:'c3', formula:'CaO + H<sub>2</sub>O = Ca(OH)<sub>2</sub>',           match:false, note:'2 → 1. Соединение.' },
+      { id:'c4', formula:'Na<sub>2</sub>CO<sub>3</sub> + 2HCl = 2NaCl + CO<sub>2</sub>↑ + H<sub>2</sub>O', match:false, note:'Обмен.' },
+      { id:'c5', formula:'2HgO = 2Hg + O<sub>2</sub>↑',                        match:false, note:'Разложение.' }
+    ]
+  },
+  {
+    id:'q-obm-1', target:'обмена',
+    pool: [
+      { id:'d1', formula:'AgNO<sub>3</sub> + NaCl = AgCl↓ + NaNO<sub>3</sub>', match:true,  note:'Сложное + сложное → 2 новых сложных, обмен ионами. Обмен.' },
+      { id:'d2', formula:'2NaOH + H<sub>2</sub>SO<sub>4</sub> = Na<sub>2</sub>SO<sub>4</sub> + 2H<sub>2</sub>O', match:true, note:'Нейтрализация — реакция обмена.' },
+      { id:'d3', formula:'2Na + 2H<sub>2</sub>O = 2NaOH + H<sub>2</sub>↑',     match:false, note:'Простое + сложное → ... + простое. Замещение.' },
+      { id:'d4', formula:'CaCO<sub>3</sub> = CaO + CO<sub>2</sub>↑',           match:false, note:'Разложение.' },
+      { id:'d5', formula:'2H<sub>2</sub> + O<sub>2</sub> = 2H<sub>2</sub>O',  match:false, note:'Соединение.' }
+    ]
+  },
+  {
+    id:'q-ovr-1', target:'овр',
+    pool: [
+      { id:'e1', formula:'Zn + CuSO<sub>4</sub> = ZnSO<sub>4</sub> + Cu',      match:true,  note:'Zn⁰ → Zn²⁺, Cu²⁺ → Cu⁰. СО изменяются — ОВР.' },
+      { id:'e2', formula:'2Mg + O<sub>2</sub> = 2MgO',                          match:true,  note:'Mg⁰ → Mg²⁺, O⁰ → O²⁻. ОВР (горение всегда ОВР).' },
+      { id:'e3', formula:'NaOH + HCl = NaCl + H<sub>2</sub>O',                 match:false, note:'Все СО не меняются (Na⁺, Cl⁻, H⁺, O²⁻ как были). Не ОВР.' },
+      { id:'e4', formula:'BaCl<sub>2</sub> + H<sub>2</sub>SO<sub>4</sub> = BaSO<sub>4</sub>↓ + 2HCl', match:false, note:'Чистый ионный обмен без изменения СО. Не ОВР.' },
+      { id:'e5', formula:'CaCO<sub>3</sub> = CaO + CO<sub>2</sub>',             match:false, note:'СО Ca, C, O не меняются. Не ОВР.' }
+    ]
+  },
+  {
+    id:'q-not-ovr-1', target:'не-овр',
+    pool: [
+      { id:'f1', formula:'Cu(OH)<sub>2</sub> + 2HCl = CuCl<sub>2</sub> + 2H<sub>2</sub>O', match:true, note:'СО элементов не меняются. Реакция обмена, не ОВР.' },
+      { id:'f2', formula:'Na<sub>2</sub>CO<sub>3</sub> + 2HCl = 2NaCl + H<sub>2</sub>O + CO<sub>2</sub>↑', match:true, note:'СО не меняются. Не ОВР.' },
+      { id:'f3', formula:'2KClO<sub>3</sub> = 2KCl + 3O<sub>2</sub>↑',         match:false, note:'Cl⁺⁵ → Cl⁻¹, O⁻² → O⁰. ОВР.' },
+      { id:'f4', formula:'Cu + Cl<sub>2</sub> = CuCl<sub>2</sub>',              match:false, note:'Cu⁰ → Cu²⁺, Cl⁰ → Cl⁻. ОВР.' },
+      { id:'f5', formula:'2H<sub>2</sub>O = 2H<sub>2</sub>↑ + O<sub>2</sub>↑', match:false, note:'Электролиз воды — ОВР.' }
+    ]
+  },
+  {
+    id:'q-soed-2', target:'соединения',
+    pool: [
+      { id:'g1', formula:'N<sub>2</sub> + 3H<sub>2</sub> ⇌ 2NH<sub>3</sub>',    match:true, note:'Из 2 простых → 1 сложное. Соединение (синтез аммиака).' },
+      { id:'g2', formula:'SO<sub>3</sub> + H<sub>2</sub>O = H<sub>2</sub>SO<sub>4</sub>', match:true, note:'Из 2 → 1. Соединение.' },
+      { id:'g3', formula:'2KMnO<sub>4</sub> = K<sub>2</sub>MnO<sub>4</sub> + MnO<sub>2</sub> + O<sub>2</sub>↑', match:false, note:'Из 1 → 3. Разложение.' },
+      { id:'g4', formula:'Fe<sub>2</sub>O<sub>3</sub> + 3CO = 2Fe + 3CO<sub>2</sub>', match:false, note:'Не подходит под определения соединения/разложения. Это сложная ОВР, не классическое замещение.' },
+      { id:'g5', formula:'CuSO<sub>4</sub> + 2NaOH = Cu(OH)<sub>2</sub>↓ + Na<sub>2</sub>SO<sub>4</sub>', match:false, note:'Обмен.' }
+    ]
+  },
+  {
+    id:'q-zam-2', target:'замещения',
+    pool: [
+      { id:'h1', formula:'2Al + 3CuCl<sub>2</sub> = 2AlCl<sub>3</sub> + 3Cu',  match:true,  note:'Простое + сложное → новое простое + новое сложное. Замещение.' },
+      { id:'h2', formula:'Cl<sub>2</sub> + 2KBr = 2KCl + Br<sub>2</sub>',      match:true,  note:'Простое (Cl₂) + сложное (KBr) → простое (Br₂) + сложное (KCl). Замещение (вытеснение брома хлором).' },
+      { id:'h3', formula:'CO<sub>2</sub> + 2NaOH = Na<sub>2</sub>CO<sub>3</sub> + H<sub>2</sub>O', match:false, note:'Сложное + сложное → 2 сложных. Обмен.' },
+      { id:'h4', formula:'4Fe(OH)<sub>2</sub> + O<sub>2</sub> + 2H<sub>2</sub>O = 4Fe(OH)<sub>3</sub>', match:false, note:'Сложно классифицировать; в школе чаще как соединение (всё в одну сторону).' },
+      { id:'h5', formula:'(NH<sub>4</sub>)<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub> = N<sub>2</sub>↑ + Cr<sub>2</sub>O<sub>3</sub> + 4H<sub>2</sub>O', match:false, note:'Из 1 → 3. Разложение.' }
+    ]
+  },
+  {
+    id:'q-razl-2', target:'разложения',
+    pool: [
+      { id:'i1', formula:'2H<sub>2</sub>O<sub>2</sub> = 2H<sub>2</sub>O + O<sub>2</sub>↑', match:true, note:'Разложение пероксида — из 1 → 2. Разложение.' },
+      { id:'i2', formula:'2Fe(OH)<sub>3</sub> = Fe<sub>2</sub>O<sub>3</sub> + 3H<sub>2</sub>O', match:true, note:'Прокаливание гидроксида: 1 → 2. Разложение.' },
+      { id:'i3', formula:'C + O<sub>2</sub> = CO<sub>2</sub>',                  match:false, note:'Соединение.' },
+      { id:'i4', formula:'CuO + H<sub>2</sub> = Cu + H<sub>2</sub>O',           match:false, note:'Замещение/восстановление: простое + сложное → простое + сложное.' },
+      { id:'i5', formula:'CaCl<sub>2</sub> + Na<sub>2</sub>CO<sub>3</sub> = CaCO<sub>3</sub>↓ + 2NaCl', match:false, note:'Обмен.' }
+    ]
+  },
+  {
+    id:'q-obm-2', target:'обмена',
+    pool: [
+      { id:'j1', formula:'CuSO<sub>4</sub> + 2KOH = Cu(OH)<sub>2</sub>↓ + K<sub>2</sub>SO<sub>4</sub>', match:true, note:'Сложное + сложное → 2 сложных, обмен. Обмен.' },
+      { id:'j2', formula:'BaCl<sub>2</sub> + Na<sub>2</sub>SO<sub>4</sub> = BaSO<sub>4</sub>↓ + 2NaCl', match:true, note:'Обмен с образованием осадка.' },
+      { id:'j3', formula:'2Na + Cl<sub>2</sub> = 2NaCl',                        match:false, note:'Соединение.' },
+      { id:'j4', formula:'Mg + H<sub>2</sub>SO<sub>4</sub> = MgSO<sub>4</sub> + H<sub>2</sub>↑', match:false, note:'Замещение.' },
+      { id:'j5', formula:'2HgO = 2Hg + O<sub>2</sub>↑',                         match:false, note:'Разложение.' }
+    ]
+  }
+];
+
+var state = { total: 0, correct: 0, streak: 0, current: null, locked: false, recentIds: [] };
+
+function pickQuestion() {
+  var pool = QUESTIONS.filter(function(q){ return state.recentIds.indexOf(q.id) < 0; });
+  if (pool.length === 0) pool = QUESTIONS;
+  var q = pool[Math.floor(Math.random() * pool.length)];
+  state.recentIds.push(q.id);
+  if (state.recentIds.length > 5) state.recentIds.shift();
+  return q;
+}
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function el(tag, props, children) {
+  var e = document.createElement(tag);
+  if (props) for (var k in props) {
+    if (k === 'class') e.className = props[k];
+    else if (k === 'html') e.innerHTML = props[k];
+    else if (k.indexOf('on') === 0) e.addEventListener(k.substring(2).toLowerCase(), props[k]);
+    else e.setAttribute(k, props[k]);
+  }
+  if (children != null) {
+    if (!Array.isArray(children)) children = [children];
+    for (var i = 0; i < children.length; i++) {
+      var c = children[i];
+      if (c == null) continue;
+      e.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(c) : c);
+    }
+  }
+  return e;
+}
+
+function renderQuestion() {
+  var q = state.current.question;
+  document.getElementById('question-text').innerHTML =
+    'Какие <b>две</b> из перечисленных реакций относятся к типу <span class="target-pill">'+TYPES[q.target]+'</span>?';
+}
+
+function renderChoices() {
+  var c = document.getElementById('choices');
+  c.innerHTML = '';
+  state.current.displayed.forEach(function(item, i) {
+    var card = el('div', { class:'choice', 'data-id': item.id });
+    card.addEventListener('click', function(){ onChoiceClick(item.id); });
+    var num = el('div', { class:'num' });
+    num.appendChild(el('span', null, String(i+1)));
+    card.appendChild(num);
+    var name = el('div');
+    name.innerHTML = item.formula;
+    card.appendChild(name);
+    var desc = el('div', { class:'desc' });
+    desc.innerHTML = item.note;
+    card.appendChild(desc);
+    c.appendChild(card);
+  });
+}
+
+function onChoiceClick(id) {
+  if (state.locked) return;
+  var pos = state.current.selectedIds.indexOf(id);
+  if (pos >= 0) state.current.selectedIds.splice(pos, 1);
+  else {
+    if (state.current.selectedIds.length >= 2) return;
+    state.current.selectedIds.push(id);
+  }
+  updateSelection();
+}
+
+function updateSelection() {
+  document.querySelectorAll('.choice').forEach(function(card) {
+    var id = card.getAttribute('data-id');
+    card.classList.toggle('selected', state.current.selectedIds.indexOf(id) >= 0);
+  });
+  document.getElementById('check-btn').disabled = state.current.selectedIds.length !== 2;
+}
+
+function checkAnswer() {
+  if (state.locked) return;
+  var q = state.current.question;
+  var correctIds = q.pool.filter(function(p){ return p.match; }).map(function(p){ return p.id; });
+  var sel = state.current.selectedIds.slice().sort();
+  var corr = correctIds.slice().sort();
+  var isCorrect = sel.length === corr.length && sel.every(function(id, i){ return id === corr[i]; });
+
+  state.total++;
+  if (isCorrect) { state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  updateStats();
+  state.locked = true;
+
+  document.querySelectorAll('.choice').forEach(function(card) {
+    var id = card.getAttribute('data-id');
+    card.classList.add('locked');
+    card.classList.remove('selected');
+    var isSel = sel.indexOf(id) >= 0;
+    var isCorrId = corr.indexOf(id) >= 0;
+    if (isSel && isCorrId) card.classList.add('correct-pick');
+    else if (isSel && !isCorrId) card.classList.add('wrong-pick');
+    else if (!isSel && isCorrId) card.classList.add('missed');
+  });
+
+  var displayedOrder = state.current.displayed.map(function(d){ return d.id; });
+  var correctNumbers = correctIds.map(function(id){ return displayedOrder.indexOf(id) + 1; }).sort(function(a,b){return a-b;}).join('');
+
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + (isCorrect ? 'win' : 'lose');
+  if (isCorrect) {
+    r.innerHTML = '<div class="result-line1">✓ Верно!</div><div class="result-line2">Ответ в формате ОГЭ: <b>'+correctNumbers+'</b>.</div>';
+  } else {
+    r.innerHTML = '<div class="result-line1">✗ Неверно.</div><div class="result-line2">Правильный ответ: <b>'+correctNumbers+'</b>.</div>';
+  }
+
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+
+function nextQuestion() {
+  var q = pickQuestion();
+  state.current = { question: q, displayed: shuffle(q.pool.slice()), selectedIds: [] };
+  state.locked = false;
+  renderQuestion();
+  renderChoices();
+  document.getElementById('result').className = 'result';
+  document.getElementById('check-btn').style.display = '';
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('skip-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function skipQuestion() { state.streak = 0; updateStats(); nextQuestion(); }
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var streakEl = document.getElementById('stat-streak');
+  streakEl.textContent = state.streak;
+  streakEl.classList.toggle('hot', state.streak >= 3);
+  var pctEl = document.getElementById('stat-pct');
+  pctEl.textContent = state.total === 0 ? '—' : Math.round(100 * state.correct / state.total) + '%';
+}
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('next-btn').addEventListener('click', nextQuestion);
+document.getElementById('skip-btn').addEventListener('click', skipQuestion);
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key >= '1' && e.key <= '5' && !state.locked) {
+    var idx = parseInt(e.key, 10) - 1;
+    if (idx < state.current.displayed.length) onChoiceClick(state.current.displayed[idx].id);
+  } else if (e.key === 'Enter') {
+    if (state.locked) nextQuestion();
+    else if (!document.getElementById('check-btn').disabled) checkAnswer();
+  }
+});
+nextQuestion();
+</script>
+</body>
+</html>

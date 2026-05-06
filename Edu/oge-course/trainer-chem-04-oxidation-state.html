@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №4 · Степень окисления</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #F2EDE2; --bg-card: #FAF6EC; --ink: #1B1814; --ink-soft: #4A453D; --ink-faint: #7A736A;
+  --rule: #C8BFAE; --rule-soft: #DCD3BF; --accent: #2D4A2B; --accent-soft: rgba(45, 74, 43, 0.08);
+  --good: #16A34A; --good-bg: #DCFCE7; --bad: #B91C1C; --bad-bg: #FEE2E2; --warn: #D97706;
+  --serif: "Fraunces", "Times New Roman", Georgia, serif;
+  --body: "Spectral", "Georgia", serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { background-image: radial-gradient(circle at 25% 10%, rgba(45, 74, 43, 0.04), transparent 40%); }
+.wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.head { border-top: 3px solid var(--ink); padding-top: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+.head-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); flex-wrap: wrap; gap: 10px; }
+.head-meta .accent { color: var(--accent); }
+h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; letter-spacing: -0.015em; margin-top: 16px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
+.subtitle { font-size: 16px; color: var(--ink-soft); margin-top: 12px; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 32px; }
+@media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--bg-card); padding: 14px 16px; }
+.stat .num { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1; color: var(--accent); }
+.stat .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 6px; }
+.stat.streak .num.hot { color: var(--warn); }
+
+.question-card { background: var(--bg-card); border: 1px solid var(--rule); border-left: 4px solid var(--accent); padding: 24px 28px; margin-bottom: 24px; }
+.question-text { font-family: var(--serif); font-size: 18px; font-weight: 400; line-height: 1.45; }
+.target-elem { display: inline-block; padding: 2px 10px; background: var(--accent); color: white; font-family: "Fraunces", serif; font-weight: 600; border-radius: 1px; font-size: 17px; margin: 0 2px; }
+
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 24px; }
+@media (max-width: 600px) { .match-grid { grid-template-columns: 1fr; gap: 16px; } }
+.match-col h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
+
+.formula-row { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border: 1px solid var(--rule); background: var(--bg); margin-bottom: 8px; }
+.formula-letter { font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--accent); flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; }
+.formula-text { font-family: "Cambria Math", "Cambria", "Times New Roman", serif; font-size: 20px; flex: 1; }
+.formula-text sub, .formula-text sup { font-size: 0.7em; }
+.formula-row select { font-family: var(--mono); font-size: 14px; font-weight: 700; padding: 6px 10px; border: 2px solid var(--rule); background: var(--bg-card); border-radius: 1px; cursor: pointer; min-width: 60px; text-align: center; color: var(--accent); }
+.formula-row select:focus { outline: none; border-color: var(--accent); }
+.formula-row.locked select { cursor: default; }
+.formula-row.correct-match { border-color: var(--good); background: var(--good-bg); }
+.formula-row.correct-match select { border-color: var(--good); color: #14532D; }
+.formula-row.wrong-match { border-color: var(--bad); background: var(--bad-bg); }
+.formula-row.wrong-match select { border-color: var(--bad); color: #7F1D1D; }
+
+.so-options { display: grid; gap: 8px; }
+.so-option { padding: 12px 16px; background: var(--bg); border: 1px solid var(--rule); font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--accent); display: flex; align-items: center; gap: 12px; }
+.so-option .num-circle { width: 22px; height: 22px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+
+.actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.btn { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 14px 28px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); cursor: pointer; border-radius: 1px; transition: all 0.15s ease; }
+.btn:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.btn:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-faint); cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.btn.next { background: var(--accent); border-color: var(--accent); }
+.btn.next:hover { background: var(--ink); border-color: var(--ink); }
+
+.result { display: none; margin-top: 24px; padding: 20px 24px; border-left: 4px solid; font-family: var(--serif); font-size: 18px; font-weight: 500; }
+.result.shown { display: block; }
+.result.win { background: var(--good-bg); border-color: var(--good); color: #14532D; }
+.result.lose { background: var(--bad-bg); border-color: var(--bad); color: #7F1D1D; }
+.result-line1 { font-size: 19px; }
+.result-line2 { font-family: var(--body); font-size: 14.5px; font-weight: 400; margin-top: 10px; line-height: 1.55; opacity: 0.92; }
+.result-line2 b { font-family: var(--mono); font-weight: 700; }
+
+.solution { display: none; margin-top: 18px; padding: 18px 22px; background: var(--bg-card); border: 1px solid var(--rule-soft); }
+.solution.shown { display: block; }
+.solution h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 12px; }
+.solution .sol-row { display: grid; grid-template-columns: 24px 1fr auto; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--rule-soft); align-items: center; }
+.solution .sol-row:last-child { border-bottom: none; }
+.solution .sol-letter { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+.solution .sol-formula { font-family: "Cambria Math", serif; font-size: 17px; }
+.solution .sol-formula sub, .solution .sol-formula sup { font-size: 0.7em; }
+.solution .sol-explain { font-family: var(--mono); font-size: 12.5px; color: var(--ink-soft); padding-left: 36px; padding-bottom: 8px; }
+.solution .sol-so { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+
+.cheat { margin-top: 56px; padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; }
+.cheat h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin-bottom: 16px; }
+.cheat p { font-size: 14.5px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 10px; }
+.cheat p b { color: var(--ink); font-family: var(--mono); }
+.cheat ul { list-style: none; padding-left: 0; }
+.cheat li { font-size: 14px; padding: 5px 0 5px 20px; position: relative; line-height: 1.5; }
+.cheat li::before { content: '·'; position: absolute; left: 6px; font-weight: 700; }
+.cheat li b { font-family: "Cambria Math", serif; }
+
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--ink-faint); text-align: center; }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+
+<header class="head">
+  <div class="head-meta">
+    <span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №4</span>
+    <span>1 балл · краткий ответ</span>
+  </div>
+  <h1>Степень окисления <em>элемента</em></h1>
+  <p class="subtitle">Тренажёр на определение степени окисления. Дан элемент и три формулы — определи, чему равна степень окисления элемента в каждой.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего вопросов</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">правильно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности</div></div>
+</div>
+
+<div class="question-card">
+  <p class="question-text" id="question-text"></p>
+  <div class="match-grid">
+    <div class="match-col">
+      <h4>Формулы веществ</h4>
+      <div id="formulas-list"></div>
+    </div>
+    <div class="match-col">
+      <h4>Возможные степени окисления</h4>
+      <div class="so-options" id="so-options"></div>
+    </div>
+  </div>
+</div>
+
+<div class="actions">
+  <button class="btn" id="check-btn" disabled>Проверить</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующий вопрос</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+
+<div class="result" id="result"></div>
+<div class="solution" id="solution"></div>
+
+<section class="cheat">
+  <h3>Правила определения степени окисления</h3>
+  <p><b>1.</b> В простом веществе (O₂, Cl₂, Fe) степень окисления = <b>0</b>.</p>
+  <p><b>2.</b> Сумма всех степеней окисления в нейтральной молекуле = <b>0</b>; в ионе = заряду иона.</p>
+  <p><b>3.</b> Постоянные степени окисления (запомнить):</p>
+  <ul>
+    <li><b>F</b> всегда −1</li>
+    <li><b>O</b> почти всегда −2 (исключения: пероксиды H₂O₂ → −1; OF₂ → +2)</li>
+    <li><b>H</b>: +1 с неметаллами; −1 с активными металлами (NaH, CaH₂)</li>
+    <li>Щелочные металлы (Li, Na, K): всегда <b>+1</b></li>
+    <li>Щёлочноземельные (Mg, Ca, Ba): всегда <b>+2</b></li>
+    <li>Al: всегда <b>+3</b></li>
+  </ul>
+  <p style="margin-top:12px"><b>4.</b> Высшая (положительная) степень окисления = номеру группы (для главных подгрупп). Низшая (отрицательная) для неметаллов = номер группы − 8.</p>
+  <p style="margin-top:12px;font-size:14px;color:var(--ink-faint)"><b style="color:var(--ink)">Пример (S в H₂SO₄):</b> H +1, O −2. Сумма: 2·(+1) + x + 4·(−2) = 0 → x = +6.</p>
+</section>
+
+<footer>
+  Источник: демоверсия и спецификация ОГЭ-2026 ФИПИ ·
+  <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a>
+</footer>
+
+</div>
+
+<script>
+// ============================================================
+//  БАЗА ВОПРОСОВ — степень окисления
+//  Каждый вопрос: один элемент-цель + 3 формулы + список возможных степеней (4 значения)
+//  formulas: [{ formula, so, explain }]  — степень окисления элемента-цели в этой формуле
+//  options: [-1, +1, +3, +7] — возможные степени окисления (4 шт., все используются хоть один раз)
+// ============================================================
+var QUESTIONS = [
+  {
+    id: 'cl-1',
+    element: 'Cl', elementName:'хлора',
+    formulas: [
+      { id:'a', formula:'NaCl',     so:-1, explain:'Na +1, сумма = 0 → Cl = −1' },
+      { id:'b', formula:'HClO<sub>3</sub>', so:+5, explain:'H +1, O −2 (×3); 1 + x + (−6) = 0 → x = +5' },
+      { id:'c', formula:'Cl<sub>2</sub>O<sub>7</sub>', so:+7, explain:'O −2 (×7); 2x + (−14) = 0 → x = +7' }
+    ],
+    options: [-1, +1, +5, +7]
+  },
+  {
+    id: 'n-1',
+    element: 'N', elementName:'азота',
+    formulas: [
+      { id:'a', formula:'NH<sub>3</sub>',  so:-3, explain:'H +1 (×3); x + 3 = 0 → x = −3' },
+      { id:'b', formula:'NO<sub>2</sub>',  so:+4, explain:'O −2 (×2); x + (−4) = 0 → x = +4' },
+      { id:'c', formula:'HNO<sub>3</sub>', so:+5, explain:'H +1, O −2 (×3); 1 + x + (−6) = 0 → x = +5' }
+    ],
+    options: [-3, 0, +4, +5]
+  },
+  {
+    id: 's-1',
+    element: 'S', elementName:'серы',
+    formulas: [
+      { id:'a', formula:'H<sub>2</sub>S',   so:-2, explain:'H +1 (×2); 2 + x = 0 → x = −2' },
+      { id:'b', formula:'SO<sub>2</sub>',   so:+4, explain:'O −2 (×2); x + (−4) = 0 → x = +4' },
+      { id:'c', formula:'H<sub>2</sub>SO<sub>4</sub>', so:+6, explain:'H +1 (×2), O −2 (×4); 2 + x + (−8) = 0 → x = +6' }
+    ],
+    options: [-2, 0, +4, +6]
+  },
+  {
+    id: 'c-1',
+    element: 'C', elementName:'углерода',
+    formulas: [
+      { id:'a', formula:'CH<sub>4</sub>',  so:-4, explain:'H +1 (×4); x + 4 = 0 → x = −4' },
+      { id:'b', formula:'CO',              so:+2, explain:'O −2; x + (−2) = 0 → x = +2' },
+      { id:'c', formula:'CO<sub>2</sub>',  so:+4, explain:'O −2 (×2); x + (−4) = 0 → x = +4' }
+    ],
+    options: [-4, 0, +2, +4]
+  },
+  {
+    id: 'p-1',
+    element: 'P', elementName:'фосфора',
+    formulas: [
+      { id:'a', formula:'PH<sub>3</sub>',         so:-3, explain:'H +1 (×3); x + 3 = 0 → x = −3' },
+      { id:'b', formula:'P<sub>2</sub>O<sub>5</sub>', so:+5, explain:'O −2 (×5); 2x + (−10) = 0 → x = +5' },
+      { id:'c', formula:'H<sub>3</sub>PO<sub>4</sub>', so:+5, explain:'H +1 (×3), O −2 (×4); 3 + x + (−8) = 0 → x = +5' }
+    ],
+    options: [-3, +1, +3, +5]
+  },
+  {
+    id: 'fe-1',
+    element: 'Fe', elementName:'железа',
+    formulas: [
+      { id:'a', formula:'Fe',                       so:0,  explain:'простое вещество — степень окисления = 0' },
+      { id:'b', formula:'FeCl<sub>2</sub>',         so:+2, explain:'Cl −1 (×2); x + (−2) = 0 → x = +2' },
+      { id:'c', formula:'Fe<sub>2</sub>O<sub>3</sub>', so:+3, explain:'O −2 (×3); 2x + (−6) = 0 → x = +3' }
+    ],
+    options: [0, +2, +3, +6]
+  },
+  {
+    id: 'mn-1',
+    element: 'Mn', elementName:'марганца',
+    formulas: [
+      { id:'a', formula:'MnO',                       so:+2, explain:'O −2; x + (−2) = 0 → x = +2' },
+      { id:'b', formula:'MnO<sub>2</sub>',           so:+4, explain:'O −2 (×2); x + (−4) = 0 → x = +4' },
+      { id:'c', formula:'KMnO<sub>4</sub>',          so:+7, explain:'K +1, O −2 (×4); 1 + x + (−8) = 0 → x = +7' }
+    ],
+    options: [+2, +4, +6, +7]
+  },
+  {
+    id: 'cr-1',
+    element: 'Cr', elementName:'хрома',
+    formulas: [
+      { id:'a', formula:'Cr<sub>2</sub>O<sub>3</sub>',  so:+3, explain:'O −2 (×3); 2x + (−6) = 0 → x = +3' },
+      { id:'b', formula:'CrO<sub>3</sub>',              so:+6, explain:'O −2 (×3); x + (−6) = 0 → x = +6' },
+      { id:'c', formula:'K<sub>2</sub>CrO<sub>4</sub>', so:+6, explain:'K +1 (×2), O −2 (×4); 2 + x + (−8) = 0 → x = +6' }
+    ],
+    options: [+2, +3, +5, +6]
+  },
+  {
+    id: 'cl-2',
+    element: 'Cl', elementName:'хлора',
+    formulas: [
+      { id:'a', formula:'Cl<sub>2</sub>',     so:0,  explain:'простое вещество — степень окисления = 0' },
+      { id:'b', formula:'HCl',                 so:-1, explain:'H +1; 1 + x = 0 → x = −1' },
+      { id:'c', formula:'KClO<sub>3</sub>',    so:+5, explain:'K +1, O −2 (×3); 1 + x + (−6) = 0 → x = +5' }
+    ],
+    options: [-1, 0, +1, +5]
+  },
+  {
+    id: 'n-2',
+    element: 'N', elementName:'азота',
+    formulas: [
+      { id:'a', formula:'N<sub>2</sub>',     so:0,  explain:'простое вещество — степень окисления = 0' },
+      { id:'b', formula:'NO',                 so:+2, explain:'O −2; x + (−2) = 0 → x = +2' },
+      { id:'c', formula:'NH<sub>4</sub>Cl',   so:-3, explain:'H +1 (×4), Cl −1; x + 4 + (−1) = 0 → x = −3' }
+    ],
+    options: [-3, 0, +2, +5]
+  }
+];
+
+var state = { total: 0, correct: 0, streak: 0, current: null, locked: false, recentIds: [] };
+
+function pickQuestion() {
+  var pool = QUESTIONS.filter(function(q){ return state.recentIds.indexOf(q.id) < 0; });
+  if (pool.length === 0) pool = QUESTIONS;
+  var q = pool[Math.floor(Math.random() * pool.length)];
+  state.recentIds.push(q.id);
+  if (state.recentIds.length > 5) state.recentIds.shift();
+  return q;
+}
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function el(tag, props, children) {
+  var e = document.createElement(tag);
+  if (props) for (var k in props) {
+    if (k === 'class') e.className = props[k];
+    else if (k === 'html') e.innerHTML = props[k];
+    else if (k.indexOf('on') === 0) e.addEventListener(k.substring(2).toLowerCase(), props[k]);
+    else e.setAttribute(k, props[k]);
+  }
+  if (children != null) {
+    if (!Array.isArray(children)) children = [children];
+    for (var i = 0; i < children.length; i++) {
+      var c = children[i];
+      if (c == null) continue;
+      e.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(c) : c);
+    }
+  }
+  return e;
+}
+
+function fmtSO(so) {
+  if (so === 0) return '0';
+  if (so > 0) return '+' + so;
+  return String(so).replace('-', '−');
+}
+
+function renderQuestion(q) {
+  document.getElementById('question-text').innerHTML =
+    'Установите соответствие между формулами веществ и степенью окисления <span class="target-elem">' + q.element + '</span> в них:';
+}
+
+function renderFormulas() {
+  var c = document.getElementById('formulas-list');
+  c.innerHTML = '';
+  var letters = ['А', 'Б', 'В'];
+  state.current.displayedFormulas.forEach(function(f, i) {
+    var row = el('div', { class:'formula-row', 'data-formula-id': f.id });
+    row.appendChild(el('span', { class:'formula-letter' }, letters[i]));
+    var formulaCell = el('div', { class:'formula-text' });
+    formulaCell.innerHTML = f.formula;
+    row.appendChild(formulaCell);
+    var sel = el('select', { 'data-formula-id': f.id });
+    sel.appendChild(el('option', { value:'' }, '—'));
+    state.current.displayedOptions.forEach(function(opt, j) {
+      sel.appendChild(el('option', { value: String(j+1) }, fmtSO(opt)));
+    });
+    sel.addEventListener('change', function() {
+      state.current.userSelections[f.id] = parseInt(sel.value, 10) || null;
+      updateCheckButton();
+    });
+    row.appendChild(sel);
+    c.appendChild(row);
+  });
+}
+
+function renderOptions() {
+  var c = document.getElementById('so-options');
+  c.innerHTML = '';
+  state.current.displayedOptions.forEach(function(opt, i) {
+    var row = el('div', { class:'so-option' });
+    row.appendChild(el('span', { class:'num-circle' }, String(i+1)));
+    row.appendChild(el('span', null, fmtSO(opt)));
+    c.appendChild(row);
+  });
+}
+
+function updateCheckButton() {
+  var allFilled = Object.keys(state.current.userSelections).filter(function(k){
+    return state.current.userSelections[k] != null;
+  }).length === 3;
+  document.getElementById('check-btn').disabled = !allFilled;
+}
+
+function checkAnswer() {
+  if (state.locked) return;
+  var q = state.current.question;
+  var allRight = true;
+  var letters = ['А', 'Б', 'В'];
+  var userAnswerLetters = '';
+
+  state.current.displayedFormulas.forEach(function(f, i) {
+    var userOptionIdx = state.current.userSelections[f.id]; // 1-based index
+    var userSO = userOptionIdx ? state.current.displayedOptions[userOptionIdx - 1] : null;
+    var isMatch = userSO === f.so;
+    var row = document.querySelector('.formula-row[data-formula-id="'+f.id+'"]');
+    row.classList.add('locked');
+    if (isMatch) {
+      row.classList.add('correct-match');
+    } else {
+      row.classList.add('wrong-match');
+      allRight = false;
+    }
+    // Find the index of correct option for this formula
+    var correctIdx = state.current.displayedOptions.indexOf(f.so) + 1;
+    userAnswerLetters += correctIdx;
+    var sel = row.querySelector('select');
+    sel.disabled = true;
+  });
+
+  state.total++;
+  if (allRight) { state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  updateStats();
+  state.locked = true;
+
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + (allRight ? 'win' : 'lose');
+  if (allRight) {
+    r.innerHTML = '<div class="result-line1">✓ Верно!</div>' +
+      '<div class="result-line2">Все три соответствия найдены правильно. В формате ОГЭ записывается без разделителей: <b>'+userAnswerLetters+'</b>.</div>';
+  } else {
+    r.innerHTML = '<div class="result-line1">✗ Не все совпало.</div>' +
+      '<div class="result-line2">Правильный ответ: <b>'+userAnswerLetters+'</b>. Зелёным помечены верные сопоставления, красным — ошибки.</div>';
+  }
+
+  var s = document.getElementById('solution');
+  s.className = 'solution shown';
+  var solHtml = '<h4>Разбор</h4>';
+  state.current.displayedFormulas.forEach(function(f, i) {
+    solHtml += '<div class="sol-row">' +
+      '<span class="sol-letter">' + letters[i] + '</span>' +
+      '<span class="sol-formula">' + f.formula + '</span>' +
+      '<span class="sol-so">' + fmtSO(f.so) + '</span>' +
+      '</div>' +
+      '<div class="sol-explain">' + f.explain + '</div>';
+  });
+  s.innerHTML = solHtml;
+
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+
+function nextQuestion() {
+  var q = pickQuestion();
+  state.current = {
+    question: q,
+    displayedFormulas: shuffle(q.formulas.slice()),
+    displayedOptions: shuffle(q.options.slice()),
+    userSelections: {}
+  };
+  state.locked = false;
+  renderQuestion(q);
+  renderFormulas();
+  renderOptions();
+  document.getElementById('result').className = 'result';
+  document.getElementById('solution').className = 'solution';
+  document.getElementById('check-btn').style.display = '';
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('skip-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function skipQuestion() {
+  state.streak = 0;
+  updateStats();
+  nextQuestion();
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var streakEl = document.getElementById('stat-streak');
+  streakEl.textContent = state.streak;
+  streakEl.classList.toggle('hot', state.streak >= 3);
+  var pctEl = document.getElementById('stat-pct');
+  pctEl.textContent = state.total === 0 ? '—' : Math.round(100 * state.correct / state.total) + '%';
+}
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('next-btn').addEventListener('click', nextQuestion);
+document.getElementById('skip-btn').addEventListener('click', skipQuestion);
+
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+  if (e.key === 'Enter') {
+    if (state.locked) nextQuestion();
+    else if (!document.getElementById('check-btn').disabled) checkAnswer();
+  }
+});
+
+nextQuestion();
+</script>
+</body>
+</html>
