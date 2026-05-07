@@ -234,7 +234,7 @@ var QUESTIONS = [
       { id:'b1', name:'AgNO<sub>3</sub>',        role:'src1',  type:'растворимая соль Ag⁺', note:'AgNO₃ полностью диссоциирует, даёт Ag⁺ в раствор — нужный катион.' },
       { id:'b2', name:'NaCl',                    role:'src2',  type:'растворимая соль с Cl⁻', note:'NaCl даёт Na⁺ + Cl⁻. Хлорид-ион нужен для образования AgCl.' },
       { id:'b3', name:'AgCl',                    role:'wrong', type:'нерастворимая соль', note:'AgCl — это уже продукт реакции, нерастворим. Не может быть исходным веществом.' },
-      { id:'b4', name:'CuCl<sub>2</sub>',        role:'wrong', type:'растворимая соль с Cl⁻', note:'CuCl₂ даёт Cl⁻ — но добавит ещё и Cu²⁺. С AgNO₃ выпадет AgCl, но в полном уравнении появится Cu(NO₃)₂. Здесь подходит только NaCl.' },
+      { id:'b4', name:'NaNO<sub>3</sub>',        role:'wrong', type:'растворимая соль', note:'NaNO₃ → Na⁺ + NO₃⁻ — нет ни Ag⁺, ни Cl⁻. С AgNO₃ не реагирует.' },
       { id:'b5', name:'KOH',                     role:'wrong', type:'щёлочь', note:'KOH даёт K⁺ и OH⁻, ни одного нужного иона.' },
       { id:'b6', name:'HNO<sub>3</sub>',         role:'wrong', type:'сильная кислота', note:'HNO₃ даёт H⁺ и NO₃⁻ — никакого Ag⁺ или Cl⁻.' }
     ]
@@ -587,7 +587,7 @@ function stripTags(s) {
 
 // Полное мол. уравнение для каждого вопроса — берём из таблицы соответствий
 var FULL_EQUATIONS = {
-  'neutral-1':   'HI + Ba(OH)<sub>2</sub> → BaI<sub>2</sub> + 2H<sub>2</sub>O   (взяв 2HI: 2HI + Ba(OH)<sub>2</sub> → BaI<sub>2</sub> + 2H<sub>2</sub>O)',
+  'neutral-1':   '2HI + Ba(OH)<sub>2</sub> → BaI<sub>2</sub> + 2H<sub>2</sub>O',
   'neutral-2':   'HCl + NaOH → NaCl + H<sub>2</sub>O',
   'agcl-1':      'AgNO<sub>3</sub> + NaCl → AgCl↓ + NaNO<sub>3</sub>',
   'agbr-1':      'AgNO<sub>3</sub> + KBr → AgBr↓ + KNO<sub>3</sub>',

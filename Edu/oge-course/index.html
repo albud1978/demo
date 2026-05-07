@@ -157,16 +157,16 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
   <div class="masthead-top">
     <div class="left">
       <span>ОГЭ-2026 <span class="dot">●</span> открытый бесплатный курс</span>
-      <span>v0.4.0</span>
+      <span>v0.6.7</span>
     </div>
     <span>обновлено 2026-05-06</span>
   </div>
   <h1 class="title">ОГЭ-2026<br/><em>тренажёры</em></h1>
   <p class="subtitle">Бесплатные интерактивные тренажёры для самостоятельной подготовки к ОГЭ. <b>Каждый тренажёр</b> — отдельный HTML-файл, открывается двойным кликом, работает офлайн, без регистрации и подписок. Содержание сверено со <b>спецификацией ФИПИ 2026 года</b>.</p>
   <div class="lede-grid">
-    <div class="lede-stat"><div class="num">17</div><div class="lbl">тренажёров<br/>готовы</div></div>
+    <div class="lede-stat"><div class="num">22</div><div class="lbl">тренажёров<br/>готовы</div></div>
     <div class="lede-stat"><div class="num">4</div><div class="lbl">предмета<br/>в плане</div></div>
-    <div class="lede-stat"><div class="num">170+</div><div class="lbl">уникальных<br/>заданий</div></div>
+    <div class="lede-stat"><div class="num">230+</div><div class="lbl">уникальных<br/>заданий</div></div>
     <div class="lede-stat"><div class="num">0&nbsp;₽</div><div class="lbl">стоимость<br/>и навсегда</div></div>
   </div>
 </header>
@@ -179,12 +179,12 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
   <div class="subjects">
     <div class="subject-card ready" style="--bar: #2D4A2B">
       <div class="subject-card-name">Химия</div>
-      <div class="subject-card-status">17 тренажёров</div>
+      <div class="subject-card-status">22 тренажёра</div>
       <div class="subject-card-stats">
         <b>23 задания</b> · 38 баллов · 180 мин<br/>
         <span style="color:var(--ink-faint)">часть 1: 19 кратких + часть 2: 4 развёрнутых</span>
       </div>
-      <div class="subject-card-tally"><b>Покрыто:</b> вся часть 1 кроме №18, 19</div>
+      <div class="subject-card-tally"><b>Покрыто:</b> ВСЁ — части 1 и 2</div>
     </div>
     <div class="subject-card coming" style="--bar: #A05B0F">
       <div class="subject-card-name">Биология</div>
@@ -219,7 +219,7 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
 <section>
   <div class="section-head">
     <h2>Химия — все тренажёры</h2>
-    <span class="meta">17 файлов · вся часть 1</span>
+    <span class="meta">22 файла · вся часть 1 + 2</span>
   </div>
 
   <div class="intro-note">
@@ -437,13 +437,68 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
         <div class="trainer-blurb">Найди массу / объём / количество вещества по данным реакции. Zn + HCl → ZnCl₂, разложение H₂O₂, горение CH₄ и т.д.</div>
         <div class="trainer-card-foot"><span class="qcount">10 расчётов</span><span class="open">открыть</span></div>
       </a>
+      <a class="trainer-card" href="trainer-chem-18-19-text-calculations.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№18+19 КИМ</span>
+          <span class="trainer-tag">связка · 2 балла</span>
+        </div>
+        <div class="trainer-title">Связанные расчёты по тексту</div>
+        <div class="trainer-blurb">Один сюжетный текст (удобрение, лекарство, минерал) и два связанных вопроса: №18 — массовая доля элемента, №19 — практический расчёт, опирающийся на результат №18.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 сюжетов</span><span class="open">открыть</span></div>
+      </a>
     </div>
   </div>
 
-  <div class="intro-note" style="margin-top:48px;border-left-color:var(--ink-faint)">
-    <p style="font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px">не покрыто пока</p>
-    <p><b>Часть 1:</b> №18, №19 — связанные расчётные задачи по тексту (один сюжет, два связанных вопроса). Особый формат, требует отдельного тренажёра.</p>
-    <p><b>Часть 2:</b> №20–23 — развёрнутые ответы. Требуется ввод химических уравнений с проверкой против эталона + допустимые альтернативы. Это следующий этап разработки.</p>
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Блок VII · Часть 2 экзамена</div>
+      <h3 class="block-title">Развёрнутый ответ</h3>
+      <p class="block-blurb">Здесь не выбор и не число, а <b>полный ответ с уравнениями</b>: ОВР с электронным балансом, цепочки превращений с записью трёх уравнений, расчётные задачи с массовой долей раствора, и наконец — <b>реальный химический эксперимент</b>. 14 баллов из 38.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-chem-20-redox-balance.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№20 КИМ</span>
+          <span class="trainer-tag">баланс · 3 балла</span>
+        </div>
+        <div class="trainer-title">ОВР с электронным балансом</div>
+        <div class="trainer-blurb">Расставь коэффициенты в схеме ОВР методом электронного баланса, укажи окислитель и восстановитель.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 реакций</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-21-chains-equations.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№21 КИМ</span>
+          <span class="trainer-tag">3 уравнения · 3 балла</span>
+        </div>
+        <div class="trainer-title">Цепочки превращений с уравнениями</div>
+        <div class="trainer-blurb">Дана схема A → X → B → C. Определи X и запиши все три молекулярных уравнения превращений с коэффициентами.</div>
+        <div class="trainer-card-foot"><span class="qcount">10 цепочек</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-22-mass-fraction-calc.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№22 КИМ</span>
+          <span class="trainer-tag">расчёт · 3 балла</span>
+        </div>
+        <div class="trainer-title">Расчёт по уравнению с массовой долей</div>
+        <div class="trainer-blurb">Дана текстовая задача с раствором (масса и ω); найди массу осадка/газа/продукта реакции через цепочку m(р-ра) → m(в-ва) → n → m(прод).</div>
+        <div class="trainer-card-foot"><span class="qcount">10 задач</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-chem-23-real-experiment.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№23 КИМ</span>
+          <span class="trainer-tag">эксперимент · 5 баллов</span>
+        </div>
+        <div class="trainer-title">Реальный химический эксперимент</div>
+        <div class="trainer-blurb">Дано задание («получите бурый осадок»); выбери из набора 2 нужных реактива, опиши признаки реакции, запиши все три уравнения (молекулярное, полное и сокращённое ионное).</div>
+        <div class="trainer-card-foot"><span class="qcount">10 опытов</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="intro-note" style="margin-top:48px;border-left-color:var(--accent)">
+    <p style="font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--accent);text-transform:uppercase;margin-bottom:8px">химия покрыта полностью</p>
+    <p><b>Все 23 задания ОГЭ-2026 по химии</b> покрыты тренажёрами — это 38 баллов из 38 в экзамене.</p>
+    <p><b>Часть 1</b> (19 заданий, 24 балла) и <b>часть 2</b> (4 задания, 14 баллов) проработаны в формате интерактивных тренажёров с пошаговыми разборами и автопроверкой.</p>
   </div>
 </section>
 
@@ -495,7 +550,7 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
 </section>
 
 <footer>
-  <span>ОГЭ-2026 · v0.4.0 · открытый бесплатный курс · 2026-05-06</span>
+  <span>ОГЭ-2026 · v0.6.7 · открытый бесплатный курс · 2026-05-06</span>
   <div class="right">
     <span>источники: <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a></span>
   </div>

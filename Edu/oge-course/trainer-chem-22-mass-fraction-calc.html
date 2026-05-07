@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №22 · Расчёт по уравнению с массовой долей раствора</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#F2EDE2;--bg-card:#FAF6EC;--ink:#1B1814;--ink-soft:#4A453D;--ink-faint:#7A736A;--rule:#C8BFAE;--rule-soft:#DCD3BF;--accent:#2D4A2B;--accent-soft:rgba(45,74,43,0.08);--good:#16A34A;--good-bg:#DCFCE7;--bad:#B91C1C;--bad-bg:#FEE2E2;--warn:#D97706;--serif:"Fraunces","Times New Roman",Georgia,serif;--body:"Spectral","Georgia",serif;--mono:"JetBrains Mono","SFMono-Regular",Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body{background-image:radial-gradient(circle at 25% 10%,rgba(45,74,43,0.04),transparent 40%)}
+.wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+.head{border-top:3px solid var(--ink);padding-top:16px;padding-bottom:24px;border-bottom:1px solid var(--rule);margin-bottom:36px}
+.head-meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft);flex-wrap:wrap;gap:10px}
+.head-meta .accent{color:var(--accent)}
+h1{font-family:var(--serif);font-weight:500;font-size:clamp(30px,5vw,44px);line-height:1.05;letter-spacing:-0.015em;margin-top:16px}
+h1 em{font-style:italic;font-weight:400;color:var(--accent)}
+.subtitle{font-size:16px;color:var(--ink-soft);margin-top:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:32px}
+@media (max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--bg-card);padding:14px 16px}
+.stat .num{font-family:var(--serif);font-size:28px;font-weight:500;line-height:1;color:var(--accent)}
+.stat .lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px}
+.stat.streak .num.hot{color:var(--warn)}
+.task-card{background:var(--bg-card);border:1px solid var(--rule);border-left:4px solid var(--accent);padding:24px 28px;margin-bottom:24px}
+.task-label{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:12px}
+.task-text{font-family:var(--serif);font-size:17px;line-height:1.55;color:var(--ink)}
+.task-text b{color:var(--accent)}
+.input-row{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;align-items:center}
+.input-label{font-family:var(--body);font-size:15px;color:var(--ink-soft)}
+.q-input{flex:0 1 220px;padding:12px 16px;font-family:var(--mono);font-size:18px;font-weight:700;border:1px solid var(--rule);background:var(--bg);color:var(--ink);outline:none;border-radius:1px;text-align:right}
+.q-input:focus{border-color:var(--accent)}
+.q-input.locked{cursor:not-allowed;background:var(--rule-soft);color:var(--ink-faint)}
+.unit-suffix{font-family:var(--mono);font-size:15px;color:var(--ink-soft);font-weight:500}
+.actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:700;padding:14px 28px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer;border-radius:1px;transition:all 0.15s}
+.btn:hover:not(:disabled){background:var(--accent);border-color:var(--accent)}
+.btn:disabled{background:var(--rule);border-color:var(--rule);color:var(--ink-faint);cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover:not(:disabled){background:var(--ink);color:var(--bg)}
+.btn.next{background:var(--accent);border-color:var(--accent)}
+.result{display:none;margin-top:24px;padding:18px 22px;border-left:4px solid;font-family:var(--serif);font-size:17px;font-weight:500}
+.result.shown{display:block}
+.result.win{background:var(--good-bg);border-color:var(--good);color:#14532D}
+.result.lose{background:var(--bad-bg);border-color:var(--bad);color:#7F1D1D}
+.result-detail{font-family:var(--body);font-weight:400;font-size:14.5px;margin-top:8px;line-height:1.55;opacity:0.92}
+.result-detail b{font-family:var(--mono);font-weight:700}
+.solution{display:none;margin-top:18px;padding:22px 26px;background:var(--bg);border:1px solid var(--rule-soft);border-left:3px solid var(--ink-faint)}
+.solution.shown{display:block}
+.solution h5{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px}
+.solution .step{margin-bottom:14px;padding-bottom:14px;border-bottom:1px dashed var(--rule-soft)}
+.solution .step:last-child{border-bottom:none;padding-bottom:0;margin-bottom:0}
+.solution .step-title{font-family:var(--serif);font-weight:600;font-size:14.5px;color:var(--ink);margin-bottom:6px}
+.solution .step-body{font-family:var(--body);font-size:14.5px;line-height:1.6;color:var(--ink-soft)}
+.solution code{font-family:"Cambria Math",serif;font-size:15px;background:var(--bg-card);padding:2px 6px;border-radius:1px;color:var(--ink)}
+.solution .calc-line{font-family:"Cambria Math",serif;font-size:15px;display:block;padding:2px 0}
+.cheat{margin-top:56px;padding:24px 28px;background:var(--bg-card);border:1px solid var(--rule);border-radius:2px}
+.cheat h3{font-family:var(--serif);font-weight:500;font-size:22px;margin-bottom:16px}
+.cheat p{font-size:14.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:8px}
+.cheat p b{color:var(--ink)}
+.cheat code{font-family:"Cambria Math",serif;background:var(--bg);padding:1px 6px;font-size:14px}
+.cheat .formula{font-family:"Cambria Math",serif;text-align:center;padding:10px;background:var(--bg);border:1px solid var(--rule-soft);border-radius:1px;margin:10px 0;font-size:16px}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-faint);text-align:center}
+footer a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+<header class="head">
+  <div class="head-meta"><span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №22</span><span>3 балла · развёрнутый ответ</span></div>
+  <h1>Расчёт по уравнению <em>с массовой долей</em></h1>
+  <p class="subtitle">Тренажёр на задание №22 части 2 ОГЭ. Дана текстовая задача с раствором (масса и массовая доля); нужно найти массу осадка, газа или другого продукта реакции.</p>
+</header>
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">правильно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности</div></div>
+</div>
+<div id="task-area"></div>
+<div class="actions" id="actions-area">
+  <button class="btn" id="check-btn">Проверить</button>
+  <button class="btn ghost" id="show-btn">Показать решение</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующая задача</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+<div class="result" id="result"></div>
+<div class="solution" id="solution"></div>
+
+<section class="cheat">
+  <h3>Алгоритм решения задач №22</h3>
+  <p><b>Шаг 1.</b> Записать уравнение реакции, расставить коэффициенты.</p>
+  <p><b>Шаг 2.</b> Найти массу растворённого вещества: <code>m(в-ва) = m(р-ра) · ω / 100%</code>.</p>
+  <p><b>Шаг 3.</b> Найти количество вещества: <code>n = m / M</code>.</p>
+  <p><b>Шаг 4.</b> По уравнению найти количество искомого продукта (через коэффициенты): <code>n(прод) = n(в-ва) · k(прод) / k(в-ва)</code>.</p>
+  <p><b>Шаг 5.</b> Найти массу продукта: <code>m(прод) = n(прод) · M(прод)</code>.</p>
+  <div class="formula"><b>m(р-ра) → m(в-ва) → n(в-ва) → n(прод) → m(прод)</b></div>
+  <p style="margin-top:12px"><b>Молярные массы для расчётов:</b> M вычисляется как сумма атомных масс, округлённых до целых (кроме Cl=35,5).</p>
+</section>
+<footer>Источник: демоверсия и спецификация ОГЭ-2026 ФИПИ · <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a></footer>
+</div>
+
+<script>
+// База задач: 10 расчётных задач с массовой долей раствора
+var TASKS = [
+  // 1. ДЕМО ФИПИ — AgNO3 + FeCl3 → AgCl
+  { id:'demo-fipi',
+    text:'К <b>340 г</b> раствора с массовой долей нитрата серебра <b>6%</b> добавили избыток раствора хлорида железа(III). Вычислите массу образовавшегося осадка.',
+    answer:17.22, unit:'г', tol:0.5,
+    eq:'3AgNO<sub>3</sub> + FeCl<sub>3</sub> = 3AgCl↓ + Fe(NO<sub>3</sub>)<sub>3</sub>',
+    steps:[
+      ['Уравнение реакции', '<code>3AgNO<sub>3</sub> + FeCl<sub>3</sub> = 3AgCl↓ + Fe(NO<sub>3</sub>)<sub>3</sub></code>. AgCl — нерастворимый осадок (качественная реакция на Cl⁻). Соотношение n(AgNO<sub>3</sub>) : n(AgCl) = 3 : 3 = 1 : 1.'],
+      ['Масса AgNO<sub>3</sub>', '<span class="calc-line">m(AgNO<sub>3</sub>) = m(р-ра) · ω = 340 · 0,06 = <code>20,4 г</code></span>'],
+      ['Количество AgNO<sub>3</sub>', '<span class="calc-line">M(AgNO<sub>3</sub>) = 108 + 14 + 16·3 = 170 г/моль</span><span class="calc-line">n(AgNO<sub>3</sub>) = 20,4 / 170 = <code>0,12 моль</code></span>'],
+      ['Количество AgCl', 'По уравнению n(AgCl) = n(AgNO<sub>3</sub>) = <code>0,12 моль</code>'],
+      ['Масса AgCl', '<span class="calc-line">M(AgCl) = 108 + 35,5 = 143,5 г/моль</span><span class="calc-line">m(AgCl) = 0,12 · 143,5 = <code>17,22 г</code></span>']
+    ]
+  },
+  // 2. BaCl2 + Na2SO4 → BaSO4
+  { id:'bacl2-na2so4',
+    text:'К <b>200 г</b> раствора с массовой долей хлорида бария <b>10,4%</b> добавили избыток раствора сульфата натрия. Вычислите массу образовавшегося осадка.',
+    answer:23.3, unit:'г', tol:0.5,
+    eq:'BaCl<sub>2</sub> + Na<sub>2</sub>SO<sub>4</sub> = BaSO<sub>4</sub>↓ + 2NaCl',
+    steps:[
+      ['Уравнение реакции', '<code>BaCl<sub>2</sub> + Na<sub>2</sub>SO<sub>4</sub> = BaSO<sub>4</sub>↓ + 2NaCl</code>. BaSO<sub>4</sub> — белый нерастворимый осадок.'],
+      ['Масса BaCl<sub>2</sub>', '<span class="calc-line">m(BaCl<sub>2</sub>) = 200 · 0,104 = <code>20,8 г</code></span>'],
+      ['Количество BaCl<sub>2</sub>', '<span class="calc-line">M(BaCl<sub>2</sub>) = 137 + 35,5·2 = 208 г/моль</span><span class="calc-line">n(BaCl<sub>2</sub>) = 20,8 / 208 = <code>0,1 моль</code></span>'],
+      ['Количество BaSO<sub>4</sub>', 'По уравнению n(BaSO<sub>4</sub>) = n(BaCl<sub>2</sub>) = <code>0,1 моль</code>'],
+      ['Масса BaSO<sub>4</sub>', '<span class="calc-line">M(BaSO<sub>4</sub>) = 137 + 32 + 16·4 = 233 г/моль</span><span class="calc-line">m(BaSO<sub>4</sub>) = 0,1 · 233 = <code>23,3 г</code></span>']
+    ]
+  },
+  // 3. CuSO4 + NaOH → Cu(OH)2
+  { id:'cuso4-naoh',
+    text:'К <b>320 г</b> раствора с массовой долей сульфата меди(II) <b>5%</b> добавили избыток раствора гидроксида натрия. Вычислите массу образовавшегося осадка.',
+    answer:9.8, unit:'г', tol:0.3,
+    eq:'CuSO<sub>4</sub> + 2NaOH = Cu(OH)<sub>2</sub>↓ + Na<sub>2</sub>SO<sub>4</sub>',
+    steps:[
+      ['Уравнение реакции', '<code>CuSO<sub>4</sub> + 2NaOH = Cu(OH)<sub>2</sub>↓ + Na<sub>2</sub>SO<sub>4</sub></code>. Cu(OH)<sub>2</sub> — голубой нерастворимый осадок.'],
+      ['Масса CuSO<sub>4</sub>', '<span class="calc-line">m(CuSO<sub>4</sub>) = 320 · 0,05 = <code>16 г</code></span>'],
+      ['Количество CuSO<sub>4</sub>', '<span class="calc-line">M(CuSO<sub>4</sub>) = 64 + 32 + 16·4 = 160 г/моль</span><span class="calc-line">n(CuSO<sub>4</sub>) = 16 / 160 = <code>0,1 моль</code></span>'],
+      ['Количество Cu(OH)<sub>2</sub>', 'По уравнению n(Cu(OH)<sub>2</sub>) = n(CuSO<sub>4</sub>) = <code>0,1 моль</code>'],
+      ['Масса Cu(OH)<sub>2</sub>', '<span class="calc-line">M(Cu(OH)<sub>2</sub>) = 64 + (16+1)·2 = 98 г/моль</span><span class="calc-line">m(Cu(OH)<sub>2</sub>) = 0,1 · 98 = <code>9,8 г</code></span>']
+    ]
+  },
+  // 4. Pb(NO3)2 + KI → PbI2
+  { id:'pb-ki',
+    text:'К <b>165,6 г</b> раствора с массовой долей нитрата свинца(II) <b>10%</b> добавили избыток раствора иодида калия. Вычислите массу образовавшегося осадка.',
+    answer:23.05, unit:'г', tol:0.5,
+    eq:'Pb(NO<sub>3</sub>)<sub>2</sub> + 2KI = PbI<sub>2</sub>↓ + 2KNO<sub>3</sub>',
+    steps:[
+      ['Уравнение реакции', '<code>Pb(NO<sub>3</sub>)<sub>2</sub> + 2KI = PbI<sub>2</sub>↓ + 2KNO<sub>3</sub></code>. PbI<sub>2</sub> — ярко-жёлтый осадок.'],
+      ['Масса Pb(NO<sub>3</sub>)<sub>2</sub>', '<span class="calc-line">m(Pb(NO<sub>3</sub>)<sub>2</sub>) = 165,6 · 0,1 = <code>16,56 г</code></span>'],
+      ['Количество Pb(NO<sub>3</sub>)<sub>2</sub>', '<span class="calc-line">M(Pb(NO<sub>3</sub>)<sub>2</sub>) = 207 + (14+16·3)·2 = 331 г/моль</span><span class="calc-line">n = 16,56 / 331 = <code>0,05 моль</code></span>'],
+      ['Количество PbI<sub>2</sub>', 'n(PbI<sub>2</sub>) = n(Pb(NO<sub>3</sub>)<sub>2</sub>) = <code>0,05 моль</code>'],
+      ['Масса PbI<sub>2</sub>', '<span class="calc-line">M(PbI<sub>2</sub>) = 207 + 127·2 = 461 г/моль</span><span class="calc-line">m = 0,05 · 461 = <code>23,05 г</code></span>']
+    ]
+  },
+  // 5. Na2CO3 + HCl → CO2 (газ)
+  { id:'na2co3-hcl',
+    text:'К <b>212 г</b> раствора с массовой долей карбоната натрия <b>5%</b> добавили избыток соляной кислоты. Вычислите массу выделившегося газа.',
+    answer:4.4, unit:'г', tol:0.2,
+    eq:'Na<sub>2</sub>CO<sub>3</sub> + 2HCl = 2NaCl + H<sub>2</sub>O + CO<sub>2</sub>↑',
+    steps:[
+      ['Уравнение реакции', '<code>Na<sub>2</sub>CO<sub>3</sub> + 2HCl = 2NaCl + H<sub>2</sub>O + CO<sub>2</sub>↑</code>. CO<sub>2</sub> — газ, выделяется при действии сильной кислоты на карбонат.'],
+      ['Масса Na<sub>2</sub>CO<sub>3</sub>', '<span class="calc-line">m(Na<sub>2</sub>CO<sub>3</sub>) = 212 · 0,05 = <code>10,6 г</code></span>'],
+      ['Количество Na<sub>2</sub>CO<sub>3</sub>', '<span class="calc-line">M(Na<sub>2</sub>CO<sub>3</sub>) = 23·2 + 12 + 16·3 = 106 г/моль</span><span class="calc-line">n = 10,6 / 106 = <code>0,1 моль</code></span>'],
+      ['Количество CO<sub>2</sub>', 'По уравнению n(CO<sub>2</sub>) = n(Na<sub>2</sub>CO<sub>3</sub>) = <code>0,1 моль</code>'],
+      ['Масса CO<sub>2</sub>', '<span class="calc-line">M(CO<sub>2</sub>) = 12 + 16·2 = 44 г/моль</span><span class="calc-line">m(CO<sub>2</sub>) = 0,1 · 44 = <code>4,4 г</code></span>']
+    ]
+  },
+  // 6. Zn + HCl → H2 (газ)
+  { id:'zn-hcl',
+    text:'К избытку цинка добавили <b>73 г</b> раствора соляной кислоты с массовой долей <b>10%</b>. Вычислите массу выделившегося водорода.',
+    answer:0.2, unit:'г', tol:0.05,
+    eq:'Zn + 2HCl = ZnCl<sub>2</sub> + H<sub>2</sub>↑',
+    steps:[
+      ['Уравнение реакции', '<code>Zn + 2HCl = ZnCl<sub>2</sub> + H<sub>2</sub>↑</code>. Соотношение n(HCl) : n(H<sub>2</sub>) = 2 : 1.'],
+      ['Масса HCl', '<span class="calc-line">m(HCl) = 73 · 0,1 = <code>7,3 г</code></span>'],
+      ['Количество HCl', '<span class="calc-line">M(HCl) = 1 + 35,5 = 36,5 г/моль</span><span class="calc-line">n(HCl) = 7,3 / 36,5 = <code>0,2 моль</code></span>'],
+      ['Количество H<sub>2</sub>', 'По уравнению n(H<sub>2</sub>) = n(HCl) / 2 = 0,2 / 2 = <code>0,1 моль</code>'],
+      ['Масса H<sub>2</sub>', '<span class="calc-line">M(H<sub>2</sub>) = 1·2 = 2 г/моль</span><span class="calc-line">m(H<sub>2</sub>) = 0,1 · 2 = <code>0,2 г</code></span>']
+    ]
+  },
+  // 7. Ca(OH)2 + CO2 → CaCO3
+  { id:'caoh2-co2',
+    text:'Через <b>296 г</b> раствора с массовой долей гидроксида кальция <b>5%</b> пропустили углекислый газ до прекращения выпадения осадка. Вычислите массу образовавшегося осадка.',
+    answer:20, unit:'г', tol:0.5,
+    eq:'Ca(OH)<sub>2</sub> + CO<sub>2</sub> = CaCO<sub>3</sub>↓ + H<sub>2</sub>O',
+    steps:[
+      ['Уравнение реакции', '<code>Ca(OH)<sub>2</sub> + CO<sub>2</sub> = CaCO<sub>3</sub>↓ + H<sub>2</sub>O</code>. CaCO<sub>3</sub> — белый осадок (помутнение известковой воды).'],
+      ['Масса Ca(OH)<sub>2</sub>', '<span class="calc-line">m(Ca(OH)<sub>2</sub>) = 296 · 0,05 = <code>14,8 г</code></span>'],
+      ['Количество Ca(OH)<sub>2</sub>', '<span class="calc-line">M(Ca(OH)<sub>2</sub>) = 40 + (16+1)·2 = 74 г/моль</span><span class="calc-line">n = 14,8 / 74 = <code>0,2 моль</code></span>'],
+      ['Количество CaCO<sub>3</sub>', 'n(CaCO<sub>3</sub>) = n(Ca(OH)<sub>2</sub>) = <code>0,2 моль</code>'],
+      ['Масса CaCO<sub>3</sub>', '<span class="calc-line">M(CaCO<sub>3</sub>) = 40 + 12 + 16·3 = 100 г/моль</span><span class="calc-line">m = 0,2 · 100 = <code>20 г</code></span>']
+    ]
+  },
+  // 8. KOH + AlCl3 → Al(OH)3
+  { id:'koh-alcl3',
+    text:'К избытку раствора хлорида алюминия добавили <b>224 г</b> раствора с массовой долей гидроксида калия <b>7,5%</b>. Вычислите массу образовавшегося осадка.',
+    answer:7.8, unit:'г', tol:0.3,
+    eq:'3KOH + AlCl<sub>3</sub> = Al(OH)<sub>3</sub>↓ + 3KCl',
+    steps:[
+      ['Уравнение реакции', '<code>3KOH + AlCl<sub>3</sub> = Al(OH)<sub>3</sub>↓ + 3KCl</code>. При избытке AlCl<sub>3</sub> образуется Al(OH)<sub>3</sub> (а не комплекс). Соотношение n(KOH) : n(Al(OH)<sub>3</sub>) = 3 : 1.'],
+      ['Масса KOH', '<span class="calc-line">m(KOH) = 224 · 0,075 = <code>16,8 г</code></span>'],
+      ['Количество KOH', '<span class="calc-line">M(KOH) = 39 + 16 + 1 = 56 г/моль</span><span class="calc-line">n(KOH) = 16,8 / 56 = <code>0,3 моль</code></span>'],
+      ['Количество Al(OH)<sub>3</sub>', 'По уравнению n(Al(OH)<sub>3</sub>) = n(KOH) / 3 = 0,3 / 3 = <code>0,1 моль</code>'],
+      ['Масса Al(OH)<sub>3</sub>', '<span class="calc-line">M(Al(OH)<sub>3</sub>) = 27 + (16+1)·3 = 78 г/моль</span><span class="calc-line">m(Al(OH)<sub>3</sub>) = 0,1 · 78 = <code>7,8 г</code></span>']
+    ]
+  },
+  // 9. Fe + CuSO4 → Cu
+  { id:'fe-cuso4',
+    text:'В <b>320 г</b> раствора с массовой долей сульфата меди(II) <b>5%</b> опустили избыток железной пластинки. Вычислите массу выделившейся меди.',
+    answer:6.4, unit:'г', tol:0.2,
+    eq:'Fe + CuSO<sub>4</sub> = FeSO<sub>4</sub> + Cu',
+    steps:[
+      ['Уравнение реакции', '<code>Fe + CuSO<sub>4</sub> = FeSO<sub>4</sub> + Cu</code>. Fe вытесняет Cu из раствора (Fe активнее Cu в ряду напряжений).'],
+      ['Масса CuSO<sub>4</sub>', '<span class="calc-line">m(CuSO<sub>4</sub>) = 320 · 0,05 = <code>16 г</code></span>'],
+      ['Количество CuSO<sub>4</sub>', '<span class="calc-line">M(CuSO<sub>4</sub>) = 64 + 32 + 16·4 = 160 г/моль</span><span class="calc-line">n = 16 / 160 = <code>0,1 моль</code></span>'],
+      ['Количество Cu', 'n(Cu) = n(CuSO<sub>4</sub>) = <code>0,1 моль</code>'],
+      ['Масса Cu', '<span class="calc-line">M(Cu) = 64 г/моль</span><span class="calc-line">m(Cu) = 0,1 · 64 = <code>6,4 г</code></span>']
+    ]
+  },
+  // 10. CaCO3 + HCl → CaCl2 (через ограничение по HCl)
+  { id:'caco3-hcl',
+    text:'К избытку карбоната кальция добавили <b>73 г</b> раствора соляной кислоты с массовой долей <b>10%</b>. Вычислите массу образовавшейся соли.',
+    answer:11.1, unit:'г', tol:0.3,
+    eq:'CaCO<sub>3</sub> + 2HCl = CaCl<sub>2</sub> + H<sub>2</sub>O + CO<sub>2</sub>↑',
+    steps:[
+      ['Уравнение реакции', '<code>CaCO<sub>3</sub> + 2HCl = CaCl<sub>2</sub> + H<sub>2</sub>O + CO<sub>2</sub>↑</code>. Образуется хлорид кальция (соль) и углекислый газ. Лимитирующий реагент — HCl (CaCO<sub>3</sub> в избытке).'],
+      ['Масса HCl', '<span class="calc-line">m(HCl) = 73 · 0,1 = <code>7,3 г</code></span>'],
+      ['Количество HCl', '<span class="calc-line">M(HCl) = 36,5 г/моль</span><span class="calc-line">n(HCl) = 7,3 / 36,5 = <code>0,2 моль</code></span>'],
+      ['Количество CaCl<sub>2</sub>', 'По уравнению n(CaCl<sub>2</sub>) = n(HCl) / 2 = 0,2 / 2 = <code>0,1 моль</code>'],
+      ['Масса CaCl<sub>2</sub>', '<span class="calc-line">M(CaCl<sub>2</sub>) = 40 + 35,5·2 = 111 г/моль</span><span class="calc-line">m(CaCl<sub>2</sub>) = 0,1 · 111 = <code>11,1 г</code></span>']
+    ]
+  }
+];
+
+var state = { total:0, correct:0, streak:0, current:null, recentIds:[] };
+
+function pickTask(){
+  var pool = TASKS.filter(function(t){return state.recentIds.indexOf(t.id)<0});
+  if(pool.length===0) pool = TASKS;
+  var t = pool[Math.floor(Math.random()*pool.length)];
+  state.recentIds.push(t.id);
+  if(state.recentIds.length>5) state.recentIds.shift();
+  return t;
+}
+
+function el(t,p,c){var e=document.createElement(t);if(p)for(var k in p){if(k==='class')e.className=p[k];else if(k==='html')e.innerHTML=p[k];else if(k.indexOf('on')===0)e.addEventListener(k.substring(2).toLowerCase(),p[k]);else e.setAttribute(k,p[k])}if(c!=null){if(!Array.isArray(c))c=[c];for(var i=0;i<c.length;i++){var x=c[i];if(x==null)continue;e.appendChild(typeof x==='string'||typeof x==='number'?document.createTextNode(x):x)}}return e}
+
+function renderTask(){
+  var t = state.current.task;
+  var area = document.getElementById('task-area');
+  area.innerHTML = '';
+
+  var card = el('div',{class:'task-card'});
+  card.appendChild(el('div',{class:'task-label'},'Задание №22'));
+  card.appendChild(el('div',{class:'task-text',html:t.text}));
+
+  var row = el('div',{class:'input-row'});
+  row.appendChild(el('span',{class:'input-label'},'Ответ:'));
+  var inp = el('input',{type:'text',class:'q-input',id:'q-input',placeholder:'число',autocomplete:'off'});
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();checkAnswer()}});
+  row.appendChild(inp);
+  row.appendChild(el('span',{class:'unit-suffix'}, t.unit));
+  card.appendChild(row);
+
+  area.appendChild(card);
+
+  // Reset state
+  state.current.locked = false;
+  document.getElementById('check-btn').style.display='';
+  document.getElementById('check-btn').disabled=false;
+  document.getElementById('show-btn').style.display='';
+  document.getElementById('skip-btn').style.display='';
+  document.getElementById('next-btn').style.display='none';
+  document.getElementById('result').className='result';
+  document.getElementById('solution').className='solution';
+
+  setTimeout(function(){inp.focus()}, 100);
+}
+
+function parseAnswer(s){
+  if(!s) return null;
+  var cleaned = s.replace(/,/g,'.').replace(/\s+/g,'').replace(/[^\d.\-]/g,'');
+  if(cleaned === '') return null;
+  var n = parseFloat(cleaned);
+  return isNaN(n) ? null : n;
+}
+
+function showSolution(){
+  var t = state.current.task;
+  var sol = document.getElementById('solution');
+  sol.className = 'solution shown';
+  var html = '<h5>Полное решение</h5>';
+  t.steps.forEach(function(step,i){
+    html += '<div class="step"><div class="step-title">' + (i+1) + '. ' + step[0] + '</div><div class="step-body">' + step[1] + '</div></div>';
+  });
+  sol.innerHTML = html;
+}
+
+function checkAnswer(){
+  if(state.current.locked) return;
+  var t = state.current.task;
+  var input = document.getElementById('q-input');
+  var userAnswer = parseAnswer(input.value);
+  if(userAnswer === null) return;
+
+  var correct = t.answer;
+  var tol = t.tol || 0.1;
+  var isCorrect = Math.abs(userAnswer - correct) <= tol;
+
+  state.total++;
+  if(isCorrect){state.correct++;state.streak++}else{state.streak=0}
+  updateStats();
+  state.current.locked = true;
+
+  input.classList.add('locked');
+  input.disabled = true;
+
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + (isCorrect?'win':'lose');
+  if(isCorrect){
+    r.innerHTML = '<div>✓ Верно! ' + correct + ' ' + t.unit + '</div>';
+  } else {
+    r.innerHTML = '<div>✗ Неверно.</div><div class="result-detail">Ваш ответ: <b>' + userAnswer + '</b>. Правильный ответ: <b>' + correct + ' ' + t.unit + '</b>.</div>';
+  }
+
+  showSolution();
+  document.getElementById('check-btn').style.display='none';
+  document.getElementById('show-btn').style.display='none';
+  document.getElementById('skip-btn').style.display='none';
+  document.getElementById('next-btn').style.display='';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+
+function showWithoutAnswer(){
+  if(state.current.locked) return;
+  state.streak=0;
+  updateStats();
+  state.current.locked = true;
+  document.getElementById('q-input').classList.add('locked');
+  document.getElementById('q-input').disabled = true;
+  showSolution();
+  document.getElementById('check-btn').style.display='none';
+  document.getElementById('show-btn').style.display='none';
+  document.getElementById('skip-btn').style.display='none';
+  document.getElementById('next-btn').style.display='';
+  document.getElementById('next-btn').classList.add('next');
+}
+
+function nextTask(){
+  state.current = { task: pickTask() };
+  renderTask();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function skipTask(){state.streak=0;updateStats();nextTask()}
+
+function updateStats(){
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var s = document.getElementById('stat-streak'); s.textContent = state.streak; s.classList.toggle('hot', state.streak>=3);
+  document.getElementById('stat-pct').textContent = state.total===0 ? '—' : Math.round(100*state.correct/state.total) + '%';
+}
+
+document.getElementById('check-btn').addEventListener('click',checkAnswer);
+document.getElementById('show-btn').addEventListener('click',showWithoutAnswer);
+document.getElementById('next-btn').addEventListener('click',nextTask);
+document.getElementById('skip-btn').addEventListener('click',skipTask);
+
+nextTask();
+</script>
+</body>
+</html>

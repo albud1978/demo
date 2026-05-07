@@ -176,7 +176,7 @@ var QUESTIONS = [
     xIdx: 2,
     pool: [
       { id:'b1', formula:'SO<sub>3</sub>', correct:true, note:'S + O₂ → SO₂. Затем 2SO₂ + O₂ → 2SO₃ (катализатор V₂O₅, нагрев). Затем SO₃ + 2NaOH → Na₂SO₄ + H₂O. Каждое звено — одна реакция.' },
-      { id:'b2', formula:'H<sub>2</sub>SO<sub>4</sub>', correct:false, note:'Из SO₂ напрямую H₂SO₄ не получить — нужен промежуточный SO₃ (а у вас X стоит между SO₂ и натриевой солью).' },
+      { id:'b2', formula:'Na<sub>2</sub>S', correct:false, note:'Na₂S — сульфид натрия, низшая СО серы (-2). Из SO₂ напрямую не получается, не подходит как X между SO₂ и Na₂SO₄.' },
       { id:'b3', formula:'H<sub>2</sub>S', correct:false, note:'Сероводород — низшая СО серы (-2), здесь нужна высшая, чтобы соответствовать сульфату.' },
       { id:'b4', formula:'CO<sub>2</sub>', correct:false, note:'Углекислый газ не из этой серии.' },
       { id:'b5', formula:'NaCl', correct:false, note:'Не содержит серы.' }
@@ -229,8 +229,8 @@ var QUESTIONS = [
     pool: [
       { id:'f1', formula:'Al<sub>2</sub>O<sub>3</sub>', correct:true, note:'4Al + 3O₂ → 2Al₂O₃. Al₂O₃ + 6HCl → 2AlCl₃ + 3H₂O. AlCl₃ + 3NaOH → Al(OH)₃↓ + 3NaCl.' },
       { id:'f2', formula:'Al(OH)<sub>3</sub>', correct:false, note:'Это конец цепочки, не середина.' },
-      { id:'f3', formula:'AlH<sub>3</sub>', correct:false, note:'Не школьное соединение.' },
-      { id:'f4', formula:'Na[Al(OH)<sub>4</sub>]', correct:false, note:'Это комплексная соль, не оксид.' },
+      { id:'f3', formula:'MgO', correct:false, note:'MgO не содержит алюминия — не подходит как X в Al-цепочке.' },
+      { id:'f4', formula:'Fe<sub>2</sub>O<sub>3</sub>', correct:false, note:'Fe₂O₃ не содержит алюминия — не подходит как X.' },
       { id:'f5', formula:'Al', correct:false, note:'Это начало цепочки.' }
     ],
     fullChain: 'Al → Al<sub>2</sub>O<sub>3</sub> → AlCl<sub>3</sub> → Al(OH)<sub>3</sub>'
@@ -242,9 +242,9 @@ var QUESTIONS = [
     pool: [
       { id:'g1', formula:'Ca(OH)<sub>2</sub>', correct:true, note:'CaCO₃ → CaO + CO₂↑ (прокаливание). CaO + H₂O → Ca(OH)₂. Ca(OH)₂ + 2HCl → CaCl₂ + 2H₂O.' },
       { id:'g2', formula:'Ca', correct:false, note:'Чистый кальций нельзя получить из CaO простыми реакциями (только электролизом).' },
-      { id:'g3', formula:'CaCO<sub>3</sub>', correct:false, note:'Это начало цепочки.' },
-      { id:'g4', formula:'Ca(NO<sub>3</sub>)<sub>2</sub>', correct:false, note:'Эта соль из цепочки не следует.' },
-      { id:'g5', formula:'CaSO<sub>4</sub>', correct:false, note:'Из CaSO₄ хлорид не получается ионным обменом.' }
+      { id:'g3', formula:'NaOH', correct:false, note:'NaOH не содержит кальция — не может быть X в цепочке Ca-соединений.' },
+      { id:'g4', formula:'Ca(NO<sub>3</sub>)<sub>2</sub>', correct:false, note:'Ca(NO₃)₂ — растворимая соль; обмен с HCl не идёт без выпадения осадка/газа/слабого электролита, поэтому к CaCl₂ ионным обменом не приводит.' },
+      { id:'g5', formula:'K<sub>2</sub>CO<sub>3</sub>', correct:false, note:'K₂CO₃ не содержит кальция — не подходит как X в Ca-цепочке.' }
     ],
     fullChain: 'CaCO<sub>3</sub> → CaO → Ca(OH)<sub>2</sub> → CaCl<sub>2</sub>'
   },
@@ -257,7 +257,7 @@ var QUESTIONS = [
       { id:'h2', formula:'PH<sub>3</sub>', correct:false, note:'Фосфин — низшая СО фосфора (-3), не даёт фосфаты.' },
       { id:'h3', formula:'P<sub>2</sub>O<sub>3</sub>', correct:false, note:'Оксид P(III), не подходит к натриевому ортофосфату.' },
       { id:'h4', formula:'NaCl', correct:false, note:'Не содержит фосфора.' },
-      { id:'h5', formula:'Na<sub>2</sub>HPO<sub>4</sub>', correct:false, note:'Кислая соль — но в цепочке нужна именно кислота.' }
+      { id:'h5', formula:'P<sub>4</sub>S<sub>3</sub>', correct:false, note:'P₄S₃ — сульфид фосфора (компонент спичечной массы), не получается из P₂O₅ и не даёт ортофосфат.' }
     ],
     fullChain: 'P → P<sub>2</sub>O<sub>5</sub> → H<sub>3</sub>PO<sub>4</sub> → Na<sub>3</sub>PO<sub>4</sub>'
   },
@@ -270,7 +270,7 @@ var QUESTIONS = [
       { id:'i2', formula:'ZnS', correct:false, note:'Сульфид — но из ZnO напрямую не получается.' },
       { id:'i3', formula:'NaOH', correct:false, note:'Не содержит цинка.' },
       { id:'i4', formula:'Zn', correct:false, note:'Это начало цепочки.' },
-      { id:'i5', formula:'Na<sub>2</sub>[Zn(OH)<sub>4</sub>]', correct:false, note:'Комплексная соль — не подходит.' }
+      { id:'i5', formula:'MgO', correct:false, note:'MgO не содержит цинка — не подходит как X в Zn-цепочке.' }
     ],
     fullChain: 'Zn → ZnO → ZnSO<sub>4</sub> → Zn(OH)<sub>2</sub>'
   },
@@ -283,9 +283,9 @@ var QUESTIONS = [
       { id:'j2', formula:'Cu', correct:false, note:'Из чистой меди не образуется Cu(OH)₂ напрямую.' },
       { id:'j3', formula:'CuS', correct:false, note:'CuS со щёлочью не реагирует — Cu(OH)₂ не получится.' },
       { id:'j4', formula:'CuO', correct:false, note:'Это уже исходное вещество.' },
-      { id:'j5', formula:'Cu(NO<sub>3</sub>)<sub>2</sub>', correct:true, note:'Альтернативный вариант: CuO + 2HNO₃ → Cu(NO₃)₂ + H₂O. Затем Cu(NO₃)₂ + 2NaOH → Cu(OH)₂↓ + 2NaNO₃. Тоже работает.' }
+      { id:'j5', formula:'Cu<sub>2</sub>O', correct:false, note:'Cu₂O — оксид меди(I), нерастворим в воде, со щелочами в водной среде не даёт Cu(OH)₂. Не подходит как X.' }
     ],
-    fullChain: 'CuO → CuCl<sub>2</sub> (или Cu(NO<sub>3</sub>)<sub>2</sub>) → Cu(OH)<sub>2</sub> → CuO'
+    fullChain: 'CuO → CuCl<sub>2</sub> → Cu(OH)<sub>2</sub> → CuO'
   }
 ];
 

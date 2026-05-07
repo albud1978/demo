@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №23 · Реальный эксперимент</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#F2EDE2;--bg-card:#FAF6EC;--ink:#1B1814;--ink-soft:#4A453D;--ink-faint:#7A736A;--rule:#C8BFAE;--rule-soft:#DCD3BF;--accent:#2D4A2B;--accent-soft:rgba(45,74,43,0.08);--good:#16A34A;--good-bg:#DCFCE7;--bad:#B91C1C;--bad-bg:#FEE2E2;--warn:#D97706;--serif:"Fraunces","Times New Roman",Georgia,serif;--body:"Spectral","Georgia",serif;--mono:"JetBrains Mono","SFMono-Regular",Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body{background-image:radial-gradient(circle at 25% 10%,rgba(45,74,43,0.04),transparent 40%)}
+.wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+.head{border-top:3px solid var(--ink);padding-top:16px;padding-bottom:24px;border-bottom:1px solid var(--rule);margin-bottom:36px}
+.head-meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft);flex-wrap:wrap;gap:10px}
+.head-meta .accent{color:var(--accent)}
+h1{font-family:var(--serif);font-weight:500;font-size:clamp(30px,5vw,44px);line-height:1.05;letter-spacing:-0.015em;margin-top:16px}
+h1 em{font-style:italic;font-weight:400;color:var(--accent)}
+.subtitle{font-size:16px;color:var(--ink-soft);margin-top:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:32px}
+@media (max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--bg-card);padding:14px 16px}
+.stat .num{font-family:var(--serif);font-size:28px;font-weight:500;line-height:1;color:var(--accent)}
+.stat .lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px}
+.stat.streak .num.hot{color:var(--warn)}
+.task-card{background:var(--bg-card);border:1px solid var(--rule);border-left:4px solid var(--accent);padding:24px 28px;margin-bottom:24px}
+.task-label{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:10px}
+.task-text{font-family:var(--serif);font-size:17px;line-height:1.55}
+.task-text b{color:var(--accent)}
+.section-title{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin:22px 0 10px}
+.reagents-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.reagent-btn{padding:10px 14px;border:1px solid var(--rule);background:var(--bg-card);font-family:"Cambria Math",serif;font-size:15px;cursor:pointer;border-radius:1px;text-align:center;transition:all 0.15s;color:var(--ink)}
+.reagent-btn:hover:not(.locked){border-color:var(--ink)}
+.reagent-btn.selected{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.reagent-btn.locked{cursor:default}
+.reagent-btn.right{border-color:var(--good);background:var(--good-bg)}
+.reagent-btn.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.signs-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-width:560px){.signs-grid{grid-template-columns:1fr}}
+.sign-btn{padding:12px 16px;border:1px solid var(--rule);background:var(--bg-card);font-family:var(--body);font-size:14.5px;cursor:pointer;border-radius:1px;text-align:left;transition:all 0.15s;line-height:1.45;color:var(--ink)}
+.sign-btn:hover:not(.locked){border-color:var(--ink)}
+.sign-btn.selected{border-color:var(--accent);background:var(--accent-soft);font-weight:500}
+.sign-btn.locked{cursor:default}
+.sign-btn.right{border-color:var(--good);background:var(--good-bg);color:#14532D}
+.sign-btn.wrong{border-color:var(--bad);background:var(--bad-bg);color:#7F1D1D}
+.sign-btn.missed{border-color:var(--good);border-style:dashed}
+.actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:700;padding:14px 28px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer;border-radius:1px;transition:all 0.15s}
+.btn:hover:not(:disabled){background:var(--accent);border-color:var(--accent)}
+.btn:disabled{background:var(--rule);border-color:var(--rule);color:var(--ink-faint);cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover:not(:disabled){background:var(--ink);color:var(--bg)}
+.btn.next{background:var(--accent);border-color:var(--accent)}
+.result{display:none;margin-top:20px;padding:18px 22px;border-left:4px solid;font-family:var(--serif);font-size:16px}
+.result.shown{display:block}
+.result.win{background:var(--good-bg);border-color:var(--good);color:#14532D}
+.result.lose{background:var(--bad-bg);border-color:var(--bad);color:#7F1D1D}
+.result-summary{font-weight:600;margin-bottom:6px}
+.result-detail{font-family:var(--body);font-weight:400;font-size:14px;line-height:1.55;opacity:0.92}
+.solution{display:none;margin-top:18px;padding:22px 26px;background:var(--bg);border:1px solid var(--rule-soft);border-left:3px solid var(--ink-faint)}
+.solution.shown{display:block}
+.solution h5{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px}
+.solution .step{margin-bottom:14px;padding-bottom:14px;border-bottom:1px dashed var(--rule-soft)}
+.solution .step:last-child{border-bottom:none;padding-bottom:0;margin-bottom:0}
+.solution .step-title{font-family:var(--serif);font-weight:600;font-size:14.5px;color:var(--ink);margin-bottom:6px}
+.solution .step-body{font-family:var(--body);font-size:14.5px;line-height:1.6;color:var(--ink-soft)}
+.solution .eq-line{font-family:"Cambria Math",serif;font-size:15px;display:block;padding:6px 14px;background:var(--bg-card);border:1px solid var(--rule-soft);border-left:2px solid var(--accent);margin:4px 0;border-radius:1px}
+.solution .eq-label{font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-faint);margin-right:8px}
+.cheat{margin-top:56px;padding:24px 28px;background:var(--bg-card);border:1px solid var(--rule);border-radius:2px}
+.cheat h3{font-family:var(--serif);font-weight:500;font-size:22px;margin-bottom:16px}
+.cheat p{font-size:14.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:8px}
+.cheat p b{color:var(--ink)}
+.cheat-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+@media (max-width:600px){.cheat-list{grid-template-columns:1fr}}
+.cheat-card{padding:10px 14px;background:var(--bg);border:1px solid var(--rule-soft);border-left:3px solid var(--accent)}
+.cheat-card h5{font-family:var(--serif);font-weight:600;font-size:14px;color:var(--accent);margin-bottom:4px}
+.cheat-card p{font-size:13px;color:var(--ink-soft);line-height:1.45;margin:0}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-faint);text-align:center}
+footer a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+<header class="head">
+  <div class="head-meta"><span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №23</span><span>5 баллов · реальный эксперимент</span></div>
+  <h1>Реальный <em>эксперимент</em></h1>
+  <p class="subtitle">Тренажёр на задание №23 части 2 ОГЭ. На реальном экзамене ты получишь набор реактивов и должен провести опыт. Здесь тренируем планирование: какие реактивы выбрать, какие признаки реакции наблюдать, какие уравнения записать.</p>
+</header>
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">всего</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">всё&nbsp;верно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">точность<br/>выбора</div></div>
+</div>
+<div id="task-area"></div>
+<div class="actions" id="actions-area">
+  <button class="btn" id="check-btn" disabled>Проверить</button>
+  <button class="btn ghost" id="next-btn" style="display:none">Следующая задача</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+<div class="result" id="result"></div>
+<div class="solution" id="solution"></div>
+
+<section class="cheat">
+  <h3>Что нужно записать в ответе на №23</h3>
+  <p>На реальном экзамене вы должны записать в бланке ответов:</p>
+  <div class="cheat-list">
+    <div class="cheat-card"><h5>1. Выбранные реактивы</h5><p>Из имеющихся склянок выбрать те, реакция между которыми даст требуемый эффект.</p></div>
+    <div class="cheat-card"><h5>2. Молекулярное уравнение</h5><p>С коэффициентами, указанием осадка (↓) или газа (↑), если есть.</p></div>
+    <div class="cheat-card"><h5>3. Полное ионное уравнение</h5><p>Сильные растворимые электролиты — в виде ионов, слабые/нерастворимые/газы — формулой.</p></div>
+    <div class="cheat-card"><h5>4. Сокращённое ионное уравнение</h5><p>После вычеркивания одинаковых ионов с двух сторон. Должно совпадать с заданием.</p></div>
+    <div class="cheat-card"><h5>5. Признаки реакции</h5><p>Что вы наблюдаете: цвет осадка, выделение газа, изменение цвета раствора.</p></div>
+  </div>
+  <p style="margin-top:14px"><b>Этот тренажёр</b> проверяет автоматически только пункты 1 (реактивы) и 5 (признаки). Уравнения (пункты 2–4) даны как образец — сравните свои с эталоном самостоятельно.</p>
+</section>
+<footer>Источник: демоверсия и спецификация ОГЭ-2026 ФИПИ · <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a></footer>
+</div>
+
+<script>
+// База экспериментов: каждый — задание + реактивы (выбор) + признаки (выбор) + 3 уравнения
+var EXPERIMENTS = [
+  // 1. Голубой осадок Cu(OH)2 из CuSO4 + NaOH
+  { id:'cuoh2-precip',
+    task:'Используя только реактивы из приведённого набора, получите <b>голубой нерастворимый осадок</b>.',
+    reagents:['CuSO<sub>4</sub> (р-р)','NaOH (р-р)','HCl (р-р)','BaCl<sub>2</sub> (р-р)','Zn'],
+    correctReagents:[0,1],
+    signs:[
+      {text:'Выпадает голубой студенистый осадок.', match:true},
+      {text:'Выделяется бесцветный газ.', match:false},
+      {text:'Раствор приобретает синий цвет.', match:false},
+      {text:'Выпадает белый творожистый осадок.', match:false},
+      {text:'Никаких видимых изменений.', match:false}
+    ],
+    eqMolecular:'CuSO<sub>4</sub> + 2NaOH = Cu(OH)<sub>2</sub>↓ + Na<sub>2</sub>SO<sub>4</sub>',
+    eqFullIonic:'Cu²⁺ + SO<sub>4</sub>²⁻ + 2Na⁺ + 2OH⁻ = Cu(OH)<sub>2</sub>↓ + 2Na⁺ + SO<sub>4</sub>²⁻',
+    eqShortIonic:'Cu²⁺ + 2OH⁻ = Cu(OH)<sub>2</sub>↓',
+    note:'Cu(OH)<sub>2</sub> — типичное нерастворимое основание. При добавлении щёлочи к раствору соли меди(II) выпадает голубой осадок гидроксида меди.'
+  },
+  // 2. Белый творожистый осадок AgCl
+  { id:'agcl-precip',
+    task:'Используя только реактивы из приведённого набора, получите <b>белый творожистый осадок</b>, нерастворимый в кислотах.',
+    reagents:['AgNO<sub>3</sub> (р-р)','NaCl (р-р)','HNO<sub>3</sub> (р-р)','NaNO<sub>3</sub> (р-р)','NaOH (р-р)'],
+    correctReagents:[0,1],
+    signs:[
+      {text:'Выпадает белый творожистый осадок.', match:true},
+      {text:'Осадок не растворяется в азотной кислоте.', match:true},
+      {text:'Выделяется бесцветный газ без запаха.', match:false},
+      {text:'Раствор приобретает голубую окраску.', match:false},
+      {text:'Осадок чернеет на свету.', match:true}
+    ],
+    eqMolecular:'AgNO<sub>3</sub> + NaCl = AgCl↓ + NaNO<sub>3</sub>',
+    eqFullIonic:'Ag⁺ + NO<sub>3</sub>⁻ + Na⁺ + Cl⁻ = AgCl↓ + Na⁺ + NO<sub>3</sub>⁻',
+    eqShortIonic:'Ag⁺ + Cl⁻ = AgCl↓',
+    note:'Это классическая качественная реакция на хлорид-ион. AgCl нерастворим даже в HNO<sub>3</sub>, на свету темнеет (отсюда фотохимия серебра). Из приведённого набора подходит только пара AgNO<sub>3</sub> + NaCl.'
+  },
+  // 3. Газ NH3 из NH4Cl + NaOH
+  { id:'nh3-gas',
+    task:'Используя только реактивы из приведённого набора, получите <b>газ с резким раздражающим запахом</b>, изменяющий цвет влажной красной лакмусовой бумаги.',
+    reagents:['NH<sub>4</sub>Cl (тв.)','NaOH (р-р)','HCl (р-р)','CaCO<sub>3</sub> (тв.)','Na<sub>2</sub>SO<sub>4</sub> (р-р)'],
+    correctReagents:[0,1],
+    signs:[
+      {text:'Выделяется газ с резким запахом нашатырного спирта.', match:true},
+      {text:'Влажная красная лакмусовая бумага синеет.', match:true},
+      {text:'Образуется белый осадок.', match:false},
+      {text:'Раствор обесцвечивается.', match:false},
+      {text:'При нагревании выделение газа усиливается.', match:true}
+    ],
+    eqMolecular:'NH<sub>4</sub>Cl + NaOH →<sup>t°</sup> NH<sub>3</sub>↑ + H<sub>2</sub>O + NaCl',
+    eqFullIonic:'NH<sub>4</sub>⁺ + Cl⁻ + Na⁺ + OH⁻ = NH<sub>3</sub>↑ + H<sub>2</sub>O + Na⁺ + Cl⁻',
+    eqShortIonic:'NH<sub>4</sub>⁺ + OH⁻ = NH<sub>3</sub>↑ + H<sub>2</sub>O',
+    note:'Качественная реакция на ион аммония. NH<sub>3</sub> — газ слабоосновного характера, окрашивает лакмус в синий цвет.'
+  },
+  // 4. Белый осадок BaSO4
+  { id:'baso4-precip',
+    task:'Используя только реактивы из приведённого набора, получите <b>белый осадок, не растворимый в кислотах</b> (качественная реакция на сульфат-ион).',
+    reagents:['BaCl<sub>2</sub> (р-р)','Na<sub>2</sub>SO<sub>4</sub> (р-р)','HCl (р-р)','NaCl (р-р)','KOH (р-р)'],
+    correctReagents:[0,1],
+    signs:[
+      {text:'Выпадает белый кристаллический осадок.', match:true},
+      {text:'Осадок не растворяется в соляной и азотной кислотах.', match:true},
+      {text:'Выделяется бесцветный газ.', match:false},
+      {text:'Раствор зеленеет.', match:false},
+      {text:'Осадок растворяется в избытке щёлочи.', match:false}
+    ],
+    eqMolecular:'BaCl<sub>2</sub> + Na<sub>2</sub>SO<sub>4</sub> = BaSO<sub>4</sub>↓ + 2NaCl',
+    eqFullIonic:'Ba²⁺ + 2Cl⁻ + 2Na⁺ + SO<sub>4</sub>²⁻ = BaSO<sub>4</sub>↓ + 2Na⁺ + 2Cl⁻',
+    eqShortIonic:'Ba²⁺ + SO<sub>4</sub>²⁻ = BaSO<sub>4</sub>↓',
+    note:'Это качественная реакция на сульфат-ион. BaSO<sub>4</sub> — один из самых нерастворимых сульфатов, не растворяется даже в концентрированных кислотах.'
+  },
+  // 5. Газ CO2 из карбоната + кислоты
+  { id:'co2-gas',
+    task:'Используя только реактивы из приведённого набора, получите <b>бесцветный газ, вызывающий помутнение известковой воды</b>.',
+    reagents:['Na<sub>2</sub>CO<sub>3</sub> (р-р)','HCl (р-р)','NaOH (р-р)','Ba(OH)<sub>2</sub> (р-р)','CuSO<sub>4</sub> (р-р)'],
+    correctReagents:[0,1],
+    signs:[
+      {text:'Выделяется бесцветный газ без запаха.', match:true},
+      {text:'Наблюдается «вскипание» раствора.', match:true},
+      {text:'Газ вызывает помутнение известковой воды.', match:true},
+      {text:'Образуется голубой осадок.', match:false},
+      {text:'Раствор окрашивается в малиновый цвет.', match:false}
+    ],
+    eqMolecular:'Na<sub>2</sub>CO<sub>3</sub> + 2HCl = 2NaCl + H<sub>2</sub>O + CO<sub>2</sub>↑',
+    eqFullIonic:'2Na⁺ + CO<sub>3</sub>²⁻ + 2H⁺ + 2Cl⁻ = 2Na⁺ + 2Cl⁻ + H<sub>2</sub>O + CO<sub>2</sub>↑',
+    eqShortIonic:'CO<sub>3</sub>²⁻ + 2H⁺ = H<sub>2</sub>O + CO<sub>2</sub>↑',
+    note:'Качественная реакция на карбонат-ион. CO<sub>2</sub> с известковой водой даёт CaCO<sub>3</sub>↓ (помутнение). Тест: Ca(OH)<sub>2</sub> + CO<sub>2</sub> → CaCO<sub>3</sub>↓ + H<sub>2</sub>O.'
+  },
+  // 6. Бурый осадок Fe(OH)3
+  { id:'feoh3-precip',
+    task:'Используя только реактивы из приведённого набора, получите <b>бурый студенистый осадок</b>.',
+    reagents:['FeCl<sub>3</sub> (р-р)','NaOH (р-р)','H<sub>2</sub>SO<sub>4</sub> (р-р)','BaCl<sub>2</sub> (р-р)','KCl (р-р)'],
+    correctReagents:[0,1],
+    signs:[
+      {text:'Выпадает бурый студенистый осадок.', match:true},
+      {text:'Раствор теряет жёлто-коричневую окраску (становится почти бесцветным).', match:true},
+      {text:'Выделяется бесцветный газ.', match:false},
+      {text:'Образуется голубой осадок.', match:false},
+      {text:'Никаких видимых изменений.', match:false}
+    ],
+    eqMolecular:'FeCl<sub>3</sub> + 3NaOH = Fe(OH)<sub>3</sub>↓ + 3NaCl',
+    eqFullIonic:'Fe³⁺ + 3Cl⁻ + 3Na⁺ + 3OH⁻ = Fe(OH)<sub>3</sub>↓ + 3Na⁺ + 3Cl⁻',
+    eqShortIonic:'Fe³⁺ + 3OH⁻ = Fe(OH)<sub>3</sub>↓',
+    note:'Качественная реакция на катион Fe³⁺. Бурый цвет — характерный признак Fe(OH)<sub>3</sub>. Раствор FeCl<sub>3</sub> жёлто-коричневый из-за гидролиза, после добавления щёлочи становится прозрачным.'
+  },
+  // 7. Газ H2 — Zn + кислота
+  { id:'h2-gas',
+    task:'Используя только реактивы из приведённого набора, получите <b>бесцветный горючий газ, в 14,5 раз легче воздуха</b>.',
+    reagents:['Zn (тв.)','HCl (р-р)','NaCl (р-р)','Cu (тв.)','Na<sub>2</sub>SO<sub>4</sub> (р-р)'],
+    correctReagents:[0,1],
+    signs:[
+      {text:'Выделяется бесцветный газ без запаха.', match:true},
+      {text:'Цинк постепенно растворяется.', match:true},
+      {text:'Газ горит с лёгким хлопком («лающий» звук).', match:true},
+      {text:'Выпадает белый осадок.', match:false},
+      {text:'Раствор приобретает синюю окраску.', match:false}
+    ],
+    eqMolecular:'Zn + 2HCl = ZnCl<sub>2</sub> + H<sub>2</sub>↑',
+    eqFullIonic:'Zn + 2H⁺ + 2Cl⁻ = Zn²⁺ + 2Cl⁻ + H<sub>2</sub>↑',
+    eqShortIonic:'Zn + 2H⁺ = Zn²⁺ + H<sub>2</sub>↑',
+    note:'Стандартный лабораторный способ получения водорода. Zn — активный металл (стоит до H в ряду активности), HCl — сильная кислота. Cu не реагирует с разб. HCl, поэтому не подходит.'
+  },
+  // 8. Жёлтый осадок PbI2
+  { id:'pbi2-precip',
+    task:'Используя только реактивы из приведённого набора, получите <b>ярко-жёлтый осадок</b>.',
+    reagents:['Pb(NO<sub>3</sub>)<sub>2</sub> (р-р)','KI (р-р)','NaCl (р-р)','HCl (р-р)','KOH (р-р)'],
+    correctReagents:[0,1],
+    signs:[
+      {text:'Выпадает ярко-жёлтый кристаллический осадок.', match:true},
+      {text:'Осадок при нагревании растворяется, при охлаждении вновь выпадает («золотой дождь»).', match:true},
+      {text:'Выделяется бесцветный газ.', match:false},
+      {text:'Раствор окрашивается в малиновый цвет.', match:false},
+      {text:'Образуется белый осадок.', match:false}
+    ],
+    eqMolecular:'Pb(NO<sub>3</sub>)<sub>2</sub> + 2KI = PbI<sub>2</sub>↓ + 2KNO<sub>3</sub>',
+    eqFullIonic:'Pb²⁺ + 2NO<sub>3</sub>⁻ + 2K⁺ + 2I⁻ = PbI<sub>2</sub>↓ + 2K⁺ + 2NO<sub>3</sub>⁻',
+    eqShortIonic:'Pb²⁺ + 2I⁻ = PbI<sub>2</sub>↓',
+    note:'Эффектная демонстрационная реакция «золотой дождь». PbI<sub>2</sub> малорастворим при комнатной температуре, при нагревании растворимость растёт, при охлаждении выпадает золотистыми чешуйками.'
+  },
+  // 9. Качественная на сульфит — SO2 газ
+  { id:'so2-gas',
+    task:'Используя только реактивы из приведённого набора, получите <b>газ с резким запахом, обесцвечивающий раствор перманганата калия</b>.',
+    reagents:['Na<sub>2</sub>SO<sub>3</sub> (р-р)','H<sub>2</sub>SO<sub>4</sub> (р-р)','NaCl (р-р)','BaCl<sub>2</sub> (р-р)','NaOH (р-р)'],
+    correctReagents:[0,1],
+    signs:[
+      {text:'Выделяется газ с резким запахом (запах горящей серы).', match:true},
+      {text:'Газ обесцвечивает раствор KMnO<sub>4</sub>.', match:true},
+      {text:'Газ обесцвечивает фуксин (или йодную воду).', match:true},
+      {text:'Образуется голубой осадок.', match:false},
+      {text:'Раствор окрашивается в красный цвет.', match:false}
+    ],
+    eqMolecular:'Na<sub>2</sub>SO<sub>3</sub> + H<sub>2</sub>SO<sub>4</sub> = Na<sub>2</sub>SO<sub>4</sub> + H<sub>2</sub>O + SO<sub>2</sub>↑',
+    eqFullIonic:'2Na⁺ + SO<sub>3</sub>²⁻ + 2H⁺ + SO<sub>4</sub>²⁻ = 2Na⁺ + SO<sub>4</sub>²⁻ + H<sub>2</sub>O + SO<sub>2</sub>↑',
+    eqShortIonic:'SO<sub>3</sub>²⁻ + 2H⁺ = H<sub>2</sub>O + SO<sub>2</sub>↑',
+    note:'Качественная реакция на сульфит-ион. SO<sub>2</sub> — сильный восстановитель, легко обесцвечивает окислители (KMnO<sub>4</sub>, иод, бром).'
+  },
+  // 10. Получить раствор соли
+  { id:'znso4-salt',
+    task:'Используя только реактивы из приведённого набора, получите <b>раствор соли, содержащей сульфат-ион</b>, в реакции, сопровождающейся выделением газа.',
+    reagents:['Zn (тв.)','H<sub>2</sub>SO<sub>4</sub> (р-р)','HCl (р-р)','NaOH (р-р)','CuSO<sub>4</sub> (р-р)'],
+    correctReagents:[0,1],
+    signs:[
+      {text:'Цинк постепенно растворяется в кислоте.', match:true},
+      {text:'Выделяется бесцветный газ без запаха.', match:true},
+      {text:'Образуется бесцветный раствор соли.', match:true},
+      {text:'Выпадает голубой осадок.', match:false},
+      {text:'Раствор окрашивается в малиновый цвет.', match:false}
+    ],
+    eqMolecular:'Zn + H<sub>2</sub>SO<sub>4</sub> = ZnSO<sub>4</sub> + H<sub>2</sub>↑',
+    eqFullIonic:'Zn + 2H⁺ + SO<sub>4</sub>²⁻ = Zn²⁺ + SO<sub>4</sub>²⁻ + H<sub>2</sub>↑',
+    eqShortIonic:'Zn + 2H⁺ = Zn²⁺ + H<sub>2</sub>↑',
+    note:'Активный металл (Zn до H в ряду активности) растворяется в разбавленной серной кислоте с выделением водорода. Сульфат цинка ZnSO<sub>4</sub> — бесцветный растворимый сульфат. С HCl получился бы хлорид ZnCl<sub>2</sub> (не сульфат), поэтому именно H<sub>2</sub>SO<sub>4</sub> подходит к этой постановке.'
+  }
+];
+
+var state = { total:0, fullCorrect:0, streak:0, taskBalls:[], current:null, recentIds:[] };
+
+function pickExp(){
+  var pool = EXPERIMENTS.filter(function(e){return state.recentIds.indexOf(e.id)<0});
+  if(pool.length===0) pool = EXPERIMENTS;
+  var e = pool[Math.floor(Math.random()*pool.length)];
+  state.recentIds.push(e.id);
+  if(state.recentIds.length>5) state.recentIds.shift();
+  return e;
+}
+
+function el(t,p,c){var e=document.createElement(t);if(p)for(var k in p){if(k==='class')e.className=p[k];else if(k==='html')e.innerHTML=p[k];else if(k.indexOf('on')===0)e.addEventListener(k.substring(2).toLowerCase(),p[k]);else e.setAttribute(k,p[k])}if(c!=null){if(!Array.isArray(c))c=[c];for(var i=0;i<c.length;i++){var x=c[i];if(x==null)continue;e.appendChild(typeof x==='string'||typeof x==='number'?document.createTextNode(x):x)}}return e}
+
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+
+function renderTask(){
+  var e = state.current.exp;
+  var area = document.getElementById('task-area');
+  area.innerHTML = '';
+
+  // Task description
+  var card = el('div',{class:'task-card'});
+  card.appendChild(el('div',{class:'task-label'},'Задание №23'));
+  card.appendChild(el('div',{class:'task-text',html:e.task}));
+
+  // Reagents (preserve original order to keep correctReagents valid)
+  card.appendChild(el('div',{class:'section-title'},'Имеющиеся реактивы — выбери 2'));
+  var rgrid = el('div',{class:'reagents-grid'});
+  e.reagents.forEach(function(name,idx){
+    var btn = el('div',{class:'reagent-btn','data-idx':idx,html:name});
+    btn.addEventListener('click',function(){toggleReagent(idx)});
+    rgrid.appendChild(btn);
+  });
+  card.appendChild(rgrid);
+
+  // Signs (shuffled — but track originals)
+  card.appendChild(el('div',{class:'section-title'},'Признаки реакции — выбери все верные'));
+  var sgrid = el('div',{class:'signs-grid'});
+  // Pre-shuffle signs but keep original index for verification
+  var shuffled = shuffle(e.signs.map(function(s,i){return Object.assign({}, s, {origIdx:i})}));
+  state.current.shuffledSigns = shuffled;
+  shuffled.forEach(function(s,idx){
+    var btn = el('div',{class:'sign-btn','data-shuf':idx,html:s.text});
+    btn.addEventListener('click',function(){toggleSign(idx)});
+    sgrid.appendChild(btn);
+  });
+  card.appendChild(sgrid);
+
+  area.appendChild(card);
+
+  state.current.selReagents = [];
+  state.current.selSigns = [];
+  state.current.locked = false;
+  document.getElementById('check-btn').style.display='';
+  document.getElementById('check-btn').disabled=true;
+  document.getElementById('skip-btn').style.display='';
+  document.getElementById('next-btn').style.display='none';
+  document.getElementById('result').className='result';
+  document.getElementById('solution').className='solution';
+}
+
+function toggleReagent(idx){
+  if(state.current.locked) return;
+  var sel = state.current.selReagents;
+  var pos = sel.indexOf(idx);
+  if(pos>=0) sel.splice(pos,1);
+  else { if(sel.length>=2) return; sel.push(idx); }
+  document.querySelectorAll('.reagent-btn').forEach(function(b){
+    b.classList.toggle('selected', sel.indexOf(parseInt(b.getAttribute('data-idx'),10))>=0);
+  });
+  updateCheckBtn();
+}
+
+function toggleSign(idx){
+  if(state.current.locked) return;
+  var sel = state.current.selSigns;
+  var pos = sel.indexOf(idx);
+  if(pos>=0) sel.splice(pos,1);
+  else sel.push(idx);
+  document.querySelectorAll('.sign-btn').forEach(function(b){
+    b.classList.toggle('selected', sel.indexOf(parseInt(b.getAttribute('data-shuf'),10))>=0);
+  });
+  updateCheckBtn();
+}
+
+function updateCheckBtn(){
+  var hasReagents = state.current.selReagents.length === 2;
+  var hasSigns = state.current.selSigns.length > 0;
+  document.getElementById('check-btn').disabled = !(hasReagents && hasSigns);
+}
+
+function checkAnswer(){
+  if(state.current.locked) return;
+  var e = state.current.exp;
+  
+  // Check reagents
+  var selR = state.current.selReagents.slice().sort(function(a,b){return a-b});
+  var corR = e.correctReagents.slice().sort(function(a,b){return a-b});
+  var reagentsRight = selR.length === corR.length && selR.every(function(v,i){return v === corR[i]});
+  
+  // Check signs (need to convert shuffled idx → original idx)
+  var selSignOrigs = state.current.selSigns.map(function(idx){return state.current.shuffledSigns[idx].origIdx});
+  var trueSignsOrig = e.signs.map(function(s,i){return s.match ? i : null}).filter(function(i){return i!==null});
+  var selSorted = selSignOrigs.slice().sort(function(a,b){return a-b});
+  var trueSorted = trueSignsOrig.slice().sort(function(a,b){return a-b});
+  var signsRight = selSorted.length === trueSorted.length && selSorted.every(function(v,i){return v === trueSorted[i]});
+
+  // Calculate "auto" points (max 2 of 5: 1 for reagents + 1 for signs)
+  var autoPoints = (reagentsRight ? 1 : 0) + (signsRight ? 1 : 0);
+  state.current.locked = true;
+  state.total++;
+  state.taskBalls.push(autoPoints);
+  if(reagentsRight && signsRight){state.fullCorrect++;state.streak++}
+  else state.streak=0;
+  updateStats();
+
+  // Visual feedback for reagents
+  document.querySelectorAll('.reagent-btn').forEach(function(b){
+    b.classList.add('locked');
+    var idx = parseInt(b.getAttribute('data-idx'),10);
+    var isSel = state.current.selReagents.indexOf(idx)>=0;
+    var isCor = corR.indexOf(idx)>=0;
+    if(isSel && isCor) b.classList.add('right');
+    else if(isSel && !isCor) b.classList.add('wrong');
+    else if(!isSel && isCor) b.classList.add('right');
+  });
+
+  // Visual feedback for signs
+  document.querySelectorAll('.sign-btn').forEach(function(b){
+    b.classList.add('locked');
+    var shufIdx = parseInt(b.getAttribute('data-shuf'),10);
+    var origIdx = state.current.shuffledSigns[shufIdx].origIdx;
+    var isSel = state.current.selSigns.indexOf(shufIdx)>=0;
+    var isCor = trueSignsOrig.indexOf(origIdx)>=0;
+    if(isSel && isCor) b.classList.add('right');
+    else if(isSel && !isCor) b.classList.add('wrong');
+    else if(!isSel && isCor) b.classList.add('missed');
+  });
+
+  // Result message
+  var r = document.getElementById('result');
+  r.className = 'result shown ' + ((reagentsRight && signsRight) ? 'win' : 'lose');
+  var summary = (reagentsRight && signsRight) 
+    ? '✓ Реактивы и признаки указаны верно (2 балла)' 
+    : (autoPoints === 1 ? '◐ Частично верно (1 из 2 автопроверяемых баллов)' : '✗ Реактивы и признаки нужно пересмотреть');
+  var detail = '';
+  if(reagentsRight) detail += 'Реактивы — верно. ';
+  else detail += 'Реактивы выбраны неверно. ';
+  if(signsRight) detail += 'Признаки реакции — верно. ';
+  else detail += 'Признаки реакции указаны не точно (зелёная пунктирная — пропущенные верные).';
+  r.innerHTML = '<div class="result-summary">' + summary + '</div><div class="result-detail">' + detail + '</div>';
+
+  // Show full solution with equations
+  var sol = document.getElementById('solution');
+  sol.className = 'solution shown';
+  var html = '<h5>Полный ответ для бланка</h5>';
+  html += '<div class="step"><div class="step-title">Молекулярное уравнение</div><div class="step-body"><span class="eq-line"><span class="eq-label">молек.:</span>' + e.eqMolecular + '</span></div></div>';
+  html += '<div class="step"><div class="step-title">Полное ионное уравнение</div><div class="step-body"><span class="eq-line"><span class="eq-label">полн. ионн.:</span>' + e.eqFullIonic + '</span></div></div>';
+  html += '<div class="step"><div class="step-title">Сокращённое ионное уравнение</div><div class="step-body"><span class="eq-line"><span class="eq-label">сокр. ионн.:</span>' + e.eqShortIonic + '</span></div></div>';
+  html += '<div class="step"><div class="step-title">Комментарий</div><div class="step-body">' + e.note + '</div></div>';
+  html += '<div class="step"><div class="step-title">Сравните свои уравнения с эталоном</div><div class="step-body" style="font-style:italic">Если все 3 уравнения у вас совпадают (с точностью до алгоритма расстановки коэффициентов и формы записи) — добавьте себе 3 балла к автопроверяемым ' + autoPoints + '. Если есть расхождения — рассмотрите свои варианты с учителем.</div></div>';
+  sol.innerHTML = html;
+
+  document.getElementById('check-btn').style.display='none';
+  document.getElementById('skip-btn').style.display='none';
+  document.getElementById('next-btn').style.display='';
+  document.getElementById('next-btn').classList.add('next');
+  document.getElementById('next-btn').focus();
+}
+
+function nextTask(){
+  state.current = { exp: pickExp() };
+  renderTask();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function skipTask(){state.streak=0;updateStats();nextTask()}
+
+function updateStats(){
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.fullCorrect;
+  var s = document.getElementById('stat-streak'); s.textContent = state.streak; s.classList.toggle('hot', state.streak>=2);
+  if(state.taskBalls.length === 0){
+    document.getElementById('stat-pct').textContent = '—';
+  } else {
+    var avg = state.taskBalls.reduce(function(s,v){return s+v},0) / state.taskBalls.length;
+    document.getElementById('stat-pct').textContent = avg.toFixed(1) + '/2';
+  }
+}
+
+document.getElementById('check-btn').addEventListener('click',checkAnswer);
+document.getElementById('next-btn').addEventListener('click',nextTask);
+document.getElementById('skip-btn').addEventListener('click',skipTask);
+
+nextTask();
+</script>
+</body>
+</html>

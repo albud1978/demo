@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №21 · Цепочки превращений</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#F2EDE2;--bg-card:#FAF6EC;--ink:#1B1814;--ink-soft:#4A453D;--ink-faint:#7A736A;--rule:#C8BFAE;--rule-soft:#DCD3BF;--accent:#2D4A2B;--accent-soft:rgba(45,74,43,0.08);--good:#16A34A;--good-bg:#DCFCE7;--bad:#B91C1C;--bad-bg:#FEE2E2;--warn:#D97706;--serif:"Fraunces","Times New Roman",Georgia,serif;--body:"Spectral","Georgia",serif;--mono:"JetBrains Mono","SFMono-Regular",Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body{background-image:radial-gradient(circle at 25% 10%,rgba(45,74,43,0.04),transparent 40%)}
+.wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+.head{border-top:3px solid var(--ink);padding-top:16px;padding-bottom:24px;border-bottom:1px solid var(--rule);margin-bottom:36px}
+.head-meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft);flex-wrap:wrap;gap:10px}
+.head-meta .accent{color:var(--accent)}
+h1{font-family:var(--serif);font-weight:500;font-size:clamp(30px,5vw,44px);line-height:1.05;letter-spacing:-0.015em;margin-top:16px}
+h1 em{font-style:italic;font-weight:400;color:var(--accent)}
+.subtitle{font-size:16px;color:var(--ink-soft);margin-top:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:32px}
+@media (max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--bg-card);padding:14px 16px}
+.stat .num{font-family:var(--serif);font-size:28px;font-weight:500;line-height:1;color:var(--accent)}
+.stat .lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px}
+.stat.streak .num.hot{color:var(--warn)}
+.chain-card{background:var(--bg-card);border:1px solid var(--rule);border-left:4px solid var(--accent);padding:24px 28px;margin-bottom:24px;text-align:center}
+.chain-label{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:12px}
+.chain-display{font-family:"Cambria Math","Cambria",serif;font-size:22px;font-weight:500;line-height:1.6;color:var(--ink);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px}
+.chain-display sub{font-size:0.7em}
+.chain-x{color:var(--accent);background:var(--accent-soft);padding:2px 12px;border-radius:1px;border:1px dashed var(--accent);font-weight:600}
+.chain-x.done{background:var(--good-bg);border-color:var(--good);border-style:solid;color:#14532D}
+.chain-arrow{color:var(--ink-faint);font-size:18px;font-weight:300}
+.step-card{background:var(--bg-card);border:1px solid var(--rule);padding:22px 28px;margin-bottom:18px;position:relative;transition:opacity 0.3s}
+.step-card.dim{opacity:0.5;pointer-events:none}
+.step-num-pill{display:inline-block;font-family:var(--mono);font-weight:700;font-size:11px;letter-spacing:0.06em;padding:3px 10px;background:var(--accent);color:white;border-radius:1px;margin-bottom:10px}
+.step-num-pill.done{background:var(--good)}
+.step-text{font-family:var(--serif);font-size:16px;line-height:1.5;font-weight:500;margin-bottom:12px}
+.step-text b{color:var(--accent)}
+.step-text code{font-family:"Cambria Math","Cambria",serif;font-size:17px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:1px 6px;border-radius:1px;font-style:normal}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{padding:13px 18px;background:var(--bg);border:1px solid var(--rule);font-family:"Cambria Math","Cambria",serif;font-size:15.5px;cursor:pointer;transition:all 0.15s ease;border-radius:1px;user-select:none;line-height:1.4}
+.option:hover:not(.locked){border-color:var(--ink)}
+.option.selected{border-color:var(--accent);background:var(--accent-soft)}
+.option.locked{cursor:default}
+.option.correct-pick{background:var(--good-bg);border-color:var(--good)}
+.option.wrong-pick{background:var(--bad-bg);border-color:var(--bad)}
+.option.correct-shown{border-color:var(--good);border-style:dashed}
+.btn-step{font-family:var(--mono);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:700;padding:11px 22px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer;border-radius:1px;transition:all 0.15s ease;margin-top:14px}
+.btn-step:hover:not(:disabled){background:var(--accent);border-color:var(--accent)}
+.btn-step:disabled{background:var(--rule);border-color:var(--rule);color:var(--ink-faint);cursor:not-allowed}
+.step-feedback{display:none;margin-top:12px;padding:12px 16px;border-left:3px solid;font-size:14px;line-height:1.5}
+.step-feedback.shown{display:block}
+.step-feedback.win{background:var(--good-bg);border-color:var(--good);color:#14532D}
+.step-feedback.lose{background:var(--bad-bg);border-color:var(--bad);color:#7F1D1D}
+.actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:700;padding:14px 28px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer;border-radius:1px;transition:all 0.15s ease}
+.btn:hover:not(:disabled){background:var(--accent);border-color:var(--accent)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover:not(:disabled){background:var(--ink);color:var(--bg)}
+.btn.next{background:var(--accent);border-color:var(--accent)}
+.summary{display:none;margin-top:24px;padding:24px 28px;background:var(--bg-card);border:2px solid var(--accent);border-left:6px solid var(--accent)}
+.summary.shown{display:block}
+.summary h4{font-family:var(--serif);font-weight:600;font-size:20px;margin-bottom:12px;color:var(--accent)}
+.summary-eq{margin-top:10px;padding:14px 18px;background:var(--bg);border:1px solid var(--rule-soft);border-radius:1px;font-family:"Cambria Math","Cambria",serif;font-size:16px;line-height:1.5}
+.summary-eq .label{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-bottom:4px;font-weight:400}
+.cheat{margin-top:56px;padding:24px 28px;background:var(--bg-card);border:1px solid var(--rule);border-radius:2px}
+.cheat h3{font-family:var(--serif);font-weight:500;font-size:22px;margin-bottom:16px}
+.cheat ol{padding-left:22px;font-size:14.5px;line-height:1.7;color:var(--ink-soft)}
+.cheat ol li{margin-bottom:6px}
+.cheat ol li b{color:var(--ink)}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-faint);text-align:center}
+footer a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+<header class="head">
+  <div class="head-meta"><span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЕ №21</span><span>3 балла · развёрнутый ответ</span></div>
+  <h1>Цепочки <em>превращений</em></h1>
+  <p class="subtitle">Тренажёр на задание №21: дана схема превращений с пропуском промежуточного вещества X. Определи X и запиши уравнения трёх реакций. На каждом шаге — выбор правильного уравнения из 4 вариантов.</p>
+</header>
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">цепочек<br/>пройдено</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">все&nbsp;3&nbsp;реакции<br/>верно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд<br/>чисто</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">% точности<br/>шагов</div></div>
+</div>
+<div id="task-area"></div>
+<div class="actions" id="actions-area">
+  <button class="btn ghost" id="next-btn" style="display:none">Следующая цепочка</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+<section class="cheat">
+  <h3>Алгоритм решения цепочек превращений</h3>
+  <ol>
+    <li><b>Определи промежуточное вещество X</b> по логике: какое вещество может быть и продуктом первой реакции, и реагентом второй?</li>
+    <li><b>Запиши молекулярные уравнения</b> каждой стадии. Не забывай: ионные уравнения в задании №21 не требуются.</li>
+    <li><b>Расставь коэффициенты</b> в каждом уравнении и проверь баланс по атомам.</li>
+    <li><b>Условия реакций:</b> разложение карбонатов и гидроксидов — нагревание (t°), окисление металлов воздухом и горение — нагревание, реакции в растворе идут при н.у.</li>
+    <li>Помни про <b>генетическую связь классов:</b> металл → оксид → соль → основание (или наоборот). Это типовая структура цепочек ОГЭ.</li>
+  </ol>
+</section>
+<footer>Источник: демоверсия и спецификация ОГЭ-2026 ФИПИ · <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a></footer>
+</div>
+
+<script>
+// База: каждая цепочка из 4 звеньев (4 substances), одно = X. Три уравнения.
+// Каждое уравнение имеет 4 варианта (1 правильный + 3 distractor).
+var CHAINS = [
+  // 1. ДЕМО ФИПИ: Zn(NO3)2 → ZnO → ZnSO4 → Zn(OH)2  (X = ZnO, на позиции 1)
+  { id:'zn-demo',
+    chain:['Zn(NO<sub>3</sub>)<sub>2</sub>','X','ZnSO<sub>4</sub>','Zn(OH)<sub>2</sub>'],
+    arrowConditions:['t°','',''],
+    xIdx:1, xValue:'ZnO',
+    xOptions:['ZnO','Zn(OH)<sub>2</sub>','Zn','ZnCl<sub>2</sub>'],
+    xExplain:'Zn(NO<sub>3</sub>)<sub>2</sub> при нагревании разлагается до оксида ZnO. Из оксида можно получить ZnSO<sub>4</sub> реакцией с H<sub>2</sub>SO<sub>4</sub>.',
+    eqs:[
+      { stage:'Zn(NO<sub>3</sub>)<sub>2</sub> → ZnO',
+        correct:'2Zn(NO<sub>3</sub>)<sub>2</sub> →(t°) 2ZnO + 4NO<sub>2</sub>↑ + O<sub>2</sub>↑',
+        wrong:['Zn(NO<sub>3</sub>)<sub>2</sub> →(t°) ZnO + 2NO<sub>2</sub>↑','Zn(NO<sub>3</sub>)<sub>2</sub> + H<sub>2</sub>O → ZnO + 2HNO<sub>3</sub>','Zn(NO<sub>3</sub>)<sub>2</sub> →(t°) Zn + 2NO<sub>2</sub>↑ + O<sub>2</sub>↑']
+      },
+      { stage:'ZnO → ZnSO<sub>4</sub>',
+        correct:'ZnO + H<sub>2</sub>SO<sub>4</sub> → ZnSO<sub>4</sub> + H<sub>2</sub>O',
+        wrong:['ZnO + Na<sub>2</sub>SO<sub>4</sub> → ZnSO<sub>4</sub> + Na<sub>2</sub>O','ZnO + 2H<sub>2</sub>SO<sub>4</sub> → ZnSO<sub>4</sub> + S + 3H<sub>2</sub>O','2ZnO + 2H<sub>2</sub>SO<sub>4</sub> → 2ZnSO<sub>4</sub> + 2H<sub>2</sub>O + O<sub>2</sub>↑']
+      },
+      { stage:'ZnSO<sub>4</sub> → Zn(OH)<sub>2</sub>',
+        correct:'ZnSO<sub>4</sub> + 2NaOH → Zn(OH)<sub>2</sub>↓ + Na<sub>2</sub>SO<sub>4</sub>',
+        wrong:['ZnSO<sub>4</sub> + H<sub>2</sub>O → Zn(OH)<sub>2</sub> + SO<sub>3</sub>','ZnSO<sub>4</sub> + 2KCl → Zn(OH)<sub>2</sub> + K<sub>2</sub>SO<sub>4</sub>','ZnSO<sub>4</sub> + 2Na → Zn(OH)<sub>2</sub> + Na<sub>2</sub>SO<sub>4</sub>']
+      }
+    ]
+  },
+  // 2. Cu → CuO → CuSO4 → Cu(OH)2
+  { id:'cu-chain',
+    chain:['Cu','X','CuSO<sub>4</sub>','Cu(OH)<sub>2</sub>'],
+    arrowConditions:['+O<sub>2</sub> (изб.), t°','',''],
+    xIdx:1, xValue:'CuO',
+    xOptions:['CuO','Cu<sub>2</sub>O','CuCl<sub>2</sub>','CuSO<sub>3</sub>'],
+    xExplain:'Cu при нагревании в избытке кислорода окисляется до оксида CuO (чёрное вещество). В недостатке кислорода возможен Cu<sub>2</sub>O, поэтому условие избытка O<sub>2</sub> делает X однозначным. Из CuO можно получить CuSO<sub>4</sub> реакцией с H<sub>2</sub>SO<sub>4</sub>.',
+    eqs:[
+      { stage:'Cu → CuO',
+        correct:'2Cu + O<sub>2</sub> →(t°) 2CuO',
+        wrong:['Cu + O<sub>2</sub> → CuO<sub>2</sub>','Cu + H<sub>2</sub>O → CuO + H<sub>2</sub>↑','Cu + 2HNO<sub>3</sub> → CuO + NO<sub>2</sub> + H<sub>2</sub>O']
+      },
+      { stage:'CuO → CuSO<sub>4</sub>',
+        correct:'CuO + H<sub>2</sub>SO<sub>4</sub> → CuSO<sub>4</sub> + H<sub>2</sub>O',
+        wrong:['CuO + Na<sub>2</sub>SO<sub>4</sub> → CuSO<sub>4</sub> + Na<sub>2</sub>O','2CuO + 2H<sub>2</sub>SO<sub>4</sub> → 2CuSO<sub>4</sub> + 2H<sub>2</sub>O + O<sub>2</sub>','CuO + 2HCl + Na<sub>2</sub>SO<sub>4</sub> → CuSO<sub>4</sub> + 2NaCl + H<sub>2</sub>O']
+      },
+      { stage:'CuSO<sub>4</sub> → Cu(OH)<sub>2</sub>',
+        correct:'CuSO<sub>4</sub> + 2NaOH → Cu(OH)<sub>2</sub>↓ + Na<sub>2</sub>SO<sub>4</sub>',
+        wrong:['CuSO<sub>4</sub> + 2H<sub>2</sub>O → Cu(OH)<sub>2</sub> + H<sub>2</sub>SO<sub>4</sub>','CuSO<sub>4</sub> + 2KCl → Cu(OH)<sub>2</sub> + K<sub>2</sub>SO<sub>4</sub>','CuSO<sub>4</sub> + 2NaCl → CuCl<sub>2</sub> + Na<sub>2</sub>SO<sub>4</sub>']
+      }
+    ]
+  },
+  // 3. Fe → FeCl3 → Fe(OH)3 → Fe2O3
+  { id:'fe-chain',
+    chain:['Fe','FeCl<sub>3</sub>','X','Fe<sub>2</sub>O<sub>3</sub>'],
+    xIdx:2, xValue:'Fe(OH)<sub>3</sub>',
+    xOptions:['Fe(OH)<sub>3</sub>','Fe(OH)<sub>2</sub>','FeO','Fe<sub>3</sub>O<sub>4</sub>'],
+    xExplain:'Из FeCl<sub>3</sub> при действии щёлочи получается нерастворимый гидроксид Fe(OH)<sub>3</sub> (бурый осадок). При прокаливании Fe(OH)<sub>3</sub> разлагается на Fe<sub>2</sub>O<sub>3</sub>.',
+    eqs:[
+      { stage:'Fe → FeCl<sub>3</sub>',
+        correct:'2Fe + 3Cl<sub>2</sub> →(t°) 2FeCl<sub>3</sub>',
+        wrong:['Fe + Cl<sub>2</sub> → FeCl<sub>2</sub>','Fe + 3HCl → FeCl<sub>3</sub> + 3/2 H<sub>2</sub>','2Fe + 6HCl → 2FeCl<sub>3</sub> + 3H<sub>2</sub>↑']
+      },
+      { stage:'FeCl<sub>3</sub> → Fe(OH)<sub>3</sub>',
+        correct:'FeCl<sub>3</sub> + 3NaOH → Fe(OH)<sub>3</sub>↓ + 3NaCl',
+        wrong:['FeCl<sub>3</sub> + 3NaNO<sub>3</sub> → Fe(NO<sub>3</sub>)<sub>3</sub> + 3NaCl','2FeCl<sub>3</sub> + 3Na<sub>2</sub>SO<sub>4</sub> → 2Fe(OH)<sub>3</sub>↓ + 3SO<sub>2</sub> + 6NaCl','FeCl<sub>3</sub> + 3KCl + 3OH → Fe(OH)<sub>3</sub> + 3KCl<sub>2</sub>']
+      },
+      { stage:'Fe(OH)<sub>3</sub> → Fe<sub>2</sub>O<sub>3</sub>',
+        correct:'2Fe(OH)<sub>3</sub> →(t°) Fe<sub>2</sub>O<sub>3</sub> + 3H<sub>2</sub>O',
+        wrong:['Fe(OH)<sub>3</sub> →(t°) Fe<sub>2</sub>O<sub>3</sub> + H<sub>2</sub>O','2Fe(OH)<sub>3</sub> → Fe<sub>2</sub>O<sub>3</sub> + 3H<sub>2</sub>↑','Fe(OH)<sub>3</sub> + H<sub>2</sub>SO<sub>4</sub> → Fe<sub>2</sub>O<sub>3</sub> + H<sub>2</sub>O']
+      }
+    ]
+  },
+  // 4. Mg → MgO → MgCl2 → Mg(OH)2
+  { id:'mg-chain',
+    chain:['Mg','MgO','X','Mg(OH)<sub>2</sub>'],
+    arrowConditions:['t°','+HCl',''],
+    xIdx:2, xValue:'MgCl<sub>2</sub>',
+    xOptions:['MgCl<sub>2</sub>','MgSO<sub>4</sub>','Mg(NO<sub>3</sub>)<sub>2</sub>','MgCO<sub>3</sub>'],
+    xExplain:'Из MgO с соляной кислотой получается соль MgCl<sub>2</sub>. С раствором щёлочи MgCl<sub>2</sub> даёт нерастворимый гидроксид Mg(OH)<sub>2</sub>. Условие +HCl на стрелке однозначно указывает на хлорид.',
+    eqs:[
+      { stage:'Mg → MgO',
+        correct:'2Mg + O<sub>2</sub> →(t°) 2MgO',
+        wrong:['Mg + O<sub>2</sub> → MgO<sub>2</sub>','3Mg + 2O<sub>2</sub> → Mg<sub>3</sub>O<sub>4</sub>','2Mg + 3O<sub>2</sub> → 2MgO + O<sub>2</sub>↑']
+      },
+      { stage:'MgO → MgCl<sub>2</sub>',
+        correct:'MgO + 2HCl → MgCl<sub>2</sub> + H<sub>2</sub>O',
+        wrong:['MgO + Cl<sub>2</sub> → MgCl<sub>2</sub> + O','MgO + 2NaCl → MgCl<sub>2</sub> + Na<sub>2</sub>O','MgO + HCl → MgCl + OH']
+      },
+      { stage:'MgCl<sub>2</sub> → Mg(OH)<sub>2</sub>',
+        correct:'MgCl<sub>2</sub> + 2NaOH → Mg(OH)<sub>2</sub>↓ + 2NaCl',
+        wrong:['MgCl<sub>2</sub> + 2NaNO<sub>3</sub> → Mg(NO<sub>3</sub>)<sub>2</sub> + 2NaCl','MgCl<sub>2</sub> + Ca(OH)<sub>2</sub> → Mg(OH)<sub>2</sub> + CaCl','MgCl<sub>2</sub> + KOH → Mg(OH) + KCl<sub>2</sub>']
+      }
+    ]
+  },
+  // 5. CaCO3 → CaO → Ca(OH)2 → CaCl2
+  { id:'ca-chain',
+    chain:['CaCO<sub>3</sub>','CaO','X','CaCl<sub>2</sub>'],
+    arrowConditions:['t°','+H<sub>2</sub>O',''],
+    xIdx:2, xValue:'Ca(OH)<sub>2</sub>',
+    xOptions:['Ca(OH)<sub>2</sub>','Ca(OH)<sub>3</sub>','Ca','CaSO<sub>4</sub>'],
+    xExplain:'CaO с водой даёт гидроксид кальция Ca(OH)<sub>2</sub> (гашение извести). С соляной кислотой Ca(OH)<sub>2</sub> даёт хлорид кальция.',
+    eqs:[
+      { stage:'CaCO<sub>3</sub> → CaO',
+        correct:'CaCO<sub>3</sub> →(t°) CaO + CO<sub>2</sub>↑',
+        wrong:['CaCO<sub>3</sub> + H<sub>2</sub>O → CaO + H<sub>2</sub>CO<sub>3</sub>','2CaCO<sub>3</sub> →(t°) 2CaO + 2CO + O<sub>2</sub>↑','CaCO<sub>3</sub> →(t°) Ca + C + 3/2 O<sub>2</sub>↑']
+      },
+      { stage:'CaO → Ca(OH)<sub>2</sub>',
+        correct:'CaO + H<sub>2</sub>O → Ca(OH)<sub>2</sub>',
+        wrong:['CaO + 2H<sub>2</sub>O → Ca(OH)<sub>2</sub> + H<sub>2</sub>↑','CaO + 2NaOH → Ca(OH)<sub>2</sub> + Na<sub>2</sub>O','2CaO + 2H<sub>2</sub>O → 2Ca(OH)<sub>2</sub> + O<sub>2</sub>↑']
+      },
+      { stage:'Ca(OH)<sub>2</sub> → CaCl<sub>2</sub>',
+        correct:'Ca(OH)<sub>2</sub> + 2HCl → CaCl<sub>2</sub> + 2H<sub>2</sub>O',
+        wrong:['Ca(OH)<sub>2</sub> + Cl<sub>2</sub> → CaCl<sub>2</sub> + 2OH','Ca(OH)<sub>2</sub> + 2NaCl → CaCl<sub>2</sub> + 2NaOH','Ca(OH)<sub>2</sub> + HCl → CaCl + H<sub>2</sub>O + OH']
+      }
+    ]
+  },
+  // 6. S → SO2 → SO3 → H2SO4
+  { id:'s-chain',
+    chain:['S','SO<sub>2</sub>','X','H<sub>2</sub>SO<sub>4</sub>'],
+    arrowConditions:['t°','+O<sub>2</sub>, кат.','+H<sub>2</sub>O'],
+    xIdx:2, xValue:'SO<sub>3</sub>',
+    xOptions:['SO<sub>3</sub>','SF<sub>6</sub>','S','Na<sub>2</sub>SO<sub>3</sub>'],
+    xExplain:'SO<sub>2</sub> каталитически окисляется до SO<sub>3</sub> (контактный способ производства серной кислоты). SO<sub>3</sub> при гидратации даёт серную кислоту. Условие <code>+O<sub>2</sub>, кат.</code> указывает именно на каталитическое окисление до высшего оксида.',
+    eqs:[
+      { stage:'S → SO<sub>2</sub>',
+        correct:'S + O<sub>2</sub> →(t°) SO<sub>2</sub>',
+        wrong:['2S + O<sub>2</sub> → 2SO','S + 2O<sub>2</sub> → SO<sub>4</sub>','S + H<sub>2</sub>O →(t°) SO<sub>2</sub> + H<sub>2</sub>↑']
+      },
+      { stage:'SO<sub>2</sub> → SO<sub>3</sub>',
+        correct:'2SO<sub>2</sub> + O<sub>2</sub> →(кат.) 2SO<sub>3</sub>',
+        wrong:['SO<sub>2</sub> + O<sub>2</sub> → 2SO<sub>3</sub>','SO<sub>2</sub> + H<sub>2</sub>O →(t°) SO<sub>3</sub> + H<sub>2</sub>↑','SO<sub>2</sub> + 2HNO<sub>3</sub> → SO<sub>3</sub> + H<sub>2</sub>O + 2NO']
+      },
+      { stage:'SO<sub>3</sub> → H<sub>2</sub>SO<sub>4</sub>',
+        correct:'SO<sub>3</sub> + H<sub>2</sub>O → H<sub>2</sub>SO<sub>4</sub>',
+        wrong:['SO<sub>3</sub> + 2H<sub>2</sub>O → H<sub>2</sub>SO<sub>4</sub> + H<sub>2</sub>↑','SO<sub>3</sub> + 2HCl → H<sub>2</sub>SO<sub>4</sub> + Cl<sub>2</sub>','SO<sub>3</sub> + 2NaOH → H<sub>2</sub>SO<sub>4</sub> + Na<sub>2</sub>O']
+      }
+    ]
+  },
+  // 7. P → P2O5 → H3PO4 → Na3PO4
+  { id:'p-chain',
+    chain:['P','P<sub>2</sub>O<sub>5</sub>','X','Na<sub>3</sub>PO<sub>4</sub>'],
+    arrowConditions:['t°','+3H<sub>2</sub>O','+3NaOH'],
+    xIdx:2, xValue:'H<sub>3</sub>PO<sub>4</sub>',
+    xOptions:['H<sub>3</sub>PO<sub>4</sub>','H<sub>3</sub>PO<sub>3</sub>','PH<sub>3</sub>','P<sub>4</sub>S<sub>3</sub>'],
+    xExplain:'P<sub>2</sub>O<sub>5</sub> с избытком воды (3H<sub>2</sub>O) даёт ортофосфорную кислоту H<sub>3</sub>PO<sub>4</sub>. С 3 моль NaOH H<sub>3</sub>PO<sub>4</sub> даёт среднюю соль Na<sub>3</sub>PO<sub>4</sub>. Условие <code>+3H<sub>2</sub>O</code> указывает именно на ортофосфорную (а не метафосфорную) кислоту.',
+    eqs:[
+      { stage:'P → P<sub>2</sub>O<sub>5</sub>',
+        correct:'4P + 5O<sub>2</sub> →(t°) 2P<sub>2</sub>O<sub>5</sub>',
+        wrong:['P + O<sub>2</sub> → PO<sub>2</sub>','2P + 3O<sub>2</sub> → P<sub>2</sub>O<sub>6</sub>','P + H<sub>2</sub>O → P<sub>2</sub>O<sub>5</sub> + H<sub>2</sub>↑']
+      },
+      { stage:'P<sub>2</sub>O<sub>5</sub> → H<sub>3</sub>PO<sub>4</sub>',
+        correct:'P<sub>2</sub>O<sub>5</sub> + 3H<sub>2</sub>O → 2H<sub>3</sub>PO<sub>4</sub>',
+        wrong:['P<sub>2</sub>O<sub>5</sub> + H<sub>2</sub>O → 2H<sub>3</sub>PO<sub>4</sub>','P<sub>2</sub>O<sub>5</sub> + 5H<sub>2</sub>O → 2H<sub>3</sub>PO<sub>4</sub> + H<sub>2</sub>O<sub>2</sub>','P<sub>2</sub>O<sub>5</sub> + 6H<sub>2</sub>O → 2H<sub>3</sub>PO<sub>4</sub> + 3H<sub>2</sub>↑']
+      },
+      { stage:'H<sub>3</sub>PO<sub>4</sub> → Na<sub>3</sub>PO<sub>4</sub>',
+        correct:'H<sub>3</sub>PO<sub>4</sub> + 3NaOH → Na<sub>3</sub>PO<sub>4</sub> + 3H<sub>2</sub>O',
+        wrong:['H<sub>3</sub>PO<sub>4</sub> + NaOH → Na<sub>3</sub>PO<sub>4</sub> + H<sub>2</sub>O','H<sub>3</sub>PO<sub>4</sub> + 3Na → Na<sub>3</sub>PO<sub>4</sub> + 3H<sub>2</sub>↑','H<sub>3</sub>PO<sub>4</sub> + 3NaCl → Na<sub>3</sub>PO<sub>4</sub> + 3HCl']
+      }
+    ]
+  },
+  // 8. C → CO2 → Na2CO3 → BaCO3
+  { id:'c-chain',
+    chain:['C','CO<sub>2</sub>','X','BaCO<sub>3</sub>'],
+    arrowConditions:['t°','+2NaOH','+BaCl<sub>2</sub>'],
+    xIdx:2, xValue:'Na<sub>2</sub>CO<sub>3</sub>',
+    xOptions:['Na<sub>2</sub>CO<sub>3</sub>','Na<sub>2</sub>O','CH<sub>4</sub>','CaCO<sub>3</sub>'],
+    xExplain:'CO<sub>2</sub> с избытком NaOH даёт средний карбонат Na<sub>2</sub>CO<sub>3</sub>. С хлоридом бария Na<sub>2</sub>CO<sub>3</sub> образует нерастворимый BaCO<sub>3</sub>. Условие <code>+2NaOH</code> на стрелке указывает именно на средний карбонат.',
+    eqs:[
+      { stage:'C → CO<sub>2</sub>',
+        correct:'C + O<sub>2</sub> →(t°) CO<sub>2</sub>',
+        wrong:['C + 2O<sub>2</sub> → CO<sub>4</sub>','C + H<sub>2</sub>O → CO<sub>2</sub> + H<sub>2</sub>↑','2C + 3O<sub>2</sub> → 2CO<sub>3</sub>']
+      },
+      { stage:'CO<sub>2</sub> → Na<sub>2</sub>CO<sub>3</sub>',
+        correct:'CO<sub>2</sub> + 2NaOH → Na<sub>2</sub>CO<sub>3</sub> + H<sub>2</sub>O',
+        wrong:['CO<sub>2</sub> + NaOH → Na<sub>2</sub>CO<sub>3</sub> + H<sub>2</sub>O','CO<sub>2</sub> + 2Na → Na<sub>2</sub>CO<sub>3</sub>','CO<sub>2</sub> + Na<sub>2</sub>O + H<sub>2</sub>O → Na<sub>2</sub>CO<sub>3</sub> + H<sub>2</sub>↑']
+      },
+      { stage:'Na<sub>2</sub>CO<sub>3</sub> → BaCO<sub>3</sub>',
+        correct:'Na<sub>2</sub>CO<sub>3</sub> + BaCl<sub>2</sub> → BaCO<sub>3</sub>↓ + 2NaCl',
+        wrong:['Na<sub>2</sub>CO<sub>3</sub> + 2BaCl<sub>2</sub> → Ba<sub>2</sub>CO<sub>3</sub> + 2NaCl<sub>2</sub>','Na<sub>2</sub>CO<sub>3</sub> + Ba → BaCO<sub>3</sub> + 2Na','Na<sub>2</sub>CO<sub>3</sub> + BaO → BaCO<sub>3</sub> + Na<sub>2</sub>O']
+      }
+    ]
+  },
+  // 9. Cu(OH)2 → CuO → Cu → CuCl2
+  { id:'cu-down-chain',
+    chain:['Cu(OH)<sub>2</sub>','CuO','X','CuCl<sub>2</sub>'],
+    arrowConditions:['t°','+H<sub>2</sub>, t°','+Cl<sub>2</sub>, t°'],
+    xIdx:2, xValue:'Cu',
+    xOptions:['Cu','Zn','Fe','NaCl'],
+    xExplain:'CuO при восстановлении водородом даёт металлическую медь Cu. Условие <code>+H<sub>2</sub>, t°</code> на стрелке указывает именно на восстановление до металла; далее Cu с хлором даёт CuCl<sub>2</sub>.',
+    eqs:[
+      { stage:'Cu(OH)<sub>2</sub> → CuO',
+        correct:'Cu(OH)<sub>2</sub> →(t°) CuO + H<sub>2</sub>O',
+        wrong:['Cu(OH)<sub>2</sub> →(t°) CuO + H<sub>2</sub>↑','2Cu(OH)<sub>2</sub> →(t°) 2CuO + 2H<sub>2</sub>O + O<sub>2</sub>↑','Cu(OH)<sub>2</sub> →(t°) Cu + H<sub>2</sub>O + 1/2 O<sub>2</sub>↑']
+      },
+      { stage:'CuO → Cu',
+        correct:'CuO + H<sub>2</sub> →(t°) Cu + H<sub>2</sub>O',
+        wrong:['CuO →(t°) Cu + 1/2 O<sub>2</sub>↑','CuO + H<sub>2</sub>O → Cu + 1/2 O<sub>2</sub> + H<sub>2</sub>','2CuO + H<sub>2</sub> → 2Cu + H<sub>2</sub>O + 1/2 O<sub>2</sub>']
+      },
+      { stage:'Cu → CuCl<sub>2</sub>',
+        correct:'Cu + Cl<sub>2</sub> →(t°) CuCl<sub>2</sub>',
+        wrong:['Cu + 2HCl → CuCl<sub>2</sub> + H<sub>2</sub>↑','Cu + 2NaCl → CuCl<sub>2</sub> + 2Na','2Cu + Cl<sub>2</sub> → 2CuCl']
+      }
+    ]
+  },
+  // 10. Al → Al2O3 → AlCl3 → Al(OH)3
+  { id:'al-chain',
+    chain:['Al','X','AlCl<sub>3</sub>','Al(OH)<sub>3</sub>'],
+    arrowConditions:['+O<sub>2</sub>, t°','+HCl','+3NaOH'],
+    xIdx:1, xValue:'Al<sub>2</sub>O<sub>3</sub>',
+    xOptions:['Al<sub>2</sub>O<sub>3</sub>','AlO','Al(OH)<sub>3</sub>','MgO'],
+    xExplain:'Al при горении на воздухе образует амфотерный оксид Al<sub>2</sub>O<sub>3</sub>. Условие <code>+O<sub>2</sub>, t°</code> указывает именно на оксид; с соляной кислотой Al<sub>2</sub>O<sub>3</sub> даёт AlCl<sub>3</sub>.',
+    eqs:[
+      { stage:'Al → Al<sub>2</sub>O<sub>3</sub>',
+        correct:'4Al + 3O<sub>2</sub> →(t°) 2Al<sub>2</sub>O<sub>3</sub>',
+        wrong:['2Al + 3O<sub>2</sub> → Al<sub>2</sub>O<sub>6</sub>','Al + O<sub>2</sub> → AlO<sub>2</sub>','Al + 3H<sub>2</sub>O → Al(OH)<sub>3</sub> + 3/2 H<sub>2</sub>']
+      },
+      { stage:'Al<sub>2</sub>O<sub>3</sub> → AlCl<sub>3</sub>',
+        correct:'Al<sub>2</sub>O<sub>3</sub> + 6HCl → 2AlCl<sub>3</sub> + 3H<sub>2</sub>O',
+        wrong:['Al<sub>2</sub>O<sub>3</sub> + 3HCl → AlCl<sub>3</sub> + Al(OH)<sub>3</sub>','Al<sub>2</sub>O<sub>3</sub> + 3Cl<sub>2</sub> → 2AlCl<sub>3</sub> + 3O','Al<sub>2</sub>O<sub>3</sub> + 6NaCl → 2AlCl<sub>3</sub> + 3Na<sub>2</sub>O']
+      },
+      { stage:'AlCl<sub>3</sub> → Al(OH)<sub>3</sub>',
+        correct:'AlCl<sub>3</sub> + 3NaOH → Al(OH)<sub>3</sub>↓ + 3NaCl',
+        wrong:['AlCl<sub>3</sub> + 3NaNO<sub>3</sub> → Al(NO<sub>3</sub>)<sub>3</sub> + 3NaCl','AlCl<sub>3</sub> + 3Na → Al(OH)<sub>3</sub> + 3NaCl','AlCl<sub>3</sub> + 3KCl + 3OH → Al(OH)<sub>3</sub> + 3KCl<sub>2</sub>']
+      }
+    ]
+  }
+];
+
+var state = { total:0, correct:0, streak:0, stepsTotal:0, stepsCorrect:0, current:null, recentIds:[] };
+
+function pickChain(){
+  var pool = CHAINS.filter(function(c){return state.recentIds.indexOf(c.id)<0});
+  if(pool.length===0) pool = CHAINS;
+  var c = pool[Math.floor(Math.random()*pool.length)];
+  state.recentIds.push(c.id);
+  if(state.recentIds.length>4) state.recentIds.shift();
+  return c;
+}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function el(t,p,c){var e=document.createElement(t);if(p)for(var k in p){if(k==='class')e.className=p[k];else if(k==='html')e.innerHTML=p[k];else if(k.indexOf('on')===0)e.addEventListener(k.substring(2).toLowerCase(),p[k]);else e.setAttribute(k,p[k])}if(c!=null){if(!Array.isArray(c))c=[c];for(var i=0;i<c.length;i++){var x=c[i];if(x==null)continue;e.appendChild(typeof x==='string'||typeof x==='number'?document.createTextNode(x):x)}}return e}
+
+function renderTask(){
+  var c = state.current.chain;
+  var area = document.getElementById('task-area');
+  area.innerHTML = '';
+
+  // Chain card
+  var chainCard = el('div',{class:'chain-card'});
+  chainCard.appendChild(el('div',{class:'chain-label'},'Цепочка превращений'));
+  var chainDiv = el('div',{class:'chain-display', id:'chain-display'});
+  c.chain.forEach(function(node, i){
+    if(i > 0){
+      var arrowCond = c.arrowConditions && c.arrowConditions[i-1] ? c.arrowConditions[i-1] : '';
+      var arrowEl = el('span',{class:'chain-arrow', html: arrowCond ? '→ (' + arrowCond + ')' : '→'});
+      chainDiv.appendChild(arrowEl);
+    }
+    if(i === c.xIdx){
+      chainDiv.appendChild(el('span',{class:'chain-x', id:'x-display'},'X'));
+    } else {
+      chainDiv.appendChild(el('span',{html:node}));
+    }
+  });
+  chainCard.appendChild(chainDiv);
+  area.appendChild(chainCard);
+
+  // STEP 1: identify X
+  var step1 = el('div',{class:'step-card', id:'step-1-card'});
+  step1.appendChild(el('div',{class:'step-num-pill'},'Шаг 1 / 4 — определи X'));
+  step1.appendChild(el('div',{class:'step-text', html:'Какое вещество должно быть на месте <code>X</code> в цепочке?'}));
+  var opt1Box = el('div',{class:'options', id:'step-1-options'});
+  state.current.xOrder = shuffle(c.xOptions);
+  state.current.xOrder.forEach(function(o, i){
+    var opt = el('div',{class:'option', 'data-value':o});
+    opt.innerHTML = o;
+    opt.addEventListener('click', function(){selectOption(1, o)});
+    opt1Box.appendChild(opt);
+  });
+  step1.appendChild(opt1Box);
+  var btn1 = el('button',{class:'btn-step', id:'step-1-btn', disabled:'disabled'},'Проверить');
+  btn1.addEventListener('click', function(){checkStep(1)});
+  step1.appendChild(btn1);
+  step1.appendChild(el('div',{class:'step-feedback', id:'step-1-feedback'}));
+  area.appendChild(step1);
+
+  // STEPS 2-4: equations
+  c.eqs.forEach(function(eq, idx){
+    var num = idx + 2;
+    var step = el('div',{class:'step-card dim', id:'step-'+num+'-card'});
+    step.appendChild(el('div',{class:'step-num-pill'},'Шаг ' + num + ' / 4 — уравнение'));
+    step.appendChild(el('div',{class:'step-text', html:'Уравнение для стадии: <code>' + eq.stage + '</code>. Выбери правильное молекулярное уравнение.'}));
+    var optBox = el('div',{class:'options', id:'step-'+num+'-options'});
+    var allOpts = shuffle([eq.correct].concat(eq.wrong));
+    state.current['eq'+idx+'Order'] = allOpts;
+    allOpts.forEach(function(o){
+      var opt = el('div',{class:'option', 'data-value':o});
+      opt.innerHTML = o;
+      opt.addEventListener('click', function(){selectOption(num, o)});
+      optBox.appendChild(opt);
+    });
+    step.appendChild(optBox);
+    var btn = el('button',{class:'btn-step', id:'step-'+num+'-btn', disabled:'disabled'},'Проверить');
+    btn.addEventListener('click', function(){checkStep(num)});
+    step.appendChild(btn);
+    step.appendChild(el('div',{class:'step-feedback', id:'step-'+num+'-feedback'}));
+    area.appendChild(step);
+  });
+
+  // SUMMARY
+  var sum = el('div',{class:'summary', id:'summary'});
+  sum.appendChild(el('h4',null,'Итоговое решение'));
+  area.appendChild(sum);
+
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = '';
+}
+
+function selectOption(stepNum, value){
+  if(state.current.locked['s'+stepNum]) return;
+  state.current['selected'+stepNum] = value;
+  var opts = document.querySelectorAll('#step-'+stepNum+'-options .option');
+  opts.forEach(function(o){
+    o.classList.toggle('selected', o.dataset.value === value);
+  });
+  document.getElementById('step-'+stepNum+'-btn').disabled = false;
+}
+
+function checkStep(stepNum){
+  var c = state.current.chain;
+  if(state.current.locked['s'+stepNum]) return;
+  state.current.locked['s'+stepNum] = true;
+
+  var selected = state.current['selected'+stepNum];
+  var correct, explain;
+  if(stepNum === 1){
+    correct = c.xValue;
+    explain = c.xExplain;
+  } else {
+    var eq = c.eqs[stepNum - 2];
+    correct = eq.correct;
+    explain = '';
+  }
+  var isCorrect = selected === correct;
+
+  state.stepsTotal++;
+  if(isCorrect) state.stepsCorrect++;
+  state.current['s'+stepNum+'Correct'] = isCorrect;
+
+  // Mark options
+  var opts = document.querySelectorAll('#step-'+stepNum+'-options .option');
+  opts.forEach(function(o){
+    o.classList.add('locked');
+    if(o.dataset.value === correct){
+      if(o.dataset.value === selected) o.classList.add('correct-pick');
+      else o.classList.add('correct-shown');
+    } else if(o.dataset.value === selected){
+      o.classList.add('wrong-pick');
+    }
+  });
+
+  // If step 1: also reveal X in the chain
+  if(stepNum === 1){
+    var xEl = document.getElementById('x-display');
+    if(isCorrect){
+      xEl.classList.add('done');
+      xEl.innerHTML = c.xValue;
+    } else {
+      // Show correct X anyway after wrong
+      xEl.innerHTML = c.xValue;
+    }
+  }
+
+  var pill = document.querySelector('#step-'+stepNum+'-card .step-num-pill');
+  if(isCorrect) pill.classList.add('done');
+  document.getElementById('step-'+stepNum+'-btn').style.display = 'none';
+
+  var fb = document.getElementById('step-'+stepNum+'-feedback');
+  fb.className = 'step-feedback shown ' + (isCorrect ? 'win' : 'lose');
+  if(isCorrect){
+    if(stepNum === 1) fb.innerHTML = '✓ Верно. ' + explain;
+    else fb.innerHTML = '✓ Верно. Уравнение записано правильно.';
+  } else {
+    if(stepNum === 1) fb.innerHTML = '✗ Неверно. Правильно: <b>' + correct + '</b>. ' + explain;
+    else fb.innerHTML = '✗ Неверно. Правильное уравнение отмечено пунктирной зелёной рамкой.';
+  }
+
+  // Unlock next step
+  if(stepNum < 4){
+    var next = document.getElementById('step-'+(stepNum+1)+'-card');
+    next.classList.remove('dim');
+    setTimeout(function(){next.scrollIntoView && next.scrollIntoView({behavior:'smooth', block:'center'})}, 200);
+  } else {
+    finishTask();
+  }
+}
+
+function finishTask(){
+  var c = state.current.chain;
+  var allCorrect = state.current.s1Correct && state.current.s2Correct && state.current.s3Correct && state.current.s4Correct;
+  state.total++;
+  if(allCorrect){state.correct++; state.streak++;}
+  else state.streak = 0;
+  updateStats();
+
+  // Build summary
+  var sum = document.getElementById('summary');
+  var fullChain = c.chain.map(function(n, i){return i === c.xIdx ? c.xValue : n}).join(' → ');
+  var html = '<h4>Итоговое решение</h4>' +
+    '<div class="summary-eq"><span class="label">Полная цепочка</span><div style="text-align:center;font-size:18px;font-weight:500">' + fullChain + '</div></div>';
+  c.eqs.forEach(function(eq, idx){
+    html += '<div class="summary-eq"><span class="label">Уравнение ' + (idx+1) + ': ' + eq.stage + '</span>' + eq.correct + '</div>';
+  });
+  sum.innerHTML = html;
+  sum.classList.add('shown');
+
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').classList.add('next');
+  setTimeout(function(){document.getElementById('next-btn').focus()}, 200);
+}
+
+function nextTask(){
+  state.current = { chain: pickChain(), locked:{s1:false,s2:false,s3:false,s4:false}, s1Correct:false, s2Correct:false, s3Correct:false, s4Correct:false };
+  renderTask();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function skipTask(){
+  state.streak = 0;
+  updateStats();
+  nextTask();
+}
+
+function updateStats(){
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var s = document.getElementById('stat-streak');
+  s.textContent = state.streak;
+  s.classList.toggle('hot', state.streak >= 2);
+  document.getElementById('stat-pct').textContent = state.stepsTotal === 0 ? '—' : Math.round(100*state.stepsCorrect/state.stepsTotal) + '%';
+}
+
+document.getElementById('next-btn').addEventListener('click', nextTask);
+document.getElementById('skip-btn').addEventListener('click', skipTask);
+nextTask();
+</script>
+</body>
+</html>

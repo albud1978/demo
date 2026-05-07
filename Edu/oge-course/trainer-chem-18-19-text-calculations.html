@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Тренажёр ОГЭ-2026 · Химия №18-19 · Связанные расчёты по тексту</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#F2EDE2;--bg-card:#FAF6EC;--ink:#1B1814;--ink-soft:#4A453D;--ink-faint:#7A736A;--rule:#C8BFAE;--rule-soft:#DCD3BF;--accent:#2D4A2B;--accent-soft:rgba(45,74,43,0.08);--good:#16A34A;--good-bg:#DCFCE7;--bad:#B91C1C;--bad-bg:#FEE2E2;--warn:#D97706;--warn-bg:#FEF3C7;--serif:"Fraunces","Times New Roman",Georgia,serif;--body:"Spectral","Georgia",serif;--mono:"JetBrains Mono","SFMono-Regular",Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body{background-image:radial-gradient(circle at 25% 10%,rgba(45,74,43,0.04),transparent 40%)}
+.wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+.head{border-top:3px solid var(--ink);padding-top:16px;padding-bottom:24px;border-bottom:1px solid var(--rule);margin-bottom:36px}
+.head-meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft);flex-wrap:wrap;gap:10px}
+.head-meta .accent{color:var(--accent)}
+h1{font-family:var(--serif);font-weight:500;font-size:clamp(30px,5vw,44px);line-height:1.05;letter-spacing:-0.015em;margin-top:16px}
+h1 em{font-style:italic;font-weight:400;color:var(--accent)}
+.subtitle{font-size:16px;color:var(--ink-soft);margin-top:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:32px}
+@media (max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--bg-card);padding:14px 16px}
+.stat .num{font-family:var(--serif);font-size:28px;font-weight:500;line-height:1;color:var(--accent)}
+.stat .lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px}
+.stat.streak .num.hot{color:var(--warn)}
+.story-card{background:var(--bg-card);border:1px solid var(--rule);border-left:4px solid var(--accent);padding:24px 28px;margin-bottom:24px}
+.story-label{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px}
+.story-text{font-family:var(--serif);font-size:16.5px;line-height:1.55;color:var(--ink-soft)}
+.story-text b{color:var(--ink);font-weight:500}
+.q-card{background:var(--bg-card);border:1px solid var(--rule);padding:22px 28px;margin-bottom:18px;position:relative;transition:opacity 0.3s}
+.q-card.dim{opacity:0.55}
+.q-num-pill{display:inline-block;font-family:var(--mono);font-weight:700;font-size:11px;letter-spacing:0.06em;padding:3px 10px;background:var(--accent);color:white;border-radius:1px;margin-bottom:10px}
+.q-text{font-family:var(--serif);font-size:17px;line-height:1.5;font-weight:500}
+.q-text b{color:var(--accent)}
+.input-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.q-input{flex:0 1 200px;padding:12px 16px;font-family:var(--mono);font-size:18px;font-weight:700;border:1px solid var(--rule);background:var(--bg);color:var(--ink);outline:none;border-radius:1px;text-align:right}
+.q-input:focus{border-color:var(--accent)}
+.q-input.locked{cursor:not-allowed;background:var(--rule-soft);color:var(--ink-faint)}
+.unit-suffix{display:flex;align-items:center;font-family:var(--mono);font-size:14px;color:var(--ink-soft);font-weight:500}
+.btn-check{font-family:var(--mono);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:700;padding:12px 24px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer;border-radius:1px;transition:all 0.15s ease}
+.btn-check:hover:not(:disabled){background:var(--accent);border-color:var(--accent)}
+.btn-check:disabled{background:var(--rule);border-color:var(--rule);color:var(--ink-faint);cursor:not-allowed}
+.q-result{display:none;margin-top:14px;padding:14px 18px;border-left:3px solid;font-size:14.5px;line-height:1.55}
+.q-result.shown{display:block}
+.q-result.win{background:var(--good-bg);border-color:var(--good);color:#14532D}
+.q-result.lose{background:var(--bad-bg);border-color:var(--bad);color:#7F1D1D}
+.q-result-head{font-family:var(--serif);font-weight:600;font-size:15px;margin-bottom:6px}
+.q-result-body{font-family:var(--body)}
+.q-result b{font-family:var(--mono);font-weight:700}
+.solution{margin-top:14px;padding:14px 18px;background:var(--bg);border:1px solid var(--rule-soft);border-left:3px solid var(--ink-faint);display:none}
+.solution.shown{display:block}
+.solution h5{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:10px}
+.solution ol{padding-left:20px;font-size:14.5px;line-height:1.6}
+.solution ol li{margin-bottom:6px}
+.solution code{font-family:var(--mono);font-weight:500;background:var(--bg-card);padding:1px 5px;border-radius:1px;font-size:13.5px}
+.actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:700;padding:14px 28px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer;border-radius:1px;transition:all 0.15s ease}
+.btn:hover:not(:disabled){background:var(--accent);border-color:var(--accent)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover:not(:disabled){background:var(--ink);color:var(--bg)}
+.btn.next{background:var(--accent);border-color:var(--accent)}
+.cheat{margin-top:56px;padding:24px 28px;background:var(--bg-card);border:1px solid var(--rule);border-radius:2px}
+.cheat h3{font-family:var(--serif);font-weight:500;font-size:22px;margin-bottom:16px}
+.cheat .recipes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+@media (max-width:600px){.cheat .recipes{grid-template-columns:1fr}}
+.recipe-card{padding:14px 18px;background:var(--bg);border:1px solid var(--rule-soft);border-left:3px solid var(--accent)}
+.recipe-card h5{font-family:var(--serif);font-weight:600;font-size:15px;margin-bottom:6px;color:var(--accent)}
+.recipe-card p{font-size:13.5px;color:var(--ink-soft);line-height:1.5}
+.recipe-card code{font-family:var(--mono);background:var(--bg-card);padding:1px 5px;font-size:12.5px}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-faint);text-align:center}
+footer a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+<header class="head">
+  <div class="head-meta"><span><span class="accent">●</span> ОГЭ-2026 · ХИМИЯ · ЗАДАНИЯ №18 + №19</span><span>2 балла · связка по тексту</span></div>
+  <h1>Связанные расчёты <em>по тексту</em></h1>
+  <p class="subtitle">Тренажёр на задания №18-19 в формате ОГЭ. Один общий текст-сюжет описывает реальный объект (удобрение, лекарство, минерал), и к нему задаётся два связанных вопроса: №18 — массовая доля, №19 — расчёт по уравнению или практический расчёт.</p>
+</header>
+<div class="stats">
+  <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">сюжетов<br/>пройдено</div></div>
+  <div class="stat"><div class="num" id="stat-correct">0</div><div class="lbl">оба<br/>верно</div></div>
+  <div class="stat streak"><div class="num" id="stat-streak">0</div><div class="lbl">подряд<br/>оба</div></div>
+  <div class="stat"><div class="num" id="stat-pct">—</div><div class="lbl">%&nbsp;точности<br/>заданий</div></div>
+</div>
+<div id="story-area"></div>
+<div class="actions" id="actions-area">
+  <button class="btn ghost" id="next-story" style="display:none">Следующий сюжет</button>
+  <button class="btn ghost" id="skip-btn">Пропустить</button>
+</div>
+
+<section class="cheat">
+  <h3>Алгоритм решения заданий №18–19</h3>
+  <p style="font-size:14.5px;color:var(--ink-soft);line-height:1.55"><b style="color:var(--ink)">Задание №18 — массовая доля элемента:</b> <code>ω(Э) = M(Э)·n / M(всего вещества) · 100%</code>, где n — число атомов элемента в формуле. <b style="color:var(--ink)">Задание №19 — практический расчёт:</b> чаще всего использует уже найденную ω. Например, если известна суточная норма элемента и ω в препарате, то масса препарата = норма / ω.</p>
+  <div class="recipes">
+    <div class="recipe-card"><h5>Базовые M (г/моль)</h5><p>H=1, C=12, N=14, O=16, F=19, Na=23, Mg=24, Al=27, P=31, S=32, Cl=35,5, K=39, Ca=40, Fe=56, Cu=64, Zn=65, Br=80, Ag=108, I=127, Ba=137</p></div>
+    <div class="recipe-card"><h5>Газовые расчёты</h5><p>При н.у.: <code>V = n · 22,4 л/моль</code>. Из массы → моли → объём: <code>V = m/M · 22,4</code>.</p></div>
+    <div class="recipe-card"><h5>Массовая доля</h5><p>Сумма ω всех элементов = 100%. Ответ обычно округляется до целых.</p></div>
+    <div class="recipe-card"><h5>Связь №18 → №19</h5><p>Часто №19 решается через результат №18. Если в №18 нашли ω(Э)=p%, то в №19 m(в-ва) = m(Э)·100/p.</p></div>
+  </div>
+</section>
+<footer>Источник: демоверсия и спецификация ОГЭ-2026 ФИПИ · <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a></footer>
+</div>
+
+<script>
+// База сюжетов: каждый — общий текст + 2 связанных вопроса.
+// Округление: все числовые ответы — целые (как в демо ФИПИ).
+var SCENARIOS = [
+  // 1. ДЕМО ФИПИ: гидрофосфат магния
+  { id:'mg-tablets',
+    text:'Магний — один из важнейших макроэлементов, необходимый для всех живых организмов. Для восполнения недостатка магния в организме человека рекомендован приём витаминно-минеральных комплексов, содержащих <b>гидрофосфат магния (MgHPO<sub>4</sub>)</b>. При некоторых заболеваниях необходим ежесуточный приём <b>300 мг магния</b> в составе витаминно-минеральных комплексов.',
+    q18:{ text:'Вычислите массовую долю магния в гидрофосфате магния. Запишите число с точностью до целых.', answer:20, unit:'%', tol:1,
+      solution:['M(MgHPO<sub>4</sub>) = 24 + 1 + 31 + 16·4 = <code>120</code> г/моль','ω(Mg) = M(Mg)/M(MgHPO<sub>4</sub>) · 100% = 24/120 · 100% = <code>20%</code>'] },
+    q19:{ text:'Вычислите массу гидрофосфата магния (в миллиграммах), которую должна содержать одна таблетка, если рекомендован приём двух таблеток в сутки.', answer:750, unit:'мг', tol:5,
+      solution:['Из №18: ω(Mg) = 20% = 0,2','Суточная масса MgHPO<sub>4</sub> = m(Mg)/ω = 300/0,2 = <code>1500 мг</code>','Масса в одной таблетке = 1500/2 = <code>750 мг</code>'] }
+  },
+  // 2. Нитрат аммония — удобрение
+  { id:'nh4no3-fert',
+    text:'<b>Нитрат аммония NH<sub>4</sub>NO<sub>3</sub></b> — одно из самых распространённых азотных удобрений. Растения извлекают азот из почвы, и для нормального роста им требуется существенное его количество. На поле площадью 1 га планируется внести <b>70 кг азота</b>.',
+    q18:{ text:'Вычислите массовую долю азота в нитрате аммония. Ответ запишите с точностью до целых.', answer:35, unit:'%', tol:1,
+      solution:['M(NH<sub>4</sub>NO<sub>3</sub>) = 14·2 + 1·4 + 16·3 = <code>80</code> г/моль','ω(N) = M(N)·2/M(NH<sub>4</sub>NO<sub>3</sub>) · 100% = 28/80 · 100% = <code>35%</code>'] },
+    q19:{ text:'Вычислите массу нитрата аммония (в килограммах), которую необходимо внести на это поле, чтобы внести 70 кг азота.', answer:200, unit:'кг', tol:2,
+      solution:['Из №18: ω(N) = 35% = 0,35','m(NH<sub>4</sub>NO<sub>3</sub>) = m(N)/ω(N) = 70/0,35 = <code>200 кг</code>'] }
+  },
+  // 3. Карбонат кальция — кальций в питании
+  { id:'caco3-supp',
+    text:'<b>Карбонат кальция CaCO<sub>3</sub></b> — основной компонент мела, мрамора и яичной скорлупы — широко применяется в качестве источника кальция в пищевых добавках. Взрослому человеку рекомендована суточная норма кальция <b>1000 мг</b>.',
+    q18:{ text:'Вычислите массовую долю кальция в карбонате кальция. Запишите число с точностью до целых.', answer:40, unit:'%', tol:1,
+      solution:['M(CaCO<sub>3</sub>) = 40 + 12 + 16·3 = <code>100</code> г/моль','ω(Ca) = M(Ca)/M(CaCO<sub>3</sub>) · 100% = 40/100 · 100% = <code>40%</code>'] },
+    q19:{ text:'Вычислите массу карбоната кальция (в миллиграммах), которая должна содержаться в добавке, чтобы покрыть суточную норму кальция в 1000 мг.', answer:2500, unit:'мг', tol:10,
+      solution:['Из №18: ω(Ca) = 40% = 0,4','m(CaCO<sub>3</sub>) = m(Ca)/ω(Ca) = 1000/0,4 = <code>2500 мг</code>'] }
+  },
+  // 4. Сульфат железа — препарат железа
+  { id:'feso4-iron',
+    text:'<b>Сульфат железа(II) FeSO<sub>4</sub></b> — действующее вещество многих препаратов железа, применяемых для лечения и профилактики железодефицитной анемии. Одна таблетка препарата содержит <b>200 мг сульфата железа(II)</b>.',
+    q18:{ text:'Вычислите массовую долю железа в сульфате железа(II). Запишите число с точностью до целых.', answer:37, unit:'%', tol:2,
+      solution:['M(FeSO<sub>4</sub>) = 56 + 32 + 16·4 = <code>152</code> г/моль','ω(Fe) = M(Fe)/M(FeSO<sub>4</sub>) · 100% = 56/152 · 100% ≈ <code>37%</code>'] },
+    q19:{ text:'Вычислите массу железа (в миллиграммах), которая содержится в одной таблетке препарата.', answer:74, unit:'мг', tol:3,
+      solution:['Из №18: ω(Fe) ≈ 37% = 0,37','m(Fe) = m(FeSO<sub>4</sub>) · ω(Fe) = 200 · 0,37 ≈ <code>74 мг</code>','Точнее: 200 · 56/152 = 73,7 ≈ 74 мг'] }
+  },
+  // 5. Питьевая сода — разложение
+  { id:'nahco3-decomp',
+    text:'<b>Питьевая (пищевая) сода — это гидрокарбонат натрия NaHCO<sub>3</sub></b>. При нагревании сода разлагается с выделением углекислого газа, что используется в кулинарии (сода как разрыхлитель теста). При выпекании из <b>168 г соды</b> происходит её полное разложение.',
+    q18:{ text:'Вычислите массовую долю натрия в гидрокарбонате натрия. Запишите число с точностью до целых.', answer:27, unit:'%', tol:1,
+      solution:['M(NaHCO<sub>3</sub>) = 23 + 1 + 12 + 16·3 = <code>84</code> г/моль','ω(Na) = M(Na)/M(NaHCO<sub>3</sub>) · 100% = 23/84 · 100% ≈ <code>27%</code>'] },
+    q19:{ text:'Вычислите массу углекислого газа (в граммах), который выделится при полном разложении 168 г соды по реакции 2NaHCO<sub>3</sub> → Na<sub>2</sub>CO<sub>3</sub> + H<sub>2</sub>O + CO<sub>2</sub>↑.', answer:44, unit:'г', tol:2,
+      solution:['n(NaHCO<sub>3</sub>) = m/M = 168/84 = <code>2 моль</code>','По уравнению: 2 моль NaHCO<sub>3</sub> → 1 моль CO<sub>2</sub>. Значит n(CO<sub>2</sub>) = 1 моль','m(CO<sub>2</sub>) = n · M = 1 · 44 = <code>44 г</code>'] }
+  },
+  // 6. Гипс — кристаллогидрат
+  { id:'gypsum-water',
+    text:'<b>Природный гипс — это кристаллогидрат сульфата кальция CaSO<sub>4</sub>·2H<sub>2</sub>O</b>. При нагревании гипс теряет кристаллизационную воду и превращается в безводный сульфат кальция. Этот процесс лежит в основе применения гипса в строительстве. На производстве прокаливают <b>86 г гипса</b>.',
+    q18:{ text:'Вычислите массовую долю воды в кристаллогидрате CaSO<sub>4</sub>·2H<sub>2</sub>O. Запишите число с точностью до целых.', answer:21, unit:'%', tol:1,
+      solution:['M(CaSO<sub>4</sub>·2H<sub>2</sub>O) = 40 + 32 + 16·4 + 2·18 = <code>172</code> г/моль','M(2H<sub>2</sub>O) = 2·18 = 36 г/моль','ω(H<sub>2</sub>O) = 36/172 · 100% ≈ <code>21%</code>'] },
+    q19:{ text:'Вычислите массу воды (в граммах), которая выделится при полном прокаливании 86 г гипса.', answer:18, unit:'г', tol:1,
+      solution:['n(CaSO<sub>4</sub>·2H<sub>2</sub>O) = m/M = 86/172 = <code>0,5 моль</code>','По формуле гидрата: 1 моль гипса содержит 2 моль H<sub>2</sub>O','n(H<sub>2</sub>O) = 0,5 · 2 = 1 моль','m(H<sub>2</sub>O) = 1 · 18 = <code>18 г</code>'] }
+  },
+  // 7. Аммиак — синтез
+  { id:'nh3-synth',
+    text:'<b>Аммиак NH<sub>3</sub></b> в промышленности производят синтезом из водорода и азота по реакции: <code>N<sub>2</sub> + 3H<sub>2</sub> ⇌ 2NH<sub>3</sub></code>. Аммиак используется как сырьё для производства азотных удобрений и азотной кислоты. На заводе нужно произвести <b>34 кг аммиака</b>.',
+    q18:{ text:'Вычислите массовую долю азота в аммиаке. Запишите число с точностью до целых.', answer:82, unit:'%', tol:2,
+      solution:['M(NH<sub>3</sub>) = 14 + 1·3 = <code>17</code> г/моль','ω(N) = M(N)/M(NH<sub>3</sub>) · 100% = 14/17 · 100% ≈ <code>82%</code>'] },
+    q19:{ text:'Вычислите массу азота (в килограммах), которая необходима для производства 34 кг аммиака.', answer:28, unit:'кг', tol:1,
+      solution:['n(NH<sub>3</sub>) = 34/17 = <code>2 кмоль</code>','По уравнению: 2 моль NH<sub>3</sub> требует 1 моль N<sub>2</sub>. Значит n(N<sub>2</sub>) = 1 кмоль','m(N<sub>2</sub>) = 1 · 28 = <code>28 кг</code>'] }
+  },
+  // 8. Сульфат цинка — препарат цинка
+  { id:'znso4-zinc',
+    text:'<b>Сульфат цинка ZnSO<sub>4</sub></b> применяется в медицине как источник цинка при дефиците этого микроэлемента в организме. Одна таблетка препарата содержит <b>322 мг сульфата цинка</b>.',
+    q18:{ text:'Вычислите массовую долю цинка в сульфате цинка. Запишите число с точностью до целых.', answer:40, unit:'%', tol:1,
+      solution:['M(ZnSO<sub>4</sub>) = 65 + 32 + 16·4 = <code>161</code> г/моль','ω(Zn) = M(Zn)/M(ZnSO<sub>4</sub>) · 100% = 65/161 · 100% ≈ <code>40%</code>'] },
+    q19:{ text:'Вычислите массу цинка (в миллиграммах), которая содержится в одной таблетке препарата.', answer:130, unit:'мг', tol:5,
+      solution:['Из №18: ω(Zn) ≈ 40% = 0,4','m(Zn) = m(ZnSO<sub>4</sub>) · ω(Zn) = 322 · 0,4 ≈ <code>129 мг</code> ≈ 130 мг','Точнее: 322 · 65/161 = <code>130 мг</code>'] }
+  },
+  // 9. Медный купорос — кристаллогидрат
+  { id:'cuso4-vitriol',
+    text:'<b>Медный купорос — это пентагидрат сульфата меди(II) CuSO<sub>4</sub>·5H<sub>2</sub>O</b>. Это синие кристаллы, широко используемые в сельском хозяйстве в качестве фунгицида и в строительстве. На производстве прокаливают <b>25 г медного купороса</b>, чтобы получить безводный сульфат меди.',
+    q18:{ text:'Вычислите массовую долю безводного сульфата меди CuSO<sub>4</sub> в медном купоросе. Запишите число с точностью до целых.', answer:64, unit:'%', tol:2,
+      solution:['M(CuSO<sub>4</sub>·5H<sub>2</sub>O) = 64 + 32 + 16·4 + 5·18 = <code>250</code> г/моль','M(CuSO<sub>4</sub>) = 64 + 32 + 16·4 = <code>160</code> г/моль','ω(CuSO<sub>4</sub>) = 160/250 · 100% = <code>64%</code>'] },
+    q19:{ text:'Вычислите массу безводного сульфата меди (в граммах), которая получится при полном прокаливании 25 г медного купороса.', answer:16, unit:'г', tol:1,
+      solution:['Из №18: ω(CuSO<sub>4</sub>) = 64% = 0,64','m(CuSO<sub>4</sub>) = m(гидрат) · ω = 25 · 0,64 = <code>16 г</code>'] }
+  },
+  // 10. Нитрат калия — удобрение
+  { id:'kno3-fert',
+    text:'<b>Нитрат калия KNO<sub>3</sub></b> (калийная селитра) — комплексное удобрение, содержащее два важных для растений элемента: калий и азот. Используется при подкормке плодоносящих культур. На поле нужно внести <b>39 кг калия</b>.',
+    q18:{ text:'Вычислите массовую долю калия в нитрате калия. Запишите число с точностью до целых.', answer:39, unit:'%', tol:2,
+      solution:['M(KNO<sub>3</sub>) = 39 + 14 + 16·3 = <code>101</code> г/моль','ω(K) = M(K)/M(KNO<sub>3</sub>) · 100% = 39/101 · 100% ≈ <code>39%</code>'] },
+    q19:{ text:'Вычислите массу нитрата калия (в килограммах), которую нужно внести на поле, чтобы внести 39 кг калия.', answer:101, unit:'кг', tol:3,
+      solution:['Из №18: ω(K) ≈ 39% = 0,39','m(KNO<sub>3</sub>) = m(K)/ω(K) = 39/0,39 ≈ <code>100 кг</code>','Точнее: 39 · 101/39 = <code>101 кг</code>'] }
+  }
+];
+
+var state = { total:0, correct:0, streak:0, tasksTotal:0, tasksCorrect:0, current:null, recentIds:[] };
+
+function pickScenario(){
+  var pool = SCENARIOS.filter(function(s){return state.recentIds.indexOf(s.id)<0});
+  if(pool.length===0) pool = SCENARIOS;
+  var s = pool[Math.floor(Math.random()*pool.length)];
+  state.recentIds.push(s.id);
+  if(state.recentIds.length>4) state.recentIds.shift();
+  return s;
+}
+
+function el(t,p,c){var e=document.createElement(t);if(p)for(var k in p){if(k==='class')e.className=p[k];else if(k==='html')e.innerHTML=p[k];else if(k.indexOf('on')===0)e.addEventListener(k.substring(2).toLowerCase(),p[k]);else e.setAttribute(k,p[k])}if(c!=null){if(!Array.isArray(c))c=[c];for(var i=0;i<c.length;i++){var x=c[i];if(x==null)continue;e.appendChild(typeof x==='string'||typeof x==='number'?document.createTextNode(x):x)}}return e}
+
+function renderScenario(){
+  var s = state.current.scenario;
+  var area = document.getElementById('story-area');
+  area.innerHTML = '';
+
+  // Story card
+  var story = el('div',{class:'story-card'});
+  story.appendChild(el('div',{class:'story-label'},'Текст к заданиям №18 и №19'));
+  story.appendChild(el('div',{class:'story-text',html:s.text}));
+  area.appendChild(story);
+
+  // Q18
+  var q18Card = el('div',{class:'q-card', id:'q18-card'});
+  q18Card.appendChild(el('div',{class:'q-num-pill'},'№18 КИМ'));
+  q18Card.appendChild(el('div',{class:'q-text', html:s.q18.text}));
+  var row18 = el('div',{class:'input-row'});
+  var inp18 = el('input',{type:'text', class:'q-input', id:'q18-input', placeholder:'число', autocomplete:'off'});
+  row18.appendChild(inp18);
+  row18.appendChild(el('div',{class:'unit-suffix'}, s.q18.unit));
+  var btn18 = el('button',{class:'btn-check',id:'q18-btn'},'Проверить');
+  btn18.addEventListener('click', function(){checkAnswer(18)});
+  row18.appendChild(btn18);
+  q18Card.appendChild(row18);
+  q18Card.appendChild(el('div',{class:'q-result',id:'q18-result'}));
+  q18Card.appendChild(el('div',{class:'solution',id:'q18-solution'}));
+  area.appendChild(q18Card);
+
+  // Q19 (initially dimmed)
+  var q19Card = el('div',{class:'q-card dim', id:'q19-card'});
+  q19Card.appendChild(el('div',{class:'q-num-pill'},'№19 КИМ'));
+  q19Card.appendChild(el('div',{class:'q-text', html:s.q19.text}));
+  var row19 = el('div',{class:'input-row'});
+  var inp19 = el('input',{type:'text', class:'q-input locked', id:'q19-input', placeholder:'сначала ответьте на №18', autocomplete:'off', disabled:'disabled'});
+  row19.appendChild(inp19);
+  row19.appendChild(el('div',{class:'unit-suffix'}, s.q19.unit));
+  var btn19 = el('button',{class:'btn-check',id:'q19-btn',disabled:'disabled'},'Проверить');
+  btn19.addEventListener('click', function(){checkAnswer(19)});
+  row19.appendChild(btn19);
+  q19Card.appendChild(row19);
+  q19Card.appendChild(el('div',{class:'q-result',id:'q19-result'}));
+  q19Card.appendChild(el('div',{class:'solution',id:'q19-solution'}));
+  area.appendChild(q19Card);
+
+  // Setup event listeners for Enter
+  inp18.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();checkAnswer(18)}});
+  inp19.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();checkAnswer(19)}});
+
+  // Reset action buttons
+  document.getElementById('next-story').style.display = 'none';
+  document.getElementById('skip-btn').style.display = '';
+
+  setTimeout(function(){inp18.focus()}, 100);
+}
+
+function parseAnswer(s){
+  if(!s) return null;
+  var cleaned = s.replace(/,/g,'.').replace(/\s+/g,'').replace(/[^\d.\-]/g,'');
+  if(cleaned === '') return null;
+  var n = parseFloat(cleaned);
+  return isNaN(n) ? null : n;
+}
+
+function checkAnswer(qNum){
+  var s = state.current.scenario;
+  var inputId = qNum===18 ? 'q18-input' : 'q19-input';
+  var resultId = qNum===18 ? 'q18-result' : 'q19-result';
+  var solutionId = qNum===18 ? 'q18-solution' : 'q19-solution';
+  var btnId = qNum===18 ? 'q18-btn' : 'q19-btn';
+  var qData = qNum===18 ? s.q18 : s.q19;
+
+  var input = document.getElementById(inputId);
+  var userAnswer = parseAnswer(input.value);
+  if(userAnswer === null) return;
+
+  var correct = qData.answer;
+  var tol = qData.tol || 0;
+  var isCorrect = Math.abs(userAnswer - correct) <= tol;
+
+  state.tasksTotal++;
+  if(isCorrect) state.tasksCorrect++;
+
+  if(qNum===18) state.current.q18Correct = isCorrect;
+  else state.current.q19Correct = isCorrect;
+
+  // Lock the input
+  input.classList.add('locked');
+  input.disabled = true;
+  document.getElementById(btnId).style.display = 'none';
+
+  // Show result
+  var r = document.getElementById(resultId);
+  r.className = 'q-result shown ' + (isCorrect ? 'win' : 'lose');
+  r.innerHTML = isCorrect
+    ? '<div class="q-result-head">✓ Верно!</div><div class="q-result-body">Ответ: <b>' + correct + ' ' + qData.unit + '</b>.</div>'
+    : '<div class="q-result-head">✗ Неверно.</div><div class="q-result-body">Ваш ответ: <b>' + userAnswer + '</b>. Правильный ответ: <b>' + correct + ' ' + qData.unit + '</b>.</div>';
+
+  // Show solution
+  var sol = document.getElementById(solutionId);
+  sol.className = 'solution shown';
+  var html = '<h5>Решение</h5><ol>';
+  qData.solution.forEach(function(step){html += '<li>' + step + '</li>'});
+  html += '</ol>';
+  sol.innerHTML = html;
+
+  if(qNum === 18){
+    // Unlock q19
+    var q19Card = document.getElementById('q19-card');
+    var q19Input = document.getElementById('q19-input');
+    var q19Btn = document.getElementById('q19-btn');
+    q19Card.classList.remove('dim');
+    q19Input.disabled = false;
+    q19Input.classList.remove('locked');
+    q19Input.placeholder = 'число';
+    q19Btn.disabled = false;
+    setTimeout(function(){q19Input.focus(); if(q19Input.scrollIntoView) q19Input.scrollIntoView({behavior:'smooth',block:'center'})}, 200);
+  } else {
+    // Both done — finalize scenario
+    finalizeScenario();
+  }
+}
+
+function finalizeScenario(){
+  state.total++;
+  if(state.current.q18Correct && state.current.q19Correct){
+    state.correct++;
+    state.streak++;
+  } else {
+    state.streak = 0;
+  }
+  updateStats();
+  document.getElementById('next-story').style.display = '';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-story').classList.add('next');
+  setTimeout(function(){document.getElementById('next-story').focus()}, 200);
+}
+
+function nextScenario(){
+  state.current = { scenario: pickScenario(), q18Correct:false, q19Correct:false };
+  renderScenario();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function skipScenario(){
+  state.streak = 0;
+  updateStats();
+  nextScenario();
+}
+
+function updateStats(){
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-correct').textContent = state.correct;
+  var s = document.getElementById('stat-streak');
+  s.textContent = state.streak;
+  s.classList.toggle('hot', state.streak >= 2);
+  document.getElementById('stat-pct').textContent = state.tasksTotal === 0 ? '—' : Math.round(100*state.tasksCorrect/state.tasksTotal) + '%';
+}
+
+document.getElementById('next-story').addEventListener('click', nextScenario);
+document.getElementById('skip-btn').addEventListener('click', skipScenario);
+
+nextScenario();
+</script>
+</body>
+</html>
