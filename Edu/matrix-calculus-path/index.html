@@ -1,0 +1,3992 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Алгебра по-взрослому · Путь к матричному исчислению</title>
+<meta name="description" content="Глубокий курс по мотивам MIT 18.S096 для школьника, который второй год изучает алгебру. От линейности — к матричному исчислению." />
+
+<!-- Шрифты: серифный академический + monospace для метаданных -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<!-- KaTeX для математики -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload='renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$",  right: "$",  display: false},
+      {left: "\\[", right: "\\]", display: true},
+      {left: "\\(", right: "\\)", display: false}
+    ],
+    throwOnError: false
+  });'></script>
+
+<style>
+  :root {
+    --paper:        #f7f3e9;
+    --paper-deep:   #efe8d6;
+    --ink:          #1a1612;
+    --ink-soft:     #4a443c;
+    --ink-faint:    #807868;
+    --rule:         #c8bfa8;
+    --crimson:      #7a1f1f;
+    --crimson-deep: #4a1212;
+    --highlight:    #f3e1a4;
+    --prof-ink:     #142a4a;
+    --prof-bg:      #e8efef;
+    --idea-bg:      #fbf4d6;
+    --code-bg:      #ebe4d2;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'EB Garamond', 'Charter', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.55;
+    font-feature-settings: "kern", "liga", "onum";
+  }
+
+  /* "Бумажная" текстура — едва уловимая */
+  body::before {
+    content:"";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background:
+      radial-gradient(ellipse 120% 80% at 30% 20%, transparent 70%, rgba(120,90,30,0.04) 100%),
+      radial-gradient(ellipse 100% 90% at 70% 80%, transparent 60%, rgba(60,40,20,0.05) 100%);
+  }
+
+  /* ========== ЛЕЙАУТ ========== */
+  .shell {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Боковое меню — sticky */
+  .toc {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 2rem 1.25rem 2rem 1.5rem;
+    border-right: 1px solid var(--rule);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    background: var(--paper);
+  }
+  .toc h2 {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 18px;
+    margin: 0 0 1rem 0;
+    color: var(--crimson-deep);
+    letter-spacing: 0.02em;
+  }
+  .toc-section { margin-bottom: 1.2rem; }
+  .toc-label {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-faint);
+    font-size: 10px;
+    margin-bottom: 0.4rem;
+  }
+  .toc a {
+    display: block;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 0.18rem 0;
+    border-left: 2px solid transparent;
+    padding-left: 0.5rem;
+    margin-left: -0.5rem;
+    transition: all 120ms ease;
+  }
+  .toc a:hover {
+    color: var(--crimson);
+    border-left-color: var(--crimson);
+    background: var(--paper-deep);
+  }
+  .toc a .num {
+    color: var(--crimson);
+    margin-right: 0.5rem;
+    font-weight: 500;
+  }
+  .toc-source {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--rule);
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-style: italic;
+    font-family: 'EB Garamond', serif;
+    line-height: 1.4;
+  }
+  .toc-source a { color: var(--crimson); text-decoration: none; border:none; padding:0; margin:0; }
+  .toc-source a:hover { text-decoration: underline; background: none; }
+
+  /* Основная колонка */
+  main {
+    padding: 4rem 5rem 8rem 5rem;
+    max-width: 880px;
+  }
+
+  /* Hero / шапка */
+  .hero {
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .hero .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--crimson);
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: 68px;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin: 0 0 1rem 0;
+    color: var(--ink);
+  }
+  .hero h1 em { font-style: italic; color: var(--crimson-deep); font-weight: 600; }
+  .hero .lede {
+    font-size: 22px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    font-style: italic;
+    max-width: 620px;
+    margin: 0 0 1.5rem 0;
+  }
+  .hero .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.05em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .hero .meta span strong { color: var(--ink); font-weight: 500; }
+
+  /* Заголовки разделов */
+  section { margin-bottom: 4rem; scroll-margin-top: 2rem; }
+  h2.chapter {
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: 38px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.4rem 0;
+    color: var(--ink);
+  }
+  h2.chapter .num {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--crimson);
+    margin-bottom: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .chapter-lede {
+    font-size: 18px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin: 0 0 2rem 0;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--rule);
+    max-width: 600px;
+  }
+
+  h3 {
+    font-family: 'EB Garamond', serif;
+    font-weight: 600;
+    font-size: 22px;
+    margin: 2.5rem 0 0.8rem 0;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  h3::before {
+    content: "§";
+    color: var(--crimson);
+    margin-right: 0.4em;
+    font-weight: 400;
+  }
+
+  h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--crimson);
+    margin: 1.8rem 0 0.5rem 0;
+    font-weight: 500;
+  }
+
+  p {
+    margin: 0 0 1.1rem 0;
+    hyphens: auto;
+    text-align: left;
+  }
+
+  p + p { text-indent: 1.5em; margin-top: -0.3rem; }
+  h2 + p, h3 + p, h4 + p, .idea + p, .prof + p,
+  .exercise + p, blockquote + p, ul + p, ol + p,
+  .figure + p, .horizon + p, .chapter-lede + p, .formula + p { text-indent: 0; }
+
+  a {
+    color: var(--crimson);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--crimson);
+    padding-bottom: 1px;
+  }
+  a:hover { background: var(--highlight); border-bottom-style: solid; }
+
+  em { color: var(--ink); font-style: italic; }
+  strong { color: var(--ink); font-weight: 600; }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+    background: var(--code-bg);
+    padding: 0.1em 0.35em;
+    border-radius: 2px;
+    color: var(--crimson-deep);
+  }
+
+  /* ========== СПЕЦБЛОКИ ========== */
+
+  /* Идея — ключевая мысль в рамке */
+  .idea {
+    margin: 1.8rem 0;
+    padding: 1.2rem 1.5rem 1.2rem 1.8rem;
+    background: var(--idea-bg);
+    border-left: 4px solid var(--crimson);
+    position: relative;
+  }
+  .idea::before {
+    content: "ИДЕЯ";
+    position: absolute;
+    top: -10px;
+    left: 1.5rem;
+    background: var(--paper);
+    padding: 0 0.6rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--crimson);
+    font-weight: 600;
+  }
+  .idea p:last-child { margin-bottom: 0; }
+
+  /* "Голос профессора" — выноска */
+  .prof {
+    margin: 1.8rem 0;
+    padding: 1.3rem 1.6rem;
+    background: var(--prof-bg);
+    border-top: 2px solid var(--prof-ink);
+    border-bottom: 2px solid var(--prof-ink);
+    position: relative;
+    color: var(--prof-ink);
+  }
+  .prof::before {
+    content: "— из лекций Эдельмана и Джонсона";
+    position: absolute;
+    top: -10px;
+    right: 1.2rem;
+    background: var(--paper);
+    padding: 0 0.6rem;
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--prof-ink);
+    font-weight: 500;
+  }
+  .prof.generic::before { content: "— взгляд старшего товарища"; }
+  .prof p:last-child { margin-bottom: 0; }
+  .prof p { color: var(--prof-ink); }
+
+  /* Упражнение */
+  .exercise {
+    margin: 1.5rem 0;
+    padding: 1rem 1.2rem;
+    border: 1px dashed var(--ink-soft);
+    background: transparent;
+  }
+  .exercise::before {
+    content: "Упражнение для размышления";
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+  }
+  .exercise p:last-child { margin-bottom: 0; }
+
+  /* "Куда дальше" — мостик к следующей главе */
+  .horizon {
+    margin: 2.5rem 0 0 0;
+    padding: 1rem 0 0 0;
+    border-top: 1px solid var(--rule);
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 17px;
+  }
+  .horizon::before {
+    content: "→ ";
+    color: var(--crimson);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  /* Формула — выделенная */
+  .formula {
+    margin: 1.5rem 0;
+    padding: 1rem 0;
+    text-align: center;
+    font-size: 1.05em;
+    overflow-x: auto;
+  }
+  .formula.with-label {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 1rem;
+  }
+  .formula .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--crimson);
+    letter-spacing: 0.1em;
+  }
+
+  /* Цитата */
+  blockquote {
+    margin: 1.5rem 0 1.5rem 1.5rem;
+    padding-left: 1rem;
+    border-left: 3px solid var(--crimson);
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 17px;
+  }
+  blockquote cite {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.05em;
+  }
+  blockquote cite::before { content: "— "; }
+
+  /* Списки */
+  ul, ol { margin: 1rem 0; padding-left: 1.5rem; }
+  li { margin: 0.4rem 0; padding-left: 0.3rem; }
+  ul li::marker { color: var(--crimson); }
+  ol li::marker { color: var(--crimson); font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
+
+  /* Фигура с подписью */
+  .figure {
+    margin: 2rem 0;
+    text-align: center;
+  }
+  .figure svg {
+    max-width: 100%;
+    height: auto;
+    background: var(--paper-deep);
+    border-radius: 3px;
+  }
+  .figure .caption {
+    margin-top: 0.6rem;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--ink-soft);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .figure .caption strong {
+    font-style: normal;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--crimson);
+    margin-right: 0.4em;
+  }
+
+  /* Таблица "форм производной" — фирменная штука Эдельмана */
+  table.shapes {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 16px;
+    font-family: 'EB Garamond', serif;
+  }
+  table.shapes th, table.shapes td {
+    border: 1px solid var(--rule);
+    padding: 0.7rem 0.8rem;
+    text-align: center;
+    vertical-align: middle;
+  }
+  table.shapes thead th {
+    background: var(--paper-deep);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--crimson);
+    font-weight: 500;
+  }
+  table.shapes tbody th {
+    background: var(--paper-deep);
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--crimson);
+    font-weight: 500;
+  }
+  table.shapes td.highlight { background: var(--highlight); font-weight: 500; }
+
+  /* Drop cap — академический акцент */
+  .drop > p:first-of-type::first-letter {
+    font-family: 'EB Garamond', serif;
+    font-size: 4.5em;
+    line-height: 0.85;
+    float: left;
+    padding: 0.05em 0.1em 0 0;
+    color: var(--crimson-deep);
+    font-weight: 500;
+  }
+
+  /* Стиль для номера секции в маргинале */
+  .marginal-num {
+    position: absolute;
+    left: -3rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--crimson);
+    letter-spacing: 0.1em;
+    top: 0.3em;
+  }
+  section { position: relative; }
+
+  /* Стиль для inline формул в KaTeX */
+  .katex { font-size: 1.02em; }
+  .katex-display { margin: 1rem 0; }
+
+  /* Финальная страница */
+  .colophon {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--ink);
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .colophon h3 { font-size: 16px; margin-top: 1rem; }
+  .colophon h3::before { content: ""; margin: 0; }
+
+  /* Интерактивный слайдер */
+  .interactive {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+  .interactive label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--crimson);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .interactive input[type=range] {
+    width: 100%;
+    accent-color: var(--crimson);
+  }
+  .interactive .readout {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    margin-top: 0.5rem;
+    color: var(--ink-soft);
+  }
+  .interactive .readout b { color: var(--crimson-deep); }
+
+  /* ========== MOBILE ========== */
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: 1fr; }
+    .toc {
+      position: static;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--rule);
+      padding: 1.5rem;
+    }
+    main { padding: 2rem 1.5rem 5rem 1.5rem; }
+    .hero h1 { font-size: 42px; }
+    .hero .lede { font-size: 18px; }
+    h2.chapter { font-size: 28px; }
+    body { font-size: 17px; }
+  }
+
+  @media (max-width: 500px) {
+    .hero h1 { font-size: 34px; }
+    main { padding: 1.5rem 1.2rem 4rem 1.2rem; }
+    body { font-size: 16px; }
+    .formula { font-size: 0.95em; }
+  }
+
+  /* ========== VOLUME RIBBON — связка двух томов ========== */
+  .volume-ribbon {
+    background: var(--paper-deep);
+    border-bottom: 1px solid var(--rule);
+    padding: 0.55rem 1.5rem;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.2rem;
+    position: relative;
+    z-index: 5;
+  }
+  .volume-ribbon a, .volume-ribbon .current-link {
+    color: var(--ink-faint);
+    text-decoration: none;
+    border: none;
+    padding: 0.2rem 0.4rem;
+    transition: color 120ms ease;
+    background: none;
+    line-height: 1.2;
+  }
+  .volume-ribbon a:hover {
+    color: var(--crimson);
+    background: none;
+  }
+  .volume-ribbon .current-link {
+    color: var(--crimson);
+    font-weight: 700;
+    border-bottom: 1px solid var(--crimson);
+  }
+  .volume-ribbon .small-tag {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--crimson);
+    font-weight: 500;
+    margin-bottom: 1px;
+  }
+  .volume-ribbon .arrow {
+    color: var(--ink-faint);
+    font-size: 13px;
+  }
+  @media (max-width: 500px) {
+    .volume-ribbon {
+      font-size: 10px;
+      gap: 0.6rem;
+      padding: 0.5rem 0.8rem;
+    }
+  }
+  @media print {
+    .toc, .volume-ribbon { display: none; }
+    .shell { grid-template-columns: 1fr; }
+    main { padding: 1cm; max-width: none; }
+    body { background: white; font-size: 11pt; }
+  }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:#7a1f1f;color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:#7a1f1f;color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<!-- ========== ШАПКА: СВЯЗКА ДВУХ ТОМОВ ========== -->
+<nav class="volume-ribbon" aria-label="навигация по томам">
+  <a href="../matrix-calculus-prep/">
+    <span class="small-tag">Том 0</span>
+    Подготовка
+  </a>
+  <span class="arrow">→</span>
+  <span class="current-link">
+    <span class="small-tag">Том 1</span>
+    Курс матричного исчисления
+  </span>
+</nav>
+
+<div class="shell">
+
+  <!-- ========== БОКОВАЯ НАВИГАЦИЯ ========== -->
+  <aside class="toc">
+    <h2>Оглавление</h2>
+
+    <div class="toc-section">
+      <div class="toc-label">Часть I · Фундамент</div>
+      <a href="#about"><span class="num">00</span>О курсе</a>
+      <a href="#how-to-read"><span class="num">※</span>Как читать</a>
+      <a href="#ch01"><span class="num">01</span>Что такое функция</a>
+      <a href="#ch02"><span class="num">02</span>Линейность</a>
+      <a href="#intuition"><span class="num">※</span>Производная: интуиция</a>
+    </div>
+
+    <div class="toc-section">
+      <div class="toc-label">Часть II · Сердце</div>
+      <a href="#ch03"><span class="num">03</span>Малые возмущения</a>
+      <a href="#ch04"><span class="num">04</span>Производная как линейный оператор</a>
+    </div>
+
+    <div class="toc-section">
+      <div class="toc-label">Часть III · Векторы и матрицы</div>
+      <a href="#ch05"><span class="num">05</span>От чисел к векторам</a>
+      <a href="#ch06"><span class="num">06</span>Матрицы как операторы</a>
+      <a href="#ch07"><span class="num">07</span>Якобиан и градиент</a>
+    </div>
+
+    <div class="toc-section">
+      <div class="toc-label">Часть IV · Вершина</div>
+      <a href="#ch08"><span class="num">08</span>Цепное правило: forward vs reverse</a>
+      <a href="#ch09"><span class="num">09</span>Производная по матрице</a>
+      <a href="#ch10"><span class="num">10</span>Гессиан и кривизна</a>
+    </div>
+
+    <div class="toc-section">
+      <div class="toc-label">Часть V · Большой курс</div>
+      <a href="#ch11"><span class="num">11</span>Автоматическое дифференцирование</a>
+      <a href="#ch12"><span class="num">12</span>Вариационное исчисление</a>
+      <a href="#ch13"><span class="num">13</span>Собственные числа и ограничения</a>
+    </div>
+
+    <div class="toc-section">
+      <div class="toc-label">Часть VI · Горизонт</div>
+      <a href="#ch14"><span class="num">14</span>Куда дальше</a>
+      <a href="#colophon"><span class="num">∞</span>Источники</a>
+    </div>
+
+    <div class="toc-source">
+      По мотивам<br/>
+      <a href="https://ocw.mit.edu/courses/18-s096-matrix-calculus-for-machine-learning-and-beyond-january-iap-2023/" target="_blank">MIT&nbsp;18.S096</a>,<br/>
+      Edelman&nbsp;&amp;&nbsp;Johnson, IAP&nbsp;2023.
+    </div>
+  </aside>
+
+  <!-- ========== ОСНОВНОЕ СОДЕРЖАНИЕ ========== -->
+  <main>
+
+    <!-- ========== HERO ========== -->
+    <header class="hero">
+      <div class="eyebrow">Курс по мотивам MIT 18.S096</div>
+      <h1>Алгебра <em>по&#8209;взрослому</em>:<br/>путь к матричному исчислению</h1>
+      <p class="lede">
+        От школьной&nbsp;y&nbsp;=&nbsp;kx&nbsp;+&nbsp;b — к производной
+        как линейному оператору. От стрелки на бумаге — к якобиану.
+        От «штрих» — к матрице, которая лежит в сердце машинного обучения.
+      </p>
+      <div class="meta">
+        <span><strong>Возраст:</strong> 13–16, второй год алгебры</span>
+        <span><strong>Предполагается:</strong> ничего сверх школы</span>
+        <span><strong>Источник:</strong> 8 лекций, 14 глав MIT-конспекта</span>
+      </div>
+    </header>
+
+    <!-- ========== О КУРСЕ ========== -->
+    <section id="about" class="drop">
+      <h2 class="chapter"><span class="num">§ 00 — преамбула</span>Что мы делаем и зачем</h2>
+
+      <p class="chapter-lede">
+        В&nbsp;MIT есть короткий курс, который читают зимой за три недели.
+        Он называется 18.S096 «Matrix Calculus for Machine Learning and Beyond».
+        Его ведут двое: Алан&nbsp;Эдельман (он же руководит лабораторией Julia)
+        и Стивен&nbsp;Джонсон (физик, отвечает за вычислительную математику).
+      </p>
+
+      <p>
+        Курс короткий, но плотный, и его главная провокация — простая.
+        Вы думаете, что научились брать производную в школе и в первом
+        семестре анализа? Вы ошибаетесь. Вы выучили частный случай,
+        самый узкий и самый ручной. Настоящая производная устроена иначе,
+        и устроена красивее.
+      </p>
+
+      <div class="prof">
+        <p>
+          «Мы говорим студентам: забудьте на секунду, что производная — это «штрих».
+          Производная — это <em>линеаризация</em>. Это правило, по которому
+          функция отвечает на крошечный толчок входа крошечным движением выхода.
+          Когда функция берёт число — это правило выглядит как умножение
+          на одно число. Но как только вход — вектор, или матрица, или целая функция,
+          правило приобретает форму, в которой школьная производная — лишь
+          ничтожный угол большой картины».
+        </p>
+      </div>
+
+      <p>
+        Этот курс рассчитан на вас раньше времени — раньше, чем вам начнут
+        читать матанализ в институте. Идея простая: главное в матричном
+        исчислении — не вычислительная техника, а одна большая идея.
+        Эту идею можно разглядеть, имея за плечами только школьную алгебру.
+        Если разглядеть её сейчас, через год-два, когда школа всё-таки
+        покажет производную как «штрих», у&nbsp;вас уже будет правильная
+        перспектива. Вы увидите, что школьное определение — это
+        не <em>определение</em>, а <em>удобный частный случай</em>.
+      </p>
+
+      <h3>Как читать</h3>
+
+      <p>
+        Курс делится на пять частей. Первые четыре главы — фундамент:
+        что такое функция, что такое линейность, что такое «бесконечно
+        малое возмущение» и почему производная — это линейный оператор.
+        Это сердце курса; их стоит читать медленно. Дальше идут главы
+        про векторы, матрицы и матричное исчисление — там идея
+        фундамента просто разворачивается в&nbsp;разных контекстах.
+      </p>
+
+      <p>
+        Внутри глав встречаются три типа врезок. <strong>Идея</strong> —
+        краткая формулировка главного, к которой можно
+        возвращаться. <strong>Голос профессора</strong> — нюанс или
+        предостережение, обычно вычитанное у Эдельмана и Джонсона
+        напрямую. <strong>Упражнение для размышления</strong> —
+        не задача «решить и записать ответ», а вопрос, который стоит
+        прокрутить в голове перед сном.
+      </p>
+
+      <div class="idea">
+        <p>
+          <strong>Главная идея всего курса, одной строкой:</strong>
+          производная — это не число, а <em>линейный оператор</em>,
+          который превращает крошечное возмущение входа в крошечное
+          возмущение выхода. Всё матричное исчисление — это
+          разворачивание этого утверждения для разных типов входа и выхода.
+        </p>
+      </div>
+
+      <p class="horizon">
+        Если вы поняли эту врезку — вам уже есть зачем читать дальше.
+        Если нет — вы поймёте её к концу четвёртой главы.
+        Это и есть точка, ради которой курс существует.
+      </p>
+    </section>
+
+
+    <!-- ========== КАК ЧИТАТЬ ========== -->
+    <section id="how-to-read" class="drop">
+      <h2 class="chapter"><span class="num">§ навигация</span>Как читать этот курс</h2>
+
+      <p class="chapter-lede">
+        Откровенно: курс амбициозен для тринадцати–пятнадцати лет.
+        Идея, лежащая в его сердце, обычно встречается на втором или
+        третьем курсе университета. Мы не собираемся это маскировать.
+      </p>
+
+      <p>
+        Но <strong>сейчас другое время</strong>. У сегодняшнего школьника
+        есть две вещи, которых не было у студентов в восьмидесятых:
+        интерактив прямо на странице и собеседник, готовый разобрать
+        любой непонятный кусок ровно тогда, когда непонятно. Эта связка
+        делает возможным то, что раньше требовало год лекций. Не легче —
+        а доступнее: мы переходим от «прочитать в одиночку и
+        промучиться» к «прочитать в диалоге».
+      </p>
+
+      <h3>Это карта, а не учебник</h3>
+
+      <p>
+        В учебнике каждое определение проговаривается, каждая теорема
+        доказывается. Здесь — нет. Здесь рассказана <em>идея</em>,
+        показана <em>перспектива</em>, обозначены ключевые ориентиры.
+        Это история про математическую идею, а не справочник. Если
+        после первого прохода у вас останется ощущение «я в общих
+        чертах вижу, как устроена производная во взрослом смысле и
+        зачем она нужна» — задача выполнена. Детали приходят позже,
+        с практикой.
+      </p>
+
+      <h3>Темп: разный для разных частей</h3>
+
+      <p>
+        <strong>Главы 01–04 — фундамент.</strong> Их читают <em>медленно</em>.
+        По одной главе в день, иногда по одной в неделю. Эти главы
+        стоит перечитать дважды. Все интерактивы, упражнения, выноски
+        в них — рабочие инструменты, а не украшения. Не пробегайте
+        врезки «ИДЕЯ» и «голос профессора»: они там не для красоты,
+        они там, чтобы остановить вас и заставить подумать.
+      </p>
+
+      <p>
+        <strong>Главы 05–13 — карта местности матричного исчисления.</strong>
+        Их можно прочитать в одно сидение как обзор, а к деталям
+        возвращаться позже, когда понадобится. Это нормальный режим
+        для научной литературы: первый проход — общий вид, последующие —
+        углубление в нужное место. Не страшно, если что-то здесь
+        покажется туманным; туман рассеется, когда вы вернётесь к этим
+        главам через полгода с большим багажом.
+      </p>
+
+      <p>
+        <strong>Глава 14 — горизонт.</strong> Она существует, чтобы
+        показать, куда расти после.
+      </p>
+
+      <h3>Собеседник</h3>
+
+      <p>
+        Эта страница молчаливая, но мир — нет. Если вы читаете её в
+        Claude — у вас под рукой собеседник, который может объяснить
+        любой непонятный кусок другими словами, придумать дополнительные
+        примеры, проверить ваше понимание задачей. Это не способ
+        «не думать самому», а наоборот: способ <em>думать вслух</em>.
+        Главный навык, который тренирует курс — формулировать,
+        что именно непонятно. Хороший вопрос — это половина решения.
+      </p>
+
+      <div class="prof generic">
+        <p>
+          Если что-то не пошло — не зависайте над страницей в попытке
+          «вчитаться». Сделайте паузу, сформулируйте вопрос
+          собственными словами и задайте его. Большинство «непонятностей»
+          в математике рассыпаются, как только их вслух произносят.
+          Из этого парадокса и состоит классический разговор научного
+          руководителя со студентом — и теперь он стал доступен школьнику.
+        </p>
+      </div>
+
+      <h3>Что значит «понять»</h3>
+
+      <p>
+        В математике «понять» — это не «уметь повторить формулу».
+        Это «уметь объяснить идею своими словами и привести свежий пример».
+        Если после главы 02 («Линейность») вы можете придумать
+        <em>новую</em> функцию и проверить, линейна ли она, — глава
+        пройдена. Если вы только можете сказать
+        «линейная — это $f(\alpha x + \beta y) = \alpha f(x) + \beta f(y)$» —
+        нет, не пройдена. Возвращайтесь.
+      </p>
+
+      <p>
+        И ещё: <em>замешательство — это рабочее состояние</em>. Если кажется,
+        что в голове туман — значит, вы перешли с уровня «по верхушкам»
+        на уровень «вглубь». Туман рассеивается. Этому эффекту даже
+        есть имя в когнитивной науке: «продуктивное замешательство».
+        Бойтесь не тумана, а его отсутствия — отсутствие тумана часто
+        означает, что вы ничего нового не узнали.
+      </p>
+
+      <h3>Если вы родитель</h3>
+
+      <p>
+        Курс не предполагает, что родитель сам разбирается в матричном
+        исчислении. Это не проблема. Ваша роль — не быть учителем,
+        а быть <em>попутчиком</em>: читать вместе, переспрашивать
+        «погоди, почему так?», обсуждать. Один из самых сильных
+        образовательных эффектов создаёт именно взрослое
+        «не знаю, давай вместе разберёмся». Дети, видя честное
+        незнание у взрослого, перестают бояться собственного.
+      </p>
+
+      <h3>Технические подсказки</h3>
+
+      <ul>
+        <li>Все формулы рендерятся через KaTeX. Если интернет
+        медленный и формула на секунду выглядит как сырой LaTeX —
+        подождите.</li>
+        <li>В третьей главе («Малые возмущения») есть слайдер.
+        Подвигайте его, не пропустите — он показывает главное
+        наблюдение всей главы.</li>
+        <li>Курс адаптивен и открывается одинаково на компьютере
+        и телефоне. Но математику комфортнее изучать на большом экране.</li>
+        <li>Каждая глава имеет стабильный URL. Понравилась мысль —
+        копируйте ссылку и возвращайтесь.</li>
+      </ul>
+
+      <p class="horizon">
+        Готовы — вперёд, в первую главу. Что такое функция, в её
+        взрослом смысле.
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 1: ФУНКЦИЯ ========== -->
+    <section id="ch01" class="drop">
+      <h2 class="chapter"><span class="num">Глава 01 — фундамент</span>Что такое функция, на самом деле</h2>
+
+      <p class="chapter-lede">
+        В школе пишут «$y = x^2$» и говорят: вот функция. Это правда,
+        но не вся. Прежде чем строить дом из формул, надо понять,
+        что такое кирпич.
+      </p>
+
+      <p>
+        Когда вы кладёте число в калькулятор и нажимаете «корень», калькулятор
+        выдаёт другое число. Когда вы загружаете фотографию в телефон и
+        прикладываете фильтр «чёрно-белое», получается другая фотография.
+        Когда вы делаете ход в шахматной партии, у позиции на доске
+        появляется новая версия. Во всех трёх случаях есть нечто общее:
+        <em>есть «вход», и есть «выход», и есть однозначное правило,
+        которое первое превращает во второе</em>.
+      </p>
+
+      <p>
+        Это и есть функция — не формула, не график, а правило преобразования.
+        Формальная запись:
+      </p>
+
+      <div class="formula">
+        $$ f : A \to B,\qquad x \mapsto f(x) $$
+      </div>
+
+      <p>
+        Здесь $A$ — множество, откуда берётся вход (его называют
+        <strong>областью определения</strong>), $B$ — множество,
+        куда падает выход (<strong>область значений</strong>), а $f$ —
+        собственно правило. Стрелка $\to$ читается «из чего во что»,
+        стрелка $\mapsto$ читается «во что переходит конкретный $x$».
+      </p>
+
+      <div class="prof generic">
+        <p>
+          Привыкните к мысли, что у функции <em>три</em> части: правило,
+          вход и выход. В школе обычно пишут только правило и притворяются,
+          что вход и выход «и так понятны». На самом деле, $f(x)=\sqrt{x}$
+          и $f(x)=\sqrt{x}$ с условием $x\ge 0$ — это <em>разные</em>
+          функции, потому что у них разные области определения. Это
+          станет важно очень скоро: одну и ту же формулу мы будем
+          применять то к числам, то к векторам, то к матрицам, и каждый
+          раз это <em>новая функция</em>, даже если буквы одинаковые.
+        </p>
+      </div>
+
+      <h3>График — это картинка, а не функция</h3>
+
+      <p>
+        Когда школьник видит «нарисуйте $y=x^2$», он представляет
+        параболу. Это удобно, но опасно. График — это всего лишь
+        способ нарисовать функцию, у которой и вход, и выход — числа.
+        Стоит входу стать парой чисел (точкой на плоскости), а выходу —
+        одним числом — и график превращается в трёхмерный рельеф,
+        который уже трудно нарисовать. Стоит входу быть матрицей $3\times 3$,
+        а выходу — числом, и график вообще <em>невозможно</em>
+        нарисовать как один объект: он живёт в десятимерном пространстве.
+      </p>
+
+      <p>
+        Поэтому профессионалы стараются думать о функции <em>не</em> через
+        график. Они думают через её <em>поведение</em>: что она делает
+        с конкретным входом, как меняется выход, когда вход чуть-чуть
+        двинули. Это переключение перспективы — первый взрослый шаг.
+      </p>
+
+      <div class="figure">
+        <svg viewBox="0 0 480 220" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#7a1f1f"/>
+            </marker>
+          </defs>
+          <rect x="40" y="50" width="120" height="120" rx="8" fill="#efe8d6" stroke="#1a1612" stroke-width="1.5"/>
+          <text x="100" y="40" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#7a1f1f" letter-spacing="2">A · ВХОД</text>
+          <circle cx="80" cy="100" r="4" fill="#1a1612"/>
+          <text x="80" y="92" text-anchor="middle" font-family="EB Garamond" font-size="14" font-style="italic">x</text>
+          <circle cx="100" cy="140" r="4" fill="#1a1612"/>
+          <text x="100" y="155" text-anchor="middle" font-family="EB Garamond" font-size="14" font-style="italic">x'</text>
+          <circle cx="130" cy="80" r="4" fill="#1a1612"/>
+
+          <rect x="320" y="50" width="120" height="120" rx="8" fill="#efe8d6" stroke="#1a1612" stroke-width="1.5"/>
+          <text x="380" y="40" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#7a1f1f" letter-spacing="2">B · ВЫХОД</text>
+          <circle cx="370" cy="110" r="4" fill="#1a1612"/>
+          <text x="382" y="105" text-anchor="start" font-family="EB Garamond" font-size="14" font-style="italic">f(x)</text>
+          <circle cx="400" cy="140" r="4" fill="#1a1612"/>
+          <text x="412" y="135" text-anchor="start" font-family="EB Garamond" font-size="14" font-style="italic">f(x')</text>
+
+          <path d="M 84 98 Q 230 50, 366 108" fill="none" stroke="#7a1f1f" stroke-width="1.5" marker-end="url(#ar1)"/>
+          <path d="M 104 138 Q 240 175, 396 140" fill="none" stroke="#7a1f1f" stroke-width="1.5" marker-end="url(#ar1)"/>
+
+          <text x="240" y="35" text-anchor="middle" font-family="EB Garamond" font-size="18" font-style="italic" fill="#1a1612">f</text>
+          <text x="240" y="200" text-anchor="middle" font-family="EB Garamond" font-size="13" fill="#4a443c" font-style="italic">правило, переводящее каждый элемент A в элемент B</text>
+        </svg>
+        <div class="caption"><strong>Фиг. 01</strong>Функция как стрелочное правило между двумя множествами. Никаких «графиков» — только связи.</div>
+      </div>
+
+      <div class="exercise">
+        <p>
+          Придумайте функцию, у которой <em>нет</em> обратной. Подсказка:
+          $f(x) = x^2$ от всех вещественных чисел — годится. Почему?
+          А что нужно сделать, чтобы у неё обратная появилась? Этот
+          трюк (сужение области определения) — то, что мы делаем
+          постоянно в матричном исчислении: «эта матрица не обратима
+          в общем виде, но в окрестности нашей точки — обратима».
+        </p>
+      </div>
+
+      <p class="horizon">
+        Среди всех функций мира есть одна особая порода — линейные.
+        Они скучны на вид, но магически устроены: вся современная
+        математика, физика и машинное обучение опираются на них.
+        Дальше — про эту магию.
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 2: ЛИНЕЙНОСТЬ ========== -->
+    <section id="ch02" class="drop">
+      <h2 class="chapter"><span class="num">Глава 02 — святой Грааль</span>Линейность</h2>
+
+      <p class="chapter-lede">
+        Школа потратит с вами три года на функции вида $y = kx + b$.
+        Это не случайно. За этим примитивом скрыто свойство, ради
+        которого вообще существует исчисление.
+      </p>
+
+      <p>
+        Возьмём простейшую функцию: $f(x) = 3x$. Что в ней такого
+        особенного? Две вещи. Первая: если удвоить вход, выход тоже
+        удваивается: $f(2x) = 6x = 2\cdot f(x)$. Это свойство называется
+        <strong>однородность</strong>, или «масштабируемость».
+        Вторая: если сложить два входа, выход — сумма выходов:
+        $f(a+b) = 3(a+b) = 3a + 3b = f(a)+f(b)$. Это свойство называют
+        <strong>аддитивность</strong>.
+      </p>
+
+      <p>
+        Функцию, у которой есть оба этих свойства, называют
+        <strong>линейной</strong>. Формально:
+      </p>
+
+      <div class="idea">
+        <p>
+          Функция $f$ называется линейной, если для любых входов
+          $x, y$ и любых чисел $\alpha, \beta$ выполнено:
+        </p>
+        <div class="formula">
+          $$ f(\alpha x + \beta y) = \alpha\, f(x) + \beta\, f(y). $$
+        </div>
+        <p>
+          Эту формулу следует выучить наизусть. На ней стоит вся
+          линейная алгебра, весь матричный анализ, весь современный ML.
+        </p>
+      </div>
+
+      <h3>Примечание про школьную «линейную функцию»</h3>
+
+      <p>
+        В школе линейной называют функцию вида $y = kx + b$. Это,
+        строго говоря, обман — вернее, недоразумение. Если $b\ne 0$,
+        то $f(0) = b \ne 0$. А по нашей формуле должно быть
+        $f(0\cdot x) = 0\cdot f(x) = 0$. То есть честно линейная
+        функция <em>обязана</em> проходить через ноль.
+      </p>
+
+      <p>
+        Школьная $y = kx + b$ — это <strong>аффинная</strong> функция:
+        линейная плюс сдвиг. Различие важно. Когда мы будем
+        говорить о производной как о линейном операторе, мы будем
+        иметь в виду <em>именно</em> линейность по нашей формуле,
+        без сдвига. Сдвиг отвечает за «текущее значение функции»,
+        а линейная часть — за то, как функция реагирует на изменение.
+      </p>
+
+      <div class="prof">
+        <p>
+          Линейность — это не одно из свойств функции, это <em>самая редкая
+          ценность</em>. Подавляющее большинство функций, встречающихся
+          в природе, нелинейны. Но почти всегда мы можем заменить
+          нелинейную функцию её линейным приближением в окрестности
+          интересующей точки. Это называется <em>линеаризацией</em>,
+          и это главная торговая марка дифференциального исчисления.
+          Когда вы освоите матричное исчисление, вы увидите, что во всех
+          его громоздких формулах живёт всё та же линеаризация — просто
+          для входов и выходов более сложной формы.
+        </p>
+      </div>
+
+      <h3>Почему именно линейность</h3>
+
+      <p>
+        Линейные функции — самые простые из «нетривиальных».
+        Постоянная функция $f(x) = 7$ ещё проще, но она ничего не
+        говорит про вход. Линейная функция реагирует на вход — но
+        реагирует <em>пропорционально</em>, а это значит, что её можно
+        полностью описать одним числом (или, как мы скоро увидим,
+        одной матрицей). Этой компактности не хватит, чтобы описать
+        что-то по-настоящему сложное; зато она достаточна, чтобы
+        описать <em>малое отклонение</em>. Именно так дифференциальное
+        исчисление побеждает сложный мир: оно изучает не функции
+        целиком, а их линейные приближения в каждой точке.
+      </p>
+
+      <div class="figure">
+        <svg viewBox="0 0 480 240" xmlns="http://www.w3.org/2000/svg">
+          <line x1="40" y1="200" x2="440" y2="200" stroke="#807868" stroke-width="1"/>
+          <line x1="240" y1="20" x2="240" y2="220" stroke="#807868" stroke-width="1"/>
+
+          <!-- Парабола y = x^2/40 + 80 -->
+          <path d="M 60 198 Q 240 -40, 420 198" fill="none" stroke="#1a1612" stroke-width="2"/>
+          <text x="100" y="60" font-family="EB Garamond" font-size="16" font-style="italic" fill="#1a1612">f(x) = x²</text>
+
+          <!-- Касательная в x=2 -->
+          <line x1="120" y1="220" x2="380" y2="40" stroke="#7a1f1f" stroke-width="1.5" stroke-dasharray="0"/>
+          <circle cx="290" cy="156" r="4" fill="#7a1f1f"/>
+          <text x="298" y="152" font-family="EB Garamond" font-size="14" font-style="italic" fill="#7a1f1f">x₀</text>
+
+          <text x="370" y="80" font-family="EB Garamond" font-size="13" font-style="italic" fill="#7a1f1f">линейное</text>
+          <text x="370" y="96" font-family="EB Garamond" font-size="13" font-style="italic" fill="#7a1f1f">приближение</text>
+        </svg>
+        <div class="caption"><strong>Фиг. 02</strong>Кривая $y=x^2$ — нелинейна. Но в окрестности точки $x_0$ она почти неотличима от прямой. Эта прямая — её <em>линеаризация</em>, и наклон этой прямой — это $f'(x_0)$.</div>
+      </div>
+
+      <div class="exercise">
+        <p>
+          Проверьте, является ли функция $f(x) = x^2$ линейной по нашему
+          определению. Возьмите $x = 1, y = 1, \alpha = \beta = 1$ и
+          сравните $f(1+1)$ с $f(1)+f(1)$. Что получилось? Хорошо, вы
+          доказали, что $x^2$ — нелинейна. Дальше: для каких $x, y$
+          равенство аддитивности всё-таки выполняется? Подсказка: их
+          мало, и это редкие исключения. Это и есть «нелинейная функция»
+          в чистом виде.
+        </p>
+      </div>
+
+      <p class="horizon">
+        Идея линеаризации — это то, как мы будем обращаться
+        с любой нелинейной функцией. Но прежде чем уходить
+        в формальные определения, остановимся на минуту и
+        обзаведёмся картинкой в голове: что такое производная,
+        если не смотреть в значки.
+      </p>
+    </section>
+
+
+    <!-- ========== ПРОИЗВОДНАЯ: ИНТУИЦИЯ ========== -->
+    <section id="intuition" class="drop">
+      <h2 class="chapter"><span class="num">§ мостик — перед формализмом</span>Производная: интуиция простыми словами</h2>
+
+      <p class="chapter-lede">
+        В следующей главе мы запишем формулу со значком «d», которая
+        формально определяет производную. Прежде чем это случится,
+        нам нужна <em>картинка в голове</em>. Без неё формула останется
+        набором значков; с ней — становится записью очевидной мысли.
+      </p>
+
+      <h3>Скорость — это и есть производная</h3>
+
+      <p>
+        Едет машина. На спидометре «60 км/ч». Что эта цифра означает?
+        Не то, что машина за час проедет 60 километров — она может
+        через секунду затормозить. Цифра означает: <em>прямо сейчас</em>,
+        в эту самую секунду, машина движется так, что <em>если бы</em>
+        скорость осталась прежней, за час она прошла бы шестьдесят
+        километров.
+      </p>
+
+      <p>
+        Эту самую «скорость прямо сейчас» в школе никогда не определяют
+        точно — потому что для точного определения нужна как раз
+        производная. Подумайте, что вообще значит «прямо сейчас». Если
+        бы мы взяли стоп-кадр и попытались узнать, сколько машина
+        прошла за нулевое время, — мы бы получили нулевое расстояние
+        за нулевое время. Делить ноль на ноль нельзя.
+      </p>
+
+      <p>
+        Поэтому делают по-другому: берут <em>очень короткий</em>
+        промежуток времени, скажем, полсекунды. Замеряют, сколько
+        машина прошла за эти полсекунды. Делят на полсекунды.
+        Получают приближённую скорость. Потом берут ещё более
+        короткий промежуток — четверть секунды. Считают снова. Если
+        значения не разбегаются, а наоборот, всё ближе сбегаются к
+        одному числу — это число и есть «скорость прямо сейчас».
+      </p>
+
+      <div class="idea">
+        <p>
+          <strong>Производная — это «скорость» в обобщённом смысле.</strong>
+          Не обязательно скорость движения. Скорость роста, скорость
+          изменения, скорость остывания, скорость падения цены —
+          всё, что меняется. Производная отвечает на один и тот же вопрос:
+          «как быстро <em>прямо сейчас</em>?»
+        </p>
+      </div>
+
+      <h3>Других «скоростей» в жизни больше, чем кажется</h3>
+
+      <p>
+        Скорость машины — очевидный пример, но не единственный.
+        Подумайте про другие. Когда вы наполняете ванну, у уровня
+        воды тоже есть «скорость роста» — она зависит от того,
+        насколько открыт кран. Перекрыли — скорость нуль, уровень
+        больше не растёт. Когда вы едете на велосипеде в гору, ваша
+        скорость падает; на ровной дороге она стабильна; под уклон —
+        растёт. Когда у заболевшего поднимается температура, у неё
+        тоже есть скорость роста: один градус в час значит, что
+        через час температура будет примерно на градус выше — если
+        ничего не изменится.
+      </p>
+
+      <p>
+        Все эти величины — производные. Производная уровня воды по
+        времени. Производная положения велосипедиста по времени.
+        Производная температуры по времени. В каждом случае один и
+        тот же вопрос: <em>как быстро это меняется прямо сейчас?</em>
+      </p>
+
+      <p>
+        Вот ещё один пример, который стоит увидеть в голове.
+        Подбросьте мяч вертикально вверх. Сначала он летит быстро,
+        потом замедляется, потом на мгновение зависает в наивысшей
+        точке, потом начинает падать обратно. В тот самый момент,
+        когда мяч находится в наивысшей точке, его скорость
+        <em>равна нулю</em>. Не потому, что мяч магически замер, —
+        а потому что в этот миг он переходит от движения вверх к
+        движению вниз, и в этой переломной точке скорость обнулена.
+        Это и есть знаменитое «производная функции в точке максимума
+        равна нулю». Если вы почувствовали, почему скорость мяча
+        обнуляется ровно в верхней точке, — вы только что прочувствовали
+        смысл одной из самых полезных теорем школьной алгебры.
+      </p>
+
+      <h3>Угловой коэффициент — это производная линейной функции</h3>
+
+      <p>
+        Возьмём конкретную ситуацию. Вы идёте пешком ровным шагом —
+        три километра в час. Если $x$ — количество часов с момента
+        старта, а $y$ — пройденное расстояние в километрах, то связь
+        между ними записывается формулой $y = 3x$. За один час прошли
+        три километра. За полтора — четыре с половиной. За пять минут
+        (это $\tfrac{1}{12}$ часа) — четверть километра.
+      </p>
+
+      <p>
+        Сделаем «толчок». Если $x$ увеличить на единицу (прошёл ещё
+        час), $y$ увеличивается на три (вы прошли ещё три километра).
+        Если на $0{,}1$ часа (шесть минут) — то на $0{,}3$ километра,
+        триста метров. Если на $0{,}001$ часа (примерно три с
+        половиной секунды) — то на $0{,}003$ километра, три метра.
+        Какой бы ни был толчок, отношение «изменение $y$» к
+        «изменению $x$» всегда равно три. Это число — ваша скорость
+        в километрах в час. Это же число — <em>угловой коэффициент</em>
+        прямой $y = 3x$. Это же число — производная.
+      </p>
+
+      <p>
+        Теперь разберём смысл букв в общей формуле $y = kx + b$.
+        Буква $k$ — это «скорость роста» функции, или, на языке
+        геометрии, наклон прямой. Если бы вы шли со скоростью пять
+        км/ч, формула стала бы $y = 5x$, а её производная — пять.
+        Буква $b$ — «откуда вы стартовали». Если стартовали в трёх
+        километрах от точки отсчёта, формула выглядела бы как
+        $y = 3x + 3$, но скорость роста — всё равно три. <em>Сдвиг
+        старта не меняет скорости.</em> Это важное наблюдение:
+        производная чувствительна к наклону, но не к смещению.
+      </p>
+
+      <h3>А что делать с кривой</h3>
+
+      <p>
+        Реальные функции редко бывают линейными. Возьмём пример из
+        обыденной жизни. У вас квадратный кусок ткани со стороной
+        $x$ метров. Его площадь $y = x^2$ квадратных метров. При
+        $x = 1$ площадь — один квадратный метр; при $x = 2$ — четыре;
+        при $x = 3$ — девять. Заметьте: каждый раз, когда сторона
+        удваивается, площадь увеличивается <em>в четыре раза</em>,
+        а не в два. Связь между стороной и площадью — нелинейная.
+      </p>
+
+      <p>
+        Спросим: насколько изменится площадь, если сторону немного
+        увеличить? При $x = 1$ м, если сторону увеличить на сантиметр,
+        площадь меняется с $1{,}00$ на $1{,}01^2 = 1{,}0201$ м², то
+        есть на $0{,}0201$. При $x = 5$ м та же прибавка в один
+        сантиметр даёт $5{,}01^2 - 25 = 25{,}1001 - 25 = 0{,}1001$
+        м² — в пять раз больше. <em>Реакция площади на одинаковый
+        толчок зависит от того, в какой точке мы стоим.</em> При
+        $x = 100$ м та же прибавка в один сантиметр дала бы изменение
+        почти в двести раз больше, чем при $x = 1$.
+      </p>
+
+      <p>
+        Это и есть «производная зависит от точки» — не теоретический
+        жаргон, а наблюдение, которое можно потрогать. И, между
+        прочим, если присмотреться к цифрам, видно, что реакция
+        площади примерно равна $2x$, помноженной на величину толчка.
+        При $x = 1$ — около $2$ за каждую единицу толчка; при $x = 5$ —
+        около $10$. Эту закономерность скоро формализуем: производная
+        функции $x^2$ в точке $x$ равна $2x$.
+      </p>
+
+      <p>
+        Раз производная зависит от точки, как её найти? Главный приём
+        математики: <strong>посмотрите вблизи</strong>. Если взять
+        кусочек кривой маленькой длины, скажем, от $x = 0{,}99$ до
+        $x = 1{,}01$, — этот кусочек почти неотличим от прямой. Чем
+        меньше кусочек, тем точнее он выглядит как прямая. Эту прямую
+        называют <strong>касательной</strong> к кривой в этой точке,
+        и её наклон — это производная функции в этой точке.
+      </p>
+
+      <div class="figure">
+        <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap; align-items:center;">
+
+          <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg" style="max-width:32%; min-width:170px;">
+            <rect width="200" height="180" fill="#efe8d6"/>
+            <text x="100" y="14" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#7a1f1f" letter-spacing="1.5">ОБЩИЙ ВИД</text>
+            <line x1="20" y1="160" x2="180" y2="160" stroke="#807868" stroke-width="0.7"/>
+            <line x1="47" y1="160" x2="47" y2="22" stroke="#807868" stroke-width="0.7"/>
+            <text x="42" y="173" text-anchor="end" font-family="EB Garamond" font-size="9" fill="#807868" font-style="italic">0</text>
+            <text x="100" y="173" text-anchor="middle" font-family="EB Garamond" font-size="9" fill="#807868" font-style="italic">1</text>
+            <polyline points="20,154 47,160 63,158 79,152 95,141 111,126 127,108 143,84 159,57 180,14" fill="none" stroke="#1a1612" stroke-width="1.6"/>
+            <circle cx="100" cy="137" r="2.8" fill="#7a1f1f"/>
+            <rect x="73" y="106" width="54" height="49" fill="none" stroke="#7a1f1f" stroke-width="0.8" stroke-dasharray="2,2"/>
+            <text x="170" y="42" text-anchor="end" font-family="EB Garamond" font-size="11" font-style="italic" fill="#1a1612">y = x²</text>
+          </svg>
+
+          <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg" style="max-width:32%; min-width:170px;">
+            <rect width="200" height="180" fill="#efe8d6"/>
+            <text x="100" y="14" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#7a1f1f" letter-spacing="1.5">ЗУМ ×&#8201;10</text>
+            <rect x="6" y="20" width="188" height="154" fill="none" stroke="#807868" stroke-width="0.5" stroke-dasharray="2,2"/>
+            <polyline points="20,156 44,145 68,130 92,113 116,92 140,69 164,42 180,23" fill="none" stroke="#1a1612" stroke-width="1.6"/>
+            <circle cx="100" cy="107" r="2.8" fill="#7a1f1f"/>
+            <rect x="92" y="100" width="16" height="14" fill="none" stroke="#7a1f1f" stroke-width="0.8" stroke-dasharray="2,2"/>
+            <text x="108" y="115" font-family="EB Garamond" font-size="10" font-style="italic" fill="#7a1f1f">(1, 1)</text>
+          </svg>
+
+          <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg" style="max-width:32%; min-width:170px;">
+            <rect width="200" height="180" fill="#efe8d6"/>
+            <text x="100" y="14" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#7a1f1f" letter-spacing="1.5">ЗУМ ×&#8201;100</text>
+            <rect x="6" y="20" width="188" height="154" fill="none" stroke="#807868" stroke-width="0.5" stroke-dasharray="2,2"/>
+            <line x1="20" y1="160" x2="180" y2="23" stroke="#7a1f1f" stroke-width="1.2" stroke-dasharray="3,2" opacity="0.85"/>
+            <polyline points="20,158 52,132 84,105 100,92 116,78 148,50 180,22" fill="none" stroke="#1a1612" stroke-width="1.6"/>
+            <circle cx="100" cy="92" r="2.8" fill="#7a1f1f"/>
+            <text x="155" y="108" text-anchor="middle" font-family="EB Garamond" font-size="11" font-style="italic" fill="#7a1f1f">наклон = 2</text>
+          </svg>
+
+        </div>
+        <div class="caption"><strong>Фиг. 03</strong>Парабола $y=x^2$ под тремя степенями увеличения вокруг точки $(1,1)$. На общем виде кривая видна; при сильном зуме — она становится практически неотличима от прямой (красный пунктир — касательная). Эта прямая и есть «лучшее линейное приближение», а её наклон — производная функции в данной точке.</div>
+      </div>
+
+      <p>
+        На картинке выше — парабола $y = x^2$ под тремя «увеличениями»
+        вокруг точки $(1, 1)$. На общем виде она явно изогнута. На
+        среднем зуме — слегка изогнута. На сильном — выглядит как прямая.
+        Эта прямая — касательная, её наклон — два. Значит, производная
+        $y = x^2$ в точке $x = 1$ равна $2$. Если бы мы взяли точку
+        $x = 3$, увидели бы, что наклон там — шесть. Общая формула
+        получается неожиданно простой: производная $x^2$ — это $2x$.
+        Но мы её сейчас не выводим; мы строим интуицию.
+      </p>
+
+      <h3>Производная — это наклон лучшего линейного приближения</h3>
+
+      <p>
+        Соединим два предыдущих абзаца в одно утверждение. У линейной
+        функции наклон одинаков в любой точке — это её производная.
+        У нелинейной — наклон разный, и в каждой точке мы строим
+        <em>лучшее линейное приближение</em> (касательную). Наклон
+        этого приближения и есть производная в этой точке.
+      </p>
+
+      <p>
+        Это и есть фраза, которую мы будем повторять весь курс:
+        <em>производная — это линеаризация</em>. То есть процедура,
+        заменяющая сложную (нелинейную) функцию её локальным
+        линейным «двойником». А наклон линейного двойника —
+        собственно производная.
+      </p>
+
+      <div class="prof generic">
+        <p>
+          Здесь стоит остановиться и проговорить главное. Производная —
+          это <em>не сложная вещь</em>. Производная — это очень
+          простая идея, обмотанная сложной нотацией. Идея: «как меняется
+          выход, когда вход чуть-чуть двинуть». Всё, что дальше в
+          курсе, — это аккуратное оформление этой идеи для разных
+          типов входа и выхода. Когда вы это поймёте, вам станет
+          смешно смотреть на людей, которые относятся к производной
+          с трепетом, как к чему-то магическому. Магии тут нет.
+          Есть аккуратность.
+        </p>
+      </div>
+
+      <h3>Множественность имён</h3>
+
+      <p>
+        Одна и та же штука всплывает в разных областях под разными
+        именами:
+      </p>
+
+      <ul>
+        <li>В физике — <strong>скорость</strong> (производная положения
+        по времени) или <strong>ускорение</strong> (производная скорости
+        по времени).</li>
+        <li>В геометрии — <strong>угловой коэффициент касательной</strong>
+        к графику.</li>
+        <li>В экономике — <strong>предельные издержки</strong>
+        (стоимость одной дополнительной единицы продукции).</li>
+        <li>В инженерии — <strong>чувствительность</strong> (на сколько
+        изменится выход при единичном изменении входа).</li>
+        <li>В машинном обучении — <strong>градиент</strong> (вектор
+        производных, указывающий, куда обновлять параметры, чтобы
+        модель стала точнее).</li>
+      </ul>
+
+      <p>
+        Все эти слова — про одну и ту же операцию. Если вы поняли
+        производную в одном контексте, вы поняли её во всех. Это и
+        есть сила абстракции: она экономит усилия. Один раз
+        разобравшись, вы получаете отмычку ко многим дверям.
+      </p>
+
+      <h3>Зачем — от спидометра до нейросетей</h3>
+
+      <p>
+        Раз производная — это «скорость», возникает законный вопрос:
+        зачем заводить целый раздел математики ради одной идеи
+        «как быстро меняется»? Ответ: потому что из этой идеи
+        получаются две сверхсилы. Первая — <em>предсказание</em>.
+        Вторая — <em>оптимизация</em>. И ради второй сегодня
+        крутится вся индустрия машинного обучения.
+      </p>
+
+      <h4>Сверхсила первая — предсказание</h4>
+
+      <p>
+        Если вы знаете, где машина прямо сейчас и какая у неё
+        скорость, вы можете предсказать, где она окажется через
+        секунду: <em>новое положение ≈ старое + скорость · время</em>.
+        Если знаете не только скорость, но и ускорение (производную
+        скорости), предсказание становится ещё точнее. На этом стоит
+        вся физика, GPS, прогноз погоды, автопилот, рынки. Берёте
+        текущее состояние, добавляете производную, протягиваете
+        в будущее. Знакомая задача про рост ребёнка — тот же приём:
+        в пять лет ребёнок рос на шесть сантиметров в год, и можно
+        было предсказать, что через год он будет на шесть сантиметров
+        выше. Угадали примерно.
+      </p>
+
+      <h4>Сверхсила вторая — оптимизация</h4>
+
+      <p>
+        Это сила, ради которой существует машинное обучение. Её
+        суть умещается в одной картинке.
+      </p>
+
+      <p>
+        Представьте, что вы стоите в горах в густом тумане. Вам нужно
+        спуститься в самую низкую точку долины. Вы её не видите —
+        туман непроницаем, видимость один шаг. Что у вас остаётся?
+        Вы можете <em>почувствовать ногами</em>, в какую сторону
+        земля под вами уходит вниз. Делаете шаг в эту сторону. Снова
+        чувствуете наклон. Снова делаете шаг. Через много шагов
+        оказываетесь внизу. Не обязательно в самой низкой точке мира —
+        но в самой низкой точке вашей долины.
+      </p>
+
+      <div class="figure">
+        <svg viewBox="0 0 480 240" xmlns="http://www.w3.org/2000/svg" style="max-width:560px; width:100%;">
+          <rect width="480" height="240" fill="#efe8d6"/>
+
+          <rect x="0" y="0" width="480" height="40" fill="#807868" opacity="0.22"/>
+          <rect x="0" y="20" width="480" height="55" fill="#807868" opacity="0.13"/>
+          <rect x="0" y="60" width="480" height="40" fill="#807868" opacity="0.07"/>
+          <text x="240" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#5a5a5a" letter-spacing="3">ТУМАН — ВИДИМОСТЬ ОДИН ШАГ</text>
+
+          <path d="M 0,160 L 30,120 L 60,140 L 90,90 L 120,150 L 160,170 L 200,130 L 240,80 L 280,110 L 320,170 L 360,200 L 400,180 L 440,212 L 480,170 L 480,240 L 0,240 Z" fill="#d8c896" stroke="#8a7858" stroke-width="1.2" stroke-linejoin="round"/>
+
+          <g transform="translate(105, 113)">
+            <circle cx="0" cy="-9" r="3.5" fill="#7a1f1f"/>
+            <line x1="0" y1="-5" x2="0" y2="6" stroke="#7a1f1f" stroke-width="2"/>
+            <line x1="0" y1="-1" x2="-5" y2="3" stroke="#7a1f1f" stroke-width="1.4"/>
+            <line x1="0" y1="-1" x2="5" y2="3" stroke="#7a1f1f" stroke-width="1.4"/>
+            <line x1="0" y1="6" x2="-5" y2="14" stroke="#7a1f1f" stroke-width="1.5"/>
+            <line x1="0" y1="6" x2="5" y2="14" stroke="#7a1f1f" stroke-width="1.5"/>
+          </g>
+          <text x="105" y="98" text-anchor="middle" font-family="EB Garamond" font-size="11" font-style="italic" fill="#7a1f1f">вы здесь</text>
+
+          <defs>
+            <marker id="arrm2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#7a1f1f"/>
+            </marker>
+          </defs>
+          <path d="M 116 138 Q 128 152, 140 162" fill="none" stroke="#7a1f1f" stroke-width="1.8" marker-end="url(#arrm2)"/>
+          <text x="180" y="155" font-family="EB Garamond" font-size="11" font-style="italic" fill="#7a1f1f">шаг по наклону вниз</text>
+
+          <text x="140" y="195" text-anchor="middle" font-family="EB Garamond" font-size="11" font-style="italic" fill="#5a5a5a">локальная долина</text>
+          <text x="445" y="232" text-anchor="middle" font-family="EB Garamond" font-size="11" font-style="italic" fill="#5a5a5a">самая низкая (не видна)</text>
+        </svg>
+        <div class="caption"><strong>Фиг. 04</strong>Турист в тумане не видит карты, но чувствует наклон под ногами и шагает по нему вниз. Через много шагов он окажется в долине. Это и есть градиентный спуск; так же — в очень многомерном «пейзаже» — учится нейросеть. «Наклон под ногами» в математике называется градиентом, а его компоненты — частными производными.</div>
+      </div>
+
+      <p>
+        «Наклон под ногами» — это и есть производная. Точнее, в
+        многомерном случае — <em>градиент</em>: вектор производных
+        по всем направлениям сразу. Он показывает, в какую сторону
+        функция растёт быстрее всего. Хотите спускаться — идите в
+        противоположную сторону.
+      </p>
+
+      <p>
+        Этот алгоритм называется <strong>градиентный спуск</strong>,
+        и он — сердце практически всего современного машинного
+        обучения.
+      </p>
+
+      <h4>Что значит «обучить нейросеть»</h4>
+
+      <p>
+        Нейросеть — это очень большая функция. Она берёт вход
+        (скажем, картинку) и выдаёт выход (например, ответ «кошка»
+        или «собака»). Внутри неё миллионы или миллиарды «крутилок» —
+        параметров, которые определяют, как именно вход превращается
+        в выход. Каждая крутилка — это одно число.
+      </p>
+
+      <p>
+        В самом начале все крутилки выставлены случайно, и сеть
+        отвечает чушь. Чтобы научить её, делают так: показывают
+        картинку с правильным ответом, смотрят, что выдаёт сеть, и
+        считают одно число — <em>насколько сильно она ошиблась</em>.
+        Это число называется «потеря» (loss). Хорошая сеть — та, у
+        которой потеря маленькая.
+      </p>
+
+      <p>
+        Получается, обучение сети — это <em>минимизация функции
+        потерь</em>. Функция потерь зависит от всех миллиардов
+        крутилок. Это невообразимо высокомерный «горный пейзаж», по
+        которому мы ищем самую глубокую долину — те значения
+        параметров, при которых сеть ошибается меньше всего.
+      </p>
+
+      <div class="idea">
+        <p>
+          <strong>Главный фокус ML:</strong> чтобы знать, в какую
+          сторону крутить каждую из миллиардов ручек для уменьшения
+          потери, нужна <em>производная потери по этой ручке</em>.
+          Множество всех таких производных и есть градиент. На каждом
+          шаге обучения сеть берёт градиент и делает маленький шаг
+          в противоположную сторону. Маленький — потому что наклон
+          под ногами говорит про <em>сейчас</em>, а через большой
+          шаг ландшафт уже другой.
+        </p>
+      </div>
+
+      <p>
+        Без производных это было бы невозможно. Перебирать миллиард
+        ручек, поворачивая каждую вручную, и смотреть, что получится, —
+        никакой жизни не хватит. А производная даёт ответ <em>сразу</em>:
+        для каждой ручки в одну строчку формулы.
+      </p>
+
+      <h4>Почему все «градиенты» в ML — это производные</h4>
+
+      <p>
+        Слово «градиент» в машинном обучении звучит на каждом углу:
+        «градиентный спуск», «обратное распространение градиента»,
+        «градиентный бустинг». За всеми этими словами стоит ровно
+        одно и то же — <em>производная функции потерь по параметрам
+        сети</em>. Производная говорит, как реагирует потеря на
+        крошечный поворот каждой ручки. Складываем все эти ответы
+        в один длинный вектор — это и есть градиент. Делаем шаг
+        против градиента — потеря уменьшается. Повторяем миллион
+        раз — сеть обучилась.
+      </p>
+
+      <p>
+        Алгоритм, который вычисляет все эти миллиарды производных
+        за один проход через сеть, называется <strong>обратное
+        распространение ошибки</strong>, или backpropagation. Он
+        использует одну специфическую формулу — <em>цепное правило</em>
+        для производной композиции функций. Эту формулу мы разберём
+        подробно в восьмой главе. А пока важно вот что: backpropagation
+        — не магия и не отдельная теория. Это просто очень умное
+        использование производной.
+      </p>
+
+      <div class="prof generic">
+        <p>
+          Если вы поняли, что производная — это «как реагирует выход
+          на крошечный толчок входа», вы уже поняли основу всего
+          современного AI. Дальше — детали, инженерия и масштаб. Но
+          сама идея — про скорость и наклон — та же самая, что у
+          мяча, который вы подбрасываете в воздух, или у воды,
+          поднимающейся в ванне. Вся математическая машина ML — это
+          производная, разогнанная до миллиардной размерности.
+        </p>
+      </div>
+
+      <div class="exercise">
+        <p>
+          Вы учитесь бросать мяч в баскетбольное кольцо. После каждого
+          броска вы видите, куда мяч полетел и насколько мимо. Если
+          ушёл влево — в следующий раз поправите чуть правее. Если
+          ушёл далеко — бросите чуть слабее. Ваш мозг неосознанно
+          ведёт градиентный спуск: «в какую сторону я промахнулся,
+          в обратную и поправляю». Подумайте: что в этой аналогии
+          играет роль функции потерь? Что — параметров сети? Что —
+          производных по этим параметрам? И что такое «скорость
+          обучения», знаменитый <em>learning rate</em>, — какую
+          величину он описывает применительно к броскам?
+        </p>
+      </div>
+
+      <h4>Сводка</h4>
+
+      <p>
+        Производная — это не школьная процедура и не университетская
+        абстракция. Это инструмент, который превращает «я не знаю,
+        в какую сторону двигаться» в «я знаю, в какую сторону
+        двигаться». Это работает для машины на дороге (предсказание),
+        для туриста в тумане (оптимизация), для нейросети с
+        миллиардом параметров (тренировка). Везде один и тот же ход:
+        <em>взять производную, узнать наклон, шагнуть в правильную
+        сторону</em>.
+      </p>
+
+      <div class="exercise">
+        <p>
+          Возьмите функцию «ваш рост в зависимости от возраста».
+          В пять лет вы росли на пять-семь сантиметров в год.
+          В пятнадцать подростковый скачок может давать десять
+          сантиметров в год. В сорок производная этой функции —
+          около нуля. В семьдесят она может стать чуть отрицательной
+          (мы немного «оседаем»). Эта последовательность чисел —
+          производная функции «рост-от-возраста», вычисленная в
+          разных точках. Видите, что вы и так интуитивно умели брать
+          производные?
+        </p>
+      </div>
+
+      <p class="horizon">
+        Теперь у нас в голове есть картинка: касательная к кривой,
+        наклон которой и есть производная. В следующей главе мы
+        запишем эту картинку формулой, и формула окажется
+        неожиданно красивой.
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 3: МАЛЫЕ ВОЗМУЩЕНИЯ ========== -->
+    <section id="ch03" class="drop">
+      <h2 class="chapter"><span class="num">Глава 03 — крошечное движение</span>Малые возмущения</h2>
+
+      <p class="chapter-lede">
+        Чтобы понять, как функция реагирует, надо её толкнуть. Слово
+        «толчок» в математике пишется как $dx$ и означает «очень
+        маленькое изменение входа». Это не операция, а способ думать.
+      </p>
+
+      <p>
+        Возьмём $f(x) = x^2$ в точке $x_0 = 3$. Значение там
+        $f(3) = 9$. Теперь сдвинем вход на крошечную величину $dx$:
+        что станет с выходом?
+      </p>
+
+      <div class="formula">
+        $$ f(3 + dx) = (3 + dx)^2 = 9 + 6\,dx + dx^2. $$
+      </div>
+
+      <p>
+        Разность $f(3+dx) - f(3) = 6\,dx + dx^2$. Главное в этой
+        формуле — что в ней <em>две</em> части. Первая, $6\,dx$,
+        пропорциональна толчку. Вторая, $dx^2$, — гораздо меньше
+        первой, когда $dx$ маленькое. Например, при $dx = 0.01$ имеем
+        $6\cdot 0.01 = 0.06$, а $dx^2 = 0.0001$. Вторая часть в
+        шестьсот раз меньше.
+      </p>
+
+      <p>
+        Если толчок ещё уменьшить, разрыв вырастет: при $dx = 0.001$
+        первая часть равна $0.006$, вторая — $10^{-6}$, разрыв в шесть
+        тысяч раз. Иначе говоря, при малом $dx$ <em>первая часть</em>
+        и есть весь ответ функции на толчок, с погрешностью
+        пренебрежимо малого порядка.
+      </p>
+
+      <div class="idea">
+        <p>
+          В разложении $f(x_0 + dx) = f(x_0) + (\text{что-то})\cdot dx + (\text{поправки})$
+          «что-то» — это <strong>производная</strong> $f'(x_0)$, а поправки —
+          это слагаемые, в которых $dx$ стоит в степени 2 и выше.
+          Поправки малы по сравнению с главным членом и в пределе
+          игнорируются.
+        </p>
+      </div>
+
+      <h3>Запись Эдельмана</h3>
+
+      <p>
+        В школе пишут $f'(x_0) = \lim\limits_{dx\to 0}\frac{f(x_0+dx)-f(x_0)}{dx}$.
+        Это правильно и работает. Но Эдельман и Джонсон любят другую запись —
+        она читается как одна строчка по-английски и сохраняет смысл «крошечного
+        движения»:
+      </p>
+
+      <div class="formula">
+        $$ \boxed{\,df = f(x + dx) - f(x) = f'(x)\,[\,dx\,] + o(dx)\,} $$
+      </div>
+
+      <p>
+        Здесь $df$ — это «крошечное изменение выхода», порождённое крошечным
+        изменением входа $dx$. Запись $f'(x)\,[\,dx\,]$ в квадратных скобках
+        не случайна: она подчёркивает, что $f'(x)$ — это не число, а
+        <em>правило</em>, действующее на $dx$. В одномерном случае это правило —
+        просто умножение на число. Но в общем случае это будет линейный оператор
+        более интересного вида.
+      </p>
+
+      <div class="prof">
+        <p>
+          «Малое $o$ от $dx$» — это всё, что стремится к нулю быстрее, чем
+          сам $dx$. Например, $dx^2$ — это «$o$ от $dx$»: при $dx \to 0$
+          отношение $dx^2/dx = dx$ тоже стремится к нулю. На практике это означает:
+          <em>при достаточно малом</em> $dx$ слагаемое $o(dx)$ можно отбросить,
+          и формула $df = f'(x)\,[\,dx\,]$ становится точной — но только
+          в первом порядке. Когда мы говорим «производная — это линеаризация»,
+          мы имеем в виду именно это: первый, линейный, член разложения.
+        </p>
+      </div>
+
+      <div class="interactive">
+        <label for="dx-slider">Толчок dx (от 0.001 до 1)</label>
+        <input type="range" id="dx-slider" min="-3" max="0" step="0.05" value="-1" />
+        <div class="readout" id="dx-readout">
+          dx = <b>0.10</b> &nbsp;·&nbsp; точное Δf = <b>0.61</b> &nbsp;·&nbsp; линейная часть 6·dx = <b>0.60</b> &nbsp;·&nbsp; поправка dx² = <b>0.01</b>
+        </div>
+      </div>
+      <script>
+        (function(){
+          var sl = document.getElementById('dx-slider');
+          var rd = document.getElementById('dx-readout');
+          if (!sl) return;
+          function update(){
+            var dx = Math.pow(10, parseFloat(sl.value));
+            var lin = 6*dx;
+            var corr = dx*dx;
+            var exact = lin + corr;
+            rd.innerHTML = 'dx = <b>' + dx.toExponential(2) + '</b>'
+              + ' &nbsp;·&nbsp; точное Δf = <b>' + exact.toExponential(3) + '</b>'
+              + ' &nbsp;·&nbsp; линейная часть 6·dx = <b>' + lin.toExponential(3) + '</b>'
+              + ' &nbsp;·&nbsp; поправка dx² = <b>' + corr.toExponential(3) + '</b>';
+          }
+          sl.addEventListener('input', update);
+          update();
+        })();
+      </script>
+
+      <p>
+        Подёргайте слайдер. Заметьте: чем меньше $dx$, тем сильнее линейная
+        часть совпадает с точным изменением. Поправка ($dx^2$) уходит в
+        нуль быстрее самого $dx$. Это и есть зрелище, ради которого затеяно
+        дифференциальное исчисление.
+      </p>
+
+      <div class="exercise">
+        <p>
+          Возьмите $f(x) = x^3$ и точку $x_0 = 2$. Раскройте $(2+dx)^3$
+          и выпишите три слагаемых: главную часть $f(2)$, линейную
+          часть «что-то умножить на $dx$» и поправки. Что получилось
+          в роли «что-то»? (Ответ — производная $f'(2) = 12$.)
+          Заметьте: поправки теперь не одна, а две — и обе содержат
+          $dx$ в степени 2 или 3, то есть малы.
+        </p>
+      </div>
+
+      <p class="horizon">
+        Мы вплотную подошли к центральной идее всего курса. В следующей
+        главе мы переименуем «что-то» в «линейный оператор» и поймём,
+        почему это слово важнее, чем кажется.
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 4: ПРОИЗВОДНАЯ КАК ЛИНЕЙНЫЙ ОПЕРАТОР ========== -->
+    <section id="ch04" class="drop">
+      <h2 class="chapter"><span class="num">Глава 04 — сердце курса</span>Производная — это линейный оператор</h2>
+
+      <p class="chapter-lede">
+        Здесь происходит то, ради чего курс затеян. Производная
+        перестаёт быть числом и становится правилом — линейным
+        правилом, превращающим возмущение входа в возмущение выхода.
+        Это переключение перспективы — главное приобретение MIT-курса.
+      </p>
+
+      <p>
+        Перепишем формулу из прошлой главы ещё раз, но смотреть будем
+        на неё иначе:
+      </p>
+
+      <div class="formula">
+        $$ df = f'(x)\,[\,dx\,] + o(dx). $$
+      </div>
+
+      <p>
+        Что такое $f'(x)\,[\,dx\,]$? В одномерном случае — просто число
+        $f'(x)$, помноженное на число $dx$. Это очень специфический
+        частный случай. Чтобы увидеть, что в нём такого <em>линейного</em>,
+        проверим формулу линейности: пусть мы делаем не один толчок,
+        а сумму двух — $\alpha\, dx_1 + \beta\, dx_2$. Тогда:
+      </p>
+
+      <div class="formula">
+        $$ f'(x)\,[\alpha\, dx_1 + \beta\, dx_2] = \alpha\, f'(x)\,[dx_1] + \beta\, f'(x)\,[dx_2]. $$
+      </div>
+
+      <p>
+        В одномерном случае это банально — обе стороны равны
+        $f'(x)\cdot(\alpha\, dx_1 + \beta\, dx_2)$. Но
+        обратите внимание на сам факт: <em>$f'(x)$ ведёт себя как
+        линейная функция от своего аргумента $dx$</em>. Это не
+        случайность одномерного случая. Это <strong>определяющее
+        свойство производной</strong>, которое сохраняется для функций
+        от чего угодно: от чисел, от векторов, от матриц, от других функций.
+      </p>
+
+      <p>
+        Кажется, что мы наговорили лишних слов: для одной переменной
+        всё это и так очевидно. Но в самой этой «очевидности» лежит
+        ключ. Если переключить взгляд и считать, что и в одномерном
+        случае производная — это <em>линейный оператор</em>
+        «умножение на число $f'(x)$», а не само число $f'(x)$, — то
+        к функциям многих переменных мы перейдём без новых концептуальных
+        усилий. Меняется только <em>форма</em> этого оператора: было
+        число, станет строка, потом матрица, потом нечто ещё более
+        громоздкое. Идея — одна и та же. Это и есть переключение
+        перспективы, ради которого затеян курс.
+      </p>
+
+      <div class="idea">
+        <p>
+          <strong>Определение производной (взрослое):</strong>
+          $f'(x)$ — это такой <em>линейный оператор</em>, что
+          $f(x + dx) - f(x) = f'(x)\,[\,dx\,] + o(dx)$, где $o(dx)$
+          стремится к нулю быстрее, чем сам $dx$.
+        </p>
+        <p>
+          Слово «оператор» здесь — синоним «функции, действующей на
+          возмущение». Слово «линейный» — означает, что оператор
+          подчиняется правилу из главы&nbsp;2. Слово «такой» — намекает,
+          что оператор определяется однозначно (если существует).
+        </p>
+      </div>
+
+      <h3>Зачем эта смена перспективы</h3>
+
+      <p>
+        Главное приобретение этого определения: теперь у нас есть
+        способ говорить о производной для функций <em>любого</em>
+        типа — лишь бы у входа и выхода была понятная структура,
+        в которой можно складывать и масштабировать. А это
+        выполняется не только для чисел.
+      </p>
+
+      <p>
+        Если $f$ берёт <em>вектор</em> и возвращает число, то «крошечное
+        возмущение» $dx$ — это маленький вектор, а $f'(x)\,[\,dx\,]$ —
+        число, линейно зависящее от вектора. Линейная функция от
+        вектора, возвращающая число, — это, как мы скоро увидим,
+        вектор-строка. Эту вектор-строку называют <strong>градиент</strong>
+        и обозначают $\nabla f$.
+      </p>
+
+      <p>
+        Если $f$ берёт <em>вектор</em> и возвращает <em>вектор</em>,
+        то $f'(x)$ — линейное правило «вектор-в-вектор», а это уже
+        матрица. Эта матрица называется <strong>якобиан</strong>.
+      </p>
+
+      <p>
+        Если $f$ берёт <em>матрицу</em> и возвращает число — то $f'(A)$
+        — линейное правило «матрица-в-число», то есть некий объект,
+        который мы пока можем представлять как «матрицу того же
+        размера, что $A$, чьё скалярное произведение с $dA$ даёт $df$».
+        Вот это последнее — уже непривычная территория, и именно оно
+        называется матричным исчислением.
+      </p>
+
+      <h3>Знаменитая таблица из лекции&nbsp;1</h3>
+
+      <p>
+        Эдельман на самой первой лекции рисует таблицу «формы
+        производной». В ней он показывает, как меняется тип производной
+        в зависимости от того, что у функции на входе и на выходе.
+        Воспроизведём её — это карта, к которой мы будем возвращаться
+        в каждой следующей главе.
+      </p>
+
+      <table class="shapes">
+        <thead>
+          <tr>
+            <th></th>
+            <th>выход: число (скаляр)</th>
+            <th>выход: вектор $\mathbb{R}^m$</th>
+            <th>выход: матрица $m\times p$</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>вход: число</th>
+            <td class="highlight">$f'(x)$ — число (школьная производная)</td>
+            <td>$f'(x)$ — вектор-столбец $\mathbb{R}^m$</td>
+            <td>$f'(x)$ — матрица $m\times p$</td>
+          </tr>
+          <tr>
+            <th>вход: вектор $\mathbb{R}^n$</th>
+            <td>$f'(x)$ — вектор-строка $\mathbb{R}^{1\times n}$ ($=\nabla f^T$)</td>
+            <td>$f'(x)$ — матрица $m\times n$ (якобиан)</td>
+            <td>$f'(x)$ — тензор третьего ранга</td>
+          </tr>
+          <tr>
+            <th>вход: матрица $n\times q$</th>
+            <td>$f'(A)$ — линейная функция «матрица&nbsp;→&nbsp;число»</td>
+            <td>$f'(A)$ — линейная функция «матрица&nbsp;→&nbsp;вектор»</td>
+            <td>$f'(A)$ — линейная функция «матрица&nbsp;→&nbsp;матрица»</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Жёлтая клетка — школьный частный случай. Все остальные клетки
+        изучают в матричном исчислении, и для каждой есть свои приёмы.
+        Но <em>идея</em> во всех клетках одна и та же — производная как
+        линейный оператор. Это важно подчеркнуть: вы не учите
+        двенадцать разных «производных», вы учите одну, у которой
+        двенадцать форм.
+      </p>
+
+      <div class="prof">
+        <p>
+          Эдельман повторяет это в каждой лекции: «не думайте о якобиане
+          как о таблице чисел. Думайте о нём как о линейном правиле.
+          Запись через таблицу — это удобный способ записи, но не
+          способ <em>думать</em>». Тот, кто думает таблицами, тонет
+          в индексных вычислениях. Тот, кто думает операторами,
+          сохраняет ясность даже в задачах с тысячами переменных.
+        </p>
+      </div>
+
+      <h3>Разомнёмся: одномерный пример по новому методу</h3>
+
+      <p>
+        Метод «производной как линейного оператора» работает по
+        одной простой схеме: <em>раскрой $f(x + dx)$, выдели линейную
+        часть по $dx$, всё остальное — поправки</em>. Покажем на
+        примере, что новый метод даёт тот же ответ, что и школьный.
+      </p>
+
+      <p>
+        Возьмём $f(x) = x^3$ в точке $x = 2$. Раскроем кубическую
+        скобку — формула из седьмого класса:
+      </p>
+
+      <div class="formula">
+        $$ f(2 + dx) = (2 + dx)^3 = 8 + 12\,dx + 6\,dx^2 + dx^3. $$
+      </div>
+
+      <p>
+        Главная часть — $f(2) = 8$. Линейная часть по $dx$ — это $12\,dx$.
+        Остальное ($6\,dx^2 + dx^3$) — поправки порядка $dx^2$ и выше; они
+        малы. Итак, производная как оператор: $f'(2)\,[dx] = 12\,dx$.
+        Сам коэффициент $12$ — это «школьная» производная в этой точке.
+        Совпадает с табличной формулой $(x^3)' = 3x^2$, потому что
+        $3\cdot 2^2 = 12$.
+      </p>
+
+      <p>
+        Видно, что новый метод не отменяет школу — он даёт те же
+        ответы на тех же задачах. Зато он берётся за такие задачи,
+        которые школьному инструменту не по зубам: производная по
+        вектору, по матрице, по функции. Об этом — следующие шесть глав.
+      </p>
+
+      <div class="exercise">
+        <p>
+          Возьмите $f(x) = \sqrt{x}$ в точке $x = 4$. Подсказка: при
+          малых $dx$ верно, что $\sqrt{4 + dx} \approx 2 + dx/4$ — это
+          можно проверить, возведя обе стороны в квадрат: $(2 + dx/4)^2
+          = 4 + dx + dx^2/16$, последнее слагаемое — поправка. Значит,
+          $f'(4)\,[dx] = dx/4$, и школьная производная $f'(4) = 1/4$.
+          Сверьте с табличной формулой $(\sqrt{x})' = 1/(2\sqrt{x})$ в
+          точке $x = 4$.
+        </p>
+      </div>
+
+      <h3>Взгляд вперёд: пример с двумерным входом</h3>
+
+      <p>
+        Теперь покажем, что тот же самый метод работает, когда вход —
+        не одно число, а пара чисел. Формальное знакомство с векторами
+        будет в следующей главе, а пока — просто аккуратно прокрутим
+        алгебру.
+      </p>
+
+      <p>
+        Пусть $x = (x_1, x_2)$ — точка на плоскости. Возьмём функцию
+        $f(x) = x_1^2 + x_2^2$ — квадрат расстояния от начала координат
+        до точки $x$. При $x = (3, 4)$ значение $f = 9 + 16 = 25$, а
+        сама точка лежит на расстоянии 5 от начала.
+      </p>
+
+      <p>
+        Толкнём $x$ на маленький вектор $dx = (dx_1, dx_2)$:
+      </p>
+
+      <div class="formula">
+        $$ f(x + dx) = (x_1 + dx_1)^2 + (x_2 + dx_2)^2 = (x_1^2 + x_2^2) + 2 x_1 dx_1 + 2 x_2 dx_2 + (dx_1^2 + dx_2^2). $$
+      </div>
+
+      <p>
+        Главная часть — $f(x) = x_1^2 + x_2^2$. Линейная часть по
+        возмущению — $2 x_1 dx_1 + 2 x_2 dx_2$. Поправки порядка $dx^2$
+        — $dx_1^2 + dx_2^2$, малы. То есть оператор-производная берёт
+        возмущение $dx = (dx_1, dx_2)$, умножает первую компоненту на
+        $2x_1$, вторую — на $2x_2$, и складывает результаты. Это
+        линейная функция «вектор-в-число» — ровно та клетка таблицы,
+        где сидит градиент.
+      </p>
+
+      <p>
+        Записать её можно компактно как пару чисел $(2x_1, 2x_2)$ —
+        этот вектор и называется <strong>градиентом</strong> функции
+        $f$ в точке $x$, обозначается $\nabla f$. Геометрический смысл:
+        в каждой точке $x$ градиент показывает, в какую сторону
+        функция растёт быстрее всего. Для нашего «квадрата расстояния»
+        естественно, что самый быстрый рост — от центра наружу, в
+        направлении самой точки. И градиент это подтверждает:
+        $\nabla f = (2x_1, 2x_2) = 2x$, смотрит туда же, куда $x$.
+      </p>
+
+      <div class="exercise">
+        <p>
+          В точке $(3, 4)$ найдите градиент функции $f(x) = x_1^2 + x_2^2$
+          по выведенной формуле. Какая длина у этого вектора? В какую
+          сторону он смотрит? Сверьте: длина должна быть $10$ (потому
+          что $|2x| = 2|x| = 10$), направление — от начала координат
+          в точку $(3, 4)$.
+        </p>
+      </div>
+
+      <p class="horizon">
+        Дальше — формальное знакомство с векторами и матрицами.
+        Если вы уже знаете, что такое матрица, эта глава будет
+        ревизией с правильной перспективой. Если не знаете —
+        самое время.
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 5: ВЕКТОРЫ ========== -->
+    <section id="ch05" class="drop">
+      <h2 class="chapter"><span class="num">Глава 05 — расширение алфавита</span>От чисел к векторам</h2>
+
+      <p class="chapter-lede">
+        Вектор — это упорядоченный набор чисел. Точка. Стрелка.
+        Список. Все три картинки правильные, и в матричном исчислении
+        мы пользуемся ими попеременно.
+      </p>
+
+      <h3>Векторы вокруг нас, даже когда их так не называют</h3>
+
+      <p>
+        Прежде чем формально определять, посмотрите, в каком количестве
+        мест векторы уже есть в обыденной жизни — пусть и без этого
+        слова.
+      </p>
+
+      <ul>
+        <li>
+          <strong>Список (рецепт).</strong> «Три стакана муки, два
+          стакана сахара, одно яйцо» — это вектор $(3, 2, 1)$ из трёх
+          чисел. Удвоить рецепт — умножить вектор на $2$: получится
+          $(6, 4, 2)$. Сложить два рецепта (себе и соседу) — сложить
+          векторы покомпонентно.
+        </li>
+        <li>
+          <strong>Точка в пространстве.</strong> Положение в комнате
+          задаётся тремя числами — например, «два метра от северной
+          стены, три от западной, на высоте полтора». Это вектор
+          $(2,\, 3,\, 1.5)$ в $\mathbb{R}^3$.
+        </li>
+        <li>
+          <strong>Стрелка (скорость, сила).</strong> Скорость машины —
+          это не «60 км/ч» само по себе, а 60 км/ч <em>в каком-то
+          направлении</em>. Чтобы записать её на плоскости, нужно
+          <em>два</em> числа: скажем, $50$ на восток и $30$ на север,
+          итого вектор $(50, 30)$. Длина $\sqrt{50^2 + 30^2}\approx 58$ —
+          собственно скорость, направление — пропорция компонент.
+        </li>
+        <li>
+          <strong>Цвет на экране.</strong> RGB-цвет — вектор из трёх
+          чисел: красный, зелёный, синий, каждый от $0$ до $255$.
+          Чёрный — $(0, 0, 0)$, белый — $(255, 255, 255)$, чистый
+          красный — $(255, 0, 0)$, какой-то фиолетовый — $(180, 50, 220)$.
+        </li>
+        <li>
+          <strong>«Смысл» слова в нейросети.</strong> Современная
+          языковая модель представляет каждое слово как вектор из
+          тысяч чисел. В этом векторе закодирован «смысл» слова. Слова
+          «собака» и «кошка» имеют близкие векторы (оба — питомцы);
+          «собака» и «трактор» — далёкие. Об этой близости — через
+          две страницы.
+        </li>
+      </ul>
+
+      <div class="figure">
+        <svg viewBox="0 0 380 220" xmlns="http://www.w3.org/2000/svg" style="max-width:520px; width:100%;">
+          <rect width="380" height="220" fill="#efe8d6"/>
+
+          <!-- subtle grid -->
+          <g stroke="#c8bfa8" stroke-width="0.5">
+            <line x1="40" y1="30" x2="40" y2="200"/>
+            <line x1="70" y1="30" x2="70" y2="200"/>
+            <line x1="100" y1="30" x2="100" y2="200"/>
+            <line x1="130" y1="30" x2="130" y2="200"/>
+            <line x1="160" y1="30" x2="160" y2="200"/>
+            <line x1="190" y1="30" x2="190" y2="200"/>
+            <line x1="220" y1="30" x2="220" y2="200"/>
+            <line x1="250" y1="30" x2="250" y2="200"/>
+            <line x1="40" y1="60" x2="280" y2="60"/>
+            <line x1="40" y1="90" x2="280" y2="90"/>
+            <line x1="40" y1="120" x2="280" y2="120"/>
+            <line x1="40" y1="150" x2="280" y2="150"/>
+            <line x1="40" y1="180" x2="280" y2="180"/>
+          </g>
+
+          <!-- axes -->
+          <line x1="30" y1="180" x2="285" y2="180" stroke="#807868" stroke-width="0.9"/>
+          <line x1="40" y1="200" x2="40" y2="25" stroke="#807868" stroke-width="0.9"/>
+          <text x="35" y="195" text-anchor="end" font-family="EB Garamond" font-size="10" font-style="italic" fill="#807868">0</text>
+
+          <defs>
+            <marker id="arr-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#7a1f1f"/>
+            </marker>
+            <marker id="arr-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#142a4a"/>
+            </marker>
+            <marker id="arr-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#0a5a2a"/>
+            </marker>
+          </defs>
+
+          <!-- v2 = (1, 3) blue -->
+          <line x1="40" y1="180" x2="70" y2="90" stroke="#142a4a" stroke-width="2.2" marker-end="url(#arr-b)"/>
+          <text x="48" y="135" font-family="EB Garamond" font-size="12" font-style="italic" fill="#142a4a">v₂ = (1, 3)</text>
+
+          <!-- v1 = (3, 2) red -->
+          <line x1="40" y1="180" x2="130" y2="120" stroke="#7a1f1f" stroke-width="2.2" marker-end="url(#arr-r)"/>
+          <text x="80" y="170" font-family="EB Garamond" font-size="12" font-style="italic" fill="#7a1f1f">v₁ = (3, 2)</text>
+
+          <!-- parallelogram dashed -->
+          <line x1="130" y1="120" x2="160" y2="30" stroke="#142a4a" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
+          <line x1="70" y1="90" x2="160" y2="30" stroke="#7a1f1f" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
+
+          <!-- v1+v2 = (4, 5) green -->
+          <line x1="40" y1="180" x2="160" y2="30" stroke="#0a5a2a" stroke-width="2.2" marker-end="url(#arr-g)"/>
+          <text x="170" y="60" font-family="EB Garamond" font-size="12" font-style="italic" fill="#0a5a2a">v₁ + v₂ = (4, 5)</text>
+
+          <!-- explanation block on right -->
+          <text x="305" y="60" font-family="JetBrains Mono" font-size="10" fill="#7a1f1f" letter-spacing="2">СЛОЖЕНИЕ</text>
+          <text x="305" y="80" font-family="EB Garamond" font-size="11" font-style="italic" fill="#1a1612">"3 на восток"</text>
+          <text x="305" y="95" font-family="EB Garamond" font-size="11" font-style="italic" fill="#1a1612">"2 на север"</text>
+          <text x="305" y="115" font-family="EB Garamond" font-size="11" font-style="italic" fill="#1a1612">плюс</text>
+          <text x="305" y="130" font-family="EB Garamond" font-size="11" font-style="italic" fill="#1a1612">"1 на восток"</text>
+          <text x="305" y="145" font-family="EB Garamond" font-size="11" font-style="italic" fill="#1a1612">"3 на север"</text>
+          <text x="305" y="165" font-family="EB Garamond" font-size="11" font-style="italic" fill="#1a1612">даёт</text>
+          <text x="305" y="180" font-family="EB Garamond" font-size="11" font-style="italic" fill="#0a5a2a">"4 на восток"</text>
+          <text x="305" y="195" font-family="EB Garamond" font-size="11" font-style="italic" fill="#0a5a2a">"5 на север"</text>
+        </svg>
+        <div class="caption"><strong>Фиг. 05</strong>Вектор как стрелка из начала координат. Сложение двух векторов — это «продолжение пути»: пройти первый, от его конца — второй. Получится точно тот же конец, что у векторной суммы.</div>
+      </div>
+
+      <p>
+        Запись $\mathbb{R}^n$ означает «множество всех упорядоченных
+        наборов из $n$ вещественных чисел». Скалярное число живёт
+        в $\mathbb{R}^1$; точка плоскости — в $\mathbb{R}^2$; точка
+        трёхмерного пространства — в $\mathbb{R}^3$; векторы языковой
+        модели живут где-то в $\mathbb{R}^{4096}$ или больше. Вектор
+        $x \in \mathbb{R}^n$ традиционно записывают как столбец чисел.
+      </p>
+
+      <p>
+        В векторе есть две естественные операции, унаследованные
+        от чисел: <strong>сложение</strong> (покомпонентно) и
+        <strong>умножение на число</strong> (тоже покомпонентно). Если
+        $x = (3, 1)$ и $y = (1, 4)$, то $x + y = (4, 5)$ и
+        $2x = (6, 2)$. Эти операции — именно те, которые нужны, чтобы
+        говорить о линейности из главы 02: формула
+        $f(\alpha x + \beta y) = \alpha f(x) + \beta f(y)$ читается
+        одинаково, идёт ли речь о числах или о векторах.
+      </p>
+
+      <h3>Скалярное произведение: «насколько одно похоже на другое»</h3>
+
+      <p>
+        Между двумя векторами одинакового размера определена особая
+        операция — <strong>скалярное произведение</strong> (в английском
+        — <em>dot product</em>):
+      </p>
+
+      <div class="formula">
+        $$ a \cdot b = a_1 b_1 + a_2 b_2 + \ldots + a_n b_n. $$
+      </div>
+
+      <p>
+        Берёте соответствующие компоненты, перемножаете, складываете.
+        Например, $(3, 4) \cdot (1, 0) = 3\cdot 1 + 4\cdot 0 = 3$. Видно,
+        что осталась только «восточная» компонента $(3, 4)$ — потому
+        что вектор $(1, 0)$ смотрит ровно на восток, и скалярное
+        произведение «отфильтровало» движение в эту сторону.
+      </p>
+
+      <p>
+        Геометрически это записывается формулой:
+      </p>
+
+      <div class="formula">
+        $$ a \cdot b = \|a\|\cdot \|b\|\cdot \cos\theta, $$
+      </div>
+
+      <p>
+        где $\|a\|$ — длина вектора $a$, $\|b\|$ — длина $b$, а
+        $\theta$ — угол между ними. Из этой формулы видно, как работает
+        «насколько одно похоже на другое»:
+      </p>
+
+      <ul>
+        <li>Если векторы смотрят в одну сторону ($\theta = 0$),
+        $\cos\theta = 1$, произведение максимально.</li>
+        <li>Если перпендикулярны ($\theta = 90°$), $\cos\theta = 0$,
+        произведение нуль.</li>
+        <li>Если в противоположные стороны ($\theta = 180°$),
+        $\cos\theta = -1$, произведение минимально, отрицательно.</li>
+      </ul>
+
+      <p>
+        Это и есть «мера похожести направлений». На ней держится поиск
+        похожих документов в Google, рекомендация фильмов в Netflix,
+        нахождение похожих слов в языковых моделях. Все эти системы
+        превращают объекты в векторы, а потом смотрят, насколько
+        большое скалярное произведение между ними. Большое — «похожи»,
+        маленькое или отрицательное — нет.
+      </p>
+
+      <div class="prof generic">
+        <p>
+          В машинном обучении эту меру часто называют «косинусной
+          близостью» (cosine similarity), потому что в формуле обычно
+          выделяют именно $\cos\theta$ — скалярное произведение,
+          поделённое на длины обоих векторов. Если у вас векторы
+          единичной длины, скалярное произведение и косинусная
+          близость — одно и то же.
+        </p>
+      </div>
+
+      <div class="prof">
+        <p>
+          Скалярное произведение — это та операция, которая позволяет
+          говорить «градиент», а не просто «производная». В главе 04
+          мы вывели для $f(x) = x_1^2 + x_2^2$ линейную часть как
+          $2 x_1 dx_1 + 2 x_2 dx_2$. Это в точности скалярное
+          произведение вектора $2x = (2x_1, 2x_2)$ на вектор $dx$:
+          $df = (2x)\cdot dx = \nabla f \cdot dx$. Так в формуле
+          появляется <em>сам</em> градиент, а не строка чисел рядом
+          друг с другом.
+        </p>
+      </div>
+
+      <p>
+        Дальше мы будем активно использовать соглашение: производная
+        скалярной функции от вектора — это вектор-строка. Сам же
+        градиент $\nabla f$ — это столбец, транспонированный к этой
+        строке. Запись $df = \nabla f \cdot dx$ работает в обе стороны.
+      </p>
+
+      <div class="exercise">
+        <p>
+          Найдите скалярное произведение $(2, 3, 1)$ и $(1, 0, -1)$.
+          Что получилось? Как это интерпретировать — векторы похожи,
+          перпендикулярны или смотрят в почти разные стороны? И —
+          задание со звёздочкой — найдите длины обоих векторов и
+          подсчитайте, какому углу $\theta$ это соответствует
+          (используйте формулу $a\cdot b = \|a\|\|b\|\cos\theta$).
+        </p>
+      </div>
+
+      <p class="horizon">
+        Скалярное произведение — частный случай чего-то более общего,
+        что называется <em>матрица-вектор-произведение</em>. Туда
+        сейчас и идём.
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 6: МАТРИЦЫ ========== -->
+    <section id="ch06" class="drop">
+      <h2 class="chapter"><span class="num">Глава 06 — холистический взгляд</span>Матрица — это линейный оператор</h2>
+
+      <p class="chapter-lede">
+        Если в школе вам показали матрицу как «таблицу чисел, которую
+        как-то умножают», — забудьте на секунду и перечитайте заголовок.
+        Матрица — это <em>правило</em>, а не таблица.
+      </p>
+
+      <p>
+        В главе 02 мы сказали: линейная функция — самая простая
+        нетривиальная функция. Оказывается, всякая линейная функция
+        $f: \mathbb{R}^n \to \mathbb{R}^m$ описывается ровно одной
+        матрицей $A$ размера $m\times n$, и работает она по правилу
+        $f(x) = A x$. И наоборот — каждая матрица соответствует
+        некоторой линейной функции.
+      </p>
+
+      <div class="idea">
+        <p>
+          Матрицы и линейные функции «вектор-в-вектор» — это
+          <em>одно и то же</em> в двух обличиях. Матрица — это способ
+          записать линейную функцию числами. Линейная функция — это
+          способ <em>думать</em> про матрицу.
+        </p>
+      </div>
+
+      <h3>Куда отправляются базисные векторы</h3>
+
+      <p>
+        Самый прозрачный способ понять матрицу — посмотреть, что она
+        делает с двумя самыми простыми векторами на плоскости:
+        $e_1 = (1, 0)$ (стрелка длины $1$ на восток) и $e_2 = (0, 1)$
+        (стрелка длины $1$ на север). Их называют <em>базисными
+        векторами</em>: любой вектор $x = (x_1, x_2)$ можно записать
+        как $x = x_1\, e_1 + x_2\, e_2$. Поэтому, зная, куда матрица
+        отправляет $e_1$ и $e_2$, мы знаем, куда она отправляет всё.
+      </p>
+
+      <p>
+        Возьмём конкретную матрицу
+      </p>
+
+      <div class="formula">
+        $$ A = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}. $$
+      </div>
+
+      <p>
+        Применим её к $e_1$, расписав по школьному правилу
+        «строка на столбец»:
+      </p>
+
+      <div class="formula">
+        $$ A\, e_1 = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix} \begin{pmatrix} 1 \\ 0 \end{pmatrix} = \begin{pmatrix} 2\cdot 1 + 1\cdot 0 \\ 1\cdot 1 + 2\cdot 0 \end{pmatrix} = \begin{pmatrix} 2 \\ 1 \end{pmatrix}. $$
+      </div>
+
+      <p>
+        А к $e_2$:
+      </p>
+
+      <div class="formula">
+        $$ A\, e_2 = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix} \begin{pmatrix} 0 \\ 1 \end{pmatrix} = \begin{pmatrix} 2\cdot 0 + 1\cdot 1 \\ 1\cdot 0 + 2\cdot 1 \end{pmatrix} = \begin{pmatrix} 1 \\ 2 \end{pmatrix}. $$
+      </div>
+
+      <p>
+        Заметили? $A\, e_1 = (2, 1)$ — это первый <em>столбец</em>
+        матрицы. $A\, e_2 = (1, 2)$ — второй столбец. Это не
+        совпадение:
+      </p>
+
+      <div class="idea">
+        <p>
+          <strong>Столбцы матрицы — это куда матрица отправляет
+          базисные векторы.</strong> Если запомнить только этот факт,
+          всё остальное про матрицы следует автоматически: и правило
+          умножения, и геометрический смысл, и «почему столбцов
+          ровно столько, сколько компонент у входа».
+        </p>
+      </div>
+
+      <p>
+        Что эта матрица делает с целым единичным квадратом со
+        сторонами $e_1$ и $e_2$? Каждый угол перейдёт по тому же
+        правилу. Квадрат превратится в параллелограмм со сторонами
+        $A e_1 = (2, 1)$ и $A e_2 = (1, 2)$.
+      </p>
+
+      <div class="figure">
+        <svg viewBox="0 0 460 220" xmlns="http://www.w3.org/2000/svg" style="max-width:580px; width:100%;">
+          <defs>
+            <marker id="m6r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#7a1f1f"/>
+            </marker>
+            <marker id="m6b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#142a4a"/>
+            </marker>
+            <marker id="m6k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#1a1612"/>
+            </marker>
+          </defs>
+
+          <rect width="460" height="220" fill="#efe8d6"/>
+
+          <text x="105" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#7a1f1f" letter-spacing="2">ДО</text>
+          <g stroke="#c8bfa8" stroke-width="0.5" opacity="0.7">
+            <line x1="20" y1="40" x2="20" y2="190"/>
+            <line x1="60" y1="40" x2="60" y2="190"/>
+            <line x1="100" y1="40" x2="100" y2="190"/>
+            <line x1="140" y1="40" x2="140" y2="190"/>
+            <line x1="180" y1="40" x2="180" y2="190"/>
+            <line x1="20" y1="180" x2="200" y2="180"/>
+            <line x1="20" y1="140" x2="200" y2="140"/>
+            <line x1="20" y1="100" x2="200" y2="100"/>
+            <line x1="20" y1="60" x2="200" y2="60"/>
+          </g>
+          <polygon points="20,180 60,180 60,140 20,140" fill="#0a5a2a" opacity="0.18" stroke="#0a5a2a" stroke-width="1.2"/>
+          <line x1="20" y1="180" x2="58" y2="180" stroke="#7a1f1f" stroke-width="2.2" marker-end="url(#m6r)"/>
+          <text x="40" y="198" text-anchor="middle" font-family="EB Garamond" font-size="11" font-style="italic" fill="#7a1f1f">e₁</text>
+          <line x1="20" y1="180" x2="20" y2="143" stroke="#142a4a" stroke-width="2.2" marker-end="url(#m6b)"/>
+          <text x="9" y="160" font-family="EB Garamond" font-size="11" font-style="italic" fill="#142a4a">e₂</text>
+
+          <text x="230" y="103" text-anchor="middle" font-family="EB Garamond" font-size="16" font-style="italic" fill="#1a1612">A</text>
+          <line x1="212" y1="120" x2="248" y2="120" stroke="#1a1612" stroke-width="1.3" marker-end="url(#m6k)"/>
+          <text x="230" y="142" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#5a5a5a">[[2,1],[1,2]]</text>
+
+          <text x="365" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#7a1f1f" letter-spacing="2">ПОСЛЕ</text>
+          <g stroke="#c8bfa8" stroke-width="0.5" opacity="0.7">
+            <line x1="270" y1="40" x2="270" y2="190"/>
+            <line x1="310" y1="40" x2="310" y2="190"/>
+            <line x1="350" y1="40" x2="350" y2="190"/>
+            <line x1="390" y1="40" x2="390" y2="190"/>
+            <line x1="430" y1="40" x2="430" y2="190"/>
+            <line x1="270" y1="180" x2="450" y2="180"/>
+            <line x1="270" y1="140" x2="450" y2="140"/>
+            <line x1="270" y1="100" x2="450" y2="100"/>
+            <line x1="270" y1="60" x2="450" y2="60"/>
+          </g>
+          <polygon points="270,180 310,180 310,140 270,140" fill="none" stroke="#807868" stroke-width="0.8" stroke-dasharray="2,2" opacity="0.6"/>
+          <polygon points="270,180 350,140 390,60 310,100" fill="#0a5a2a" opacity="0.18" stroke="#0a5a2a" stroke-width="1.2"/>
+          <line x1="270" y1="180" x2="346" y2="142" stroke="#7a1f1f" stroke-width="2.2" marker-end="url(#m6r)"/>
+          <text x="335" y="167" font-family="EB Garamond" font-size="11" font-style="italic" fill="#7a1f1f">A·e₁ = (2,1)</text>
+          <line x1="270" y1="180" x2="311" y2="103" stroke="#142a4a" stroke-width="2.2" marker-end="url(#m6b)"/>
+          <text x="245" y="93" font-family="EB Garamond" font-size="11" font-style="italic" fill="#142a4a">A·e₂ = (1,2)</text>
+        </svg>
+        <div class="caption"><strong>Фиг. 06</strong>Матрица $A$ переводит единичный квадрат в параллелограмм. Красная и синяя стрелки слева — базисные векторы $e_1$ и $e_2$; справа — куда они улетают под действием матрицы. Эти два целевых вектора — в точности столбцы матрицы.</div>
+      </div>
+
+      <p>
+        Площадь нового параллелограмма — три квадратные единицы (в три
+        раза больше оригинала). Это число называется
+        <strong>определителем</strong> матрицы и для $2\times 2$
+        считается как $a_{11} a_{22} - a_{12} a_{21} = 2\cdot 2 - 1\cdot 1 = 3$.
+        Если определитель отрицательный, площадь та же, но «лево с
+        правом меняются местами» (зеркальное отражение); если нуль —
+        квадрат схлопывается в отрезок или точку, и матрица «теряет
+        измерение».
+      </p>
+
+      <div class="exercise">
+        <p>
+          Возьмите матрицу поворота на $90°$ против часовой стрелки:
+          $R = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}$. Куда
+          она отправляет $e_1$ и $e_2$? Нарисуйте на бумаге исходный
+          квадрат и его образ. Где он теперь лежит? Чему равен
+          определитель этой матрицы (попробуйте предсказать заранее
+          — площадь сохраняется или нет)?
+        </p>
+      </div>
+
+      <h3>Композиция и умножение матриц</h3>
+
+      <p>
+        Если $A$ — матрица функции $f$, а $B$ — матрица функции $g$,
+        то композиция $g\circ f$ (сначала применить $f$, потом $g$) —
+        это снова линейная функция, и она описывается матрицей $BA$
+        (именно в таком порядке). Правило умножения матриц — это, по
+        сути, правило композиции линейных функций. Вот почему оно
+        <em>не коммутативно</em>: $AB \ne BA$ в общем случае. «Сначала
+        надеть носки, потом ботинки» и «сначала ботинки, потом носки» —
+        результаты разные, и тут так же.
+      </p>
+
+      <div class="prof">
+        <p>
+          Эдельман любит повторять: «не пугайтесь правила
+          $(AB)_{ij} = \sum_k A_{ik}B_{kj}$. Оно скучное и техническое.
+          Запомните вместо него, что $AB$ значит "применить $B$, потом
+          $A$" к любому вектору. Все странные свойства умножения
+          матриц мгновенно становятся очевидными в этом языке».
+        </p>
+      </div>
+
+      <h3>Где это видно сегодня</h3>
+
+      <p>
+        Самая богатая интуиция: матрица — это <em>преобразование
+        пространства</em>. Возьмите квадратную сетку на плоскости.
+        Матрица $2\times 2$ переведёт её в другую сетку — растянутую,
+        повёрнутую, скошенную, отражённую или их комбинацию. В
+        $\mathbb{R}^3$ та же идея, но трёхмерная. Где это всплывает
+        в современной жизни:
+      </p>
+
+      <ul>
+        <li>
+          <strong>Компьютерная графика и игры.</strong> Каждое
+          движение объекта в 3D-сцене — поворот, масштабирование,
+          перенос — это матрица. Современный графический процессор
+          перемалывает миллиарды матрица-вектор-произведений в
+          секунду.
+        </li>
+        <li>
+          <strong>Нейросети.</strong> Каждый «слой» нейросети —
+          это матрица. Слой берёт вектор-вход (например, тысячу
+          чисел — «признаки» картинки), умножает на матрицу (с
+          миллионом крутилок-весов), получает вектор-выход (новые
+          признаки). Эти крутилки и есть то, что нужно настроить —
+          для чего и нужны производные из главы 04.
+        </li>
+        <li>
+          <strong>Сжатие, поиск похожих объектов, обработка звука и
+          изображений.</strong> Всюду, где есть преобразование
+          одного набора чисел в другой, скрывается матрица.
+        </li>
+      </ul>
+
+      <p class="horizon">
+        Теперь, когда матрицы — это линейные функции, мы можем
+        спросить: как выглядит производная функции «вектор-в-вектор»?
+        Ответ вы уже видели в таблице из главы 04: матрица. Эту
+        матрицу зовут якобианом.
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 7: ЯКОБИАН ========== -->
+    <section id="ch07" class="drop">
+      <h2 class="chapter"><span class="num">Глава 07 — карта роста</span>Якобиан и градиент</h2>
+
+      <p class="chapter-lede">
+        Если функция переводит вектор в вектор, её производная —
+        матрица. Эту матрицу зовут якобианом. У неё ясная геометрическая
+        работа: она описывает, как функция растягивает и поворачивает
+        пространство в окрестности данной точки.
+      </p>
+
+      <p>
+        Пусть $f: \mathbb{R}^n \to \mathbb{R}^m$, то есть вход — вектор
+        длины $n$, выход — вектор длины $m$. По нашему определению
+        $f'(x)$ — линейный оператор, превращающий малое возмущение
+        входа $dx \in \mathbb{R}^n$ в малое возмущение выхода $df \in \mathbb{R}^m$.
+        Линейный оператор «$\mathbb{R}^n$ — в — $\mathbb{R}^m$» — это,
+        как мы выяснили в главе 6, матрица $m\times n$. Эту матрицу и
+        называют якобианом и обозначают $J_f(x)$ или просто $f'(x)$.
+      </p>
+
+      <h3>Заполнение якобиана</h3>
+
+      <p>
+        Элемент $J_{ij}$ — это частная производная $\partial f_i/\partial x_j$:
+        как меняется $i$-я компонента выхода при крошечном изменении
+        $j$-й компоненты входа. Если выписать всё:
+      </p>
+
+      <div class="formula">
+        $$
+        J_f(x) = \begin{pmatrix}
+        \dfrac{\partial f_1}{\partial x_1} & \cdots & \dfrac{\partial f_1}{\partial x_n}\\[0.4em]
+        \vdots & \ddots & \vdots\\[0.2em]
+        \dfrac{\partial f_m}{\partial x_1} & \cdots & \dfrac{\partial f_m}{\partial x_n}
+        \end{pmatrix}.
+        $$
+      </div>
+
+      <h3>Градиент — частный случай</h3>
+
+      <p>
+        Когда $m = 1$ (функция возвращает число), якобиан — это
+        матрица $1\times n$, то есть вектор-строка. Её транспонированная
+        версия — вектор-столбец того же размера, что и вход — называется
+        градиентом и обозначается $\nabla f$. Геометрический смысл:
+        $\nabla f(x)$ указывает в направлении самого быстрого роста
+        функции в точке $x$.
+      </p>
+
+      <h3>Конкретно: температура на металлическом листе</h3>
+
+      <p>
+        Возьмём квадратный лист металла и опишем температуру в каждой
+        его точке функцией $T(x, y) = 100 - x^2 - y^2$. Самая горячая
+        точка — центр $(0, 0)$, где температура $100°$. Чем дальше от
+        центра, тем холоднее: на расстоянии $5$ единиц температура
+        $100 - 25 = 75°$, на расстоянии $10$ — ноль.
+      </p>
+
+      <p>
+        Положим муравья на лист в точку $(3, 4)$. Текущая температура
+        под муравьём — $T(3, 4) = 100 - 9 - 16 = 75°$. В какую сторону
+        ему пойти, чтобы стало холоднее быстрее всего? Здравый смысл
+        подсказывает: от центра наружу, в направлении самой точки
+        $(3, 4)$. А чтобы стало теплее — к центру, в направлении
+        $(-3, -4)$.
+      </p>
+
+      <p>
+        Посчитаем градиент строго. Частные производные:
+        $\partial T/\partial x = -2x$, $\partial T/\partial y = -2y$.
+        В точке $(3, 4)$: $\nabla T = (-6, -8)$. Длина этого вектора —
+        $\sqrt{36 + 64} = 10$, направление — точно противоположно
+        направлению от начала к точке $(3, 4)$. То есть градиент
+        смотрит к центру, и температура растёт быстрее всего, если
+        двигаться к центру, со скоростью $10°$ на единицу пути.
+      </p>
+
+      <p>
+        Муравью, который хотел холоднее, надо идти в сторону,
+        <em>противоположную</em> градиенту: в направлении $+(3, 4)$.
+        Это и есть градиентный спуск из главы про интуицию, только
+        теперь с точными числами. И заодно конкретное подтверждение
+        фразы «градиент указывает, в какую сторону функция растёт
+        быстрее всего».
+      </p>
+
+      <h3>Конкретно: якобиан нелинейной функции на плоскости</h3>
+
+      <p>
+        Теперь — полноразмерный якобиан, не одна строка. Возьмём
+        векторную функцию $f(x, y) = (x^2 + y,\; x - y^2)$. Она
+        берёт точку плоскости и возвращает другую точку.
+      </p>
+
+      <p>
+        $f_1 = x^2 + y$, поэтому $\partial f_1/\partial x = 2x$,
+        $\partial f_1/\partial y = 1$. $f_2 = x - y^2$, поэтому
+        $\partial f_2/\partial x = 1$, $\partial f_2/\partial y = -2y$.
+        Собираем в матрицу:
+      </p>
+
+      <div class="formula">
+        $$ J_f(x, y) = \begin{pmatrix} 2x & 1 \\ 1 & -2y \end{pmatrix}. $$
+      </div>
+
+      <p>
+        В точке $(1, 1)$ якобиан превращается в конкретную матрицу
+        чисел: $J = \begin{pmatrix} 2 & 1 \\ 1 & -2 \end{pmatrix}$.
+        Само значение функции: $f(1, 1) = (2, 0)$.
+      </p>
+
+      <p>
+        Проверим, что эта матрица действительно работает как
+        «производная-предсказатель». Толкнём вход на маленькое
+        возмущение $dx = (0{,}01,\; 0{,}02)$. Якобиан обещает, что
+        выход сместится на $J\,dx$:
+      </p>
+
+      <div class="formula">
+        $$ J \cdot dx = \begin{pmatrix} 2 & 1 \\ 1 & -2 \end{pmatrix} \begin{pmatrix} 0{,}01 \\ 0{,}02 \end{pmatrix} = \begin{pmatrix} 0{,}04 \\ -0{,}03 \end{pmatrix}. $$
+      </div>
+
+      <p>
+        То есть якобиан предсказывает, что
+        $f(1{,}01,\; 1{,}02) \approx (2 + 0{,}04,\; 0 - 0{,}03) = (2{,}04,\; -0{,}03)$.
+        А что на самом деле? Подставим:
+        $f(1{,}01,\; 1{,}02) = (1{,}01^2 + 1{,}02,\; 1{,}01 - 1{,}02^2)
+        = (2{,}0401,\; -0{,}0304)$. Отличие от якобианова предсказания —
+        порядка $0{,}0001$, поправки второго порядка по $dx$. Линейное
+        приближение работает в точности так, как обещано.
+      </p>
+
+      <div class="prof">
+        <p>
+          В современной школе градиент часто вводят как «вектор
+          частных производных». Это правда, но это бухгалтерия.
+          Настоящий смысл: градиент — это <em>тот самый</em> вектор,
+          скалярное произведение которого с любым возмущением $dx$
+          даёт линейную часть изменения функции. Именно поэтому он
+          указывает в сторону самого быстрого роста: скалярное
+          произведение максимально, когда $dx$ направлен туда же,
+          куда $\nabla f$.
+        </p>
+      </div>
+
+      <p class="horizon">
+        Якобианы можно перемножать — и это и есть цепное правило.
+        Дальше — про самое практическое следствие: алгоритм
+        обратного распространения ошибки в нейросетях. Он живёт
+        ровно в этом месте.
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 8: ЦЕПНОЕ ПРАВИЛО ========== -->
+    <section id="ch08" class="drop">
+      <h2 class="chapter"><span class="num">Глава 08 — самое практическое</span>Цепное правило: forward vs reverse</h2>
+
+      <p class="chapter-lede">
+        Это глава, где матричное исчисление встречает машинное обучение.
+        Алгоритм обратного распространения ошибки, на котором обучаются
+        все современные нейросети, — это цепное правило, прочитанное
+        справа налево.
+      </p>
+
+      <p>
+        Допустим, у нас цепочка из трёх функций: $h(x)$, потом $g$,
+        потом $f$. Композиция $F(x) = f(g(h(x)))$. По цепному правилу
+        её якобиан — произведение якобианов:
+      </p>
+
+      <div class="formula">
+        $$ F'(x) = f'(g(h(x)))\cdot g'(h(x))\cdot h'(x). $$
+      </div>
+
+      <p>
+        А произведение матриц можно вычислять в любом порядке, лишь бы
+        не менять сами матрицы местами. И вот тут начинается интересное.
+        Допустим, размеры такие: $h: \mathbb{R}^{1000}\to \mathbb{R}^{1000}$,
+        $g: \mathbb{R}^{1000}\to \mathbb{R}^{1000}$, $f: \mathbb{R}^{1000}\to \mathbb{R}$.
+        Это типичная ситуация в нейросети: тысяча параметров на входе,
+        одно число — потеря — на выходе.
+      </p>
+
+      <p>
+        Размеры якобианов: $h'$ — это $1000\times 1000$, $g'$ — это
+        $1000\times 1000$, $f'$ — это $1\times 1000$. Если умножать
+        слева направо ($h'$ потом $g'$ потом $f'$ — это
+        <strong>forward mode</strong>), то на каждом шаге мы перемножаем
+        большие квадратные матрицы — это $1000^3 = 10^9$ операций
+        на шаг. Если же справа налево ($f'$ потом $g'$ потом $h'$ —
+        это <strong>reverse mode</strong>), то $f'$ — это вектор-строка,
+        и умножение её на матрицу — всего $1000^2 = 10^6$ операций.
+        Тысячекратный выигрыш.
+      </p>
+
+      <div class="idea">
+        <p>
+          Цепное правило, прочитанное <em>справа налево</em>, — это
+          backpropagation. Цепное правило, прочитанное <em>слева
+          направо</em>, — это forward-mode дифференцирование. В первом
+          случае выгодно, когда выход маленький, а вход большой
+          (типично для обучения нейросетей). Во втором — наоборот,
+          когда вход маленький, а выход большой.
+        </p>
+      </div>
+
+      <div class="prof">
+        <p>
+          Эдельман подчёркивает: «никакой магии в backprop нет.
+          Это просто умное умножение матриц цепного правила в
+          правильную сторону. Когда вы поймёте цепное правило как
+          композицию линейных операторов, термин backpropagation
+          покажется вам избыточно драматическим».
+        </p>
+      </div>
+
+      <h3>Конкретно: тренировка крошечной «сети»</h3>
+
+      <p>
+        Чтобы увидеть цепное правило в работе, рассмотрим самую
+        маленькую возможную нейросеть. На входе одно число $x$.
+        Внутри две «крутилки» — параметры $w_1$ и $w_2$. На выходе
+        одно число $y$. Сеть устроена так:
+      </p>
+
+      <div class="formula">
+        $$ a = w_1 \cdot x, \quad b = a^2, \quad y = w_2 \cdot b. $$
+      </div>
+
+      <p>
+        Это уже композиция трёх простых функций. Возьмём конкретные
+        значения: $x = 1$, $w_1 = 2$, $w_2 = 3$. Прогон вперёд
+        (forward pass): $a = 2$, $b = 4$, $y = 12$.
+      </p>
+
+      <p>
+        Допустим, мы хотели, чтобы сеть выдавала $y_{\text{цель}} = 10$
+        при входе $x = 1$. Сеть ошиблась: выдала $12$ вместо $10$.
+        Зададим функцию потерь $L = (y - 10)^2 = 4$.
+      </p>
+
+      <p>
+        Вопрос: в какую сторону крутить $w_1$ и $w_2$, чтобы потеря
+        уменьшалась? Нам нужны $\partial L/\partial w_1$ и
+        $\partial L/\partial w_2$. Считаем по цепному правилу справа
+        налево (это и есть reverse mode = backprop):
+      </p>
+
+      <ol>
+        <li>$\partial L/\partial y = 2(y - 10) = 4$ — потеря растёт со
+        скоростью $4$ на единицу выхода;</li>
+        <li>$\partial L/\partial w_2 = (\partial L/\partial y) \cdot
+        (\partial y/\partial w_2) = 4 \cdot b = 16$;</li>
+        <li>$\partial L/\partial b = (\partial L/\partial y) \cdot
+        (\partial y/\partial b) = 4 \cdot w_2 = 12$;</li>
+        <li>$\partial L/\partial a = (\partial L/\partial b) \cdot
+        (\partial b/\partial a) = 12 \cdot 2a = 48$;</li>
+        <li>$\partial L/\partial w_1 = (\partial L/\partial a) \cdot
+        (\partial a/\partial w_1) = 48 \cdot x = 48$.</li>
+      </ol>
+
+      <p>
+        Готово. Градиенты: $\partial L/\partial w_1 = 48$,
+        $\partial L/\partial w_2 = 16$. Потеря растёт быстрее всего,
+        если крутить $w_1$ в плюс — он влияет на выход через всю
+        цепочку, поэтому «отвечает за неё больше». Чтобы уменьшать
+        потерю, шагнём в противоположную сторону, скажем, на $0{,}001$
+        от градиента: $w_1 \to 2 - 0{,}048 = 1{,}952$,
+        $w_2 \to 3 - 0{,}016 = 2{,}984$.
+      </p>
+
+      <p>
+        Прогон вперёд с новыми весами: $a = 1{,}952$, $b = 3{,}81$,
+        $y = 11{,}37$, $L = (11{,}37 - 10)^2 \approx 1{,}88$. Потеря
+        упала с $4$ до $1{,}88$. Один шаг градиентного спуска — и
+        сеть стала ближе к ответу. Повторить ещё двадцать-тридцать
+        раз, и сеть начнёт выдавать почти десятку.
+      </p>
+
+      <div class="idea">
+        <p>
+          Это и есть «обучение нейросети» в самом маленьком масштабе.
+          У настоящей сети не две крутилки, а миллиарды. Но алгоритм
+          — тот же самый: forward pass для подсчёта потери, backward
+          pass (цепное правило справа налево) для подсчёта градиентов,
+          шаг против градиента. Повторить много раз. Никакой магии,
+          только аккуратное применение производной композиции.
+        </p>
+      </div>
+
+      <p class="horizon">
+        Дальше — смертельный номер: производная по матрице. Тут школьная
+        интуиция трещит, и приходится опираться на абстракцию.
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 9: ПРОИЗВОДНАЯ ПО МАТРИЦЕ ========== -->
+    <section id="ch09" class="drop">
+      <h2 class="chapter"><span class="num">Глава 09 — где школа сдаётся</span>Производная по матрице</h2>
+
+      <p class="chapter-lede">
+        Что такое «производная по матрице»? Школа на этот вопрос
+        ответить не может — у неё нет языка. У нас — есть.
+      </p>
+
+      <p>
+        Пусть $f(A)$ — функция, которая берёт матрицу и возвращает
+        число. Например, $f(A) = \det A$ — определитель. Или
+        $f(A) = \|A\|_F^2 = \sum_{ij} A_{ij}^2$ — сумма квадратов
+        элементов. Чему равна $f'(A)$?
+      </p>
+
+      <p>
+        По нашему определению, $f'(A)$ — линейный оператор «матрица — в —
+        число», такой что $f(A + dA) - f(A) = f'(A)\,[dA] + o(\|dA\|)$.
+        Линейная функция «матрица — в — число» — это в точности
+        скалярное произведение матриц. А скалярное произведение
+        матриц определяется как сумма произведений соответствующих
+        элементов: $A\cdot B = \sum_{ij} A_{ij}B_{ij} = \mathrm{tr}(A^T B)$.
+        Поэтому существует такая матрица $G$, что $f'(A)\,[dA] = G\cdot dA$.
+        Эта матрица $G$ называется <strong>градиентом по матрице</strong>
+        и обозначается $\nabla f(A)$.
+      </p>
+
+      <h3>Пример: $f(A) = \det A$</h3>
+
+      <p>
+        Знаменитая формула Якоби: $d(\det A) = \det(A)\cdot \mathrm{tr}(A^{-1}\,dA)$.
+        Расшифровка: малое изменение определителя при малом
+        изменении матрицы — это скалярное произведение «матрицы
+        $\det(A)\cdot (A^{-1})^T$» на возмущение $dA$. Значит,
+        градиент определителя по матрице — это $\det(A)\cdot (A^{-1})^T$.
+      </p>
+
+      <p>
+        В школе такое не доказать — нет инструмента. Но мы только что
+        вывели результат, рассуждая на языке линейных операторов. Это
+        и есть цена, ради которой стоит выучить матричное исчисление.
+      </p>
+
+      <h3>Пример: $f(X) = X^2$ — почему это не $2X\,dX$</h3>
+
+      <p>
+        Возьмём, наверное, самую простую матричную функцию: квадрат
+        матрицы $f(X) = X^2 = X \cdot X$. Школа подсказывает: «производная
+        $x^2$ — это $2x$, значит и здесь должно быть $2X$». Школа в
+        этот раз ошибается. Раскроем по нашему методу:
+      </p>
+
+      <div class="formula">
+        $$ f(X + dX) = (X + dX)(X + dX) = X^2 + X\,dX + dX\,X + dX^2. $$
+      </div>
+
+      <p>
+        Главная часть — $X^2$. Линейная по $dX$ часть —
+        $X\,dX + dX\,X$. Поправки — $dX^2 = dX \cdot dX$, малы. Значит:
+      </p>
+
+      <div class="formula">
+        $$ f'(X)\,[dX] = X\,dX + dX\,X. $$
+      </div>
+
+      <p>
+        Это <em>не</em> $2X\,dX$. Разница принципиальная: матрицы в общем
+        случае не коммутируют — $X\,dX \ne dX\,X$. Поэтому производная
+        содержит <em>оба</em> слагаемых, и оба нужно сохранить. Если бы
+        $X$ и $dX$ коммутировали (как обычные числа), мы могли бы их
+        объединить и получить $2X\,dX$. В матричном мире — нельзя.
+      </p>
+
+      <div class="idea">
+        <p>
+          <strong>Главный урок:</strong> привычные правила анализа в
+          матричном мире выглядят похоже, но имеют дополнительный слой.
+          Производная $X^2$ — это линейный оператор $dX \mapsto X\,dX + dX\,X$,
+          не сводящийся к умножению на одну фиксированную матрицу. Большая
+          часть «странностей» матричного исчисления — следствие именно
+          некоммутативности.
+        </p>
+      </div>
+
+      <h3>Пример: $f(X) = X^{-1}$ — производная обратной матрицы</h3>
+
+      <p>
+        Обратная матрица $X^{-1}$ — это такая, что $X \cdot X^{-1} = I$
+        (единичная матрица). Существует, если $\det X \ne 0$. Чему
+        равна её производная по $X$?
+      </p>
+
+      <p>
+        Здесь — гениальный приём, который стоит запомнить: продифференцировать
+        обе стороны тождества $X \cdot X^{-1} = I$. Слева — производная
+        произведения по правилу из главы 04, делая «толчок» $X \to X + dX$
+        (и, соответственно, $X^{-1} \to X^{-1} + d(X^{-1})$):
+      </p>
+
+      <div class="formula">
+        $$ dX \cdot X^{-1} + X \cdot d(X^{-1}) = 0. $$
+      </div>
+
+      <p>
+        (Справа — производная константы $I$, то есть нуль.) Решаем
+        относительно $d(X^{-1})$: домножим слева на $X^{-1}$:
+      </p>
+
+      <div class="formula">
+        $$ \boxed{\,d(X^{-1}) = -X^{-1}\, dX\, X^{-1}\,}. $$
+      </div>
+
+      <p>
+        Производная обратной — это минус «обратная-возмущение-обратная».
+        Запомните эту формулу: вы встретите её в физике (теория возмущений),
+        в численных методах решения нелинейных систем, в оптимизации
+        второго порядка (Newton, BFGS), в дифференцируемом программировании.
+        Без неё современная вычислительная математика выглядела бы
+        совершенно иначе.
+      </p>
+
+      <div class="prof generic">
+        <p>
+          Этот приём — «продифференцировать тождество» — работает не
+          только для обратной матрицы. Так выводят производные собственных
+          значений, корней характеристического уравнения, неявных функций
+          и многого другого. Идея одна: если что-то определено через
+          уравнение, дифференцируйте уравнение, а не определение.
+        </p>
+      </div>
+
+      <div class="exercise">
+        <p>
+          Используя те же идеи, выведите производную $f(X) = X^3 = X \cdot X \cdot X$.
+          Подсказка: раскройте $(X + dX)^3$ как тройное произведение,
+          оставьте линейную по $dX$ часть. Сколько слагаемых получится?
+          (Ответ: три, и они <em>не</em> складываются в $3X^2\,dX$ — снова
+          из-за некоммутативности.)
+        </p>
+      </div>
+
+      <h3>Где это всплывает в современной практике</h3>
+
+      <p>
+        Может показаться, что «производная по матрице» — экзотика.
+        На самом деле это именно тот инструмент, который заставляет
+        работать большую часть современного машинного обучения.
+        Несколько мест, где он живёт:
+      </p>
+
+      <ul>
+        <li>
+          <strong>Веса слоя нейросети.</strong> Когда слой считает
+          $y = W x$, где $W$ — матрица весов размера тысячи на тысячи,
+          обучение требует найти $\partial L/\partial W$ — производную
+          функции потерь по этой матрице. Это и есть «градиент по
+          матрице», и именно его обновляет каждый шаг backprop.
+        </li>
+        <li>
+          <strong>Внимание (attention) в трансформерах.</strong> В моделях
+          типа GPT слово взаимодействует с другими словами через три
+          матрицы — $Q$, $K$, $V$. Обучаемые параметры — именно
+          эти матрицы, и градиенты по ним считаются ровно по нашей
+          схеме «раскрой $f(A + dA)$, выдели линейную часть».
+        </li>
+        <li>
+          <strong>Эмбеддинги слов.</strong> Каждое слово в словаре —
+          строка большой матрицы $E$. Когда модель учится, она двигает
+          эту матрицу так, чтобы похожие слова оказывались с похожими
+          строками. Шаг обучения — это шаг по градиенту $\partial L/\partial E$.
+        </li>
+        <li>
+          <strong>Главные компоненты (PCA).</strong> Чтобы уменьшить
+          размерность данных, ищут матрицу проекции, минимизирующую
+          ошибку реконструкции. Условие минимума — равенство нулю
+          производной по этой матрице, и решение находится через
+          собственные числа.
+        </li>
+      </ul>
+
+      <p>
+        Во всех этих местах формальный аппарат — один и тот же. Меняется
+        только функция потерь и форма исходной матрицы. Идея «производная
+        — это линеаризация» работает одинаково для $A \in \mathbb{R}^{2\times 2}$
+        в учебнике и для $W \in \mathbb{R}^{4096\times 12288}$ в
+        промышленной нейросети.
+      </p>
+
+      <div class="prof">
+        <p>
+          «Когда вы видите производную по матрице — не пытайтесь
+          представить себе „матрицу частных производных матрицы по
+          матрице“. Это путь к индексному аду. Вместо этого напишите
+          $f(A + dA) - f(A)$, разложите по линейности, и в полученной
+          формуле сразу будет виден линейный оператор. А его уже можно
+          переписать через скалярное произведение или сводимый к нему
+          объект».
+        </p>
+      </div>
+
+      <p class="horizon">
+        Дальше — вторая производная. Если первая производная — это
+        наклон, то вторая — это кривизна, и в матричной форме её
+        зовут гессианом.
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 10: ГЕССИАН ========== -->
+    <section id="ch10" class="drop">
+      <h2 class="chapter"><span class="num">Глава 10 — кривизна</span>Гессиан и оптимизация</h2>
+
+      <p class="chapter-lede">
+        Первая производная говорит, куда наклонена функция. Вторая
+        говорит, как она изгибается. В одномерном случае это число,
+        в многомерном — симметричная матрица, гессиан.
+      </p>
+
+      <h3>Сначала — одномерный случай: вторая производная как кривизна</h3>
+
+      <p>
+        Чтобы не остаться абстрактными, вспомним школьное определение.
+        Если первая производная функции — её наклон, то вторая —
+        <em>скорость, с которой меняется наклон</em>. Геометрически
+        это «насколько изогнута» функция в данной точке.
+      </p>
+
+      <p>
+        Возьмём параболу $f(x) = x^2$. Её первая производная: $f'(x) = 2x$.
+        При $x = 0$ наклон нулевой (низшая точка кривой); при $x = 1$
+        наклон равен $2$; при $x = 2$ — $4$. Наклон растёт линейно — а
+        скорость его роста и есть вторая производная: $f''(x) = 2$,
+        постоянная двойка. Это значит: парабола изгибается одинаково
+        сильно во всех точках.
+      </p>
+
+      <p>
+        Знак второй производной говорит, куда «изогнута» функция:
+      </p>
+
+      <ul>
+        <li>$f''(x) > 0$ — функция изгибается «вверх», как дно чаши.
+        В такой точке, если ещё и первая производная нулевая, у функции
+        локальный <em>минимум</em>.</li>
+        <li>$f''(x) < 0$ — функция изгибается «вниз», как купол. В
+        такой точке, если первая производная нулевая, — локальный
+        <em>максимум</em>.</li>
+        <li>$f''(x) = 0$ — функция в этой точке прямая, не изгибается.
+        Это может быть точка перегиба, в которой чаша превращается
+        в купол.</li>
+      </ul>
+
+      <div class="figure">
+        <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; align-items:center;">
+
+          <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg" style="max-width:48%; min-width:200px;">
+            <rect width="200" height="180" fill="#efe8d6"/>
+            <text x="100" y="16" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#7a1f1f" letter-spacing="2">f'' &gt; 0  (ЧАША)</text>
+            <line x1="20" y1="155" x2="180" y2="155" stroke="#807868" stroke-width="0.7"/>
+            <line x1="100" y1="155" x2="100" y2="30" stroke="#807868" stroke-width="0.7"/>
+            <polyline points="40,30 55,75 70,110 85,140 100,150 115,140 130,110 145,75 160,30" fill="none" stroke="#1a1612" stroke-width="1.8"/>
+            <circle cx="100" cy="150" r="3" fill="#7a1f1f"/>
+            <text x="116" y="165" font-family="EB Garamond" font-size="11" font-style="italic" fill="#7a1f1f">минимум</text>
+            <text x="38" y="50" font-family="EB Garamond" font-size="11" font-style="italic" fill="#1a1612">y = x²</text>
+          </svg>
+
+          <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg" style="max-width:48%; min-width:200px;">
+            <rect width="200" height="180" fill="#efe8d6"/>
+            <text x="100" y="16" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#7a1f1f" letter-spacing="2">f'' &lt; 0  (КУПОЛ)</text>
+            <line x1="20" y1="155" x2="180" y2="155" stroke="#807868" stroke-width="0.7"/>
+            <line x1="100" y1="155" x2="100" y2="30" stroke="#807868" stroke-width="0.7"/>
+            <polyline points="40,150 55,110 70,75 85,45 100,35 115,45 130,75 145,110 160,150" fill="none" stroke="#1a1612" stroke-width="1.8"/>
+            <circle cx="100" cy="35" r="3" fill="#7a1f1f"/>
+            <text x="116" y="42" font-family="EB Garamond" font-size="11" font-style="italic" fill="#7a1f1f">максимум</text>
+            <text x="38" y="170" font-family="EB Garamond" font-size="11" font-style="italic" fill="#1a1612">y = −x² + c</text>
+          </svg>
+
+        </div>
+        <div class="caption"><strong>Фиг. 07</strong>Знак второй производной — это форма функции в точке. Положительная — чаша (минимум), отрицательная — купол (максимум). В многомерном случае «чаш» и «куполов» больше: к ним добавляется седло — бывает чашей в одном направлении и куполом в другом одновременно.</div>
+      </div>
+
+      <p>
+        В физике вторая производная всплывает под другим именем —
+        <strong>ускорение</strong>. Если $x(t)$ — положение машины как
+        функция времени, то $x'(t)$ — её скорость, а $x''(t)$ —
+        ускорение. Знакомая формула равноускоренного движения
+        $x(t) = x(0) + v t + \tfrac{1}{2} a t^2$ — это в точности
+        разложение функции положения по второй производной, где
+        $v = x'(0)$ и $a = x''(0)$. Так что вы уже видели разложение
+        по второму порядку — просто называли его иначе.
+      </p>
+
+      <h3>Многомерный случай: гессиан</h3>
+
+      <p>
+        Если мы умеем брать первую производную как линейный оператор,
+        то вторую можно определить как «производную от первой
+        производной». Получается <em>билинейная форма</em>: правило,
+        которое берёт два возмущения $dx_1, dx_2$ и возвращает число —
+        вторую часть разложения функции около точки.
+      </p>
+
+      <div class="formula">
+        $$ f(x + dx) = f(x) + f'(x)[dx] + \tfrac{1}{2} f''(x)[dx, dx] + o(\|dx\|^2). $$
+      </div>
+
+      <p>
+        Когда $f$ — функция от вектора в число, форма $f''(x)[dx, dx]$
+        записывается через симметричную матрицу $H$ как $dx^T H\, dx$.
+        Эта матрица $H$ — гессиан, $H_{ij} = \partial^2 f / \partial x_i \partial x_j$.
+        Это в точности «многомерный аналог числа $f''$»: он же —
+        число там, где входит одно измерение, теперь становится
+        матрицей того же размера, что и сам вход.
+      </p>
+
+      <h3>Зачем гессиан</h3>
+
+      <p>
+        В оптимизации (а большая часть машинного обучения — это
+        оптимизация) гессиан говорит, является ли точка минимумом,
+        максимумом или седлом. У минимума гессиан положительно определён
+        (все собственные значения положительны), у максимума —
+        отрицательно определён, у седла — знаконеопределён.
+      </p>
+
+      <p>
+        Метод Ньютона в оптимизации — это шаг по формуле
+        $x_{k+1} = x_k - H^{-1}\nabla f$. Это значительно быстрее
+        обычного градиентного спуска — но требует уметь обратить
+        гессиан, что в больших задачах непрактично, и потому в ML
+        чаще используют упрощённые приближения (BFGS, L-BFGS) или
+        вообще остаются на градиенте (SGD, Adam).
+      </p>
+
+      <p class="horizon">
+        Курс Эдельмана и Джонсона на этой точке не заканчивается.
+        Производные собственных значений, адъюнктное дифференцирование
+        для ОДУ, автоматическое дифференцирование как наука — всё это
+        ещё впереди. Следующие три главы — обзор того, как берут
+        производную «с компьютерной точки зрения», по форме функции
+        и по матричному ограничению.
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 11: АВТОМАТИЧЕСКОЕ ДИФФЕРЕНЦИРОВАНИЕ ========== -->
+    <section id="ch11" class="drop">
+      <h2 class="chapter"><span class="num">Глава 11 — компьютер берёт производную</span>Автоматическое дифференцирование</h2>
+
+      <p class="chapter-lede">
+        Когда современная нейросеть тренируется, кто-то — что-то — должен
+        посчитать миллиарды производных. Не таблицы из учебника, не формулы,
+        которые помнит человек, — а аккуратные, точные, мгновенные. Этим
+        «кем-то» оказывается алгоритм: автоматическое дифференцирование, AD.
+      </p>
+
+      <p>
+        На первой же лекции курса MIT Эдельман и Джонсон проговаривают
+        важную мысль. Когда вы дифференцируете в школе, вы либо подсматриваете
+        в таблицу («производная синуса — косинус»), либо считаете предел
+        приращения. У компьютера есть третий путь — лучше первого и второго:
+        AD. Это ни таблица производных, ни численное приближение. Это особый
+        способ <em>выполнять программу</em>, при котором вместе с обычными
+        числами компьютер протаскивает их производные. Современные нейросети
+        обучаются именно так.
+      </p>
+
+      <p>
+        AD бывает двух видов: <strong>forward mode</strong> (вперёд) и
+        <strong>reverse mode</strong> (назад). Они используют один и тот
+        же принцип — цепное правило из главы 08 — но применяют его в
+        противоположных направлениях. Каждый удобен в своих задачах.
+      </p>
+
+      <h3>Forward mode: дуальные числа</h3>
+
+      <p>
+        Это, наверное, самый красивый трюк во всей вычислительной
+        математике XX века. Введём новый тип чисел — пары $(a, b)$,
+        которые называются <strong>дуальными числами</strong>. Договоримся
+        складывать и умножать их по таким правилам:
+      </p>
+
+      <div class="formula">
+        $$ (a_1, b_1) + (a_2, b_2) = (a_1 + a_2,\; b_1 + b_2). $$
+      </div>
+
+      <div class="formula">
+        $$ (a_1, b_1) \cdot (a_2, b_2) = (a_1 a_2,\; a_1 b_2 + a_2 b_1). $$
+      </div>
+
+      <p>
+        Сложение очевидно — покомпонентно, как у векторов. А вот умножение
+        подозрительно: формула во второй компоненте — $a_1 b_2 + a_2 b_1$ —
+        это в точности правило производной произведения! Это не случайность.
+        Если интерпретировать $(a, b)$ как «значение $a$ и его производная
+        $b$», то правила арифметики дуальных чисел совпадают с правилами
+        дифференциального исчисления.
+      </p>
+
+      <p>
+        Чтобы вычислить производную функции $f(x)$ в точке $x_0$, нужно:
+      </p>
+
+      <ol>
+        <li>Подставить дуальное число $(x_0, 1)$ — «$x$ — это $x_0$,
+        а производная переменной по самой себе равна единице».</li>
+        <li>Применить функцию $f$ по правилам арифметики дуальных чисел.</li>
+        <li>Прочитать результат: $(f(x_0),\; f'(x_0))$.</li>
+      </ol>
+
+      <p>
+        Пример. Возьмём $f(x) = x^2 + 3x$ в точке $x_0 = 2$. Подставляем
+        $(2, 1)$ и считаем шаг за шагом:
+      </p>
+
+      <ul>
+        <li>$(2, 1) \cdot (2, 1) = (4,\; 2\cdot 1 + 2 \cdot 1) = (4,\; 4)$
+        — это $x^2$;</li>
+        <li>$3 \cdot (2, 1)$. Здесь обычное число $3$ интерпретируется как
+        дуальное $(3, 0)$ — у константы производная нулевая. Тогда
+        $(3, 0) \cdot (2, 1) = (6,\; 3\cdot 1 + 2\cdot 0) = (6,\; 3)$ — это $3x$;</li>
+        <li>Складываем: $(4, 4) + (6, 3) = (10,\; 7)$.</li>
+      </ul>
+
+      <p>
+        Ответ: $f(2) = 10$, $f'(2) = 7$. Сверяем по формуле $f'(x) = 2x + 3$,
+        при $x = 2$ это $4 + 3 = 7$. Совпало.
+      </p>
+
+      <div class="idea">
+        <p>
+          <strong>Что только что произошло.</strong> Программа, не знающая
+          никаких формул из таблицы производных, посчитала производную
+          точно. Не приближённо, не численным дифференцированием. Точно.
+          Просто выполняя обычное вычисление, но с другим типом чисел.
+          Этот трюк — основа форвардного автодифференцирования, и его
+          реализация на Python или Julia занимает буквально десятки
+          строк кода.
+        </p>
+      </div>
+
+      <p>
+        Чтобы это работало для любой функции, нужно расширить правила
+        умножения дуальных чисел на все элементарные операции — деление,
+        синус, экспоненту и так далее. Каждое правило выводится одинаково:
+        соответствующее правило производной. Например, для синуса:
+        $\sin((a, b)) = (\sin a,\; b\cos a)$ — потому что $(\sin x)' = \cos x$.
+      </p>
+
+      <h3>Reverse mode: граф вычислений</h3>
+
+      <p>
+        Forward mode имеет ограничение: чтобы посчитать производную по $n$
+        переменным, нужно $n$ прогонов программы (каждый раз с
+        «единичкой» в новой компоненте). У современной нейросети
+        переменных миллиард, а выходная функция (потеря) одна — значит,
+        forward неэффективен. Reverse mode переворачивает картину.
+      </p>
+
+      <p>
+        Идея: представить программу как <em>граф вычислений</em>. Каждый
+        узел графа — либо входная переменная, либо результат одной операции.
+        Стрелки идут от входов операции к её выходу. Пример: чтобы посчитать
+        $L = (w_1 x \cdot w_2 + b)^2$, граф будет таким: $w_1$ и $x$ →
+        умножение → промежуточный $a$; $a$ и $w_2$ → умножение → $c$;
+        $c$ и $b$ → сложение → $d$; $d$ → возведение в квадрат → $L$.
+      </p>
+
+      <p>
+        Алгоритм reverse mode работает в два прохода:
+      </p>
+
+      <ol>
+        <li><strong>Forward:</strong> прогнать программу обычным образом,
+        вычислить значение в каждом узле и сохранить.</li>
+        <li><strong>Backward:</strong> идти по графу <em>в обратную
+        сторону</em>, от конца к началу. В каждом узле вычислить
+        «чувствительность выхода к этому узлу», умножая чувствительности
+        следующих узлов на локальные производные операций.</li>
+      </ol>
+
+      <p>
+        Если в forward проходе $N$ операций, то и в backward проходе тоже
+        примерно $N$ — итого $2N$, не зависит от количества входных
+        переменных. В нейросети с миллиардом параметров это даёт ускорение
+        в миллиард раз по сравнению с forward mode для одной выходной
+        потери. Конкретный расчёт мы уже видели в главе 08, на примере
+        с двумя крутилками; теперь это просто масштабируется на любую
+        программу.
+      </p>
+
+      <div class="prof">
+        <p>
+          Эдельман любит говорить: «Reverse-mode AD — это самое крупное
+          математическое изобретение XX века, не получившее приличной
+          славы. Без него никакая нейросеть не обучалась бы. И при этом
+          это не "матанализ" в традиционном смысле — это тонкая смесь
+          матанализа и компиляторных технологий».
+        </p>
+      </div>
+
+      <h3>Где это используется</h3>
+
+      <p>
+        Все современные ML-фреймворки — PyTorch, JAX, TensorFlow,
+        Julia/Zygote — это, по сути, мощные системы автоматического
+        дифференцирования с наложенным сверху матричным GPU-ускорением.
+        Когда вы пишете модель в PyTorch, под капотом строится граф
+        вычислений, и backward-проход по нему даёт градиенты для
+        оптимизатора. Это — главное достижение последнего десятилетия
+        в практике ML.
+      </p>
+
+      <p>
+        Замечательно вот что: AD работает не только для нейросетей.
+        Он работает для любой программы, которую можно представить как
+        цепочку вычислений. Можно дифференцировать решение
+        дифференциального уравнения, решение оптимизационной задачи, шаг
+        физического моделирования, или комбинацию всего этого. Это и
+        лежит в основе бурно растущей области <em>дифференцируемого
+        программирования</em>: программа, по которой можно взять
+        производную, превращается из «вычисления одного числа» в
+        «оптимизируемый объект».
+      </p>
+
+      <div class="exercise">
+        <p>
+          Возьмите $f(x) = (x + 1)(x - 1)$ в точке $x_0 = 3$. По правилам
+          дуальной арифметики: $(3, 1) + (1, 0) = (4, 1)$ и
+          $(3, 1) - (1, 0) = (2, 1)$. Перемножьте эти два дуальных числа
+          по правилу выше. Что получили в виде пары? Сверьте: $f(3) =
+          4 \cdot 2 = 8$. А производная — посчитайте по таблице
+          ($f(x) = x^2 - 1$, $f'(x) = 2x$, $f'(3) = 6$). Должно совпасть
+          со второй компонентой пары.
+        </p>
+      </div>
+
+      <p class="horizon">
+        Дальше — производная не по числу, не по матрице, а по <em>целой
+        функции</em>. Звучит странно, но именно это нужно для задачи о
+        брахистохроне и для всей лагранжевой механики. Туда и идём.
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 12: ВАРИАЦИОННОЕ ИСЧИСЛЕНИЕ ========== -->
+    <section id="ch12" class="drop">
+      <h2 class="chapter"><span class="num">Глава 12 — производная по форме</span>Вариационное исчисление</h2>
+
+      <p class="chapter-lede">
+        Что, если переменная, по которой мы дифференцируем, — это не число,
+        не вектор и не матрица, а целая <em>функция</em>? Например, искомая
+        форма кривой? Звучит дико, но это именно то, как Иоганн Бернулли в
+        1696 году поставил задачу о брахистохроне, и именно та задача,
+        которая породила одну из самых красивых ветвей математики.
+      </p>
+
+      <h3>Задача о брахистохроне</h3>
+
+      <p>
+        1696 год, июнь. Иоганн Бернулли публикует в журнале «Acta
+        Eruditorum» вызов всем математикам Европы. Между двумя точками на
+        разной высоте проложить желоб такой формы, чтобы шарик, скатившись
+        из верхней точки в нижнюю, оказался там за <em>минимальное</em>
+        время. Прямая? Дуга круга? Что-то ещё?
+      </p>
+
+      <div class="figure">
+        <svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg" style="max-width:520px; width:100%;">
+          <rect width="380" height="200" fill="#efe8d6"/>
+          <circle cx="60" cy="40" r="5" fill="#7a1f1f"/>
+          <text x="50" y="36" text-anchor="end" font-family="EB Garamond" font-size="12" font-style="italic" fill="#1a1612">A</text>
+          <circle cx="320" cy="160" r="5" fill="#7a1f1f"/>
+          <text x="332" y="165" font-family="EB Garamond" font-size="12" font-style="italic" fill="#1a1612">B</text>
+          <path d="M 60 40 L 320 160" stroke="#807868" stroke-width="1.5" fill="none" stroke-dasharray="4,3"/>
+          <text x="180" y="90" font-family="EB Garamond" font-size="11" font-style="italic" fill="#807868">прямая</text>
+          <path d="M 60 40 Q 200 20 320 160" stroke="#142a4a" stroke-width="1.5" fill="none"/>
+          <text x="200" y="35" font-family="EB Garamond" font-size="11" font-style="italic" fill="#142a4a">верхняя дуга</text>
+          <path d="M 60 40 Q 130 180 320 160" stroke="#0a5a2a" stroke-width="2.2" fill="none"/>
+          <text x="160" y="178" font-family="EB Garamond" font-size="11" font-style="italic" fill="#0a5a2a">циклоида ← оптимум</text>
+        </svg>
+        <div class="caption"><strong>Фиг. 08</strong>Шарик скатывается из A в B по разным желобам. По прямой — медленно (пологий разгон). По верхней дуге — длинный путь. По циклоиде, дающей быстрый разгон в начале, — минимальное время. Вызов Бернулли решили Ньютон, Лейбниц и братья Бернулли в течение нескольких месяцев.</div>
+      </div>
+
+      <p>
+        На первый взгляд — прямая, ведь она кратчайшая. Но интуиция
+        обманывает. По прямой шарик разгоняется медленно: пологий спуск даёт
+        небольшую скорость на долгом пути. По крутой дуге шарик быстро
+        набирает скорость, но путь длиннее. Где-то посередине есть оптимум,
+        и его форма — не очевидна.
+      </p>
+
+      <p>
+        На вызов ответили Лейбниц, Якоб Бернулли, Лопиталь и Ньютон —
+        последний за вечер, как сообщали современники. Победителем оказалась
+        <strong>циклоида</strong> — кривая, которую описывает точка на ободе
+        колеса, катящегося по прямой. Это решение открыло новую область
+        математики: <em>вариационное исчисление</em>.
+      </p>
+
+      <h3>Что значит «производная по форме»</h3>
+
+      <p>
+        До сих пор все наши производные брались по входу определённого типа:
+        число, вектор, матрица. Брахистохрона требует чего-то нового: вход —
+        это <em>сама функция</em> $y(x)$, описывающая форму желоба. А выход —
+        число (время скатывания), которое зависит от всей формы.
+      </p>
+
+      <p>
+        Такой объект — функция от функции — называется
+        <strong>функционалом</strong>. Время скатывания $T[y]$ — функционал,
+        зависящий от $y(x)$. Значит, нам нужна производная функционала по
+        функции.
+      </p>
+
+      <div class="idea">
+        <p>
+          Разница между «функцией» и «функционалом»: функция переводит число
+          в число (например, $f(x) = x^2$). Функционал переводит <em>функцию</em>
+          в число (например, $T[y]$ — время, зависящее от формы $y$).
+          Использует квадратные скобки $[\,\cdot\,]$ вместо круглых, чтобы
+          подчеркнуть, что аргумент — целая функция, а не одно число.
+        </p>
+      </div>
+
+      <p>
+        К счастью, наш метод универсален. Мы говорили в главе 04: чтобы
+        взять производную, нужно уметь складывать и масштабировать объекты
+        на входе. Функции этим обладают: можно сложить две функции
+        $y_1(x) + y_2(x)$ или умножить функцию на число $\alpha\cdot y(x)$.
+        Значит, всё определение производной как линейного оператора
+        применимо.
+      </p>
+
+      <p>
+        Возмущение функции записывается как $\delta y(x)$ — небольшое
+        изменение формы в каждой точке. Производная функционала — линейная
+        функция от такого возмущения, отвечающая на вопрос: «как изменится
+        $T$, если форму $y$ слегка пошатнуть?»
+      </p>
+
+      <h3>Уравнение Эйлера-Лагранжа</h3>
+
+      <p>
+        Если функционал имеет вид
+        $T[y] = \int_a^b F(x, y(x), y'(x))\,dx$ — то есть значение зависит
+        от $y$ и его производной, проинтегрированных по $x$, — то условие
+        $\delta T = 0$ (оптимум) приводит к так называемому
+        <strong>уравнению Эйлера–Лагранжа</strong>:
+      </p>
+
+      <div class="formula">
+        $$ \frac{d}{dx}\,\frac{\partial F}{\partial y'} \;=\; \frac{\partial F}{\partial y}. $$
+      </div>
+
+      <p>
+        Это — «приравнивание градиента к нулю», но в пространстве функций.
+        Решение этого уравнения — функция $y(x)$ — и есть оптимальная форма.
+        Для брахистохроны $F = \sqrt{1 + (y')^2}\,/\,\sqrt{2gy}$, и решение —
+        циклоида.
+      </p>
+
+      <h3>Где это работает сегодня</h3>
+
+      <ul>
+        <li>
+          <strong>Лагранжева механика.</strong> Все законы классической
+          физики записываются как «принцип наименьшего действия»:
+          $S[q(t)] = \int L\,dt$ должно быть минимально. Уравнения Лагранжа
+          получаются как Эйлер–Лагранж этого функционала. Из них выводятся
+          уравнения Ньютона, движение планет и так далее.
+        </li>
+        <li>
+          <strong>Оптимальное управление.</strong> «Какой манёвр совершит
+          ракета, чтобы достичь цели за минимум топлива?» — задача о форме
+          траектории, классика вариационного исчисления.
+        </li>
+        <li>
+          <strong>Нейросетевые ОДУ (Neural ODEs).</strong> Современные
+          непрерывные нейросети трактуют сеть как непрерывное преобразование,
+          и обучение требует дифференцирования по решению дифференциального
+          уравнения — это уже почти вариационная задача.
+        </li>
+      </ul>
+
+      <div class="prof generic">
+        <p>
+          Главный концептуальный шаг здесь — почувствовать, что «функция»
+          может быть точкой пространства, по которому ищут оптимум. Это
+          пространство бесконечномерное, но локальное правило (производная =
+          0 в оптимуме) работает по-прежнему. Эйлер и Лагранж в XVIII веке
+          ввели для этого пространства язык, который потом расширился до
+          квантовой механики и до ML.
+        </p>
+      </div>
+
+      <p class="horizon">
+        Следующая, и последняя из «трудных», глава — про производные
+        собственных значений матрицы и про то, что делать, когда переменная
+        не свободно гуляет по пространству, а сидит на ограничении
+        (например, «вектор обязан быть единичной длины»).
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 13: СОБСТВЕННЫЕ ЗНАЧЕНИЯ И ОГРАНИЧЕНИЯ ========== -->
+    <section id="ch13" class="drop">
+      <h2 class="chapter"><span class="num">Глава 13 — на изогнутых пространствах</span>Производные собственных значений и ограничения</h2>
+
+      <p class="chapter-lede">
+        Бывают переменные, которые не могут свободно гулять по пространству.
+        Например, единичный вектор $\|x\| = 1$ обязан жить на сфере. Или
+        ортогональная матрица $Q^T Q = I$ — на «многообразии ортогональных
+        матриц». Производную в таких случаях нужно брать «вдоль ограничения»,
+        и это особое искусство.
+      </p>
+
+      <p>
+        Параллельно — вопрос, который всплывает в физике, в численных
+        методах, в ML: как меняется собственное значение матрицы, когда
+        сама матрица слегка возмущается? Это тоже пример «производной с
+        ограничением», и ответ настолько красив, что его в физике называют
+        теоремой по фамилиям её первооткрывателей.
+      </p>
+
+      <h3>Производные собственных значений</h3>
+
+      <p>
+        Пусть $A$ — симметричная матрица, $\lambda$ — её собственное
+        значение, $v$ — соответствующий собственный вектор: $A v = \lambda v$,
+        причём $\|v\| = 1$. Что станет с $\lambda$, если $A$ слегка изменится:
+        $A \to A + dA$?
+      </p>
+
+      <p>
+        Применим приём из главы 09 (продифференцировать тождество).
+        Дифференцируем $A v = \lambda v$:
+      </p>
+
+      <div class="formula">
+        $$ dA \cdot v + A \cdot dv = d\lambda \cdot v + \lambda \cdot dv. $$
+      </div>
+
+      <p>
+        Чтобы извлечь $d\lambda$ — фокус: умножим обе стороны на $v^T$ слева.
+        Поскольку $v^T A = \lambda v^T$ (для симметричной матрицы собственный
+        вектор работает с обеих сторон), слагаемые с $dv$ сокращаются.
+        Поскольку $v^T v = 1$, остаётся:
+      </p>
+
+      <div class="formula">
+        $$ \boxed{\,d\lambda = v^T\, dA\, v\,}. $$
+      </div>
+
+      <p>
+        Это <strong>теорема Хеллмана-Фейнмана</strong>: производная
+        собственного значения по матрице — это «среднее значение» возмущения
+        матрицы, взятое по соответствующему собственному вектору. В физике
+        она лежит в основе теории возмущений в квантовой механике: если
+        слегка возмутить гамильтониан, изменение энергии равно среднему
+        значению возмущения по невозмущённому состоянию.
+      </p>
+
+      <div class="prof">
+        <p>
+          Эдельман: «Эта формула обычно появляется на третьем курсе
+          университета, обмотанная тяжёлым формализмом операторов
+          Гильбертова пространства. На самом же деле она — прямое следствие
+          одного приёма: продифференцировать тождество. Ровно как для
+          производной обратной матрицы, ровно как для всех неявных функций.
+          В матричном исчислении эта простота — обычная вещь».
+        </p>
+      </div>
+
+      <h3>Производные с ограничениями</h3>
+
+      <p>
+        Возьмём конкретный пример: пусть мы хотим минимизировать функцию
+        $f(x)$, но с условием, что $\|x\| = 1$ — точка $x$ должна лежать
+        на единичной сфере. Это типичная задача в физике (нормированная
+        волновая функция), в ML (нормализационные слои), в статистике
+        (PCA).
+      </p>
+
+      <p>
+        Обычный градиент $\nabla f$ нам не годится: он указывает в любую
+        сторону, в том числе наружу сферы, куда нам хода нет. Нужна
+        производная <em>вдоль сферы</em>. Геометрически: проекция $\nabla f$
+        на касательную плоскость к сфере в точке $x$.
+      </p>
+
+      <p>
+        Для сферы это просто: касательное пространство в точке $x$ — все
+        вектора, перпендикулярные к $x$. Поэтому касательная производная —
+        $\nabla f$, из которого вычли его проекцию на $x$:
+      </p>
+
+      <div class="formula">
+        $$ \nabla_{\text{касат}} f \;=\; \nabla f - (x \cdot \nabla f)\, x. $$
+      </div>
+
+      <p>
+        Шаг градиентного спуска по этому касательному градиенту нужно
+        потом «вернуть» обратно на сферу — например, нормализовав вектор
+        после шага. Это — простейший пример <strong>оптимизации на
+        многообразии</strong>, целой ветви современной численной математики.
+      </p>
+
+      <h3>Метод множителей Лагранжа</h3>
+
+      <p>
+        Альтернативный, чисто алгебраический способ работать с ограничениями
+        — <strong>метод множителей Лагранжа</strong>. Если задача — минимизировать
+        $f(x)$ при условии $g(x) = 0$, вводят новую переменную $\mu$ и
+        минимизируют функцию $L(x, \mu) = f(x) - \mu\, g(x)$ <em>без</em>
+        ограничений. В оптимуме её градиенты по $x$ и $\mu$ обнуляются, и
+        условие $\nabla_x L = 0$ говорит, что $\nabla f = \mu \nabla g$ —
+        градиент функции параллелен градиенту ограничения. Геометрически
+        это значит: дальше двигаться вдоль ограничения нельзя без того,
+        чтобы $f$ не начала расти.
+      </p>
+
+      <h3>Где это работает в ML</h3>
+
+      <ul>
+        <li>
+          <strong>PCA и SVD.</strong> Поиск главных компонент — это поиск
+          направлений максимальной дисперсии, что технически и есть задача
+          о собственных значениях. Все алгоритмы PCA так или иначе
+          опираются на формулы дифференцирования собственных значений.
+        </li>
+        <li>
+          <strong>Нормализационные слои (BatchNorm, LayerNorm).</strong>
+          Они эффективно проецируют активации на ограничения единичной
+          нормы. Производные через них — это производные с ограничением.
+        </li>
+        <li>
+          <strong>Adversarial training.</strong> Поиск «плохого» возмущения
+          входа $\|\delta\| \le \varepsilon$, при котором сеть ошибается, —
+          задача оптимизации с ограничением, решаемая projected gradient
+          descent (тот же касательный градиент, что мы только что вывели).
+        </li>
+        <li>
+          <strong>Stiefel и Grassmann manifolds.</strong> В некоторых
+          современных архитектурах (orthogonal RNN, equivariant networks)
+          веса намеренно держатся на многообразии ортогональных матриц,
+          что улучшает устойчивость обучения.
+        </li>
+      </ul>
+
+      <p class="horizon">
+        На этом наша полная карта матричного исчисления заканчивается.
+        Дальше — официальный горизонт: что было слишком сложно даже для
+        обзора, что мы обошли молчанием, и куда ехать дальше.
+      </p>
+    </section>
+
+
+    <!-- ========== ГЛАВА 14: ГОРИЗОНТ ========== -->
+    <section id="ch14" class="drop">
+      <h2 class="chapter"><span class="num">Глава 14 — куда дальше</span>Горизонт MIT 18.S096</h2>
+
+      <p class="chapter-lede">
+        Тринадцать предыдущих глав покрыли центральную часть MIT-курса.
+        Теперь — короткий бег по тому, что осталось за границами и
+        куда расти дальше.
+      </p>
+
+      <p>
+        Если вы дочитали досюда и поняли, что производная — это линейный
+        оператор, у вас в руках ключ ко всему остальному. Перечислим
+        несколько важных тем, которых мы коснулись бегло или совсем не
+        коснулись.
+      </p>
+
+      <h4>CR-исчисление: производные комплексных функций</h4>
+
+      <p>
+        Если функция принимает комплексное число и возвращает комплексное,
+        у неё две возможные производные — голоморфная (если функция
+        «гладкая в комплексном смысле») и более общие производные
+        Виртингера. Это нужно в физике, в обработке сигналов и в
+        некоторых ML-моделях, работающих с фазами.
+      </p>
+
+      <h4>Адъюнктный метод для дифференциальных уравнений</h4>
+
+      <p>
+        Если функция $f(\theta)$ определена не формулой, а как решение
+        дифференциального уравнения, зависящего от параметра $\theta$, —
+        её производную $\partial f/\partial\theta$ всё равно можно
+        посчитать, и часто весьма эффективно. Приём называется адъюнктным
+        (adjoint) методом. Это reverse-mode AD, расширенный на бесконечно
+        много операций, и именно он стоит за современными нейросетевыми
+        ОДУ и физически-информированными нейросетями.
+      </p>
+
+      <h4>Кронекеровы произведения и vec</h4>
+
+      <p>
+        Когда нужно явно записать матричный оператор как одну большую
+        матрицу — например, чтобы передать его другому алгоритму —
+        используют операцию «вытягивания» матрицы в столбец ($\mathrm{vec}$)
+        и Кронекерово произведение $\otimes$. Тождество
+        $\mathrm{vec}(AXB) = (B^T \otimes A)\mathrm{vec}(X)$ — рабочая
+        лошадка вычислительной линейной алгебры.
+      </p>
+
+      <h4>Распределения, дельта-функции, обобщённые производные</h4>
+
+      <p>
+        Производные функций, которые «недостаточно гладкие» (имеют
+        разрывы, изломы, дельта-выбросы), требуют расширенного понятия
+        — распределения по Шварцу. Это инженерный аппарат для физики,
+        обработки сигналов и теории уравнений в частных производных.
+      </p>
+
+      <h4>Тензоры третьего и более высоких рангов</h4>
+
+      <p>
+        Производная функции, которая берёт матрицу и возвращает матрицу,
+        — это уже не «матрица матриц», а объект четвёртого ранга. Чтобы
+        работать с такими, нужен язык тензорного исчисления. В физике
+        этот аппарат знаменит как ОТО, в ML — как современные библиотеки
+        многомерных массивов (PyTorch tensors — это именно это).
+      </p>
+
+      <h4>Дефектные матрицы и патологии</h4>
+
+      <p>
+        Формула $d\lambda = v^T dA\, v$ из главы 13 работает не всегда.
+        Если у матрицы есть кратные собственные значения или, хуже,
+        она дефектна (не имеет полного набора собственных векторов), —
+        собственные значения становятся не дифференцируемыми, и нужны
+        обобщённые градиенты. Это редкое, но важное место, где обычная
+        теория ломается.
+      </p>
+
+      <div class="prof">
+        <p>
+          Финал последней лекции в курсе MIT — слайд под названием
+          «куда мы идём дальше». Эдельман и Джонсон прямо говорят: мы
+          успели рассказать вам только часть. У дифференцирования есть
+          ещё минимум десять расширений, каждое из которых — отдельный
+          мир. Но если вы поняли центральную идею — производная это
+          линеаризация, линеаризация это линейный оператор — вы найдёте
+          дорогу в любое из них.
+        </p>
+      </div>
+
+      <h3>Что почитать дальше</h3>
+
+      <p>
+        Для того, кто прошёл этот мини-курс и хочет углубиться, есть
+        несколько хороших ступеней.
+      </p>
+
+      <ul>
+        <li>
+          <strong>Gilbert Strang, «Highlights of Calculus»</strong> —
+          обзорные лекции на MIT OCW, сделанные специально для
+          школьников. Очень лёгкий, очень умный вход в анализ.
+          Для тринадцати–пятнадцати лет — самая дружелюбная следующая
+          ступень.
+        </li>
+        <li>
+          <strong>3Blue1Brown, серии «Essence of calculus» и
+          «Essence of linear algebra»</strong> — лучшее визуальное
+          сопровождение к этим темам. Каждая серия — десять-пятнадцать
+          коротких видео по пять-десять минут. Не замена курсу, но
+          превосходный компаньон, особенно когда хочется ещё раз
+          увидеть в движении то, что мы здесь рисовали статически.
+        </li>
+        <li>
+          <strong>MIT 18.06 «Linear Algebra», Strang</strong> —
+          классический университетский курс линейной алгебры. После
+          него вся первая половина 18.S096 будет читаться как
+          тривиальные следствия. Идти после Highlights of Calculus.
+        </li>
+        <li>
+          <strong>Конспекты MIT 18.S096</strong> на arXiv:2501.14787 —
+          собственно полный текст того, что мы здесь пересказали в
+          первом приближении. Читать после линейной алгебры. Длинный,
+          формальный, превосходный.
+        </li>
+        <li>
+          <strong>Matrix Cookbook</strong> (Petersen &amp; Pedersen) —
+          справочник всех формул производной по матрице. Не для
+          чтения подряд, а для подсматривания, когда какая-то
+          производная встретится в задаче.
+        </li>
+      </ul>
+
+      <h3>Как продолжать</h3>
+
+      <p>
+        Главное — не пытайтесь пройти всё сразу. Выберите один из
+        пунктов и доведите его до конца, прежде чем браться за
+        следующий. Для возраста до университета первые две позиции
+        списка — Strang's Highlights и 3Blue1Brown — это самые
+        естественные первые шаги. Их можно начать прямо сейчас,
+        параллельно перечитывая нашу карту: возвращайтесь сюда, чтобы
+        вспомнить, какая клетка таблицы из главы 04 сейчас обсуждается.
+      </p>
+
+      <p>
+        И ещё одно — важное. Чтение математики, особенно такой, не
+        работает как чтение романа. Каждое утверждение нужно
+        проверять самостоятельно: подставлять конкретные числа,
+        рисовать графики на бумаге, иногда писать пятистрочный код
+        на Python с numpy. Если у вас есть AI-собеседник под рукой,
+        просите его придумать задачу, потом проверить ваш ответ,
+        потом объяснить, почему вы ошиблись (если ошиблись). Этот
+        режим — «прочитал — попробовал — проверил — обсудил» —
+        единственный, в котором математика прирастает на самом деле.
+        Без него страница остаётся страницей.
+      </p>
+
+      <p class="horizon">
+        На этом наша карта заканчивается. Если она помогла увидеть,
+        куда расти, и сделала чуть менее страшным звучание слов
+        «градиент» и «якобиан» — задача выполнена. Дальше — ваша
+        территория.
+      </p>
+    </section>
+
+
+    <!-- ========== КОЛОФОН ========== -->
+    <section id="colophon" class="colophon">
+      <h2 class="chapter"><span class="num">Колофон</span>Об этой странице</h2>
+
+      <p>
+        Это пересказ — не перевод и не конспект — курса
+        <a href="https://ocw.mit.edu/courses/18-s096-matrix-calculus-for-machine-learning-and-beyond-january-iap-2023/" target="_blank">MIT 18.S096
+        «Matrix Calculus for Machine Learning and Beyond»</a>, прочитанного
+        Аланом Эдельманом и Стивеном Джонсоном на сессии IAP 2023.
+        Главная идея курса — что производная это линейный оператор —
+        принадлежит лекторам и многократно ими повторена.
+        Адаптация для возраста «второй год школьной алгебры» — наша.
+      </p>
+
+      <h3>Источники</h3>
+
+      <p>
+        Полные конспекты курса (Paige Bright под руководством Эдельмана и
+        Джонсона) доступны на странице курса OCW и на
+        <a href="https://arxiv.org/abs/2501.14787" target="_blank">arXiv:2501.14787</a>.
+        Видео всех восьми лекций — на YouTube-плейлисте
+        <a href="https://www.youtube.com/playlist?list=PLUl4u3cNGP62EaLLH92E_VCN4izBKK6OE" target="_blank">PLUl4u3cNGP62EaLLH92E_VCN4izBKK6OE</a>.
+        Все материалы лежат под лицензией Creative Commons BY-NC-SA.
+      </p>
+
+      <h3>Что здесь есть и чего нет</h3>
+
+      <p>
+        Полностью раскрыты главы 01–04 — фундамент и центральная идея
+        курса. Главы 05–13 — содержательные конспекты основных тем
+        в духе тех же лекторов, но без полных доказательств; они
+        предназначены для того, чтобы у читателя сложилась карта местности.
+        Глава 14 — обзор того, что лежит дальше границы курса.
+        Если вам интересна какая-то конкретная глава в полной MIT-плотности,
+        обратитесь к первоисточнику — он бесплатный.
+      </p>
+
+      <h3>Технические заметки</h3>
+
+      <p>
+        Страница — один статический HTML-файл. Шрифты — EB Garamond
+        (текст) и JetBrains Mono (метаданные). Математика — KaTeX
+        с CDN. Никакой сборки, никаких локальных зависимостей.
+        Любой раздел можно вырвать и читать отдельно. Адаптировано
+        для печати: при печати TOC исчезает, поля выравниваются.
+      </p>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Перехват внутристраничных якорей.
+  // В обычном браузере href="#chXX" работает штатно. Но в WebView Claude-приложения
+  // hash-навигация воспринимается как уход со страницы и показывает диалог "Open Link".
+  // Мы предотвращаем стандартное поведение и делаем плавную прокрутку вручную.
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href || href.charAt(0) !== '#' || href.length < 2) return;
+    var target = document.getElementById(href.slice(1));
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Обновляем URL без триггера навигации — чтобы можно было поделиться ссылкой
+    if (history && history.replaceState) {
+      history.replaceState(null, '', href);
+    }
+  }, false);
+</script>
+
+</body>
+</html>
