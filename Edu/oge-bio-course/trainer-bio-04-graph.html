@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №4 — анализ графика</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.context{margin-bottom:14px;padding:12px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:2px;font-size:15px;font-style:italic}
+.graph-wrap{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:16px;
+  margin-bottom:18px;
+  text-align:center;
+}
+.graph-wrap svg{
+  display:block;
+  margin:0 auto;
+  max-width:100%;
+  height:auto;
+}
+.options{display:flex;flex-direction:column;gap:6px}
+.option{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--border);background:white;border-radius:4px;cursor:pointer;transition:all 0.12s;user-select:none}
+.option:hover:not(.locked){border-color:var(--accent)}
+.option.selected{border-color:var(--accent);background:#F0EDE0}
+.option.locked{cursor:not-allowed}
+.option-num{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;flex-shrink:0;width:26px;height:26px;border:1px solid var(--border);background:var(--paper);display:flex;align-items:center;justify-content:center;border-radius:50%}
+.option.selected .option-num{background:var(--accent);color:white;border-color:var(--accent)}
+.option-text{flex:1;font-size:16px}
+.option.correct-mark{background:#E1ECDD;border-color:#A8C49F}
+.option.correct-mark .option-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.option.miss-mark{background:#FFF5DA;border-color:#D4B952}
+.option.miss-mark .option-num{background:#D4B952;color:white;border-color:#D4B952}
+.option.wrong-mark{background:#F2E0DC;border-color:#C99A93}
+.option.wrong-mark .option-num{background:#C99A93;color:white;border-color:#C99A93}
+.counter{margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.partial{background:#FFF5DA;border:1px solid #D4B952;color:#7A5C00}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №4</span>
+  <span class="right">2 балла · базовый</span>
+</div>
+
+<h1>Анализ <em>графика</em></h1>
+<p class="lead">Тренажёр на задание №4 ОГЭ по биологии: дан график зависимости одной величины от другой. Выбери ровно <strong>два</strong> описания, которые верно характеризуют зависимость.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №4 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// === SVG GRAPH BUILDER ===
+// Принимает: data = массив точек [[x, y], ...] или функцию f(x), x-range, y-range, метки осей, заголовок
+function buildGraph(opts){
+  const W = 480, H = 280;
+  const PAD = {top:20, right:20, bottom:46, left:50};
+  const innerW = W - PAD.left - PAD.right;
+  const innerH = H - PAD.top - PAD.bottom;
+  const xMin = opts.xMin, xMax = opts.xMax;
+  const yMin = opts.yMin || 0, yMax = opts.yMax;
+  const xToPx = x => PAD.left + (x - xMin) / (xMax - xMin) * innerW;
+  const yToPx = y => PAD.top + innerH - (y - yMin) / (yMax - yMin) * innerH;
+
+  // Generate points
+  const points = [];
+  if(typeof opts.fn === 'function'){
+    const N = 80;
+    for(let i = 0; i <= N; i++){
+      const x = xMin + (xMax - xMin) * i / N;
+      points.push([x, opts.fn(x)]);
+    }
+  } else if(Array.isArray(opts.points)){
+    points.push(...opts.points);
+  }
+
+  // Build path
+  const pathData = points.map((p, i) =>
+    (i === 0 ? 'M' : 'L') + xToPx(p[0]).toFixed(1) + ',' + yToPx(p[1]).toFixed(1)
+  ).join(' ');
+
+  // Axes ticks
+  const xTicks = opts.xTicks || [];
+  const yTicks = opts.yTicks || [];
+  let ticksHtml = '';
+  // grid
+  yTicks.forEach(t => {
+    const y = yToPx(t);
+    ticksHtml += `<line x1="${PAD.left}" y1="${y.toFixed(1)}" x2="${W - PAD.right}" y2="${y.toFixed(1)}" stroke="#E5DFCC" stroke-width="0.5"/>`;
+    ticksHtml += `<text x="${PAD.left - 6}" y="${(y + 4).toFixed(1)}" font-size="11" fill="#6B6B6B" text-anchor="end" font-family="JetBrains Mono, monospace">${t}</text>`;
+  });
+  xTicks.forEach(t => {
+    const x = xToPx(t);
+    ticksHtml += `<line x1="${x.toFixed(1)}" y1="${PAD.top}" x2="${x.toFixed(1)}" y2="${H - PAD.bottom}" stroke="#E5DFCC" stroke-width="0.5"/>`;
+    ticksHtml += `<text x="${x.toFixed(1)}" y="${H - PAD.bottom + 16}" font-size="11" fill="#6B6B6B" text-anchor="middle" font-family="JetBrains Mono, monospace">${t}</text>`;
+  });
+
+  // Axes
+  const axes = `
+    <line x1="${PAD.left}" y1="${PAD.top}" x2="${PAD.left}" y2="${H - PAD.bottom}" stroke="#2C2C2C" stroke-width="1.2"/>
+    <line x1="${PAD.left}" y1="${H - PAD.bottom}" x2="${W - PAD.right}" y2="${H - PAD.bottom}" stroke="#2C2C2C" stroke-width="1.2"/>
+    <polygon points="${PAD.left - 4},${PAD.top + 4} ${PAD.left + 4},${PAD.top + 4} ${PAD.left},${PAD.top - 4}" fill="#2C2C2C"/>
+    <polygon points="${W - PAD.right - 4},${H - PAD.bottom - 4} ${W - PAD.right - 4},${H - PAD.bottom + 4} ${W - PAD.right + 4},${H - PAD.bottom}" fill="#2C2C2C"/>
+  `;
+
+  // Axis labels
+  const xLabel = `<text x="${(W - PAD.right + 8).toFixed(1)}" y="${(H - PAD.bottom + 4).toFixed(1)}" font-size="13" fill="#2C2C2C" font-style="italic" font-family="Fraunces, serif">${opts.xLabel || 'x'}</text>`;
+  const yLabel = `<text x="${(PAD.left + 8).toFixed(1)}" y="${(PAD.top - 6).toFixed(1)}" font-size="13" fill="#2C2C2C" font-style="italic" font-family="Fraunces, serif">${opts.yLabel || 'y'}</text>`;
+
+  // Title above
+  const titleHtml = opts.title ? `<text x="${(W/2).toFixed(1)}" y="14" font-size="13" fill="#2D4A2B" text-anchor="middle" font-family="Fraunces, serif" font-weight="600">${opts.title}</text>` : '';
+
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img">
+    ${titleHtml}
+    ${ticksHtml}
+    ${axes}
+    ${xLabel}${yLabel}
+    <path d="${pathData}" fill="none" stroke="#2D4A2B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+const QUESTIONS = [
+  // 1. Логистический рост популяции (S-кривая)
+  { id:'gr1',
+    context:'График зависимости числа особей бактериальной культуры (ось y, ед.) от времени (ось x, часы).',
+    graph:{
+      title:'Зависимость числа особей от времени',
+      xLabel:'t, ч', yLabel:'N',
+      xMin:0, xMax:16, yMin:0, yMax:600,
+      xTicks:[0,4,8,12,16], yTicks:[0,150,300,450,600],
+      fn: x => 600 / (1 + Math.exp(-(x - 9) * 0.7))
+    },
+    statements:[
+      {text:'Скорость размножения имеет максимальное значение в период между 8-м и 10-м часами наблюдений.', correct:true,  why:'Максимальный наклон S-кривой посередине, около точки перегиба (~9 часов).'},
+      {text:'Численность не изменяется в первые часы эксперимента (примерно до 4 ч).', correct:true,  why:'В лаг-фазе численность остаётся почти постоянной у нижнего предела.'},
+      {text:'Численность увеличивается на всём протяжении наблюдений с одинаковой скоростью.', correct:false, why:'Скорость переменна: сначала медленный рост, потом быстрый, в конце выходит на плато.'},
+      {text:'Численность линейно возрастает с 7-го по 8-й час.', correct:false, why:'В этот промежуток рост близок к экспоненциальному, не строго линейный.'},
+      {text:'После 14 часов численность резко падает.', correct:false, why:'На графике падения нет: кривая выходит на плато, численность почти перестаёт расти.'}
+    ]
+  },
+  // 2. Зависимость скорости фотосинтеза от освещённости (насыщение)
+  { id:'gr2',
+    context:'Зависимость скорости фотосинтеза (ось y, усл. ед.) от интенсивности света (ось x, усл. ед.).',
+    graph:{
+      title:'Скорость фотосинтеза от освещённости',
+      xLabel:'I', yLabel:'v',
+      xMin:0, xMax:100, yMin:0, yMax:50,
+      xTicks:[0,20,40,60,80,100], yTicks:[0,10,20,30,40,50],
+      fn: x => 50 * (1 - Math.exp(-x / 25))
+    },
+    statements:[
+      {text:'При увеличении освещённости скорость фотосинтеза сначала растёт, а потом выходит на плато.', correct:true,  why:'Типичная кривая насыщения: лимитирующий фактор меняется со света на CO₂.'},
+      {text:'Скорость фотосинтеза прямо пропорциональна интенсивности света во всём диапазоне.', correct:false, why:'Прямая пропорциональность только в начале; при больших значениях наступает насыщение.'},
+      {text:'При интенсивности света выше 80 усл. ед. скорость фотосинтеза почти не меняется.', correct:true,  why:'Кривая выходит на плато: дальнейшее увеличение света не повышает скорость.'},
+      {text:'При нулевой освещённости фотосинтез идёт с максимальной скоростью.', correct:false, why:'При нулевой освещённости скорость равна нулю; фотосинтез невозможен в темноте.'},
+      {text:'Скорость фотосинтеза уменьшается при увеличении света.', correct:false, why:'Скорость растёт; на плато не убывает.'}
+    ]
+  },
+  // 3. Зависимость скорости фотосинтеза от температуры (колоколообразная)
+  { id:'gr3',
+    context:'Зависимость скорости фотосинтеза (ось y, усл. ед.) от температуры (ось x, °C).',
+    graph:{
+      title:'Скорость фотосинтеза от температуры',
+      xLabel:'T, °C', yLabel:'v',
+      xMin:0, xMax:50, yMin:0, yMax:50,
+      xTicks:[0,10,20,30,40,50], yTicks:[0,10,20,30,40,50],
+      fn: x => 50 * Math.exp(-Math.pow((x - 27)/8, 2))
+    },
+    statements:[
+      {text:'Скорость фотосинтеза имеет максимум при температуре около 25–30 °C.', correct:true,  why:'Колокол с пиком в районе 27 °C — оптимум для большинства растений.'},
+      {text:'Скорость фотосинтеза непрерывно растёт с увеличением температуры.', correct:false, why:'После оптимума скорость падает (денатурация ферментов).'},
+      {text:'При температурах выше 40 °C скорость фотосинтеза резко снижается.', correct:true,  why:'При высоких температурах ферменты денатурируют, скорость падает почти до нуля.'},
+      {text:'При 0 °C скорость фотосинтеза максимальна.', correct:false, why:'При 0 °C ферменты почти не работают.'},
+      {text:'Скорость фотосинтеза не зависит от температуры.', correct:false, why:'Зависит — это видно из графика.'}
+    ]
+  },
+  // 4. Активность фермента от pH (колокол)
+  { id:'gr4',
+    context:'Зависимость активности фермента (ось y, %) от pH среды (ось x).',
+    graph:{
+      title:'Активность фермента от pH',
+      xLabel:'pH', yLabel:'%',
+      xMin:0, xMax:14, yMin:0, yMax:100,
+      xTicks:[0,2,4,6,8,10,12,14], yTicks:[0,25,50,75,100],
+      fn: x => 100 * Math.exp(-Math.pow((x - 7)/2, 2))
+    },
+    statements:[
+      {text:'Оптимальный pH для данного фермента около 7 (нейтральный).', correct:true,  why:'Максимум кривой приходится на pH ≈ 7; типично для большинства внутриклеточных ферментов.'},
+      {text:'При pH 2 и pH 12 активность фермента низкая.', correct:true,  why:'Сильные кислотные и щелочные значения денатурируют белок фермента.'},
+      {text:'Активность фермента прямо пропорциональна pH.', correct:false, why:'Кривая колоколообразная, не прямая.'},
+      {text:'При сильнокислом pH активность фермента максимальна.', correct:false, why:'Наоборот, минимальна.'},
+      {text:'Активность фермента не зависит от pH.', correct:false, why:'Зависит сильно — кривая колоколообразная.'}
+    ]
+  },
+  // 5. Линейный рост (например, рост растения)
+  { id:'gr5',
+    context:'Зависимость высоты молодого растения (ось y, см) от времени (ось x, недели).',
+    graph:{
+      title:'Высота растения от времени',
+      xLabel:'t, нед', yLabel:'h, см',
+      xMin:0, xMax:10, yMin:0, yMax:50,
+      xTicks:[0,2,4,6,8,10], yTicks:[0,10,20,30,40,50],
+      fn: x => 4 * x + 2
+    },
+    statements:[
+      {text:'Высота растения линейно увеличивается с течением времени.', correct:true,  why:'График — прямая линия; одинаковые приращения высоты за одинаковые промежутки времени.'},
+      {text:'За первые 2 недели растение выросло примерно на 8 см.', correct:true,  why:'Из графика: при t = 2 высота ≈ 10 см, в начале ≈ 2 см → рост ≈ 8 см.'},
+      {text:'Скорость роста уменьшается с течением времени.', correct:false, why:'Линейный рост означает постоянную скорость.'},
+      {text:'В первые недели рост идёт быстрее, чем в последние.', correct:false, why:'Скорость одинакова на всём промежутке (линейный график).'},
+      {text:'Высота растения не изменяется со временем.', correct:false, why:'Высота явно растёт.'}
+    ]
+  },
+  // 6. Снижение содержания кислорода с глубиной (убывание)
+  { id:'gr6',
+    context:'Зависимость концентрации кислорода в воде озера (ось y, мг/л) от глубины (ось x, м).',
+    graph:{
+      title:'Кислород в воде от глубины',
+      xLabel:'h, м', yLabel:'O₂, мг/л',
+      xMin:0, xMax:20, yMin:0, yMax:12,
+      xTicks:[0,5,10,15,20], yTicks:[0,3,6,9,12],
+      fn: x => 11 * Math.exp(-x / 7)
+    },
+    statements:[
+      {text:'С увеличением глубины концентрация кислорода уменьшается.', correct:true,  why:'Кривая монотонно убывает; на больших глубинах меньше света и кислорода.'},
+      {text:'Наибольшая концентрация кислорода — в поверхностном слое.', correct:true,  why:'У поверхности O₂ максимален: контакт с воздухом и активный фотосинтез водорослей.'},
+      {text:'Концентрация кислорода одинакова на всех глубинах.', correct:false, why:'Кривая явно убывает; концентрация различна.'},
+      {text:'На глубине 20 м концентрация кислорода максимальна.', correct:false, why:'Наоборот, минимальна.'},
+      {text:'Концентрация кислорода растёт с увеличением глубины.', correct:false, why:'Падает.'}
+    ]
+  },
+  // 7. Колебания численности (синусоида)
+  { id:'gr7',
+    context:'Зависимость численности популяции леммингов (ось y, тыс.) от времени (ось x, годы).',
+    graph:{
+      title:'Численность популяции леммингов',
+      xLabel:'t, годы', yLabel:'N, тыс',
+      xMin:0, xMax:20, yMin:0, yMax:100,
+      xTicks:[0,4,8,12,16,20], yTicks:[0,25,50,75,100],
+      fn: x => 50 + 35 * Math.sin(x * Math.PI / 4)
+    },
+    statements:[
+      {text:'Численность популяции имеет циклические колебания.', correct:true,  why:'График — синусоида; периодически повторяющиеся максимумы и минимумы.'},
+      {text:'Период колебаний составляет примерно 8 лет.', correct:true,  why:'Расстояние между соседними пиками ≈ 8 единиц по оси x.'},
+      {text:'Численность непрерывно растёт.', correct:false, why:'Меняется циклически вверх и вниз.'},
+      {text:'Численность одинакова в любой момент времени.', correct:false, why:'Меняется в широких пределах.'},
+      {text:'Минимум численности наблюдается каждые 2 года.', correct:false, why:'Минимумы каждые 8 лет (полный период).'}
+    ]
+  },
+  // 8. Концентрация глюкозы в крови (ступенчатый рост и падение)
+  { id:'gr8',
+    context:'Зависимость концентрации глюкозы в крови (ось y, ммоль/л) от времени после еды (ось x, минуты).',
+    graph:{
+      title:'Глюкоза в крови после еды',
+      xLabel:'t, мин', yLabel:'C, ммоль/л',
+      xMin:0, xMax:180, yMin:3, yMax:9,
+      xTicks:[0,30,60,90,120,150,180], yTicks:[3,5,7,9],
+      fn: x => 5 + 3 * Math.exp(-Math.pow((x - 45)/30, 2))
+    },
+    statements:[
+      {text:'Концентрация глюкозы достигает максимума примерно через 45–60 минут после еды.', correct:true,  why:'Пик кривой приходится на ~45 минут.'},
+      {text:'Через 3 часа после еды концентрация глюкозы возвращается к норме.', correct:true,  why:'К 180 мин кривая спадает почти до исходного уровня (≈ 5 ммоль/л).'},
+      {text:'Концентрация глюкозы постоянно растёт после еды.', correct:false, why:'Растёт только до пика, затем падает (благодаря инсулину).'},
+      {text:'Глюкоза не изменяется в течение 3 часов.', correct:false, why:'Меняется значительно: от 5 до 8 ммоль/л.'},
+      {text:'После еды концентрация глюкозы сразу падает ниже нормы.', correct:false, why:'Сначала растёт, затем падает.'}
+    ]
+  },
+  // 9. Накопление продукта реакции (насыщение)
+  { id:'gr9',
+    context:'Зависимость количества продукта ферментативной реакции (ось y, мкмоль) от времени (ось x, минуты).',
+    graph:{
+      title:'Накопление продукта со временем',
+      xLabel:'t, мин', yLabel:'P, мкмоль',
+      xMin:0, xMax:30, yMin:0, yMax:100,
+      xTicks:[0,5,10,15,20,25,30], yTicks:[0,25,50,75,100],
+      fn: x => 100 * (1 - Math.exp(-x / 8))
+    },
+    statements:[
+      {text:'Накопление продукта быстрее всего идёт в первые минуты реакции.', correct:true,  why:'Наибольший наклон в начале — субстрата много, фермент работает с максимальной скоростью.'},
+      {text:'Скорость реакции постепенно уменьшается.', correct:true,  why:'Кривая выходит на плато: субстрат исчерпывается, скорость падает.'},
+      {text:'Количество продукта линейно растёт со временем.', correct:false, why:'Не линейно; кривая выпуклая, выходит на плато.'},
+      {text:'После 25 минут количество продукта быстро увеличивается.', correct:false, why:'Близко к плато — практически не меняется.'},
+      {text:'Реакция не идёт после 5 минут.', correct:false, why:'Продолжает идти, но медленнее.'}
+    ]
+  },
+  // 10. Зависимость скорости дыхания от температуры (рост, потом резкое падение)
+  { id:'gr10',
+    context:'Зависимость интенсивности дыхания семян (ось y, отн. ед.) от температуры (ось x, °C).',
+    graph:{
+      title:'Интенсивность дыхания семян',
+      xLabel:'T, °C', yLabel:'v',
+      xMin:0, xMax:60, yMin:0, yMax:80,
+      xTicks:[0,10,20,30,40,50,60], yTicks:[0,20,40,60,80],
+      fn: x => Math.max(0, x < 40 ? Math.pow(2, x/10) * 5 : 80 - (x - 40) * 4)
+    },
+    statements:[
+      {text:'Интенсивность дыхания возрастает с увеличением температуры от 0 до примерно 40 °C.', correct:true,  why:'Закон Вант-Гоффа: при увеличении T на 10 °C скорость возрастает в 2–3 раза.'},
+      {text:'При температуре выше 40 °C интенсивность дыхания резко снижается.', correct:true,  why:'Денатурация ферментов; реакция обрывается.'},
+      {text:'Интенсивность дыхания не зависит от температуры.', correct:false, why:'Зависит и сильно: видно из графика.'},
+      {text:'Максимальная интенсивность достигается при 0 °C.', correct:false, why:'При 0 °C скорость минимальна.'},
+      {text:'Скорость дыхания постоянно убывает от 0 до 60 °C.', correct:false, why:'Сначала растёт, после оптимума падает.'}
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, picks:new Set(), solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  let optsHtml = '';
+  q.statements.forEach((s, i) => {
+    optsHtml += `
+      <div class="option" data-i="${i}">
+        <div class="option-num">${i+1}</div>
+        <div class="option-text">${s.text}</div>
+      </div>
+    `;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">2 верных из 5</span>
+      <div class="context">${q.context}</div>
+      <div class="graph-wrap">${buildGraph(q.graph)}</div>
+      <p class="q-text">Какие <strong>два</strong> из приведённых описаний характеризуют данную зависимость?</p>
+      <div class="options" id="options">${optsHtml}</div>
+      <div class="counter" id="counter">Выбрано: 0 / 2</div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.picks = new Set();
+  document.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if(state.answered) return;
+      const i = +opt.dataset.i;
+      if(state.picks.has(i)){
+        state.picks.delete(i);
+        opt.classList.remove('selected');
+      } else if(state.picks.size < 2){
+        state.picks.add(i);
+        opt.classList.add('selected');
+      }
+      document.getElementById('counter').textContent = `Выбрано: ${state.picks.size} / 2`;
+      document.getElementById('check').disabled = state.picks.size !== 2;
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  let countCorrect = 0;
+  q.statements.forEach((s, i) => {
+    const opt = document.querySelector(`.option[data-i="${i}"]`);
+    opt.classList.add('locked');
+    const picked = state.picks.has(i);
+    if(s.correct && picked){ opt.classList.add('correct-mark'); countCorrect++; }
+    else if(s.correct && !picked) opt.classList.add('miss-mark');
+    else if(!s.correct && picked) opt.classList.add('wrong-mark');
+  });
+
+  state.solved++;
+  // 2 балла за все 2 верных без ошибок; 1 балл за 1 верный + не более 1 ошибки; 0 иначе
+  const wrongPicks = [...state.picks].filter(i => !q.statements[i].correct).length;
+  let score = 0;
+  if(countCorrect === 2 && wrongPicks === 0) score = 2;
+  else if(countCorrect === 1 && wrongPicks <= 1) score = 1;
+  else score = 0;
+
+  if(score === 2){ state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = '<p style="margin-top:8px"><strong>Пояснения:</strong></p>';
+  q.statements.forEach((s, i) => {
+    const tag = s.correct ? '✓' : '✗';
+    notesHtml += `<p style="margin:4px 0"><strong>${i+1}.</strong> <span style="color:${s.correct?'var(--success)':'var(--error)'}">${tag}</span> ${s.why}</p>`;
+  });
+
+  if(score === 2){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно (2 балла).</strong> Оба утверждения отмечены правильно.</div><div class="hint">${notesHtml}</div>`;
+  } else if(score === 1){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (1 балл).</strong> Не оба верных утверждения найдены или есть лишнее.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно (0 баллов).</strong></div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

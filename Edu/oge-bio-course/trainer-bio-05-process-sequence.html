@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №5 — последовательность процессов</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.taxa-list{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:8px 12px;
+  align-items:center;
+  margin-bottom:12px;
+}
+.taxa-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  font-weight:500;
+  background:white;
+  border:1px solid var(--border);
+  width:28px;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+}
+.taxa-text{font-size:16px}
+.taxa-rank{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);text-transform:lowercase}
+.seq-input-wrap{
+  margin-top:18px;
+  padding:14px;
+  background:var(--accent-soft);
+  border-radius:4px;
+}
+.seq-label{
+  font-size:14px;
+  color:var(--ink);
+  margin-bottom:8px;
+}
+.seq-slots{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.seq-slot{
+  font-family:'JetBrains Mono',monospace;
+  font-size:18px;
+  font-weight:500;
+  width:46px;
+  height:46px;
+  border:2px dashed var(--border);
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:4px;
+  cursor:pointer;
+  user-select:none;
+}
+.seq-slot:hover:not(.locked){border-color:var(--accent);color:var(--accent)}
+.seq-slot.filled{border-style:solid;border-color:var(--accent);color:var(--accent)}
+.seq-slot.locked{cursor:not-allowed}
+.seq-slot.correct-mark{background:#D4E5CD;border-color:#A8C49F;color:var(--success)}
+.seq-slot.wrong-mark{background:#F2E0DC;border-color:#C99A93;color:var(--error)}
+.seq-arrow{
+  font-size:18px;
+  color:var(--muted);
+  font-family:'JetBrains Mono',monospace;
+}
+.seq-hint{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:6px;
+}
+.tray{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.tray-btn{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  font-weight:500;
+  width:36px;
+  height:36px;
+  border:1px solid var(--border);
+  background:white;
+  cursor:pointer;
+  border-radius:4px;
+}
+.tray-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.tray-btn:disabled{opacity:0.3;cursor:not-allowed}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+  .seq-slot{width:40px;height:40px}
+  .seq-arrow{display:none}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №5</span>
+  <span class="right">2 балла · базовый</span>
+</div>
+
+<h1><em>Последовательность</em> процессов</h1>
+<p class="lead">Тренажёр на задание №5 ОГЭ по биологии: расположи в правильном порядке этапы лабораторной инструкции или биологического процесса (онтогенез, жизненный цикл).</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №5 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// Каждое задание: 5 таксонов с rank-уровнем; правильная последовательность от меньшего к большему
+// Уровни (для подсказок и сортировки):
+//   вид=1, род=2, семейство=3, отряд/порядок=4, класс=5, тип/отдел=6
+// rank — это правильный порядковый номер этапа (от 1 до N)
+const QUESTIONS = [
+  { id:'s1', title:'Проращивание семян огурцов в чашке Петри', taxa:[
+    {label:'Возьмите тарелку и уложите на её дно сухую фильтровальную бумагу.', rank:1},
+    {label:'Смочите фильтровальную бумагу водой и следите, чтобы она была постоянно влажной.', rank:2},
+    {label:'На влажную фильтровальную бумагу положите 10 семян огурцов.', rank:3},
+    {label:'Закройте тарелку полиэтиленовой плёнкой.', rank:4},
+    {label:'Поставьте закрытую тарелку в тёплое место.', rank:5}
+  ]},
+  { id:'s2', title:'Размножение и развитие лягушки (от половых клеток до взрослого)', taxa:[
+    {label:'Откладывание икры самкой в воду.', rank:1},
+    {label:'Оплодотворение икры самцами.', rank:2},
+    {label:'Появление личинки (головастика).', rank:3},
+    {label:'Развитие жабр, мускулатуры и скелета у головастика.', rank:4},
+    {label:'Замена жаберного дыхания лёгочным; превращение во взрослую лягушку.', rank:5}
+  ]},
+  { id:'s3', title:'Жизненный цикл бабочки', taxa:[
+    {label:'Самка откладывает яйца на лист растения.', rank:1},
+    {label:'Из яйца вылупляется личинка (гусеница).', rank:2},
+    {label:'Гусеница интенсивно питается и линяет.', rank:3},
+    {label:'Гусеница превращается в куколку (стадия покоя).', rank:4},
+    {label:'Из куколки выходит взрослое насекомое (имаго).', rank:5}
+  ]},
+  { id:'s4', title:'Опыт по обнаружению крахмала в листе растения', taxa:[
+    {label:'Выдержите растение 2 суток в темноте, чтобы удалить запасной крахмал.', rank:1},
+    {label:'Поставьте растение на свет, частично закрыв лист чёрной бумагой.', rank:2},
+    {label:'Через 6–8 часов сорвите лист и опустите его в кипящую воду на 2 минуты.', rank:3},
+    {label:'Поместите лист в горячий спирт для обесцвечивания.', rank:4},
+    {label:'Промойте лист и капните на него раствор иода — окрасятся только освещённые участки.', rank:5}
+  ]},
+  { id:'s5', title:'Развитие птицы из оплодотворённого яйца', taxa:[
+    {label:'Самка откладывает оплодотворённое яйцо в гнездо.', rank:1},
+    {label:'Птица насиживает яйцо, поддерживая нужную температуру.', rank:2},
+    {label:'В яйце развивается зародыш, питаясь желтком.', rank:3},
+    {label:'Зародыш разрушает скорлупу и вылупляется птенец.', rank:4},
+    {label:'Птенец растёт, оперяется и становится взрослой птицей.', rank:5}
+  ]},
+  { id:'s6', title:'Опыт по доказательству выделения растениями кислорода', taxa:[
+    {label:'Поместите водное растение (например, элодею) в банку с водой.', rank:1},
+    {label:'Накройте растение перевёрнутой воронкой, а сверху наденьте пробирку с водой.', rank:2},
+    {label:'Поставьте установку на яркий свет на несколько часов.', rank:3},
+    {label:'В пробирке собирается газ, поднимающийся в виде пузырьков.', rank:4},
+    {label:'Внесите тлеющую лучинку в пробирку — она вспыхнет, что доказывает наличие кислорода.', rank:5}
+  ]},
+  { id:'s7', title:'Прохождение пищи по пищеварительному тракту человека', taxa:[
+    {label:'Пища измельчается зубами и смачивается слюной в ротовой полости.', rank:1},
+    {label:'Пищевой комок проглатывается и проходит по пищеводу в желудок.', rank:2},
+    {label:'В желудке белки расщепляются под действием соляной кислоты и пепсина.', rank:3},
+    {label:'В тонком кишечнике под действием ферментов происходит окончательное переваривание и всасывание питательных веществ.', rank:4},
+    {label:'В толстом кишечнике всасывается вода; формируются каловые массы.', rank:5}
+  ]},
+  { id:'s8', title:'Прорастание семени фасоли', taxa:[
+    {label:'Семя поглощает воду и набухает.', rank:1},
+    {label:'Кожура семени лопается; появляется зародышевый корешок.', rank:2},
+    {label:'Корешок растёт вниз; зародышевый стебелёк выносит семядоли над почвой.', rank:3},
+    {label:'Семядоли расходятся; между ними развивается верхушечная почка.', rank:4},
+    {label:'Образуются настоящие листья, и начинается фотосинтез — растение становится самостоятельным.', rank:5}
+  ]},
+  { id:'s9', title:'Стадии оплодотворения и раннего развития человека', taxa:[
+    {label:'Оплодотворение: слияние сперматозоида и яйцеклетки в маточной трубе.', rank:1},
+    {label:'Образование зиготы и её дробление в маточной трубе.', rank:2},
+    {label:'Образование бластоцисты и её перемещение в матку.', rank:3},
+    {label:'Имплантация зародыша в стенку матки.', rank:4},
+    {label:'Развитие зародыша и плода в течение беременности.', rank:5}
+  ]},
+  { id:'s10', title:'Действие фермента слюны (амилазы) на крахмал — лабораторный опыт', taxa:[
+    {label:'Положите кусочек накрахмаленной марли на язык, обработав его слюной.', rank:1},
+    {label:'Выдержите марлю в тёплой воде (около 37 °C) в течение 2–3 минут.', rank:2},
+    {label:'Добавьте к марле раствор иода.', rank:3},
+    {label:'Часть марли, обработанная слюной, не окрашивается в синий цвет.', rank:4},
+    {label:'Это доказывает, что амилаза слюны расщепила крахмал до простых сахаров.', rank:5}
+  ]}
+];
+
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, slots:[null,null,null,null,null], used:new Set(), solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function render(){
+  const q = state.current;
+  // shuffle taxa for display, but remember original index for answer
+  const indexed = q.taxa.map((t, i) => ({...t, num:i+1}));
+  const shuffled = shuffle(indexed);
+
+  let listHtml = '';
+  shuffled.forEach(t => {
+    listHtml += `
+      <div class="taxa-num">${t.num}</div>
+      <div class="taxa-text">${t.label}</div>
+      
+    `;
+  });
+
+  let slotsHtml = '';
+  for(let i = 0; i < 5; i++){
+    slotsHtml += `<div class="seq-slot" data-slot="${i}"></div>`;
+    if(i < 4) slotsHtml += `<span class="seq-arrow">→</span>`;
+  }
+
+  let trayHtml = '';
+  for(let n = 1; n <= 5; n++){
+    trayHtml += `<button class="tray-btn" data-num="${n}">${n}</button>`;
+  }
+
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">последовательность</span>
+      <p class="q-text">Установите правильную последовательность этапов:</p>
+      <div class="taxa-list">${listHtml}</div>
+      <div class="seq-input-wrap">
+        <div class="seq-label">В правильном порядке (от первого этапа к последнему):</div>
+        <div class="seq-slots">${slotsHtml}</div>
+        <div class="seq-hint">Нажмите цифру в палитре, чтобы добавить её в первую пустую ячейку. Клик по ячейке очищает её.</div>
+        <div class="tray" id="tray">${trayHtml}</div>
+      </div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+
+  // store mapping: num → original taxon
+  state.slots = [null,null,null,null,null];
+  state.used = new Set();
+  state.indexedTaxa = indexed; // keep for check
+
+  document.querySelectorAll('.tray-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(state.answered) return;
+      const num = +btn.dataset.num;
+      if(state.used.has(num)) return;
+      // find first empty slot
+      const idx = state.slots.findIndex(s => s === null);
+      if(idx === -1) return;
+      state.slots[idx] = num;
+      state.used.add(num);
+      btn.disabled = true;
+      const slot = document.querySelector(`.seq-slot[data-slot="${idx}"]`);
+      slot.textContent = num;
+      slot.classList.add('filled');
+      // enable check if all filled
+      document.getElementById('check').disabled = state.slots.some(s => s === null);
+    });
+  });
+  document.querySelectorAll('.seq-slot').forEach(slot => {
+    slot.addEventListener('click', () => {
+      if(state.answered) return;
+      const i = +slot.dataset.slot;
+      const num = state.slots[i];
+      if(num === null) return;
+      state.slots[i] = null;
+      state.used.delete(num);
+      slot.textContent = '';
+      slot.classList.remove('filled');
+      document.querySelector(`.tray-btn[data-num="${num}"]`).disabled = false;
+      document.getElementById('check').disabled = true;
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  // correct sequence: original taxa sorted by rank ascending → their original indices+1
+  const correctOrder = q.taxa
+    .map((t, i) => ({num:i+1, rank:t.rank}))
+    .sort((a,b) => a.rank - b.rank)
+    .map(x => x.num);
+
+  const userSeq = state.slots.slice();
+  const ok = correctOrder.every((n, i) => n === userSeq[i]);
+
+  state.solved++;
+  if(ok){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  // mark slots
+  document.querySelectorAll('.seq-slot').forEach(slot => {
+    slot.classList.add('locked');
+    const i = +slot.dataset.slot;
+    slot.textContent = userSeq[i] !== null ? userSeq[i] : '';
+    if(userSeq[i] === correctOrder[i]) slot.classList.add('correct-mark');
+    else if(userSeq[i] !== null) slot.classList.add('wrong-mark');
+  });
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = '<p style="margin-top:8px"><strong>Правильный порядок:</strong></p><ol style="margin:6px 0 0 20px;padding:0">';
+  correctOrder.forEach(n => {
+    const t = q.taxa[n-1];
+    notesHtml += `<li><strong>${n}.</strong> ${t.label}</li>`;
+  });
+  notesHtml += '</ol>';
+  notesHtml += '<p style="margin-top:8px;font-size:13px;color:var(--muted)">Найдите первый этап и располагайте остальные в логической последовательности.</p>';
+
+  if(ok){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно.</strong> Ответ: <code style="font-family:'JetBrains Mono',monospace">${correctOrder.join('')}</code>.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: <code style="font-family:'JetBrains Mono',monospace">${correctOrder.join('')}</code>, ваш: <code style="font-family:'JetBrains Mono',monospace">${userSeq.join('')}</code>.</div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

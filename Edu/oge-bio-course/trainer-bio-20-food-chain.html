@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №20 — пищевая цепь</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.taxa-list{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:8px 12px;
+  align-items:center;
+  margin-bottom:12px;
+}
+.taxa-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  font-weight:500;
+  background:white;
+  border:1px solid var(--border);
+  width:28px;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+}
+.taxa-text{font-size:16px}
+.taxa-rank{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);text-transform:lowercase}
+.seq-input-wrap{
+  margin-top:18px;
+  padding:14px;
+  background:var(--accent-soft);
+  border-radius:4px;
+}
+.seq-label{
+  font-size:14px;
+  color:var(--ink);
+  margin-bottom:8px;
+}
+.seq-slots{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.seq-slot{
+  font-family:'JetBrains Mono',monospace;
+  font-size:18px;
+  font-weight:500;
+  width:46px;
+  height:46px;
+  border:2px dashed var(--border);
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:4px;
+  cursor:pointer;
+  user-select:none;
+}
+.seq-slot:hover:not(.locked){border-color:var(--accent);color:var(--accent)}
+.seq-slot.filled{border-style:solid;border-color:var(--accent);color:var(--accent)}
+.seq-slot.locked{cursor:not-allowed}
+.seq-slot.correct-mark{background:#D4E5CD;border-color:#A8C49F;color:var(--success)}
+.seq-slot.wrong-mark{background:#F2E0DC;border-color:#C99A93;color:var(--error)}
+.seq-arrow{
+  font-size:18px;
+  color:var(--muted);
+  font-family:'JetBrains Mono',monospace;
+}
+.seq-hint{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:6px;
+}
+.tray{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.tray-btn{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  font-weight:500;
+  width:36px;
+  height:36px;
+  border:1px solid var(--border);
+  background:white;
+  cursor:pointer;
+  border-radius:4px;
+}
+.tray-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.tray-btn:disabled{opacity:0.3;cursor:not-allowed}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+  .seq-slot{width:40px;height:40px}
+  .seq-arrow{display:none}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №20</span>
+  <span class="right">1 балл · базовый</span>
+</div>
+
+<h1><em>Пищевая</em> цепь</h1>
+<p class="lead">Тренажёр на задание №20 ОГЭ по биологии: установи правильную пищевая цепь звеньев пищевой цепи — от продуцента к высшему хищнику.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №20 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// Каждое задание: 5 таксонов с rank-уровнем; правильная последовательность от меньшего к большему
+// Уровни (для подсказок и сортировки):
+//   вид=1, род=2, семейство=3, отряд/порядок=4, класс=5, тип/отдел=6
+// rank — это правильный порядковый номер этапа (от 1 до N)
+// rank — правильный порядок: 1=продуцент, 2=консумент-1, 3=консумент-2, 4=консумент-3, 5=редуцент
+const QUESTIONS = [
+  { id:'fc1', title:'Лесная пищевая цепь', taxa:[
+    {label:'Дуб (зелёное растение)', rank:1},
+    {label:'Гусеница (растительноядное)', rank:2},
+    {label:'Синица (насекомоядная птица)', rank:3},
+    {label:'Ястреб (хищная птица)', rank:4},
+    {label:'Гнилостные бактерии', rank:5}
+  ]},
+  { id:'fc2', title:'Луговая пищевая цепь', taxa:[
+    {label:'Клевер (травянистое растение)', rank:1},
+    {label:'Кузнечик (растительноядное насекомое)', rank:2},
+    {label:'Жаба (земноводное)', rank:3},
+    {label:'Уж обыкновенный (хищная рептилия)', rank:4},
+    {label:'Плесневые грибы (редуценты)', rank:5}
+  ]},
+  { id:'fc3', title:'Степная пищевая цепь', taxa:[
+    {label:'Ковыль (степная трава)', rank:1},
+    {label:'Полевая мышь (грызун)', rank:2},
+    {label:'Степная гадюка (рептилия-хищник)', rank:3},
+    {label:'Орёл-могильник (хищная птица)', rank:4},
+    {label:'Сапротрофные бактерии', rank:5}
+  ]},
+  { id:'fc4', title:'Пресноводная пищевая цепь', taxa:[
+    {label:'Одноклеточные водоросли (фитопланктон)', rank:1},
+    {label:'Дафния (планктонный рачок)', rank:2},
+    {label:'Малёк плотвы (мелкая рыба)', rank:3},
+    {label:'Щука (хищная рыба)', rank:4},
+    {label:'Бактерии-редуценты ила', rank:5}
+  ]},
+  { id:'fc5', title:'Морская пищевая цепь', taxa:[
+    {label:'Морские водоросли', rank:1},
+    {label:'Морская улитка', rank:2},
+    {label:'Крупная рыба (треска)', rank:3},
+    {label:'Касатка', rank:4},
+    {label:'Бактерии донного ила', rank:5}
+  ]},
+  { id:'fc6', title:'Огородная пищевая цепь', taxa:[
+    {label:'Капуста (овощное растение)', rank:1},
+    {label:'Гусеница капустной белянки', rank:2},
+    {label:'Скворец (насекомоядная птица)', rank:3},
+    {label:'Кошка', rank:4},
+    {label:'Грибы-сапротрофы', rank:5}
+  ]},
+  { id:'fc7', title:'Тундровая пищевая цепь', taxa:[
+    {label:'Ягель (лишайник)', rank:1},
+    {label:'Северный олень', rank:2},
+    {label:'Волк', rank:3},
+    {label:'Белый медведь (на падали оленей и волков)', rank:4},
+    {label:'Бактерии гниения тундровой почвы', rank:5}
+  ]},
+  { id:'fc8', title:'Пищевая цепь хвойного леса', taxa:[
+    {label:'Сосна обыкновенная', rank:1},
+    {label:'Белка обыкновенная (грызёт шишки)', rank:2},
+    {label:'Куница (хищное млекопитающее)', rank:3},
+    {label:'Филин (крупная сова)', rank:4},
+    {label:'Дождевые черви (детритофаги)', rank:5}
+  ]},
+  { id:'fc9', title:'Пищевая цепь зернового поля', taxa:[
+    {label:'Пшеница', rank:1},
+    {label:'Полёвка обыкновенная', rank:2},
+    {label:'Лиса', rank:3},
+    {label:'Беркут (крупная хищная птица)', rank:4},
+    {label:'Гнилостные бактерии', rank:5}
+  ]},
+  { id:'fc10', title:'Болотная пищевая цепь', taxa:[
+    {label:'Ряска малая (водное растение)', rank:1},
+    {label:'Прудовик (моллюск)', rank:2},
+    {label:'Озёрная лягушка', rank:3},
+    {label:'Цапля серая (хищная птица)', rank:4},
+    {label:'Анаэробные бактерии торфяных почв', rank:5}
+  ]}
+];
+
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, slots:[null,null,null,null,null], used:new Set(), solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function render(){
+  const q = state.current;
+  // shuffle taxa for display, but remember original index for answer
+  const indexed = q.taxa.map((t, i) => ({...t, num:i+1}));
+  const shuffled = shuffle(indexed);
+
+  let listHtml = '';
+  shuffled.forEach(t => {
+    listHtml += `
+      <div class="taxa-num">${t.num}</div>
+      <div class="taxa-text">${t.label}</div>
+      
+    `;
+  });
+
+  let slotsHtml = '';
+  for(let i = 0; i < 5; i++){
+    slotsHtml += `<div class="seq-slot" data-slot="${i}"></div>`;
+    if(i < 4) slotsHtml += `<span class="seq-arrow">→</span>`;
+  }
+
+  let trayHtml = '';
+  for(let n = 1; n <= 5; n++){
+    trayHtml += `<button class="tray-btn" data-num="${n}">${n}</button>`;
+  }
+
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">последовательность</span>
+      <p class="q-text">Установите правильную последовательность звеньев пищевой цепи (от продуцента к высшему звену):</p>
+      <div class="taxa-list">${listHtml}</div>
+      <div class="seq-input-wrap">
+        <div class="seq-label">От продуцента к высшему хищнику:</div>
+        <div class="seq-slots">${slotsHtml}</div>
+        <div class="seq-hint">Нажмите цифру в палитре, чтобы добавить её в первую пустую ячейку. Клик по ячейке очищает её.</div>
+        <div class="tray" id="tray">${trayHtml}</div>
+      </div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+
+  // store mapping: num → original taxon
+  state.slots = [null,null,null,null,null];
+  state.used = new Set();
+  state.indexedTaxa = indexed; // keep for check
+
+  document.querySelectorAll('.tray-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(state.answered) return;
+      const num = +btn.dataset.num;
+      if(state.used.has(num)) return;
+      // find first empty slot
+      const idx = state.slots.findIndex(s => s === null);
+      if(idx === -1) return;
+      state.slots[idx] = num;
+      state.used.add(num);
+      btn.disabled = true;
+      const slot = document.querySelector(`.seq-slot[data-slot="${idx}"]`);
+      slot.textContent = num;
+      slot.classList.add('filled');
+      // enable check if all filled
+      document.getElementById('check').disabled = state.slots.some(s => s === null);
+    });
+  });
+  document.querySelectorAll('.seq-slot').forEach(slot => {
+    slot.addEventListener('click', () => {
+      if(state.answered) return;
+      const i = +slot.dataset.slot;
+      const num = state.slots[i];
+      if(num === null) return;
+      state.slots[i] = null;
+      state.used.delete(num);
+      slot.textContent = '';
+      slot.classList.remove('filled');
+      document.querySelector(`.tray-btn[data-num="${num}"]`).disabled = false;
+      document.getElementById('check').disabled = true;
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  // correct sequence: original taxa sorted by rank ascending → their original indices+1
+  const correctOrder = q.taxa
+    .map((t, i) => ({num:i+1, rank:t.rank}))
+    .sort((a,b) => a.rank - b.rank)
+    .map(x => x.num);
+
+  const userSeq = state.slots.slice();
+  const ok = correctOrder.every((n, i) => n === userSeq[i]);
+
+  state.solved++;
+  if(ok){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  // mark slots
+  document.querySelectorAll('.seq-slot').forEach(slot => {
+    slot.classList.add('locked');
+    const i = +slot.dataset.slot;
+    slot.textContent = userSeq[i] !== null ? userSeq[i] : '';
+    if(userSeq[i] === correctOrder[i]) slot.classList.add('correct-mark');
+    else if(userSeq[i] !== null) slot.classList.add('wrong-mark');
+  });
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = '<p style="margin-top:8px"><strong>Правильный порядок:</strong></p><ol style="margin:6px 0 0 20px;padding:0">';
+  correctOrder.forEach(n => {
+    const t = q.taxa[n-1];
+    notesHtml += `<li><strong>${n}.</strong> ${t.label}</li>`;
+  });
+  notesHtml += '</ol>';
+  notesHtml += '<p style="margin-top:8px;font-size:13px;color:var(--muted)">Начните с продуцента (зелёного растения) и далее: травоядное → хищник → высший хищник → редуцент.</p>';
+
+  if(ok){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно.</strong> Ответ: <code style="font-family:'JetBrains Mono',monospace">${correctOrder.join('')}</code>.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: <code style="font-family:'JetBrains Mono',monospace">${correctOrder.join('')}</code>, ваш: <code style="font-family:'JetBrains Mono',monospace">${userSeq.join('')}</code>.</div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

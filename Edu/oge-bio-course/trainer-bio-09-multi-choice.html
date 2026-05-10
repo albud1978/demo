@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №9 — выбор трёх верных ответов</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.q-text strong{color:var(--accent);font-weight:600}
+.context{
+  margin-bottom:16px;
+  padding:12px 14px;
+  background:var(--accent-soft);
+  border-left:3px solid var(--accent);
+  border-radius:2px;
+  font-size:15px;
+  font-style:italic;
+}
+.options{display:flex;flex-direction:column;gap:6px}
+.option{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  background:white;
+  border-radius:4px;
+  cursor:pointer;
+  transition:all 0.12s;
+  user-select:none;
+}
+.option:hover:not(.locked){border-color:var(--accent)}
+.option.selected{border-color:var(--accent);background:#F0EDE0}
+.option.locked{cursor:not-allowed}
+.option-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  font-weight:500;
+  flex-shrink:0;
+  width:26px;
+  height:26px;
+  border:1px solid var(--border);
+  background:var(--paper);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+}
+.option.selected .option-num{background:var(--accent);color:white;border-color:var(--accent)}
+.option-text{flex:1;font-size:16px}
+.option.correct-mark{background:#E1ECDD;border-color:#A8C49F}
+.option.correct-mark .option-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.option.miss-mark{background:#FFF5DA;border-color:#D4B952}
+.option.miss-mark .option-num{background:#D4B952;color:white;border-color:#D4B952}
+.option.wrong-mark{background:#F2E0DC;border-color:#C99A93}
+.option.wrong-mark .option-num{background:#C99A93;color:white;border-color:#C99A93}
+.counter{
+  margin-top:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--muted);
+}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.partial{background:#FFF5DA;border:1px solid #D4B952;color:#7A5C00}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+.legend-key{display:inline-flex;gap:6px;align-items:center;font-size:12px;color:var(--muted);margin-right:12px}
+.key-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.key-dot.correct{background:#A8C49F}
+.key-dot.miss{background:#D4B952}
+.key-dot.wrong{background:#C99A93}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №9</span>
+  <span class="right">2 балла · базовый</span>
+</div>
+
+<h1><em>Группа</em> животных или растений</h1>
+<p class="lead">Тренажёр на задание №9 ОГЭ по биологии: вопрос об общих признаках животных или растений. Выбери ровно <strong>три</strong> верных утверждения из шести.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №9 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// 6 утверждений в каждом задании; correct содержит индексы (0-based) из ровно 3 правильных
+const QUESTIONS = [
+  { id:'a1',
+    context:'Какие животные размножаются на суше?',
+    statements:[
+      {text:'Нильский крокодил откладывает яйца в гнездо на берегу.', correct:true,  why:'Все рептилии — наземные яйцекладущие; крокодил откладывает яйца на суше.'},
+      {text:'Электрический скат откладывает икру в воду.', correct:false, why:'Скаты — рыбы; размножение в воде, а большинство — живородящие.'},
+      {text:'Императорский пингвин откладывает яйцо на льду Антарктиды.', correct:true,  why:'Пингвины — птицы, размножаются на суше (на льду — это тоже суша, не вода).'},
+      {text:'Дельфин-афалина рождает детёныша в воде.', correct:false, why:'Млекопитающее, но размножение и рождение происходят в воде.'},
+      {text:'Байкальская нерпа рождает детёнышей в снежном логове на льду.', correct:true,  why:'Хотя нерпа — водное млекопитающее, она вылезает на лёд (сушу) и там приносит потомство.'},
+      {text:'Серая жаба откладывает икру в водоём.', correct:false, why:'Земноводные размножаются в воде; икра без воды не развивается.'}
+    ]
+  },
+  { id:'a2',
+    context:'Какие признаки характеризуют класс Млекопитающие?',
+    statements:[
+      {text:'Тело покрыто шерстью, есть кожные железы.', correct:true,  why:'Шерсть и сальные/потовые/молочные железы — отличительные признаки млекопитающих.'},
+      {text:'Имеют четырёхкамерное сердце и тёплую кровь.', correct:true,  why:'Полное разделение венозной и артериальной крови — признак млекопитающих и птиц; обеспечивает теплокровность.'},
+      {text:'Выкармливают детёнышей молоком.', correct:true,  why:'Млечные железы — определяющая черта класса (от лат. mamma — грудь).'},
+      {text:'Размножаются откладкой яиц во внешнюю среду.', correct:false, why:'Большинство — живородящие. Исключение — однопроходные (утконос, ехидна).'},
+      {text:'Дышат жабрами на протяжении всей жизни.', correct:false, why:'Дыхание у всех млекопитающих лёгочное.'},
+      {text:'Имеют непостоянную температуру тела, зависящую от температуры среды.', correct:false, why:'Млекопитающие — гомойотермные (теплокровные), их температура постоянна и не зависит от среды.'}
+    ]
+  },
+  { id:'a3',
+    context:'Какие признаки характерны для класса Птицы?',
+    statements:[
+      {text:'Тело покрыто перьями.', correct:true,  why:'Перо — главный отличительный признак птиц, нет ни у одного другого класса.'},
+      {text:'Передние конечности преобразованы в крылья.', correct:true,  why:'Анатомия летательного аппарата — особенность класса.'},
+      {text:'Имеют четырёхкамерное сердце.', correct:true,  why:'Полное разделение кровотоков, теплокровность.'},
+      {text:'Откладывают икру в водоёмы.', correct:false, why:'Птицы — наземные яйцекладущие, откладывают яйца с твёрдой скорлупой.'},
+      {text:'Дыхание лёгочное; воздушных мешков нет.', correct:false, why:'У птиц помимо лёгких имеются воздушные мешки (двойное дыхание); это противоречит описанию.'},
+      {text:'Тело покрыто шерстью или щетиной.', correct:false, why:'Шерсть — у млекопитающих; птицы имеют только перо.'}
+    ]
+  },
+  { id:'a4',
+    context:'Какие признаки характеризуют отдел Цветковые (Покрытосеменные) растения?',
+    statements:[
+      {text:'Имеют цветок как орган полового размножения.', correct:true,  why:'Цветок — определяющий признак отдела.'},
+      {text:'Семена защищены околоплодником (находятся в плоде).', correct:true,  why:'Покрытосеменные — «семена покрыты»; отсюда название.'},
+      {text:'Опыляются ветром, насекомыми, водой и др. способами.', correct:true,  why:'Разнообразие способов опыления — характерная черта.'},
+      {text:'Размножаются только спорами, не образуют семян.', correct:false, why:'Это признак папоротников, мхов; цветковые формируют семена.'},
+      {text:'Имеют шишки вместо плодов.', correct:false, why:'Шишки — у голосеменных (хвойных), не у цветковых.'},
+      {text:'Не имеют проводящих тканей.', correct:false, why:'У всех высших растений есть ксилема и флоэма.'}
+    ]
+  },
+  { id:'a5',
+    context:'Какие признаки характерны для класса Земноводные?',
+    statements:[
+      {text:'Кожа голая, влажная, участвует в газообмене.', correct:true,  why:'Кожное дыхание возможно только при влажной коже — признак земноводных.'},
+      {text:'Размножаются и развиваются в воде; личинки (головастики) дышат жабрами.', correct:true,  why:'Икра без оболочек, оплодотворение в воде; личиночная стадия водная.'},
+      {text:'Имеют трёхкамерное сердце; кровь смешанная.', correct:true,  why:'Анатомия сердца — характерный признак класса.'},
+      {text:'Тело покрыто роговыми чешуями.', correct:false, why:'Это признак пресмыкающихся.'},
+      {text:'Имеют постоянную температуру тела.', correct:false, why:'Земноводные холоднокровные.'},
+      {text:'Откладывают яйца с твёрдой скорлупой.', correct:false, why:'Это признак рептилий и птиц; у амфибий икра без скорлупы.'}
+    ]
+  },
+  { id:'a6',
+    context:'Какие признаки характерны для класса Костные рыбы?',
+    statements:[
+      {text:'Имеют костный скелет (внутренний скелет из костной ткани).', correct:true,  why:'Отличает от хрящевых рыб (акул, скатов).'},
+      {text:'Дышат жабрами.', correct:true,  why:'Жабры — основные органы дыхания всех рыб.'},
+      {text:'Имеют плавательный пузырь, регулирующий плавучесть.', correct:true,  why:'Плавательный пузырь — особенность костных рыб (у хрящевых отсутствует).'},
+      {text:'Имеют четырёхкамерное сердце.', correct:false, why:'У рыб двухкамерное сердце.'},
+      {text:'Конечности преобразованы в ласты.', correct:false, why:'У рыб плавники, не ласты; ласты — у морских млекопитающих.'},
+      {text:'Размножаются в воздушной среде.', correct:false, why:'Рыбы размножаются в воде (нерест).'}
+    ]
+  },
+  { id:'a7',
+    context:'Какие признаки характеризуют класс Пресмыкающиеся?',
+    statements:[
+      {text:'Тело покрыто роговыми чешуями.', correct:true,  why:'Сухая кожа с чешуями — приспособление к жизни на суше.'},
+      {text:'Откладывают яйца с твёрдой или кожистой скорлупой на суше.', correct:true,  why:'Освобождает от зависимости от воды для размножения.'},
+      {text:'Имеют лёгкие более развитые, чем у амфибий.', correct:true,  why:'Кожное дыхание невозможно (сухая кожа), поэтому лёгкие совершеннее.'},
+      {text:'Постоянная температура тела около 37 °C.', correct:false, why:'Рептилии — пойкилотермные (холоднокровные).'},
+      {text:'Размножаются метаморфозом через личиночную стадию.', correct:false, why:'У рептилий прямое развитие без личиночной стадии.'},
+      {text:'Тело покрыто перьями.', correct:false, why:'Перья — у птиц.'}
+    ]
+  },
+  { id:'a8',
+    context:'Какие признаки характерны для отдела Голосеменные растения?',
+    statements:[
+      {text:'Семена развиваются на чешуях шишек, открыто.', correct:true,  why:'«Голо-семенные» — семена не защищены плодом.'},
+      {text:'Большинство представителей — хвойные деревья.', correct:true,  why:'Хвойные (сосна, ель, пихта) — самая многочисленная группа.'},
+      {text:'Опыляются ветром.', correct:true,  why:'У голосеменных нет ярких цветков, опыление преимущественно ветровое.'},
+      {text:'Образуют плоды-ягоды или орехи.', correct:false, why:'Плодов нет; шишка не плод.'},
+      {text:'Имеют ярко окрашенные крупные цветки.', correct:false, why:'У голосеменных нет цветков.'},
+      {text:'Размножаются спорами без образования семян.', correct:false, why:'Семена есть, в этом и название отдела.'}
+    ]
+  },
+  { id:'a9',
+    context:'Какие признаки характеризуют тип Членистоногие?',
+    statements:[
+      {text:'Тело сегментировано и имеет членистые конечности.', correct:true,  why:'Прямо следует из названия типа.'},
+      {text:'Имеют наружный хитиновый скелет.', correct:true,  why:'Хитиновый покров — защита и опора.'},
+      {text:'Рост сопровождается периодической линькой.', correct:true,  why:'Хитиновый покров не растягивается, поэтому членистоногие растут после линек.'},
+      {text:'Тело покрыто слизью; кожное дыхание.', correct:false, why:'Это признак кольчатых червей и амфибий.'},
+      {text:'Имеют внутренний костный скелет.', correct:false, why:'У членистоногих скелет наружный.'},
+      {text:'Размножаются спорами.', correct:false, why:'Споры — у грибов и низших растений; членистоногие размножаются яйцами.'}
+    ]
+  },
+  { id:'a10',
+    context:'Какие особенности характерны для отдела Папоротниковидные?',
+    statements:[
+      {text:'Имеют настоящие корни, стебли и листья (вайи).', correct:true,  why:'Признак высших растений; в отличие от мхов есть корни и проводящие ткани.'},
+      {text:'Размножаются спорами, образующимися на нижней стороне листьев.', correct:true,  why:'Спорангии в сорусах под листом — характерная черта.'},
+      {text:'Для оплодотворения нужна вода (сперматозоиды плывут к яйцеклетке).', correct:true,  why:'Зависимость от воды для оплодотворения — признак споровых растений.'},
+      {text:'Имеют цветки и плоды.', correct:false, why:'Это признак цветковых.'},
+      {text:'Семенами размножаются в шишках.', correct:false, why:'Это признак голосеменных.'},
+      {text:'Не имеют проводящих тканей; вода поднимается осмотически.', correct:false, why:'У папоротников развита ксилема и флоэма.'}
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, picks:new Set(), solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  let optsHtml = '';
+  q.statements.forEach((s, i) => {
+    optsHtml += `
+      <div class="option" data-i="${i}">
+        <div class="option-num">${i+1}</div>
+        <div class="option-text">${s.text}</div>
+      </div>
+    `;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">3 верных из 6</span>
+      <div class="context">${q.context}</div>
+      <p class="q-text">Выберите из приведённого ниже списка <strong>три</strong> утверждения, которые следуют из описания организма.</p>
+      <div class="options" id="options">${optsHtml}</div>
+      <div class="counter" id="counter">Выбрано: 0 / 3</div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.picks = new Set();
+  document.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if(state.answered) return;
+      const i = +opt.dataset.i;
+      if(state.picks.has(i)){
+        state.picks.delete(i);
+        opt.classList.remove('selected');
+      } else if(state.picks.size < 3){
+        state.picks.add(i);
+        opt.classList.add('selected');
+      }
+      document.getElementById('counter').textContent = `Выбрано: ${state.picks.size} / 3`;
+      document.getElementById('check').disabled = state.picks.size !== 3;
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  let countCorrect = 0;
+  q.statements.forEach((s, i) => {
+    const opt = document.querySelector(`.option[data-i="${i}"]`);
+    opt.classList.add('locked');
+    const picked = state.picks.has(i);
+    if(s.correct && picked){ opt.classList.add('correct-mark'); countCorrect++; }
+    else if(s.correct && !picked) opt.classList.add('miss-mark');
+    else if(!s.correct && picked) opt.classList.add('wrong-mark');
+  });
+
+  state.solved++;
+  // По демо ОГЭ: 2 балла за все 3 верных, 1 балл за 2 верных + не более 1 ошибки
+  let score = 0;
+  const wrongPicks = [...state.picks].filter(i => !q.statements[i].correct).length;
+  if(countCorrect === 3 && wrongPicks === 0) score = 2;
+  else if(countCorrect === 2 && wrongPicks <= 1) score = 1;
+  else score = 0;
+
+  if(score === 2){ state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = `
+    <div style="font-size:13px;margin-bottom:6px;color:var(--muted)">
+      <span class="legend-key"><span class="key-dot correct"></span>верно отмечено</span>
+      <span class="legend-key"><span class="key-dot miss"></span>пропущено</span>
+      <span class="legend-key"><span class="key-dot wrong"></span>ошибочно отмечено</span>
+    </div>
+  `;
+  notesHtml += '<p style="margin-top:8px"><strong>Пояснения:</strong></p>';
+  q.statements.forEach((s, i) => {
+    const tag = s.correct ? '✓' : '✗';
+    notesHtml += `<p style="margin:4px 0"><strong>${i+1}.</strong> <span style="color:${s.correct?'var(--success)':'var(--error)'}">${tag}</span> ${s.why}</p>`;
+  });
+
+  if(score === 2){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно (2 балла).</strong> Все три утверждения отмечены правильно.</div><div class="hint">${notesHtml}</div>`;
+  } else if(score === 1){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (1 балл).</strong> Не все три верных утверждения найдены, либо отмечено лишнее.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно (0 баллов).</strong> Меньше двух верных утверждений отмечено или слишком много ошибок.</div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

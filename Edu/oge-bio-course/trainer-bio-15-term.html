@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №15 — биологический термин</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.bio-table{
+  width:100%;
+  border-collapse:collapse;
+  margin:14px 0 18px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  overflow:hidden;
+}
+.bio-table th{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:14px;
+  text-align:left;
+  padding:10px 14px;
+  background:var(--accent-soft);
+  border-bottom:1px solid var(--border);
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+  color:var(--accent);
+}
+.bio-table td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  font-size:16px;
+}
+.bio-table tr:last-child td{border-bottom:none}
+.bio-gap{
+  display:inline-block;
+  font-style:italic;
+  color:var(--accent);
+  letter-spacing:0.5em;
+  font-weight:500;
+  font-size:20px;
+  vertical-align:middle;
+}
+.options{display:flex;flex-direction:column;gap:6px}
+.option{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  background:white;
+  border-radius:4px;
+  cursor:pointer;
+  transition:all 0.12s;
+  user-select:none;
+}
+.option:hover:not(.locked){border-color:var(--accent)}
+.option.selected{border-color:var(--accent);background:#F0EDE0}
+.option.locked{cursor:not-allowed}
+.option-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  font-weight:500;
+  flex-shrink:0;
+  width:26px;
+  height:26px;
+  border:1px solid var(--border);
+  background:var(--paper);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+}
+.option.selected .option-num{background:var(--accent);color:white;border-color:var(--accent)}
+.option-text{flex:1;font-size:16px}
+.option.correct-mark{background:#E1ECDD;border-color:#A8C49F}
+.option.correct-mark .option-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.option.wrong-mark{background:#F2E0DC;border-color:#C99A93}
+.option.wrong-mark .option-num{background:#C99A93;color:white;border-color:#C99A93}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №15</span>
+  <span class="right">1 балл · базовый</span>
+</div>
+
+<h1>Биологический <em>термин</em></h1>
+<p class="lead">Тренажёр на задание №15 ОГЭ по биологии: дано определение биологического процесса, явления или структуры. Выбери термин, который ему соответствует.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №15 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// gapPos: 'left' (пропуск слева, объект) или 'right' (пропуск справа, функция)
+// options: 4 варианта, correct — индекс 0..3
+// Каждое задание — определение и 4 варианта термина; correct — индекс 0..3
+const QUESTIONS = [
+  { id:'t1',
+    definition:'Явление захвата клетками крови чужеродных твёрдых частиц (бактерий, повреждённых клеток).',
+    options:[
+      {text:'симбиоз', why:'Симбиоз — длительное совместное существование разных организмов с взаимной пользой; не имеет отношения к захвату частиц.'},
+      {text:'транспорт веществ', why:'Транспорт — общее название перемещения веществ; не предполагает поглощение клеток.'},
+      {text:'фагоцитоз', why:'Фагоцитоз — поглощение клетками твёрдых частиц; описано И. И. Мечниковым.'},
+      {text:'паразитизм', why:'Паразитизм — взаимоотношения организмов, при которых один живёт за счёт другого; не явление поглощения.'}
+    ],
+    correct:2
+  },
+  { id:'t2',
+    definition:'Совокупность процессов поступления, превращения и удаления веществ и энергии в организме.',
+    options:[
+      {text:'обмен веществ (метаболизм)', why:'Точное определение метаболизма.'},
+      {text:'размножение', why:'Размножение — воспроизведение себе подобных.'},
+      {text:'раздражимость', why:'Раздражимость — способность отвечать на воздействия среды.'},
+      {text:'наследственность', why:'Наследственность — передача признаков потомству.'}
+    ],
+    correct:0
+  },
+  { id:'t3',
+    definition:'Процесс образования органических веществ из углекислого газа и воды на свету в зелёных растениях.',
+    options:[
+      {text:'дыхание', why:'Дыхание — обратный процесс: расщепление органики с выделением энергии.'},
+      {text:'фотосинтез', why:'Точное определение фотосинтеза.'},
+      {text:'испарение', why:'Испарение (транспирация) — потеря воды растением через устьица.'},
+      {text:'питание', why:'Питание — получение веществ из среды, более общий термин.'}
+    ],
+    correct:1
+  },
+  { id:'t4',
+    definition:'Закономерная последовательность событий: ответ организма на раздражение, осуществляемый при участии нервной системы.',
+    options:[
+      {text:'гормон', why:'Гормон — биологически активное вещество, не процесс.'},
+      {text:'нейрон', why:'Нейрон — клетка, не процесс.'},
+      {text:'рефлекс', why:'Точное определение рефлекса (по И. М. Сеченову, И. П. Павлову).'},
+      {text:'инстинкт', why:'Инстинкт — врождённый комплекс рефлексов, специфическое поведение, а не одиночный ответ.'}
+    ],
+    correct:2
+  },
+  { id:'t5',
+    definition:'Сожительство двух организмов разных видов, при котором оба получают пользу.',
+    options:[
+      {text:'паразитизм', why:'Один организм живёт за счёт другого, нанося ему вред.'},
+      {text:'хищничество', why:'Один питается другим.'},
+      {text:'мутуализм (взаимовыгодный симбиоз)', why:'Точное определение взаимовыгодного симбиоза.'},
+      {text:'конкуренция', why:'Соперничество за ресурсы; обоим хуже, не лучше.'}
+    ],
+    correct:2
+  },
+  { id:'t6',
+    definition:'Историческое развитие живых организмов на Земле, сопровождающееся возникновением новых видов.',
+    options:[
+      {text:'онтогенез', why:'Индивидуальное развитие организма от зиготы до смерти.'},
+      {text:'эволюция', why:'Точное определение эволюции по Ч. Дарвину.'},
+      {text:'регенерация', why:'Восстановление утраченных частей тела.'},
+      {text:'адаптация', why:'Адаптация — приспособление; результат эволюции, но не она сама.'}
+    ],
+    correct:1
+  },
+  { id:'t7',
+    definition:'Сообщество живых организмов вместе со средой их обитания, в котором происходит круговорот веществ и поток энергии.',
+    options:[
+      {text:'биогеоценоз (экосистема)', why:'Точное определение экосистемы.'},
+      {text:'биосфера', why:'Биосфера — совокупность всех экосистем Земли; шире, чем одна экосистема.'},
+      {text:'популяция', why:'Группа особей одного вида, более узкое понятие.'},
+      {text:'вид', why:'Вид — таксон, не сообщество.'}
+    ],
+    correct:0
+  },
+  { id:'t8',
+    definition:'Совокупность всех генов организма, его наследственная программа.',
+    options:[
+      {text:'фенотип', why:'Совокупность внешних признаков, формирующихся под действием генотипа и среды.'},
+      {text:'кариотип', why:'Кариотип — набор хромосом клетки, а не совокупность всех генов конкретного организма.'},
+      {text:'генотип', why:'Точное определение генотипа.'},
+      {text:'хромосома', why:'Структура из ДНК и белков; носитель генов, но не их совокупность.'}
+    ],
+    correct:2
+  },
+  { id:'t9',
+    definition:'Свойство живых организмов отвечать на воздействия внешней среды реакциями, обеспечивающими их выживание.',
+    options:[
+      {text:'рост', why:'Увеличение размеров и массы — другое свойство.'},
+      {text:'размножение', why:'Воспроизведение себе подобных — другое свойство.'},
+      {text:'наследственность', why:'Передача признаков — другое свойство.'},
+      {text:'раздражимость', why:'Точное определение раздражимости.'}
+    ],
+    correct:3
+  },
+  { id:'t10',
+    definition:'Группа особей одного вида, длительно проживающих на определённой территории и свободно скрещивающихся между собой.',
+    options:[
+      {text:'популяция', why:'Точное определение популяции.'},
+      {text:'вид', why:'Вид — более широкое понятие; популяция — единица вида.'},
+      {text:'род', why:'Род — таксон выше вида.'},
+      {text:'биоценоз', why:'Сообщество разных видов, не одного.'}
+    ],
+    correct:0
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, pick:null, solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  let optsHtml = '';
+  q.options.forEach((o, i) => {
+    optsHtml += `
+      <div class="option" data-i="${i}">
+        <div class="option-num">${i+1}</div>
+        <div class="option-text">${o.text}</div>
+      </div>
+    `;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">биологический термин</span>
+      <p class="q-text">Каким биологическим термином обозначают:</p>
+      <div style="margin-bottom:14px;padding:14px 16px;background:white;border:1px solid var(--border);border-radius:4px;font-style:italic;font-size:17px">${q.definition}</div>
+      <div class="options" id="options">${optsHtml}</div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.pick = null;
+  document.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if(state.answered) return;
+      document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.pick = +opt.dataset.i;
+      document.getElementById('check').disabled = false;
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  const ok = state.pick === q.correct;
+  state.solved++;
+  if(ok){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  q.options.forEach((o, i) => {
+    const opt = document.querySelector(`.option[data-i="${i}"]`);
+    opt.classList.add('locked');
+    if(i === q.correct) opt.classList.add('correct-mark');
+    else if(i === state.pick) opt.classList.add('wrong-mark');
+  });
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = '<p style="margin-top:8px"><strong>Пояснения:</strong></p>';
+  q.options.forEach((o, i) => {
+    const tag = i === q.correct ? '✓' : '✗';
+    notesHtml += `<p style="margin:4px 0"><strong>${i+1}.</strong> <span style="color:${i===q.correct?'var(--success)':'var(--error)'}">${tag}</span> ${o.why}</p>`;
+  });
+
+  if(ok){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно.</strong> Ответ: ${q.correct+1}.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: ${q.correct+1}.</div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

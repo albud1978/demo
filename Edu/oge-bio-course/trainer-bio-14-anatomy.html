@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №14 — анатомия по рисунку</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.svg-wrap{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:14px;
+  margin-bottom:16px;
+  text-align:center;
+}
+.svg-wrap svg{display:block;margin:0 auto;max-width:100%;height:auto}
+.organ{fill:#E8E4D6;stroke:#6B6B6B;stroke-width:0.8}
+.organ.highlight{fill:#A8C49F}
+.label-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  font-weight:500;
+  fill:white;
+}
+.label-circle{
+  fill:#2D4A2B;
+}
+.options{display:flex;flex-direction:column;gap:6px}
+.option{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--border);background:white;border-radius:4px;cursor:pointer;transition:all 0.12s;user-select:none}
+.option:hover:not(.locked){border-color:var(--accent)}
+.option.selected{border-color:var(--accent);background:#F0EDE0}
+.option.locked{cursor:not-allowed}
+.option-num{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;flex-shrink:0;width:26px;height:26px;border:1px solid var(--border);background:var(--paper);display:flex;align-items:center;justify-content:center;border-radius:50%}
+.option.selected .option-num{background:var(--accent);color:white;border-color:var(--accent)}
+.option-text{flex:1;font-size:16px}
+.option.correct-mark{background:#E1ECDD;border-color:#A8C49F}
+.option.correct-mark .option-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.option.wrong-mark{background:#F2E0DC;border-color:#C99A93}
+.option.wrong-mark .option-num{background:#C99A93;color:white;border-color:#C99A93}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №14</span>
+  <span class="right">1 балл · базовый</span>
+</div>
+
+<h1>Анатомия <em>по рисунку</em></h1>
+<p class="lead">Тренажёр на задание №14 ОГЭ по биологии: на схеме внутренних органов человека отмечен один орган. Определи его по описанию или функции.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №14 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// SVG-силуэт человека с пронумерованными органами
+// Координаты органов (центр круга с цифрой):
+const ORGANS = {
+  brain:    {cx:160, cy: 50, label:'Головной мозг'},
+  lungs:    {cx:115, cy:135, label:'Лёгкие'},     // левое лёгкое (на схеме слева)
+  heart:    {cx:170, cy:155, label:'Сердце'},
+  liver:    {cx:130, cy:215, label:'Печень'},
+  stomach:  {cx:185, cy:225, label:'Желудок'},
+  kidneys:  {cx:200, cy:265, label:'Почки'},
+  intestine:{cx:160, cy:295, label:'Кишечник'},
+  bladder:  {cx:160, cy:340, label:'Мочевой пузырь'}
+};
+
+function buildSVG(highlightKey){
+  // Простой стилизованный силуэт человека (плечи, туловище, голова)
+  const W = 320, H = 400;
+  // позиции цифр (по порядку 1..8)
+  const order = ['brain','lungs','heart','liver','stomach','kidneys','intestine','bladder'];
+  // Силуэт
+  let body = `
+    <!-- Голова -->
+    <ellipse cx="160" cy="50" rx="36" ry="42" class="organ"/>
+    <!-- Шея -->
+    <rect x="148" y="86" width="24" height="14" class="organ"/>
+    <!-- Туловище (контур) -->
+    <path d="M 80 110 Q 80 100 100 100 L 220 100 Q 240 100 240 110 L 240 320 Q 240 360 200 360 L 120 360 Q 80 360 80 320 Z"
+          fill="none" stroke="#6B6B6B" stroke-width="1.2"/>
+    <!-- Лёгкие (контур, светлый) -->
+    <ellipse cx="115" cy="160" rx="24" ry="40" fill="#F8F4E8" stroke="#6B6B6B" stroke-width="0.7" stroke-dasharray="3,2"/>
+    <ellipse cx="205" cy="160" rx="24" ry="40" fill="#F8F4E8" stroke="#6B6B6B" stroke-width="0.7" stroke-dasharray="3,2"/>
+    <!-- Сердце -->
+    <path d="M 165 145 C 160 138, 145 138, 145 152 C 145 165, 165 178, 170 180 C 175 178, 195 165, 195 152 C 195 138, 180 138, 175 145 Z"
+          fill="#F8F4E8" stroke="#6B6B6B" stroke-width="0.7" stroke-dasharray="3,2"/>
+    <!-- Печень -->
+    <path d="M 92 200 Q 92 235 130 235 L 165 230 L 165 205 Q 130 195 92 200 Z"
+          fill="#F8F4E8" stroke="#6B6B6B" stroke-width="0.7" stroke-dasharray="3,2"/>
+    <!-- Желудок -->
+    <path d="M 168 215 Q 165 218 167 232 Q 175 248 200 240 Q 215 230 210 218 Q 200 210 180 213 Z"
+          fill="#F8F4E8" stroke="#6B6B6B" stroke-width="0.7" stroke-dasharray="3,2"/>
+    <!-- Почки -->
+    <ellipse cx="120" cy="265" rx="12" ry="18" fill="#F8F4E8" stroke="#6B6B6B" stroke-width="0.7" stroke-dasharray="3,2"/>
+    <ellipse cx="200" cy="265" rx="12" ry="18" fill="#F8F4E8" stroke="#6B6B6B" stroke-width="0.7" stroke-dasharray="3,2"/>
+    <!-- Кишечник (тонкий + толстый, упрощённо) -->
+    <path d="M 110 290 Q 100 320 130 330 Q 160 335 180 320 Q 210 310 215 285 Q 200 290 175 295 Q 145 305 130 295 Q 115 285 110 290 Z"
+          fill="#F8F4E8" stroke="#6B6B6B" stroke-width="0.7" stroke-dasharray="3,2"/>
+    <!-- Мочевой пузырь -->
+    <ellipse cx="160" cy="345" rx="18" ry="12" fill="#F8F4E8" stroke="#6B6B6B" stroke-width="0.7" stroke-dasharray="3,2"/>
+  `;
+
+  // Маркер выделенного органа (зелёный кружок с цифрой 1)
+  let markers = '';
+  const idx = order.indexOf(highlightKey);
+  if(idx >= 0){
+    const o = ORGANS[highlightKey];
+    markers += `
+      <circle cx="${o.cx}" cy="${o.cy}" r="14" class="label-circle"/>
+      <text x="${o.cx}" y="${o.cy + 5}" text-anchor="middle" class="label-num">1</text>
+    `;
+  }
+
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img">${body}${markers}</svg>`;
+}
+
+const QUESTIONS = [
+  { id:'an1', highlight:'heart',
+    prompt:'Какой орган отмечен на рисунке цифрой 1?',
+    options:['печень','сердце','желудок','почка'],
+    correct:1,
+    note:'Сердце расположено в грудной полости, между лёгкими, чуть левее центральной линии.'
+  },
+  { id:'an2', highlight:'liver',
+    prompt:'Какой орган отмечен на рисунке цифрой 1?',
+    options:['печень','селезёнка','лёгкое','поджелудочная железа'],
+    correct:0,
+    note:'Печень — крупная пищеварительная железа, расположена в правом подреберье, под диафрагмой.'
+  },
+  { id:'an3', highlight:'stomach',
+    prompt:'Какой орган отмечен на рисунке цифрой 1?',
+    options:['тонкий кишечник','желудок','селезёнка','печень'],
+    correct:1,
+    note:'Желудок находится в верхней левой части брюшной полости, между пищеводом и двенадцатиперстной кишкой.'
+  },
+  { id:'an4', highlight:'kidneys',
+    prompt:'Какой парный орган отмечен на рисунке цифрой 1?',
+    options:['лёгкие','надпочечники','почки','яичники'],
+    correct:2,
+    note:'Почки — парный орган выделения, расположены в поясничной области по обе стороны от позвоночника.'
+  },
+  { id:'an5', highlight:'lungs',
+    prompt:'Какой орган отмечен на рисунке цифрой 1?',
+    options:['сердце','лёгкое','селезёнка','печень'],
+    correct:1,
+    note:'Лёгкие — парный орган дыхания, расположены в грудной полости по обе стороны от сердца.'
+  },
+  { id:'an6', highlight:'brain',
+    prompt:'Какой орган отмечен на рисунке цифрой 1?',
+    options:['щитовидная железа','спинной мозг','головной мозг','глотка'],
+    correct:2,
+    note:'Головной мозг — главный орган центральной нервной системы; находится в полости черепа.'
+  },
+  { id:'an7', highlight:'intestine',
+    prompt:'Какой орган отмечен на рисунке цифрой 1?',
+    options:['кишечник','матка','мочеточники','желчный пузырь'],
+    correct:0,
+    note:'Кишечник (тонкий и толстый) занимает большую часть брюшной полости; место всасывания питательных веществ и формирования каловых масс.'
+  },
+  { id:'an8', highlight:'bladder',
+    prompt:'Какой орган отмечен на рисунке цифрой 1?',
+    options:['прямая кишка','мочевой пузырь','матка','предстательная железа'],
+    correct:1,
+    note:'Мочевой пузырь — полый орган в малом тазу, накапливает мочу, поступающую из почек по мочеточникам.'
+  },
+  { id:'an9', highlight:'heart',
+    prompt:'В каком из перечисленных органов вырабатываются ферменты, расщепляющие пищу?',
+    options:['отмечен на рисунке (центральный мышечный)','желудок','почка','лёгкое'],
+    correct:1,
+    note:'В желудке вырабатывается пепсин, расщепляющий белки. Многие другие пищеварительные ферменты выделяет поджелудочная железа, а действуют они в тонком кишечнике. Сердце — мышечный насос.'
+  },
+  { id:'an10', highlight:'liver',
+    prompt:'Какую функцию выполняет орган, отмеченный на рисунке цифрой 1?',
+    options:['газообмен с воздухом','перекачивание крови','выработка жёлчи и обезвреживание токсинов','выделение мочи'],
+    correct:2,
+    note:'Печень вырабатывает жёлчь (для эмульгации жиров) и нейтрализует токсичные вещества из крови, поступающей по воротной вене.'
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, pick:null, solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  let optsHtml = '';
+  q.options.forEach((o, i) => {
+    optsHtml += `<div class="option" data-i="${i}"><div class="option-num">${i+1}</div><div class="option-text">${o}</div></div>`;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">анатомия</span>
+      <p class="q-text">${q.prompt}</p>
+      <div class="svg-wrap">${buildSVG(q.highlight)}</div>
+      <div class="options" id="options">${optsHtml}</div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.pick = null;
+  document.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if(state.answered) return;
+      document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.pick = +opt.dataset.i;
+      document.getElementById('check').disabled = false;
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  const ok = state.pick === q.correct;
+  state.solved++;
+  if(ok){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+  q.options.forEach((o, i) => {
+    const opt = document.querySelector(`.option[data-i="${i}"]`);
+    opt.classList.add('locked');
+    if(i === q.correct) opt.classList.add('correct-mark');
+    else if(i === state.pick) opt.classList.add('wrong-mark');
+  });
+  const fb = document.getElementById('feedback-area');
+  if(ok){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно.</strong> Ответ: ${q.correct+1} (${q.options[q.correct]}).</div><div class="hint">${q.note}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: ${q.correct+1} (${q.options[q.correct]}).</div><div class="hint">${q.note}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

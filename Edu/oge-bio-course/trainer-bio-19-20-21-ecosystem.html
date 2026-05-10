@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №19–21 — экосистема (связка)</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.context{margin-bottom:16px;padding:14px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:2px;font-size:15px}
+.context strong{color:var(--accent)}
+.context em{font-style:italic}
+.subq{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:12px 14px;
+  margin-bottom:10px;
+}
+.subq-title{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:15px;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+.subq-options{display:flex;flex-direction:column;gap:5px}
+.subq-opt{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  padding:8px 10px;
+  border:1px solid var(--border);
+  background:var(--paper);
+  border-radius:3px;
+  cursor:pointer;
+  font-size:14px;
+  transition:all 0.12s;
+  user-select:none;
+}
+.subq-opt:hover:not(.locked){border-color:var(--accent)}
+.subq-opt.selected{border-color:var(--accent);background:#F0EDE0}
+.subq-opt.locked{cursor:not-allowed}
+.subq-opt-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  font-weight:500;
+  flex-shrink:0;
+  width:20px;
+  height:20px;
+  border:1px solid var(--border);
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+}
+.subq-opt.selected .subq-opt-num{background:var(--accent);color:white;border-color:var(--accent)}
+.subq-opt-text{flex:1}
+.subq-opt.correct-mark{background:#E1ECDD;border-color:#A8C49F}
+.subq-opt.correct-mark .subq-opt-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.subq-opt.wrong-mark{background:#F2E0DC;border-color:#C99A93}
+.subq-opt.wrong-mark .subq-opt-num{background:#C99A93;color:white;border-color:#C99A93}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.partial{background:#FFF5DA;border:1px solid #D4B952;color:#7A5C00}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задания №19–21</span>
+  <span class="right">4 балла · базовый+повышенный</span>
+</div>
+
+<h1><em>Экосистема</em>: связка №19–21</h1>
+<p class="lead">Тренажёр-связка на задания №19–21 ОГЭ по биологии: дано описание экосистемы с 6 организмами. По одной экосистеме — 3 связанных задания (всего 4 балла).</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задания №19–21 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// Каждое задание: описание породы + 3 подвопроса; каждый — 4 варианта, correct индекс
+const QUESTIONS = [
+
+  { id:'eco1',
+    species:'лиственный лес',
+    description:`<strong>В лиственном лесу обитают организмы:</strong>
+      <ul style="margin:6px 0 6px 22px;padding:0">
+        <li><strong>А</strong> — дуб черешчатый (дерево)</li>
+        <li><strong>Б</strong> — гусеница дубового шелкопряда</li>
+        <li><strong>В</strong> — большая синица (насекомоядная птица)</li>
+        <li><strong>Г</strong> — ястреб-перепелятник (хищная птица)</li>
+        <li><strong>Д</strong> — почвенные гнилостные бактерии</li>
+        <li><strong>Е</strong> — омела (полупаразитное растение на дубе)</li>
+      </ul>`,
+    subq:[
+      { title:'№19. Какой организм является редуцентом этой экосистемы?',
+        points:1,
+        options:['А — дуб','В — синица','Д — гнилостные бактерии','Е — омела'],
+        correct:2, why:'Гнилостные бактерии разлагают органические остатки до неорганических веществ — это типичные редуценты.'
+      },
+      { title:'№20. Какая последовательность отображает правильную пищевую цепь?',
+        points:1,
+        options:[
+          'дуб → синица → ястреб → гусеница',
+          'гусеница → дуб → синица → ястреб',
+          'дуб → гусеница → синица → ястреб',
+          'ястреб → синица → гусеница → дуб'
+        ],
+        correct:2, why:'Пищевая цепь идёт от продуцента к высшему хищнику: дуб (продуцент) → гусеница (травоядное) → синица (1-й хищник) → ястреб (2-й хищник).'
+      },
+      { title:'№21. Какие отношения между парами организмов?',
+        points:2,
+        options:[
+          'А и Б — мутуализм; В и Г — симбиоз',
+          'А и Б — хищничество (растение → травоядное); В и Г — хищничество (синица → ястреб)',
+          'А и Е — паразитизм; В и Б — хищничество',
+          'А и Д — конкуренция; В и Г — мутуализм'
+        ],
+        correct:2, why:'Омела (Е) — полупаразит на дубе (А) — паразитизм. Синица (В) ловит и поедает гусеницу (Б) — хищничество.'
+      }
+    ]
+  },
+
+  { id:'eco2',
+    species:'луг',
+    description:`<strong>На лугу обитают:</strong>
+      <ul style="margin:6px 0 6px 22px;padding:0">
+        <li><strong>А</strong> — клевер луговой</li>
+        <li><strong>Б</strong> — кузнечик</li>
+        <li><strong>В</strong> — травяная лягушка</li>
+        <li><strong>Г</strong> — уж обыкновенный</li>
+        <li><strong>Д</strong> — клубеньковые бактерии (на корнях клевера)</li>
+        <li><strong>Е</strong> — плесневые грибы (на опавшей листве)</li>
+      </ul>`,
+    subq:[
+      { title:'№19. Какие организмы — продуценты этой экосистемы?',
+        points:1,
+        options:['Б, кузнечик','В, лягушка','А, клевер','Е, плесневые грибы'],
+        correct:2, why:'Только клевер — зелёное растение, способное к фотосинтезу.'
+      },
+      { title:'№20. Какая пищевая цепь правильная?',
+        points:1,
+        options:[
+          'клевер → кузнечик → лягушка → уж',
+          'кузнечик → клевер → лягушка → уж',
+          'уж → лягушка → кузнечик → клевер',
+          'клевер → лягушка → кузнечик → уж'
+        ],
+        correct:0, why:'От продуцента (клевер) → растительноядный (кузнечик) → насекомоядный (лягушка) → хищник (уж).'
+      },
+      { title:'№21. Какие отношения между парами организмов?',
+        points:2,
+        options:[
+          'А и Д — мутуализм (бактерии фиксируют азот, клевер даёт сахара); В и Б — хищничество',
+          'А и Д — паразитизм; Б и В — мутуализм',
+          'А и Б — мутуализм; В и Г — конкуренция',
+          'А и Е — симбиоз; Г и В — мутуализм'
+        ],
+        correct:0, why:'Клубеньковые бактерии и клевер — классический мутуализм. Лягушка ловит кузнечика — хищничество.'
+      }
+    ]
+  },
+
+  { id:'eco3',
+    species:'степь',
+    description:`<strong>В степи обитают:</strong>
+      <ul style="margin:6px 0 6px 22px;padding:0">
+        <li><strong>А</strong> — ковыль перистый (степная трава)</li>
+        <li><strong>Б</strong> — обыкновенный суслик (грызун)</li>
+        <li><strong>В</strong> — степной хорь</li>
+        <li><strong>Г</strong> — степной орёл</li>
+        <li><strong>Д</strong> — почвенные сапротрофные бактерии</li>
+        <li><strong>Е</strong> — лисица обыкновенная</li>
+      </ul>`,
+    subq:[
+      { title:'№19. Какой организм — консумент 2-го порядка?',
+        points:1,
+        options:['А, ковыль','Б, суслик','В, степной хорь','Д, бактерии'],
+        correct:2, why:'Хорь питается сусликами (консументами 1-го порядка), значит сам он — консумент 2-го порядка.'
+      },
+      { title:'№20. Какая пищевая цепь правильная?',
+        points:1,
+        options:[
+          'суслик → ковыль → хорь → орёл',
+          'ковыль → суслик → хорь → орёл',
+          'орёл → ковыль → суслик',
+          'ковыль → хорь → суслик → орёл'
+        ],
+        correct:1, why:'Продуцент → растительноядный → мелкий хищник → крупный хищник.'
+      },
+      { title:'№21. Какие отношения между парами организмов?',
+        points:2,
+        options:[
+          'В и Е — конкуренция (оба охотятся на сусликов); Г и Б — хищничество',
+          'А и Б — мутуализм; Г и В — паразитизм',
+          'А и Д — паразитизм; Б и Е — симбиоз',
+          'А и Г — хищничество; В и Е — мутуализм'
+        ],
+        correct:0, why:'Хорь и лисица — оба охотятся на грызунов (конкуренция за пищу). Орёл ловит сусликов (хищничество).'
+      }
+    ]
+  },
+
+  { id:'eco4',
+    species:'тайга',
+    description:`<strong>В тайге обитают:</strong>
+      <ul style="margin:6px 0 6px 22px;padding:0">
+        <li><strong>А</strong> — сосна обыкновенная</li>
+        <li><strong>Б</strong> — белка обыкновенная (грызёт шишки)</li>
+        <li><strong>В</strong> — куница лесная</li>
+        <li><strong>Г</strong> — рысь</li>
+        <li><strong>Д</strong> — грибы-сапротрофы (на опаде хвои)</li>
+        <li><strong>Е</strong> — клещ таёжный (на млекопитающих)</li>
+      </ul>`,
+    subq:[
+      { title:'№19. Какой организм — продуцент?',
+        points:1,
+        options:['Б, белка','А, сосна','Д, грибы','Е, клещ'],
+        correct:1, why:'Только сосна — фотосинтезирующее растение, продуцент органики.'
+      },
+      { title:'№20. Какая пищевая цепь правильная?',
+        points:1,
+        options:[
+          'сосна → белка → куница → рысь',
+          'куница → белка → сосна',
+          'белка → сосна → куница → рысь',
+          'рысь → куница → белка → сосна'
+        ],
+        correct:0, why:'От продуцента к высшему хищнику: сосна → белка (грызун) → куница (мелкий хищник) → рысь (крупный хищник).'
+      },
+      { title:'№21. Какие отношения между парами организмов?',
+        points:2,
+        options:[
+          'Б и А — мутуализм; В и Г — симбиоз',
+          'Е и Г — паразитизм; В и Б — хищничество',
+          'А и Е — паразитизм; Б и В — хищничество',
+          'А и Г — конкуренция; Д и Е — мутуализм'
+        ],
+        correct:1, why:'Клещ питается кровью млекопитающих, в том числе рыси, — паразитизм. Куница охотится на белку — хищничество.'
+      }
+    ]
+  },
+
+  { id:'eco5',
+    species:'пресный водоём',
+    description:`<strong>В пресном водоёме обитают:</strong>
+      <ul style="margin:6px 0 6px 22px;padding:0">
+        <li><strong>А</strong> — одноклеточные зелёные водоросли (фитопланктон)</li>
+        <li><strong>Б</strong> — дафнии (планктонные ракообразные)</li>
+        <li><strong>В</strong> — мальки плотвы</li>
+        <li><strong>Г</strong> — щука</li>
+        <li><strong>Д</strong> — донные бактерии-редуценты</li>
+        <li><strong>Е</strong> — речная пиявка (на рыбах)</li>
+      </ul>`,
+    subq:[
+      { title:'№19. Какой организм — консумент 1-го порядка?',
+        points:1,
+        options:['А, водоросли','Б, дафнии','Г, щука','Д, бактерии'],
+        correct:1, why:'Дафнии питаются фитопланктоном (продуцентами), значит они — консументы 1-го порядка.'
+      },
+      { title:'№20. Какая пищевая цепь правильная?',
+        points:1,
+        options:[
+          'водоросли → плотва → щука → дафнии',
+          'щука → плотва → дафнии → водоросли',
+          'водоросли → дафнии → плотва → щука',
+          'дафнии → плотва → водоросли → щука'
+        ],
+        correct:2, why:'Классическая водная цепь: фитопланктон → зоопланктон (дафнии) → мирная рыба (плотва) → хищная рыба (щука).'
+      },
+      { title:'№21. Какие отношения между парами организмов?',
+        points:2,
+        options:[
+          'Е и В — паразитизм (пиявка сосёт кровь рыбы); Г и В — хищничество',
+          'А и Б — паразитизм; В и Г — конкуренция',
+          'А и Д — хищничество; Г и Б — мутуализм',
+          'Б и В — конкуренция; Д и А — паразитизм'
+        ],
+        correct:0, why:'Пиявка живёт за счёт рыбы — паразитизм. Щука поедает плотву — хищничество.'
+      }
+    ]
+  },
+
+  { id:'eco6',
+    species:'тундра',
+    description:`<strong>В тундре обитают:</strong>
+      <ul style="margin:6px 0 6px 22px;padding:0">
+        <li><strong>А</strong> — ягель (лишайник)</li>
+        <li><strong>Б</strong> — северный олень</li>
+        <li><strong>В</strong> — волк тундровый</li>
+        <li><strong>Г</strong> — белая сова</li>
+        <li><strong>Д</strong> — лемминг (мелкий грызун)</li>
+        <li><strong>Е</strong> — почвенные психрофильные бактерии (редуценты)</li>
+      </ul>`,
+    subq:[
+      { title:'№19. Какой организм — продуцент?',
+        points:1,
+        options:['Е, бактерии','А, ягель','Д, лемминг','Г, сова'],
+        correct:1, why:'Ягель — лишайник, состоящий из гриба и водоросли (или цианобактерии); фотосинтезирует через водорослевый компонент → продуцент.'
+      },
+      { title:'№20. Какая пищевая цепь правильная?',
+        points:1,
+        options:[
+          'ягель → олень → волк',
+          'волк → олень → ягель',
+          'олень → ягель → волк',
+          'ягель → лемминг → олень → волк'
+        ],
+        correct:0, why:'Простая тундровая цепь: ягель (продуцент) → северный олень (травоядное) → волк (хищник).'
+      },
+      { title:'№21. Какие отношения между парами организмов?',
+        points:2,
+        options:[
+          'А (ягель) — внутри сам по себе мутуализм гриба и водоросли; Г и Д — хищничество',
+          'А и Е — паразитизм; В и Б — мутуализм',
+          'Б и В — конкуренция; Г и Д — симбиоз',
+          'А и Б — мутуализм; Г и В — паразитизм'
+        ],
+        correct:0, why:'Лишайник — классический пример мутуализма гриба и водоросли. Сова охотится на леммингов — хищничество.'
+      }
+    ]
+  },
+
+  { id:'eco7',
+    species:'болото',
+    description:`<strong>В болоте обитают:</strong>
+      <ul style="margin:6px 0 6px 22px;padding:0">
+        <li><strong>А</strong> — сфагнум (мох)</li>
+        <li><strong>Б</strong> — гусеница болотной бабочки (растительноядная)</li>
+        <li><strong>В</strong> — озёрная лягушка</li>
+        <li><strong>Г</strong> — серая цапля</li>
+        <li><strong>Д</strong> — клюква болотная</li>
+        <li><strong>Е</strong> — анаэробные бактерии торфяников (редуценты)</li>
+      </ul>`,
+    subq:[
+      { title:'№19. Какой организм — продуцент болотной экосистемы?',
+        points:1,
+        options:['Б, гусеница','В, лягушка','А, сфагнум (или Д, клюква)','Е, бактерии'],
+        correct:2, why:'Сфагнум и клюква — растения, способные к фотосинтезу. Гусеница — консумент 1-го порядка, лягушка — консумент 2-го порядка, бактерии торфяников — редуценты.'
+      },
+      { title:'№20. Какая пищевая цепь правильная?',
+        points:1,
+        options:[
+          'клюква → гусеница → лягушка → цапля',
+          'гусеница → лягушка → цапля → клюква',
+          'клюква → лягушка → гусеница → цапля',
+          'лягушка → клюква → цапля → гусеница'
+        ],
+        correct:0, why:'Болотная цепь: клюква (продуцент) → растительноядная гусеница → лягушка → цапля.'
+      },
+      { title:'№21. Какие отношения между парами организмов?',
+        points:2,
+        options:[
+          'В и Б — хищничество; Г и В — хищничество',
+          'А и Е — мутуализм; Б и А — конкуренция',
+          'А и Д — конкуренция; В и Г — мутуализм',
+          'А и В — паразитизм; Б и Д — хищничество'
+        ],
+        correct:0, why:'Лягушка поедает гусеницу; цапля ест лягушек — в обоих случаях это хищничество.'
+      }
+    ]
+  },
+
+  { id:'eco8',
+    species:'хвойный лес умеренной зоны',
+    description:`<strong>В хвойном лесу обитают:</strong>
+      <ul style="margin:6px 0 6px 22px;padding:0">
+        <li><strong>А</strong> — ель европейская</li>
+        <li><strong>Б</strong> — белый гриб (микоризообразователь)</li>
+        <li><strong>В</strong> — заяц-беляк</li>
+        <li><strong>Г</strong> — сова неясыть</li>
+        <li><strong>Д</strong> — лесная мышь</li>
+        <li><strong>Е</strong> — дождевые черви (детритофаги в подстилке)</li>
+      </ul>`,
+    subq:[
+      { title:'№19. Кто играет роль детритофага (поедателя органических остатков)?',
+        points:1,
+        options:['А, ель','Б, белый гриб','Д, лесная мышь','Е, дождевые черви'],
+        correct:3, why:'Дождевые черви питаются разлагающейся листвой и хвойным опадом — типичные детритофаги.'
+      },
+      { title:'№20. Какая пищевая цепь правильная?',
+        points:1,
+        options:[
+          'мышь → сова → ель → заяц',
+          'ель → мышь → сова',
+          'сова → мышь → ель',
+          'ель → сова → заяц → мышь'
+        ],
+        correct:1, why:'Простая цепь: ель (продуцент) → мышь (грызун-семеноед) → сова (хищник).'
+      },
+      { title:'№21. Какие отношения между парами организмов?',
+        points:2,
+        options:[
+          'А и Б — мутуализм (микориза: дерево даёт сахара, гриб — воду и минералы); Г и Д — хищничество',
+          'А и В — конкуренция; Г и Б — мутуализм',
+          'А и Е — паразитизм; Г и Д — конкуренция',
+          'Б и В — мутуализм; А и Г — паразитизм'
+        ],
+        correct:0, why:'Микориза — взаимовыгодный симбиоз корней дерева и гифов гриба. Сова ловит мышей — хищничество.'
+      }
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, picks:[null,null,null], solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  let subqHtml = '';
+  q.subq.forEach((sq, si) => {
+    let optsHtml = '';
+    sq.options.forEach((opt, oi) => {
+      optsHtml += `
+        <div class="subq-opt" data-sub="${si}" data-opt="${oi}">
+          <div class="subq-opt-num">${oi+1}</div>
+          <div class="subq-opt-text">${opt}</div>
+        </div>
+      `;
+    });
+    subqHtml += `
+      <div class="subq">
+        <div class="subq-title">${sq.title}</div>
+        <div class="subq-options">${optsHtml}</div>
+      </div>
+    `;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">связка №19–21</span>
+      <div class="context"><strong><strong>Экосистема:</strong></strong> ${q.description}</div>
+      <p class="q-text">Ответь на три задания по этой экосистеме: №19 (1 балл) + №20 (1 балл) + №21 (2 балла) = 4 балла.</p>
+      ${subqHtml}
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.picks = [null, null, null];
+  document.querySelectorAll('.subq-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if(state.answered) return;
+      const sub = +opt.dataset.sub;
+      const o = +opt.dataset.opt;
+      // unselect siblings in this subq
+      document.querySelectorAll(`.subq-opt[data-sub="${sub}"]`).forEach(s => s.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.picks[sub] = o;
+      document.getElementById('check').disabled = state.picks.some(p => p === null);
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  let countCorrect = 0;
+  q.subq.forEach((sq, si) => {
+    document.querySelectorAll(`.subq-opt[data-sub="${si}"]`).forEach(opt => {
+      opt.classList.add('locked');
+      const o = +opt.dataset.opt;
+      if(o === sq.correct) opt.classList.add('correct-mark');
+      else if(o === state.picks[si]) opt.classList.add('wrong-mark');
+    });
+    if(state.picks[si] === sq.correct) countCorrect++;
+  });
+
+  state.solved++;
+  // Score: sub1=1б, sub2=1б, sub3=2б; total max = 4
+  let pointsScore = 0;
+  q.subq.forEach((sq, si) => {
+    if(state.picks[si] === sq.correct) pointsScore += sq.points || 1;
+  });
+  if(pointsScore === 4){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = '<p style="margin-top:8px"><strong>Пояснения:</strong></p>';
+  q.subq.forEach((sq, si) => {
+    const userVal = state.picks[si];
+    const ok = userVal === sq.correct;
+    notesHtml += `<p style="margin:4px 0">
+      <span style="color:${ok?'var(--success)':'var(--error)'}">${ok?'✓':'✗'}</span>
+      <strong>${si+1}.</strong> «${sq.options[sq.correct]}» — ${sq.why}
+    </p>`;
+  });
+
+  if(pointsScore === 4){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно (4 балла).</strong> Все три задания решены правильно.</div><div class="hint">${notesHtml}</div>`;
+  } else if(pointsScore >= 2){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (${pointsScore} ${pointsScore===1?'балл':'балла'}).</strong></div><div class="hint">${notesHtml}</div>`;
+  } else if(pointsScore === 1){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (1 балл).</strong></div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно (0 баллов).</strong></div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

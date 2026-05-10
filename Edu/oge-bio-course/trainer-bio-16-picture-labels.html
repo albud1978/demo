@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №16 — подписи к рисунку</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 14px;line-height:1.5}
+.svg-wrap{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:14px;
+  margin-bottom:16px;
+  text-align:center;
+}
+.svg-wrap svg{display:block;margin:0 auto;max-width:100%;height:auto}
+.label-marker{font-family:'Fraunces',serif;font-weight:600;font-size:18px;fill:#2D4A2B}
+.label-circle{fill:#FBF8F0;stroke:#2D4A2B;stroke-width:1.5}
+.row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border)}
+.row:last-child{border-bottom:none}
+.row-letter{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--accent);margin-right:8px}
+.row-organism{flex:1;font-size:15px}
+.choice-buttons{display:flex;gap:4px;flex-wrap:wrap}
+.choice-btn{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;width:36px;height:36px;border:1px solid var(--border);background:white;color:var(--ink);cursor:pointer;border-radius:4px;transition:all 0.15s}
+.choice-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.choice-btn.selected{background:var(--accent);color:white;border-color:var(--accent)}
+.choice-btn:disabled{cursor:not-allowed}
+.choice-btn.correct-mark{background:#A8C49F;color:white;border-color:#A8C49F}
+.choice-btn.wrong-mark{background:#C99A93;color:white;border-color:#C99A93}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+  .row{grid-template-columns:1fr;gap:6px}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №16</span>
+  <span class="right">2 балла · базовый</span>
+</div>
+
+<h1>Подписи к <em>рисунку</em></h1>
+<p class="lead">Тренажёр на задание №16 ОГЭ по биологии: на схеме отмечены 4 структуры буквами А, Б, В, Г. Сопоставь каждую букву с правильной подписью.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №16 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// Каждое задание содержит SVG-функцию (которая возвращает строку SVG) и 4 буквы → подписи
+// captions: список из 4 подписей (в нумерованном порядке для UI)
+// answer: для каждой буквы [А, Б, В, Г] — индекс подписи (1..4)
+
+// === Шаблон точки с буквой ===
+function lbl(cx, cy, letter){
+  return `<circle cx="${cx}" cy="${cy}" r="11" class="label-circle"/><text x="${cx}" y="${cy+6}" text-anchor="middle" class="label-marker">${letter}</text>`;
+}
+function arrow(x1,y1,x2,y2){
+  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#6B6B6B" stroke-width="0.8"/>`;
+}
+
+const QUESTIONS = [
+  // 1. Цветок с пестиком и тычинками
+  { id:'fig1', title:'Строение цветка',
+    svg: () => `<svg viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg" role="img">
+      <!-- Лепестки -->
+      <ellipse cx="180" cy="120" rx="80" ry="22" fill="#F2D9C9" stroke="#8B5C44" stroke-width="0.8"/>
+      <ellipse cx="180" cy="120" rx="80" ry="22" fill="#F2D9C9" stroke="#8B5C44" stroke-width="0.8" transform="rotate(60 180 120)"/>
+      <ellipse cx="180" cy="120" rx="80" ry="22" fill="#F2D9C9" stroke="#8B5C44" stroke-width="0.8" transform="rotate(120 180 120)"/>
+      <!-- Цветоложе -->
+      <ellipse cx="180" cy="120" rx="14" ry="14" fill="#E8E4D6" stroke="#6B6B6B" stroke-width="0.8"/>
+      <!-- Пестик: рыльце, столбик, завязь -->
+      <ellipse cx="180" cy="80" rx="9" ry="6" fill="#A8C49F" stroke="#2D4A2B" stroke-width="0.8"/>
+      <line x1="180" y1="86" x2="180" y2="120" stroke="#2D4A2B" stroke-width="2"/>
+      <ellipse cx="180" cy="138" rx="14" ry="20" fill="#D4E5CD" stroke="#2D4A2B" stroke-width="1.2"/>
+      <!-- Тычинки -->
+      <line x1="160" y1="120" x2="155" y2="95" stroke="#8B7C44" stroke-width="1.5"/>
+      <ellipse cx="155" cy="92" rx="5" ry="7" fill="#D4B952" stroke="#8B7C44"/>
+      <line x1="200" y1="120" x2="205" y2="95" stroke="#8B7C44" stroke-width="1.5"/>
+      <ellipse cx="205" cy="92" rx="5" ry="7" fill="#D4B952" stroke="#8B7C44"/>
+      <!-- Чашелистик -->
+      <path d="M 110 130 L 100 140 L 115 140 Z" fill="#A8C49F" stroke="#2D4A2B" stroke-width="0.7"/>
+      <!-- Цветоножка -->
+      <line x1="180" y1="158" x2="180" y2="240" stroke="#2D4A2B" stroke-width="2.5"/>
+      <!-- Метки -->
+      ${arrow(155, 92, 130, 70)}${lbl(115, 65, 'А')}
+      ${arrow(180, 80, 240, 50)}${lbl(254, 45, 'Б')}
+      ${arrow(180, 138, 280, 138)}${lbl(295, 138, 'В')}
+      ${arrow(110, 140, 80, 165)}${lbl(65, 168, 'Г')}
+    </svg>`,
+    captions:['тычинка (с пыльником)','рыльце пестика','завязь','чашелистик'],
+    answer:[1,2,3,4],  // А=тычинка, Б=рыльце, В=завязь, Г=чашелистик
+    notes:[
+      'А — тычинка с пыльником на верхушке (мужской орган цветка, производит пыльцу).',
+      'Б — рыльце пестика (верхняя часть пестика; ловит пыльцу).',
+      'В — завязь (нижняя часть пестика, содержит семязачатки).',
+      'Г — чашелистик (зелёные листочки чашечки, защищающие бутон).'
+    ]
+  },
+
+  // 2. Корень растения
+  { id:'fig2', title:'Зоны корня',
+    svg: () => `<svg viewBox="0 0 280 360" xmlns="http://www.w3.org/2000/svg" role="img">
+      <!-- Корень (вертикально) -->
+      <path d="M 130 30 Q 150 100 145 180 Q 142 240 138 290 L 138 320 Q 138 330 132 335 L 128 340" fill="#E8E4D6" stroke="#6B6B6B" stroke-width="1"/>
+      <path d="M 150 30 Q 170 100 165 180 Q 162 240 158 290 L 158 320 Q 158 330 164 335 L 168 340" fill="#E8E4D6" stroke="#6B6B6B" stroke-width="1"/>
+      <path d="M 130 30 L 150 30" stroke="#6B6B6B" stroke-width="1"/>
+      <!-- Чехлик (зона деления у самого кончика) -->
+      <path d="M 138 320 Q 148 350 158 320" fill="#A8C49F" stroke="#2D4A2B" stroke-width="0.8"/>
+      <!-- Корневые волоски -->
+      <line x1="130" y1="220" x2="115" y2="222" stroke="#6B6B6B" stroke-width="0.5"/>
+      <line x1="130" y1="225" x2="113" y2="226" stroke="#6B6B6B" stroke-width="0.5"/>
+      <line x1="130" y1="230" x2="115" y2="232" stroke="#6B6B6B" stroke-width="0.5"/>
+      <line x1="166" y1="222" x2="180" y2="220" stroke="#6B6B6B" stroke-width="0.5"/>
+      <line x1="166" y1="226" x2="182" y2="226" stroke="#6B6B6B" stroke-width="0.5"/>
+      <line x1="166" y1="230" x2="180" y2="232" stroke="#6B6B6B" stroke-width="0.5"/>
+      <!-- Метки и линии-указатели -->
+      ${arrow(148, 335, 220, 335)}${lbl(238, 335, 'Г')}
+      ${arrow(148, 280, 220, 280)}${lbl(238, 280, 'В')}
+      ${arrow(180, 226, 220, 200)}${lbl(238, 196, 'Б')}
+      ${arrow(148, 100, 220, 80)}${lbl(238, 76, 'А')}
+    </svg>`,
+    captions:['зона роста (растяжения)','зона всасывания (с корневыми волосками)','зона деления (с корневым чехликом)','зона проведения'],
+    answer:[4,2,1,3],
+    notes:[
+      'А — зона проведения (выше всех; идёт прямо в стебель).',
+      'Б — зона всасывания (с корневыми волосками — видны на схеме).',
+      'В — зона роста (растяжения); расположена сразу выше кончика.',
+      'Г — зона деления у самого кончика, защищена корневым чехликом.'
+    ]
+  },
+
+  // 3. Сердце человека (4 камеры)
+  { id:'fig3', title:'Сердце человека',
+    svg: () => `<svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" role="img">
+      <!-- Контур сердца (стилизованный) -->
+      <path d="M 80 100 Q 80 60 120 60 L 200 60 Q 240 60 240 100 L 240 220 Q 240 270 160 290 Q 80 270 80 220 Z"
+            fill="#F8F4E8" stroke="#6B6B6B" stroke-width="1.2"/>
+      <!-- Внутреннее разделение (предсердие/желудочек) -->
+      <line x1="80" y1="160" x2="240" y2="160" stroke="#6B6B6B" stroke-width="1" stroke-dasharray="3,2"/>
+      <!-- Перегородка (вертикаль) -->
+      <line x1="160" y1="60" x2="160" y2="290" stroke="#6B6B6B" stroke-width="1.2"/>
+      <!-- Сосуды сверху: аорта и лёгочная -->
+      <ellipse cx="135" cy="60" rx="14" ry="6" fill="none" stroke="#8B2C2C" stroke-width="1.2"/>
+      <ellipse cx="185" cy="60" rx="14" ry="6" fill="none" stroke="#2D4A6B" stroke-width="1.2"/>
+      <!-- Метки -->
+      ${arrow(120, 110, 50, 90)}${lbl(36, 85, 'А')}
+      ${arrow(200, 110, 270, 90)}${lbl(284, 85, 'Б')}
+      ${arrow(120, 220, 50, 235)}${lbl(36, 240, 'В')}
+      ${arrow(200, 220, 270, 235)}${lbl(284, 240, 'Г')}
+    </svg>`,
+    captions:['правое предсердие','левое предсердие','правый желудочек','левый желудочек'],
+    answer:[1,2,3,4],  // на схеме сердце «как видит врач», но по анатомии правое сверху-слева
+    notes:[
+      'А — правое предсердие. На схеме сердца (вид со стороны врача, как у пациента) правые камеры расположены слева.',
+      'Б — левое предсердие. Левые камеры сильнее развиты (большой круг).',
+      'В — правый желудочек. От него начинается лёгочная артерия (малый круг).',
+      'Г — левый желудочек. Самая мощная камера, выбрасывает кровь в аорту (большой круг).'
+    ]
+  },
+
+  // 4. Скелет рыбы (упрощённо)
+  { id:'fig4', title:'Скелет костной рыбы',
+    svg: () => `<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" role="img">
+      <!-- Череп -->
+      <ellipse cx="60" cy="105" rx="35" ry="28" fill="#F8F4E8" stroke="#6B6B6B" stroke-width="1"/>
+      <!-- Позвоночник -->
+      <path d="M 95 105 L 350 105" stroke="#6B6B6B" stroke-width="3" fill="none"/>
+      <!-- Позвонки (мелкие штрихи) -->
+      ${[110,130,150,170,190,210,230,250,270,290,310,330].map(x => `<line x1="${x}" y1="100" x2="${x}" y2="110" stroke="#6B6B6B" stroke-width="0.6"/>`).join('')}
+      <!-- Рёбра -->
+      ${[110,130,150,170,190,210,230,250].map(x => `<path d="M ${x} 110 Q ${x-5} 130 ${x-10} 150" stroke="#6B6B6B" stroke-width="0.7" fill="none"/>`).join('')}
+      <!-- Плавники: верхний (спинной) -->
+      <path d="M 200 100 L 220 60 L 260 100 Z" fill="#E8E4D6" stroke="#6B6B6B" stroke-width="0.8"/>
+      <!-- Хвостовой плавник -->
+      <path d="M 350 105 L 385 75 L 380 105 L 385 135 Z" fill="#E8E4D6" stroke="#6B6B6B" stroke-width="0.8"/>
+      <!-- Метки -->
+      ${arrow(60, 105, 60, 175)}${lbl(60, 188, 'А')}
+      ${arrow(180, 105, 180, 175)}${lbl(180, 188, 'Б')}
+      ${arrow(160, 140, 110, 175)}${lbl(95, 188, 'В')}
+      ${arrow(380, 105, 380, 175)}${lbl(380, 188, 'Г')}
+    </svg>`,
+    captions:['позвоночник','рёбра','череп','хвостовой плавник'],
+    answer:[3,1,2,4],
+    notes:[
+      'А — череп (расположен спереди, защищает головной мозг и органы чувств).',
+      'Б — позвоночник (опора всего тела, состоит из позвонков).',
+      'В — рёбра (костные дуги, отходящие от позвоночника).',
+      'Г — хвостовой плавник (главный движитель рыбы при плавании).'
+    ]
+  },
+
+  // 5. Растительная клетка
+  { id:'fig5', title:'Растительная клетка',
+    svg: () => `<svg viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg" role="img">
+      <!-- Клеточная стенка (внешний контур) -->
+      <rect x="40" y="40" width="280" height="200" fill="none" stroke="#6B6B6B" stroke-width="2.5"/>
+      <!-- Мембрана (внутренний контур) -->
+      <rect x="48" y="48" width="264" height="184" fill="#FBF8F0" stroke="#6B6B6B" stroke-width="0.8"/>
+      <!-- Большая центральная вакуоль -->
+      <rect x="100" y="80" width="160" height="120" fill="#E8F0E8" stroke="#A8C49F" stroke-width="1"/>
+      <!-- Ядро -->
+      <ellipse cx="80" cy="100" rx="22" ry="18" fill="#D4E5CD" stroke="#2D4A2B" stroke-width="1"/>
+      <ellipse cx="80" cy="100" rx="6" ry="5" fill="#2D4A2B"/>
+      <!-- Хлоропласты -->
+      <ellipse cx="280" cy="80" rx="10" ry="7" fill="#A8C49F" stroke="#2D4A2B" stroke-width="0.8"/>
+      <ellipse cx="290" cy="120" rx="10" ry="7" fill="#A8C49F" stroke="#2D4A2B" stroke-width="0.8"/>
+      <ellipse cx="275" cy="200" rx="10" ry="7" fill="#A8C49F" stroke="#2D4A2B" stroke-width="0.8"/>
+      <!-- Метки -->
+      ${arrow(40, 60, 20, 50)}${lbl(15, 35, 'А')}
+      ${arrow(80, 100, 30, 145)}${lbl(20, 152, 'Б')}
+      ${arrow(180, 140, 200, 250)}${lbl(200, 268, 'В')}
+      ${arrow(285, 120, 340, 90)}${lbl(345, 80, 'Г')}
+    </svg>`,
+    captions:['ядро','хлоропласт','клеточная стенка','вакуоль'],
+    answer:[3,1,4,2],
+    notes:[
+      'А — клеточная стенка (наружная жёсткая оболочка, состоит из целлюлозы; характерна для растительных клеток).',
+      'Б — ядро (содержит хроматин и ядрышко; хранит наследственную информацию).',
+      'В — крупная центральная вакуоль (заполнена клеточным соком; характерна для зрелых растительных клеток).',
+      'Г — хлоропласт (зелёный пластид, в нём идёт фотосинтез).'
+    ]
+  },
+
+  // 6. Рефлекторная дуга (упрощённая)
+  { id:'fig6', title:'Рефлекторная дуга',
+    svg: () => `<svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" role="img">
+      <!-- Кожа (рецептор слева) -->
+      <path d="M 30 130 L 60 130 L 60 90 L 80 90 L 80 170 L 60 170 L 60 130" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <ellipse cx="50" cy="130" rx="10" ry="6" fill="#D4B952" stroke="#8B7C44"/>
+      <!-- Чувствительный нейрон → линия к спинному мозгу -->
+      <line x1="60" y1="130" x2="200" y2="130" stroke="#2D4A6B" stroke-width="2"/>
+      <circle cx="160" cy="130" r="6" fill="#2D4A6B"/>
+      <!-- Спинной мозг (овал) -->
+      <ellipse cx="240" cy="130" rx="42" ry="55" fill="#E8E4D6" stroke="#6B6B6B" stroke-width="1.2"/>
+      <ellipse cx="240" cy="130" rx="20" ry="38" fill="#D4D0C0" stroke="#6B6B6B" stroke-width="0.7"/>
+      <!-- Двигательный нейрон → к мышце -->
+      <line x1="282" y1="130" x2="380" y2="130" stroke="#8B2C2C" stroke-width="2"/>
+      <circle cx="320" cy="130" r="6" fill="#8B2C2C"/>
+      <!-- Мышца -->
+      <path d="M 380 100 L 410 130 L 380 160 L 380 100 Z" fill="#F2A89A" stroke="#8B2C2C" stroke-width="1"/>
+      <!-- Метки -->
+      ${arrow(50, 130, 50, 215)}${lbl(50, 230, 'А')}
+      ${arrow(160, 130, 160, 215)}${lbl(160, 230, 'Б')}
+      ${arrow(240, 130, 240, 215)}${lbl(240, 230, 'В')}
+      ${arrow(395, 130, 395, 215)}${lbl(395, 230, 'Г')}
+    </svg>`,
+    captions:['рабочий орган (мышца)','чувствительный (центростремительный) нейрон','рецептор','нервный центр (спинной мозг)'],
+    answer:[3,2,4,1],
+    notes:[
+      'А — рецептор в коже (воспринимает раздражение).',
+      'Б — чувствительный (афферентный) нейрон, передаёт сигнал в спинной мозг.',
+      'В — нервный центр (серое вещество спинного мозга), где сигнал переключается с чувствительного нейрона на двигательный.',
+      'Г — рабочий орган (мышца), которая сокращается в ответ на сигнал.'
+    ]
+  },
+
+  // 7. Семя двудольного растения
+  { id:'fig7', title:'Семя фасоли',
+    svg: () => `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" role="img">
+      <!-- Контур семени -->
+      <ellipse cx="160" cy="120" rx="100" ry="70" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1.5"/>
+      <!-- Семядоли (внутри, две большие половины) -->
+      <ellipse cx="160" cy="125" rx="80" ry="55" fill="#FBF8F0" stroke="#6B6B6B" stroke-width="1"/>
+      <line x1="160" y1="70" x2="160" y2="180" stroke="#6B6B6B" stroke-width="0.8" stroke-dasharray="3,2"/>
+      <!-- Зародышевый корешок (снизу, выступает) -->
+      <ellipse cx="180" cy="160" rx="14" ry="10" fill="#D4E5CD" stroke="#2D4A2B" stroke-width="0.8"/>
+      <!-- Зародышевый стебелёк / почечка (внутри слева) -->
+      <ellipse cx="135" cy="105" rx="10" ry="14" fill="#A8C49F" stroke="#2D4A2B" stroke-width="0.8"/>
+      <!-- Метки -->
+      ${arrow(60, 120, 25, 120)}${lbl(13, 120, 'А')}
+      ${arrow(160, 125, 30, 50)}${lbl(15, 38, 'Б')}
+      ${arrow(135, 105, 30, 200)}${lbl(15, 215, 'В')}
+      ${arrow(180, 160, 290, 200)}${lbl(303, 215, 'Г')}
+    </svg>`,
+    captions:['кожура (семенная оболочка)','зародышевый стебелёк с почечкой','семядоли','зародышевый корешок'],
+    answer:[1,3,2,4],
+    notes:[
+      'А — кожура семени (внешняя защитная оболочка).',
+      'Б — две семядоли (запас питательных веществ, у двудольных их две).',
+      'В — зародышевый стебелёк с почечкой (из него развивается побег).',
+      'Г — зародышевый корешок (из него развивается главный корень).'
+    ]
+  },
+
+  // 8. Глаз человека (упрощённо)
+  { id:'fig8', title:'Глаз человека',
+    svg: () => `<svg viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg" role="img">
+      <!-- Глазное яблоко -->
+      <circle cx="180" cy="130" r="100" fill="#F8F4E8" stroke="#6B6B6B" stroke-width="1.5"/>
+      <!-- Сосудистая (внутренний слой) -->
+      <circle cx="180" cy="130" r="92" fill="none" stroke="#8B5C44" stroke-width="1.2"/>
+      <!-- Сетчатка (внутренний) -->
+      <circle cx="180" cy="130" r="84" fill="none" stroke="#2D4A2B" stroke-width="1" stroke-dasharray="3,2"/>
+      <!-- Роговица (выпуклая спереди) -->
+      <path d="M 88 130 Q 70 85 88 75 Q 100 75 90 130" fill="#FBF8F0" stroke="#2D4A2B" stroke-width="1.3"/>
+      <!-- Радужка с зрачком -->
+      <ellipse cx="92" cy="105" rx="6" ry="14" fill="#A8C49F" stroke="#2D4A2B" stroke-width="0.8"/>
+      <ellipse cx="92" cy="105" rx="3" ry="6" fill="#2C2C2C"/>
+      <!-- Хрусталик -->
+      <ellipse cx="115" cy="130" rx="14" ry="18" fill="#D4E5CD" stroke="#2D4A2B" stroke-width="1"/>
+      <!-- Зрительный нерв (справа сзади) -->
+      <line x1="280" y1="130" x2="340" y2="130" stroke="#D4B952" stroke-width="6"/>
+      <!-- Метки -->
+      ${arrow(85, 90, 85, 230)}${lbl(85, 245, 'А')}
+      ${arrow(115, 130, 200, 245)}${lbl(218, 248, 'Б')}
+      ${arrow(180, 213, 180, 245)}${lbl(180, 248, 'В')}
+      ${arrow(310, 130, 340, 245)}${lbl(345, 248, 'Г')}
+    </svg>`,
+    captions:['зрительный нерв','хрусталик','сетчатка (внутренняя оболочка)','роговица'],
+    answer:[4,2,3,1],
+    notes:[
+      'А — роговица (прозрачная передняя часть глаза, главная преломляющая среда).',
+      'Б — хрусталик (двояковыпуклая линза, изменяет кривизну при аккомодации).',
+      'В — сетчатка (внутренняя оболочка глаза, содержит фоторецепторы — палочки и колбочки).',
+      'Г — зрительный нерв (передаёт сигнал от сетчатки в головной мозг).'
+    ]
+  },
+
+  // 9. Клетка животного (упрощённо)
+  { id:'fig9', title:'Клетка животного',
+    svg: () => `<svg viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg" role="img">
+      <!-- Мембрана -->
+      <ellipse cx="180" cy="130" rx="140" ry="100" fill="#FBF8F0" stroke="#6B6B6B" stroke-width="2"/>
+      <!-- Ядро -->
+      <ellipse cx="180" cy="130" rx="40" ry="32" fill="#D4E5CD" stroke="#2D4A2B" stroke-width="1.2"/>
+      <ellipse cx="180" cy="130" rx="9" ry="7" fill="#2D4A2B"/>
+      <!-- Митохондрия -->
+      <ellipse cx="80" cy="100" rx="22" ry="12" fill="#F2D9C9" stroke="#8B5C44" stroke-width="0.8"/>
+      <line x1="65" y1="100" x2="95" y2="100" stroke="#8B5C44" stroke-width="0.5" stroke-dasharray="2,2"/>
+      <!-- Эндоплазматическая сеть (волнистая линия) -->
+      <path d="M 240 80 Q 280 90 270 110 Q 285 130 270 150 Q 290 170 260 180" fill="none" stroke="#8B7C44" stroke-width="1"/>
+      <!-- Рибосомы (точки) -->
+      <circle cx="80" cy="200" r="3" fill="#2D4A2B"/>
+      <circle cx="100" cy="210" r="3" fill="#2D4A2B"/>
+      <circle cx="90" cy="220" r="3" fill="#2D4A2B"/>
+      <circle cx="115" cy="200" r="3" fill="#2D4A2B"/>
+      <!-- Метки -->
+      ${arrow(310, 60, 340, 30)}${lbl(345, 25, 'А')}
+      ${arrow(180, 130, 30, 30)}${lbl(20, 25, 'Б')}
+      ${arrow(80, 100, 30, 80)}${lbl(20, 75, 'В')}
+      ${arrow(95, 215, 30, 230)}${lbl(20, 240, 'Г')}
+    </svg>`,
+    captions:['ядро','мембрана клеточная','рибосомы','митохондрия'],
+    answer:[2,1,4,3],
+    notes:[
+      'А — клеточная мембрана (наружная граница клетки; обеспечивает обмен веществ).',
+      'Б — ядро с ядрышком (хранит наследственную информацию).',
+      'В — митохондрия (синтезирует АТФ, «энергетическая станция»).',
+      'Г — рибосомы (мелкие гранулы; синтезируют белок).'
+    ]
+  },
+
+  // 10. Гриб (плодовое тело + грибница)
+  { id:'fig10', title:'Шляпочный гриб',
+    svg: () => `<svg viewBox="0 0 280 320" xmlns="http://www.w3.org/2000/svg" role="img">
+      <!-- Шляпка -->
+      <path d="M 60 130 Q 140 50 220 130 L 60 130 Z" fill="#8B5C44" stroke="#5C3C2A" stroke-width="1"/>
+      <!-- Пластинки гименофора (низ шляпки) -->
+      ${[80,100,120,140,160,180,200].map(x => `<line x1="${x}" y1="130" x2="${x}" y2="148" stroke="#5C3C2A" stroke-width="0.5"/>`).join('')}
+      <line x1="60" y1="130" x2="220" y2="130" stroke="#5C3C2A" stroke-width="0.8"/>
+      <line x1="65" y1="146" x2="215" y2="146" stroke="#5C3C2A" stroke-width="0.6"/>
+      <!-- Ножка -->
+      <rect x="125" y="148" width="30" height="80" fill="#FBF8F0" stroke="#6B6B6B" stroke-width="1"/>
+      <!-- Земля (линия почвы) -->
+      <line x1="20" y1="228" x2="260" y2="228" stroke="#5C3C2A" stroke-width="1.5"/>
+      <!-- Грибница (мицелий) -->
+      <path d="M 130 228 Q 100 250 80 280" fill="none" stroke="#6B6B6B" stroke-width="0.8"/>
+      <path d="M 140 228 Q 120 250 110 290" fill="none" stroke="#6B6B6B" stroke-width="0.8"/>
+      <path d="M 150 228 Q 170 245 180 270" fill="none" stroke="#6B6B6B" stroke-width="0.8"/>
+      <path d="M 145 228 Q 180 250 200 280" fill="none" stroke="#6B6B6B" stroke-width="0.8"/>
+      <path d="M 135 228 Q 160 260 150 295" fill="none" stroke="#6B6B6B" stroke-width="0.8"/>
+      <!-- Метки -->
+      ${arrow(140, 100, 20, 80)}${lbl(10, 75, 'А')}
+      ${arrow(140, 140, 250, 130)}${lbl(265, 130, 'Б')}
+      ${arrow(140, 188, 250, 188)}${lbl(265, 188, 'В')}
+      ${arrow(140, 280, 250, 280)}${lbl(265, 280, 'Г')}
+    </svg>`,
+    captions:['ножка плодового тела','шляпка','грибница (мицелий)','гименофор (пластинки)'],
+    answer:[2,4,1,3],
+    notes:[
+      'А — шляпка плодового тела (верхняя расширенная часть).',
+      'Б — гименофор (пластинки или трубочки на нижней стороне шляпки; на них образуются споры).',
+      'В — ножка плодового тела (поднимает шляпку над почвой).',
+      'Г — грибница, или мицелий (находится в почве; основная вегетативная часть гриба).'
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, picks:[null,null,null,null], solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  const letters = ['А','Б','В','Г'];
+  let rows = '';
+  letters.forEach((L, i) => {
+    let btns = '';
+    for(let k = 1; k <= 4; k++){
+      btns += `<button class="choice-btn" data-row="${i}" data-val="${k}">${k}</button>`;
+    }
+    rows += `<div class="row"><div><span class="row-letter">${L})</span></div><div class="choice-buttons">${btns}</div></div>`;
+  });
+  let captionsList = '<ol style="margin:6px 0 14px 22px;padding:0;font-size:14px">';
+  q.captions.forEach(c => { captionsList += `<li style="margin:2px 0">${c}</li>`; });
+  captionsList += '</ol>';
+
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">подписи к рисунку</span>
+      <p class="q-text"><strong>${q.title}.</strong> Сопоставь буквенные обозначения на рисунке с подписями из списка:</p>
+      <div class="svg-wrap">${q.svg()}</div>
+      ${captionsList}
+      <p style="font-size:14px;color:var(--muted);margin:6px 0 4px">Для каждой буквы выберите номер подписи:</p>
+      <div>${rows}</div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.picks = [null, null, null, null];
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(state.answered) return;
+      const r = +btn.dataset.row, v = +btn.dataset.val;
+      state.picks[r] = v;
+      document.querySelectorAll(`.choice-btn[data-row="${r}"]`).forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('check').disabled = state.picks.some(p => p === null);
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  let allCorrect = true, countCorrect = 0;
+  q.answer.forEach((corr, i) => {
+    document.querySelectorAll(`.choice-btn[data-row="${i}"]`).forEach(btn => {
+      btn.disabled = true;
+      const v = +btn.dataset.val;
+      if(v === corr) btn.classList.add('correct-mark');
+      else if(v === state.picks[i]) btn.classList.add('wrong-mark');
+    });
+    if(state.picks[i] === corr) countCorrect++;
+    else allCorrect = false;
+  });
+
+  state.solved++;
+  // 2 балла за всё верно, 1 балл за 1 ошибку, 0 за больше
+  let score = 0;
+  if(countCorrect === 4) score = 2;
+  else if(countCorrect === 3) score = 1;
+  else score = 0;
+
+  if(score === 2){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  const correctSeq = q.answer.join('');
+  const userSeq = state.picks.join('');
+  let notesHtml = '<p style="margin-top:8px"><strong>Пояснения:</strong></p>';
+  ['А','Б','В','Г'].forEach((L, i) => {
+    notesHtml += `<p style="margin:4px 0">${q.notes[i]}</p>`;
+  });
+
+  if(score === 2){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно (2 балла).</strong> Ответ: <code style="font-family:'JetBrains Mono',monospace">${correctSeq}</code>.</div><div class="hint">${notesHtml}</div>`;
+  } else if(score === 1){
+    fb.innerHTML = `<div class="feedback ok" style="background:#FFF5DA;border-color:#D4B952;color:#7A5C00"><strong>Частично (1 балл).</strong> Правильный ответ: <code style="font-family:'JetBrains Mono',monospace">${correctSeq}</code>, ваш: <code>${userSeq}</code>.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: <code style="font-family:'JetBrains Mono',monospace">${correctSeq}</code>, ваш: <code>${userSeq}</code>.</div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

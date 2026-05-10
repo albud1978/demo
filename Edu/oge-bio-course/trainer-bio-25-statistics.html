@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №25 — статистическая таблица</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.context{margin-bottom:16px;padding:0;background:transparent;border:none;font-size:15px}
+.bio-table{width:100%;border-collapse:collapse;background:white;border:1px solid var(--border);border-radius:4px;font-size:14px;margin-top:10px}
+.bio-table th{font-family:"Fraunces",serif;font-weight:600;font-size:13px;text-align:left;padding:8px 10px;background:var(--accent-soft);color:var(--accent);border-bottom:1px solid var(--border)}
+.bio-table td{padding:6px 10px;border-bottom:1px solid var(--border)}
+.bio-table td:not(:first-child){text-align:right;font-family:"JetBrains Mono",monospace;font-size:13px}
+.bio-table tr:last-child td{border-bottom:none}
+.tbl-title{font-family:"Fraunces",serif;font-weight:600;font-size:15px;color:var(--accent);margin-bottom:8px}
+.context strong{color:var(--accent)}
+.context em{font-style:italic}
+.subq{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:12px 14px;
+  margin-bottom:10px;
+}
+.subq-title{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:15px;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+.subq-options{display:flex;flex-direction:column;gap:5px}
+.subq-opt{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  padding:8px 10px;
+  border:1px solid var(--border);
+  background:var(--paper);
+  border-radius:3px;
+  cursor:pointer;
+  font-size:14px;
+  transition:all 0.12s;
+  user-select:none;
+}
+.subq-opt:hover:not(.locked){border-color:var(--accent)}
+.subq-opt.selected{border-color:var(--accent);background:#F0EDE0}
+.subq-opt.locked{cursor:not-allowed}
+.subq-opt-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  font-weight:500;
+  flex-shrink:0;
+  width:20px;
+  height:20px;
+  border:1px solid var(--border);
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+}
+.subq-opt.selected .subq-opt-num{background:var(--accent);color:white;border-color:var(--accent)}
+.subq-opt-text{flex:1}
+.subq-opt.correct-mark{background:#E1ECDD;border-color:#A8C49F}
+.subq-opt.correct-mark .subq-opt-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.subq-opt.wrong-mark{background:#F2E0DC;border-color:#C99A93}
+.subq-opt.wrong-mark .subq-opt-num{background:#C99A93;color:white;border-color:#C99A93}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.partial{background:#FFF5DA;border:1px solid #D4B952;color:#7A5C00}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №25</span>
+  <span class="right">3 балла · повышенный</span>
+</div>
+
+<h1>Статистическая <em>таблица</em></h1>
+<p class="lead">Тренажёр на задание №25 ОГЭ по биологии: дана таблица со статистическими данными. Ответь на 3 вопроса по таблице (по 1 баллу за каждый верный ответ, всего 3).</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №25 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// Каждое задание: описание породы + 3 подвопроса; каждый — 4 варианта, correct индекс
+const QUESTIONS = [
+  { id:'st1',
+    species:'Состав вдыхаемого и выдыхаемого воздуха',
+    description:`<table class="bio-table">
+      <thead><tr><th>Газ</th><th>Вдыхаемый, %</th><th>Выдыхаемый, %</th></tr></thead>
+      <tbody>
+        <tr><td>Кислород (O₂)</td><td>20,9</td><td>16,3</td></tr>
+        <tr><td>Углекислый газ (CO₂)</td><td>0,03</td><td>4,0</td></tr>
+        <tr><td>Азот (N₂)</td><td>78,1</td><td>78,1</td></tr>
+        <tr><td>Водяные пары</td><td>0,5</td><td>1,5</td></tr>
+      </tbody></table>`,
+    subq:[
+      { title:'1. Какого газа во вдыхаемом воздухе больше всего?',
+        options:['кислорода','углекислого газа','азота','водяных паров'],
+        correct:2, why:'Азот составляет 78,1% — больше всех других газов.'
+      },
+      { title:'2. Во сколько раз больше CO₂ в выдыхаемом воздухе по сравнению с вдыхаемым?',
+        options:[
+          'примерно в 100 раз больше (4 / 0,03 ≈ 133)',
+          'примерно в 10 раз больше',
+          'на 0,5%',
+          'на 4%'
+        ],
+        correct:0, why:'4 / 0,03 ≈ 133 — содержание увеличилось более чем в 100 раз.'
+      },
+      { title:'3. Что не изменяется в составе воздуха при дыхании?',
+        options:[
+          'содержание кислорода',
+          'содержание углекислого газа',
+          'содержание азота',
+          'содержание водяных паров'
+        ],
+        correct:2, why:'Азот (78,1%) — нейтральный газ, не участвует в газообмене.'
+      }
+    ]
+  },
+
+  { id:'st2',
+    species:'Содержание витамина C в продуктах (мг/100 г)',
+    description:`<table class="bio-table">
+      <thead><tr><th>Продукт</th><th>Витамин C, мг/100г</th></tr></thead>
+      <tbody>
+        <tr><td>Шиповник сухой</td><td>1200</td></tr>
+        <tr><td>Чёрная смородина</td><td>200</td></tr>
+        <tr><td>Болгарский перец</td><td>150</td></tr>
+        <tr><td>Лимон</td><td>40</td></tr>
+        <tr><td>Картофель</td><td>20</td></tr>
+        <tr><td>Молоко коровье</td><td>1</td></tr>
+      </tbody></table>`,
+    subq:[
+      { title:'1. В каком продукте больше всего витамина C?',
+        options:['чёрная смородина','лимон','шиповник сухой','болгарский перец'],
+        correct:2, why:'1200 мг/100 г — максимум в таблице.'
+      },
+      { title:'2. Во сколько раз в чёрной смородине витамина C больше, чем в лимоне?',
+        options:['в 2 раза','в 5 раз','в 10 раз','в 100 раз'],
+        correct:1, why:'200 / 40 = 5 раз.'
+      },
+      { title:'3. Суточная потребность взрослого человека в витамине C — около 80 мг. Сколько граммов перца нужно съесть в день, чтобы её удовлетворить?',
+        options:[
+          'около 50 г',
+          'около 100 г',
+          'около 200 г',
+          'около 500 г'
+        ],
+        correct:0, why:'Перец содержит 150 мг/100 г; 80 мг ≈ в 53 г (≈ 50 г).'
+      }
+    ]
+  },
+
+  { id:'st3',
+    species:'Количество видов в разных царствах живой природы',
+    description:`<table class="bio-table">
+      <thead><tr><th>Царство</th><th>Кол-во известных видов</th></tr></thead>
+      <tbody>
+        <tr><td>Бактерии</td><td>10 000</td></tr>
+        <tr><td>Грибы</td><td>100 000</td></tr>
+        <tr><td>Растения</td><td>320 000</td></tr>
+        <tr><td>Животные</td><td>1 500 000</td></tr>
+      </tbody></table>`,
+    subq:[
+      { title:'1. В каком царстве известно больше всего видов?',
+        options:['Бактерии','Грибы','Растения','Животные'],
+        correct:3, why:'1 500 000 видов — максимум; класс Насекомые в нём самый разнообразный (около 1 млн).'
+      },
+      { title:'2. В каком царстве известно меньше всего видов? (По данным таблицы)',
+        options:['Бактерии','Грибы','Растения','Животные'],
+        correct:0, why:'10 000 видов — минимум в таблице (хотя реальное число бактерий, вероятно, гораздо больше — многие не описаны).'
+      },
+      { title:'3. Во сколько раз больше известных видов животных, чем грибов?',
+        options:['в 5 раз','в 10 раз','в 15 раз','в 100 раз'],
+        correct:2, why:'1 500 000 / 100 000 = 15.'
+      }
+    ]
+  },
+
+  { id:'st4',
+    species:'Энерготраты при разных видах деятельности (ккал/мин на 1 кг массы)',
+    description:`<table class="bio-table">
+      <thead><tr><th>Деятельность</th><th>Расход, ккал/мин/кг</th></tr></thead>
+      <tbody>
+        <tr><td>Сон</td><td>0,02</td></tr>
+        <tr><td>Чтение сидя</td><td>0,03</td></tr>
+        <tr><td>Прогулка спокойная</td><td>0,07</td></tr>
+        <tr><td>Бег трусцой</td><td>0,18</td></tr>
+        <tr><td>Плавание</td><td>0,21</td></tr>
+        <tr><td>Лыжный ход</td><td>0,24</td></tr>
+      </tbody></table>`,
+    subq:[
+      { title:'1. Какая деятельность требует наибольших энерготрат?',
+        options:['чтение сидя','спокойная прогулка','бег трусцой','лыжный ход'],
+        correct:3, why:'Лыжный ход — 0,24 ккал/мин/кг, самое высокое значение.'
+      },
+      { title:'2. Школьник массой 50 кг бежал трусцой 30 минут. Сколько ккал он израсходовал?',
+        options:['около 90 ккал','около 270 ккал','около 540 ккал','около 1000 ккал'],
+        correct:1, why:'0,18 × 50 × 30 = 270 ккал.'
+      },
+      { title:'3. Во сколько раз энерготраты при плавании больше, чем во сне?',
+        options:['в 3 раза','в 5 раз','в 10 раз','в 100 раз'],
+        correct:2, why:'0,21 / 0,02 ≈ 10,5 раза.'
+      }
+    ]
+  },
+
+  { id:'st5',
+    species:'Численность популяции зайцев и лис в одной экосистеме',
+    description:`<table class="bio-table">
+      <thead><tr><th>Год</th><th>Зайцы, тыс. особей</th><th>Лисы, особей</th></tr></thead>
+      <tbody>
+        <tr><td>2018</td><td>20</td><td>180</td></tr>
+        <tr><td>2019</td><td>25</td><td>220</td></tr>
+        <tr><td>2020</td><td>15</td><td>250</td></tr>
+        <tr><td>2021</td><td>10</td><td>200</td></tr>
+        <tr><td>2022</td><td>14</td><td>140</td></tr>
+        <tr><td>2023</td><td>22</td><td>120</td></tr>
+      </tbody></table>`,
+    subq:[
+      { title:'1. В каком году численность зайцев была минимальной?',
+        options:['2018','2020','2021','2023'],
+        correct:2, why:'10 тыс. особей в 2021 году — минимум.'
+      },
+      { title:'2. Что наблюдается в год минимума зайцев (2021)?',
+        options:[
+          'минимум лис',
+          'максимум лис снизился, но численность всё ещё высока (200)',
+          'лисы исчезли',
+          'лисы достигли максимума 250 — но это в 2020 году'
+        ],
+        correct:1, why:'В 2021 году ещё много лис (200), что объясняет малую численность зайцев. Через год число лис тоже упало (нечего есть).'
+      },
+      { title:'3. Какая закономерность видна между численностью зайцев и лис?',
+        options:[
+          'численности изменяются независимо',
+          'численность лис растёт сразу за численностью зайцев (с задержкой)',
+          'лисы вымирают, когда зайцев много',
+          'лисы и зайцы всегда одинаковой численности'
+        ],
+        correct:1, why:'Колебания «хищник–жертва»: пик зайцев → пик лис с задержкой → спад зайцев → спад лис.'
+      }
+    ]
+  },
+
+  { id:'st6',
+    species:'Состав плазмы крови человека',
+    description:`<table class="bio-table">
+      <thead><tr><th>Компонент</th><th>Содержание, %</th></tr></thead>
+      <tbody>
+        <tr><td>Вода</td><td>90</td></tr>
+        <tr><td>Белки</td><td>7–8</td></tr>
+        <tr><td>Глюкоза</td><td>0,1</td></tr>
+        <tr><td>Минеральные соли</td><td>0,9</td></tr>
+        <tr><td>Прочие органические в-ва</td><td>1–2</td></tr>
+      </tbody></table>`,
+    subq:[
+      { title:'1. Какое вещество составляет основу плазмы?',
+        options:['белки','вода','глюкоза','соли'],
+        correct:1, why:'Вода — 90% плазмы.'
+      },
+      { title:'2. Каков нормальный уровень глюкозы в плазме крови?',
+        options:['около 0,1%','около 1%','около 7%','около 10%'],
+        correct:0, why:'0,1% соответствует ~1 г/л или ~5 ммоль/л — норма натощак.'
+      },
+      { title:'3. Что происходит с человеком при повышении доли глюкозы выше нормы?',
+        options:[
+          'это норма, ничего не происходит',
+          'это может быть признаком сахарного диабета; повышенный уровень — гипергликемия',
+          'кровь свёртывается',
+          'белки распадаются'
+        ],
+        correct:1, why:'Гипергликемия — характерный признак сахарного диабета или нарушения действия инсулина.'
+      }
+    ]
+  },
+
+  { id:'st7',
+    species:'Скорость поступления воды в корни разных растений',
+    description:`<table class="bio-table">
+      <thead><tr><th>Растение</th><th>Скорость, мл/час</th></tr></thead>
+      <tbody>
+        <tr><td>Подсолнечник</td><td>40</td></tr>
+        <tr><td>Кукуруза</td><td>35</td></tr>
+        <tr><td>Берёза</td><td>20</td></tr>
+        <tr><td>Сосна</td><td>8</td></tr>
+        <tr><td>Кактус</td><td>2</td></tr>
+      </tbody></table>`,
+    subq:[
+      { title:'1. У какого растения скорость поступления воды максимальна?',
+        options:['берёза','подсолнечник','сосна','кактус'],
+        correct:1, why:'40 мл/ч у подсолнечника — максимум.'
+      },
+      { title:'2. Какое объяснение низкой скорости у кактуса самое верное?',
+        options:[
+          'кактус болен',
+          'кактус приспособлен к засушливому климату; листья превращены в иголки, испарение минимально, поэтому и поглощение мало',
+          'кактус не имеет корней',
+          'кактус не нуждается в воде вообще'
+        ],
+        correct:1, why:'Адаптация к пустыне: малая площадь испарения → малая транспирация → малое поглощение воды.'
+      },
+      { title:'3. Почему у сосны скорость поглощения воды ниже, чем у берёзы?',
+        options:[
+          'у сосны нет корней',
+          'у сосны иголки (хвоя) испаряют меньше воды, чем плоские листья берёзы',
+          'сосна не нуждается в воде',
+          'сосна меньше по размеру'
+        ],
+        correct:1, why:'Меньшая площадь хвои → меньшая транспирация → меньше воды нужно поглощать.'
+      }
+    ]
+  },
+
+  { id:'st8',
+    species:'Калорийность 100 г разных продуктов',
+    description:`<table class="bio-table">
+      <thead><tr><th>Продукт</th><th>Ккал/100г</th></tr></thead>
+      <tbody>
+        <tr><td>Сало свиное</td><td>790</td></tr>
+        <tr><td>Масло сливочное</td><td>720</td></tr>
+        <tr><td>Грецкий орех</td><td>650</td></tr>
+        <tr><td>Сыр</td><td>360</td></tr>
+        <tr><td>Хлеб ржаной</td><td>200</td></tr>
+        <tr><td>Картофель</td><td>80</td></tr>
+        <tr><td>Огурец</td><td>15</td></tr>
+      </tbody></table>`,
+    subq:[
+      { title:'1. Какой продукт самый калорийный?',
+        options:['масло','грецкий орех','сало свиное','сыр'],
+        correct:2, why:'790 ккал/100 г — максимум; жиры — самые калорийные.'
+      },
+      { title:'2. Во сколько раз калорийнее хлеб ржаной по сравнению с огурцом?',
+        options:['в 2 раза','в 5 раз','в 10 раз','в 13 раз'],
+        correct:3, why:'200 / 15 ≈ 13 раз.'
+      },
+      { title:'3. Если съесть 200 г сыра и 100 г хлеба, сколько ккал получится?',
+        options:['260','520','720','920'],
+        correct:3, why:'200 × 3,6 + 100 × 2 = 720 + 200 = 920 ккал.'
+      }
+    ]
+  },
+
+  { id:'st9',
+    species:'Зависимость частоты сердечных сокращений (ЧСС) от возраста',
+    description:`<table class="bio-table">
+      <thead><tr><th>Возраст</th><th>ЧСС, уд/мин (среднее)</th></tr></thead>
+      <tbody>
+        <tr><td>Новорождённый</td><td>140</td></tr>
+        <tr><td>1 год</td><td>120</td></tr>
+        <tr><td>5 лет</td><td>100</td></tr>
+        <tr><td>10 лет</td><td>90</td></tr>
+        <tr><td>14–15 лет</td><td>80</td></tr>
+        <tr><td>Взрослый</td><td>70</td></tr>
+      </tbody></table>`,
+    subq:[
+      { title:'1. Какая закономерность видна с возрастом?',
+        options:[
+          'ЧСС растёт с возрастом',
+          'ЧСС убывает с возрастом',
+          'ЧСС не меняется',
+          'ЧСС пилообразно колеблется'
+        ],
+        correct:1, why:'У новорождённого 140, у взрослого 70 — снижение в 2 раза.'
+      },
+      { title:'2. Во сколько раз ЧСС новорождённого больше, чем у взрослого?',
+        options:['в 1,5 раза','в 2 раза','в 3 раза','в 10 раз'],
+        correct:1, why:'140 / 70 = 2.'
+      },
+      { title:'3. Почему у новорождённых ЧСС такая высокая?',
+        options:[
+          'у них больше эритроцитов',
+          'малый объём сердца — за один удар прокачивает мало крови, поэтому компенсирует частотой',
+          'их кровь слишком жидкая',
+          'у них больше сердец'
+        ],
+        correct:1, why:'Сердце маленькое, ударный объём низкий → нужна высокая частота для покрытия потребностей.'
+      }
+    ]
+  },
+
+  { id:'st10',
+    species:'Урожайность пшеницы при разных дозах минеральных удобрений',
+    description:`<table class="bio-table">
+      <thead><tr><th>Доза удобр., кг/га</th><th>Урожайность, ц/га</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>20</td></tr>
+        <tr><td>50</td><td>28</td></tr>
+        <tr><td>100</td><td>35</td></tr>
+        <tr><td>150</td><td>40</td></tr>
+        <tr><td>200</td><td>42</td></tr>
+        <tr><td>250</td><td>40</td></tr>
+        <tr><td>300</td><td>32</td></tr>
+      </tbody></table>`,
+    subq:[
+      { title:'1. При какой дозе урожайность максимальная?',
+        options:['100 кг/га','150 кг/га','200 кг/га','300 кг/га'],
+        correct:2, why:'42 ц/га при 200 кг — максимум.'
+      },
+      { title:'2. Что происходит при дальнейшем увеличении дозы (250–300)?',
+        options:[
+          'урожайность продолжает расти',
+          'урожайность снижается из-за избытка солей и токсичности',
+          'почва становится более плодородной навсегда',
+          'удобрения ускоряют вегетацию'
+        ],
+        correct:1, why:'Перенасыщение почвы солями вредит растениям; типичная зависимость с оптимумом.'
+      },
+      { title:'3. Какой вывод правильнее всего из этой таблицы?',
+        options:[
+          'удобрения всегда увеличивают урожайность пропорционально',
+          'удобрения вредны',
+          'существует оптимальная доза удобрений; превышение её снижает урожайность',
+          'без удобрений ничего не растёт'
+        ],
+        correct:2, why:'Зависимость с оптимумом — классический агрохимический результат.'
+      }
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, picks:[null,null,null], solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  let subqHtml = '';
+  q.subq.forEach((sq, si) => {
+    let optsHtml = '';
+    sq.options.forEach((opt, oi) => {
+      optsHtml += `
+        <div class="subq-opt" data-sub="${si}" data-opt="${oi}">
+          <div class="subq-opt-num">${oi+1}</div>
+          <div class="subq-opt-text">${opt}</div>
+        </div>
+      `;
+    });
+    subqHtml += `
+      <div class="subq">
+        <div class="subq-title">${sq.title}</div>
+        <div class="subq-options">${optsHtml}</div>
+      </div>
+    `;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">статистическая таблица</span>
+      <div class="context"><strong><strong>${q.species}</strong></strong> ${q.description}</div>
+      <p class="q-text">Проанализируй таблицу и ответь на вопросы. За каждый верный ответ — 1 балл (всего 3).</p>
+      ${subqHtml}
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.picks = [null, null, null];
+  document.querySelectorAll('.subq-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if(state.answered) return;
+      const sub = +opt.dataset.sub;
+      const o = +opt.dataset.opt;
+      // unselect siblings in this subq
+      document.querySelectorAll(`.subq-opt[data-sub="${sub}"]`).forEach(s => s.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.picks[sub] = o;
+      document.getElementById('check').disabled = state.picks.some(p => p === null);
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  let countCorrect = 0;
+  q.subq.forEach((sq, si) => {
+    document.querySelectorAll(`.subq-opt[data-sub="${si}"]`).forEach(opt => {
+      opt.classList.add('locked');
+      const o = +opt.dataset.opt;
+      if(o === sq.correct) opt.classList.add('correct-mark');
+      else if(o === state.picks[si]) opt.classList.add('wrong-mark');
+    });
+    if(state.picks[si] === sq.correct) countCorrect++;
+  });
+
+  state.solved++;
+  // Score: 3 — все 3 верных, 2 — 2 верных, 1 — 1 верный, 0 — 0 верных
+  if(countCorrect === 3){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = '<p style="margin-top:8px"><strong>Пояснения:</strong></p>';
+  q.subq.forEach((sq, si) => {
+    const userVal = state.picks[si];
+    const ok = userVal === sq.correct;
+    notesHtml += `<p style="margin:4px 0">
+      <span style="color:${ok?'var(--success)':'var(--error)'}">${ok?'✓':'✗'}</span>
+      <strong>${si+1}.</strong> «${sq.options[sq.correct]}» — ${sq.why}
+    </p>`;
+  });
+
+  if(countCorrect === 3){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно (3 балла).</strong> Все три характеристики определены правильно.</div><div class="hint">${notesHtml}</div>`;
+  } else if(countCorrect === 2){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (2 балла).</strong> Две характеристики из трёх верны.</div><div class="hint">${notesHtml}</div>`;
+  } else if(countCorrect === 1){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (1 балл).</strong> Только одна характеристика верна.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно (0 баллов).</strong></div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

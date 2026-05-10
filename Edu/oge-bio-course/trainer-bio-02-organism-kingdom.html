@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №2 — соответствие организм↔царство</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.legend{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:8px;
+  margin-bottom:16px;
+  padding:12px;
+  background:var(--accent-soft);
+  border-radius:4px;
+}
+.legend-item{
+  font-size:14px;
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.legend-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  font-weight:500;
+  background:white;
+  border:1px solid var(--border);
+  width:24px;
+  height:24px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+}
+.row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:12px;
+  align-items:center;
+  padding:10px 12px;
+  border-bottom:1px solid var(--border);
+}
+.row:last-child{border-bottom:none}
+.row-letter{
+  font-family:'Fraunces',serif;
+  font-size:20px;
+  font-weight:600;
+  color:var(--accent);
+  margin-right:8px;
+}
+.row-organism{
+  flex:1;
+  font-size:16px;
+}
+.row-organism em{font-style:italic;color:var(--muted);font-size:14px}
+.choice-buttons{
+  display:flex;
+  gap:4px;
+}
+.choice-btn{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  font-weight:500;
+  width:36px;
+  height:36px;
+  border:1px solid var(--border);
+  background:white;
+  color:var(--ink);
+  cursor:pointer;
+  border-radius:4px;
+  transition:all 0.15s;
+}
+.choice-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.choice-btn.selected{
+  background:var(--accent);
+  color:white;
+  border-color:var(--accent);
+}
+.choice-btn:disabled{cursor:not-allowed}
+.choice-btn.correct-mark{
+  background:#A8C49F;
+  color:white;
+  border-color:#A8C49F;
+}
+.choice-btn.wrong-mark{
+  background:#C99A93;
+  color:white;
+  border-color:#C99A93;
+}
+button.primary{
+  font-family:'Spectral',serif;
+  font-size:16px;
+  padding:10px 20px;
+  border:1px solid var(--accent);
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+  border-radius:4px;
+}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{
+  font-family:'Spectral',serif;
+  font-size:16px;
+  padding:10px 20px;
+  border:1px solid var(--accent);
+  background:white;
+  color:var(--accent);
+  cursor:pointer;
+  border-radius:4px;
+}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+  .legend{grid-template-columns:1fr 1fr}
+  .row{grid-template-columns:1fr;gap:8px}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span>
+  <span>·</span>
+  <span>биология</span>
+  <span>·</span>
+  <span>задание №2</span>
+  <span class="right">1 балл · базовый</span>
+</div>
+
+<h1><em>Соответствие</em>: организм и царство</h1>
+<p class="lead">Тренажёр на задание №2 ОГЭ по биологии: для каждого организма выбери царство (Бактерии, Грибы, Растения, Животные).</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №2 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// Царства: 1=Бактерии, 2=Грибы, 3=Растения, 4=Животные
+const KINGDOMS = ['Бактерии','Грибы','Растения','Животные'];
+
+// 10 заданий, в каждом 4 организма, ответ — последовательность из 4 цифр (1-4)
+const QUESTIONS = [
+  { id:'k1', items:[
+    {organism:'опёнок зимний', kingdom:2, note:'Шляпочный гриб с пластинчатым гименофором.'},
+    {organism:'клостридия ботулиновая', kingdom:1, note:'Анаэробная бактерия, возбудитель ботулизма.'},
+    {organism:'муравей лесной', kingdom:4, note:'Насекомое отряда перепончатокрылых.'},
+    {organism:'тис ягодный', kingdom:3, note:'Хвойное дерево семейства Тисовые.'}
+  ]},
+  { id:'k2', items:[
+    {organism:'кишечная палочка', kingdom:1, note:'Бактерия (Escherichia coli) — обитатель кишечника.'},
+    {organism:'мукор', kingdom:2, note:'Плесневый гриб, поражающий хлеб и фрукты.'},
+    {organism:'хламидомонада', kingdom:3, note:'Одноклеточная зелёная водоросль.'},
+    {organism:'инфузория-туфелька', kingdom:4, note:'Простейшее, относится к царству Животных.'}
+  ]},
+  { id:'k3', items:[
+    {organism:'дрожжи', kingdom:2, note:'Одноклеточные грибы, используются в хлебопечении.'},
+    {organism:'азотобактер', kingdom:1, note:'Почвенная бактерия, фиксирующая азот.'},
+    {organism:'сосна обыкновенная', kingdom:3, note:'Хвойное дерево.'},
+    {organism:'паук-крестовик', kingdom:4, note:'Членистоногое класса Паукообразные.'}
+  ]},
+  { id:'k4', items:[
+    {organism:'пеницилл', kingdom:2, note:'Плесневый гриб, источник антибиотика пенициллина.'},
+    {organism:'туберкулёзная палочка', kingdom:1, note:'Бактерия (Mycobacterium tuberculosis).'},
+    {organism:'мох сфагнум', kingdom:3, note:'Болотный мох, образует торф.'},
+    {organism:'дождевой червь', kingdom:4, note:'Кольчатый червь.'}
+  ]},
+  { id:'k5', items:[
+    {organism:'мухомор красный', kingdom:2, note:'Шляпочный гриб, ядовит.'},
+    {organism:'сенная палочка', kingdom:1, note:'Бактерия (Bacillus subtilis).'},
+    {organism:'папоротник орляк', kingdom:3, note:'Высшее споровое растение.'},
+    {organism:'окунь речной', kingdom:4, note:'Костная рыба.'}
+  ]},
+  { id:'k6', items:[
+    {organism:'белый гриб', kingdom:2, note:'Шляпочный гриб с трубчатым гименофором.'},
+    {organism:'стафилококк', kingdom:1, note:'Сферическая бактерия.'},
+    {organism:'ландыш майский', kingdom:3, note:'Травянистое цветковое растение.'},
+    {organism:'медуза-корнерот', kingdom:4, note:'Кишечнополостное животное.'}
+  ]},
+  { id:'k7', items:[
+    {organism:'трутовик', kingdom:2, note:'Древоразрушающий гриб с многолетним плодовым телом.'},
+    {organism:'сальмонелла', kingdom:1, note:'Бактерия, возбудитель сальмонеллёза.'},
+    {organism:'хвощ полевой', kingdom:3, note:'Высшее споровое растение.'},
+    {organism:'аскарида человеческая', kingdom:4, note:'Круглый червь-паразит.'}
+  ]},
+  { id:'k8', items:[
+    {organism:'шампиньон', kingdom:2, note:'Шляпочный гриб, выращивается человеком.'},
+    {organism:'холерный вибрион', kingdom:1, note:'Бактерия с одним жгутиком.'},
+    {organism:'дуб черешчатый', kingdom:3, note:'Цветковое дерево семейства Буковые.'},
+    {organism:'голубь сизый', kingdom:4, note:'Птица отряда Голубеобразные.'}
+  ]},
+  { id:'k9', items:[
+    {organism:'спорынья', kingdom:2, note:'Гриб-паразит злаков.'},
+    {organism:'молочнокислая бактерия', kingdom:1, note:'Сбраживает лактозу до молочной кислоты.'},
+    {organism:'ламинария', kingdom:3, note:'Бурая водоросль (морская капуста).'},
+    {organism:'устрица съедобная', kingdom:4, note:'Двустворчатый моллюск.'}
+  ]},
+  { id:'k10', items:[
+    {organism:'дрожжи пивные', kingdom:2, note:'Одноклеточные грибы.'},
+    {organism:'цианобактерии', kingdom:1, note:'Прокариотические фотосинтезирующие организмы (синезелёные «водоросли»).'},
+    {organism:'ель европейская', kingdom:3, note:'Хвойное дерево.'},
+    {organism:'лягушка озёрная', kingdom:4, note:'Земноводное.'}
+  ]}
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, picks:[null,null,null,null], solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  const main = document.getElementById('main');
+  const letters = ['А','Б','В','Г'];
+  let rows = '';
+  q.items.forEach((it, i) => {
+    let btns = '';
+    for(let k=1;k<=4;k++){
+      btns += `<button class="choice-btn" data-row="${i}" data-val="${k}">${k}</button>`;
+    }
+    rows += `
+      <div class="row">
+        <div><span class="row-letter">${letters[i]})</span><span class="row-organism">${it.organism}</span></div>
+        <div class="choice-buttons">${btns}</div>
+      </div>`;
+  });
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">соответствие</span>
+      <p class="q-text">Установите соответствие между организмами и царствами живой природы:</p>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-num">1</span>Бактерии</div>
+        <div class="legend-item"><span class="legend-num">2</span>Грибы</div>
+        <div class="legend-item"><span class="legend-num">3</span>Растения</div>
+        <div class="legend-item"><span class="legend-num">4</span>Животные</div>
+      </div>
+      <div id="rows">${rows}</div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.picks = [null,null,null,null];
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(state.answered) return;
+      const r = +btn.dataset.row, v = +btn.dataset.val;
+      state.picks[r] = v;
+      // unselect siblings
+      document.querySelectorAll(`.choice-btn[data-row="${r}"]`).forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      // enable check if all 4 picked
+      document.getElementById('check').disabled = state.picks.some(p => p === null);
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  let allCorrect = true;
+  q.items.forEach((it, i) => {
+    const userPick = state.picks[i];
+    const correct = it.kingdom;
+    document.querySelectorAll(`.choice-btn[data-row="${i}"]`).forEach(btn => {
+      btn.disabled = true;
+      const v = +btn.dataset.val;
+      if(v === correct) btn.classList.add('correct-mark');
+      else if(v === userPick) btn.classList.add('wrong-mark');
+    });
+    if(userPick !== correct) allCorrect = false;
+  });
+
+  state.solved++;
+  if(allCorrect){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  const correctSeq = q.items.map(it => it.kingdom).join('');
+  const userSeq = state.picks.join('');
+  let notesHtml = '<p style="margin-top:8px"><strong>Пояснения:</strong></p>';
+  q.items.forEach((it, i) => {
+    const lr = ['А','Б','В','Г'][i];
+    notesHtml += `<p style="margin:4px 0"><strong>${lr})</strong> ${it.organism} — <em>${KINGDOMS[it.kingdom-1]}</em>. ${it.note}</p>`;
+  });
+  if(allCorrect){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно.</strong> Ответ: <code style="font-family:'JetBrains Mono',monospace">${correctSeq}</code>.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: <code style="font-family:'JetBrains Mono',monospace">${correctSeq}</code>, ваш: <code style="font-family:'JetBrains Mono',monospace">${userSeq}</code>.</div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

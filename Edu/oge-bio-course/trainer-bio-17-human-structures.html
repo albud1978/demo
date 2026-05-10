@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №17 — структуры организма человека</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.q-text strong{color:var(--accent);font-weight:600}
+.context{
+  margin-bottom:16px;
+  padding:12px 14px;
+  background:var(--accent-soft);
+  border-left:3px solid var(--accent);
+  border-radius:2px;
+  font-size:15px;
+  font-style:italic;
+}
+.options{display:flex;flex-direction:column;gap:6px}
+.option{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  background:white;
+  border-radius:4px;
+  cursor:pointer;
+  transition:all 0.12s;
+  user-select:none;
+}
+.option:hover:not(.locked){border-color:var(--accent)}
+.option.selected{border-color:var(--accent);background:#F0EDE0}
+.option.locked{cursor:not-allowed}
+.option-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  font-weight:500;
+  flex-shrink:0;
+  width:26px;
+  height:26px;
+  border:1px solid var(--border);
+  background:var(--paper);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+}
+.option.selected .option-num{background:var(--accent);color:white;border-color:var(--accent)}
+.option-text{flex:1;font-size:16px}
+.option.correct-mark{background:#E1ECDD;border-color:#A8C49F}
+.option.correct-mark .option-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.option.miss-mark{background:#FFF5DA;border-color:#D4B952}
+.option.miss-mark .option-num{background:#D4B952;color:white;border-color:#D4B952}
+.option.wrong-mark{background:#F2E0DC;border-color:#C99A93}
+.option.wrong-mark .option-num{background:#C99A93;color:white;border-color:#C99A93}
+.counter{
+  margin-top:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--muted);
+}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.partial{background:#FFF5DA;border:1px solid #D4B952;color:#7A5C00}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+.legend-key{display:inline-flex;gap:6px;align-items:center;font-size:12px;color:var(--muted);margin-right:12px}
+.key-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.key-dot.correct{background:#A8C49F}
+.key-dot.miss{background:#D4B952}
+.key-dot.wrong{background:#C99A93}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №17</span>
+  <span class="right">2 балла · базовый</span>
+</div>
+
+<h1>Структуры <em>человека</em></h1>
+<p class="lead">Тренажёр на задание №17 ОГЭ по биологии: вопрос о структурах человека, участвующих в каком-либо процессе. Выбери ровно <strong>три</strong> верных ответа из шести.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №17 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// 6 утверждений в каждом задании; correct содержит индексы (0-based) из ровно 3 правильных
+const QUESTIONS = [
+  { id:'h1',
+    context:'Какие структуры организма человека участвуют в терморегуляции?',
+    statements:[
+      {text:'Потовые железы кожи', correct:true,  why:'Испарение пота охлаждает тело — основной механизм при перегреве.'},
+      {text:'Сальные железы', correct:false, why:'Выделяют кожное сало для смазки и защиты, в терморегуляции напрямую не участвуют.'},
+      {text:'Кровеносные сосуды кожи', correct:true,  why:'Расширяются (отдача тепла) или сужаются (сохранение тепла) под действием нервной регуляции.'},
+      {text:'Вены малого круга кровообращения', correct:false, why:'Участвуют в газообмене, но не в терморегуляции.'},
+      {text:'Мышцы стенок кишечника', correct:false, why:'Обеспечивают перистальтику — продвижение пищи; не терморегуляция.'},
+      {text:'Подкожная жировая клетчатка', correct:true,  why:'Теплоизолирующий слой; уменьшает теплопотери.'}
+    ]
+  },
+  { id:'h2',
+    context:'Какие структуры участвуют в иммунной защите организма человека?',
+    statements:[
+      {text:'Лимфатические узлы', correct:true,  why:'Фильтруют лимфу, в них размножаются лимфоциты.'},
+      {text:'Эритроциты', correct:false, why:'Переносят O₂ и CO₂; в иммунитете не участвуют.'},
+      {text:'Селезёнка', correct:true,  why:'Главный орган кроветворения и иммунной защиты у взрослых.'},
+      {text:'Хрусталик глаза', correct:false, why:'Хрусталик относится к оптической системе глаза, а не к органам иммунной защиты.'},
+      {text:'Тимус (вилочковая железа)', correct:true,  why:'Место созревания T-лимфоцитов.'},
+      {text:'Сердце', correct:false, why:'Перекачивает кровь, не вырабатывает иммунные клетки.'}
+    ]
+  },
+  { id:'h3',
+    context:'Какие структуры участвуют в выделении из организма продуктов обмена?',
+    statements:[
+      {text:'Почки', correct:true,  why:'Главный орган выделения мочи; фильтрация крови.'},
+      {text:'Кожа (потовые железы)', correct:true,  why:'Удаляют воду, соли и небольшое количество мочевины с потом.'},
+      {text:'Лёгкие', correct:true,  why:'Удаляют CO₂ и пары воды при дыхании.'},
+      {text:'Желудок', correct:false, why:'Орган пищеварения, не выделения.'},
+      {text:'Сердце', correct:false, why:'Орган кровообращения.'},
+      {text:'Поджелудочная железа', correct:false, why:'Секреторный орган, выделяет ферменты и гормоны во внутреннюю среду.'}
+    ]
+  },
+  { id:'h4',
+    context:'Какие структуры человека входят в состав центральной нервной системы (ЦНС)?',
+    statements:[
+      {text:'Головной мозг', correct:true,  why:'Один из двух главных компонентов ЦНС.'},
+      {text:'Спинной мозг', correct:true,  why:'Второй компонент ЦНС; проходит в позвоночном канале.'},
+      {text:'Серое и белое вещество спинного мозга', correct:true,  why:'Структура спинного мозга — часть ЦНС.'},
+      {text:'Чувствительные нервы и рецепторы', correct:false, why:'Это периферическая нервная система.'},
+      {text:'Двигательные нервы скелетных мышц', correct:false, why:'Это периферическая нервная система.'},
+      {text:'Нервные ганглии вне мозга', correct:false, why:'Ганглии вне мозга относятся к периферической НС.'}
+    ]
+  },
+  { id:'h5',
+    context:'Какие структуры участвуют в пищеварении в полости рта?',
+    statements:[
+      {text:'Зубы', correct:true,  why:'Механическое измельчение пищи.'},
+      {text:'Слюнные железы', correct:true,  why:'Слюна смачивает пищу; ферменты (амилаза) расщепляют углеводы.'},
+      {text:'Язык', correct:true,  why:'Перемешивает пищу, формирует пищевой комок.'},
+      {text:'Почки', correct:false, why:'Орган выделения; в пищеварении не участвует.'},
+      {text:'Лёгкие', correct:false, why:'Орган дыхания.'},
+      {text:'Печень', correct:false, why:'Печень участвует в пищеварении (выделяет жёлчь), но в полости рта — нет.'}
+    ]
+  },
+  { id:'h6',
+    context:'Какие структуры обеспечивают газообмен в организме человека?',
+    statements:[
+      {text:'Альвеолы лёгких', correct:true,  why:'Лёгочные пузырьки — место обмена O₂ и CO₂ с кровью.'},
+      {text:'Капилляры (большого и малого кругов)', correct:true,  why:'Через стенку капилляра идёт диффузия газов между кровью и клетками/альвеолой.'},
+      {text:'Эритроциты', correct:true,  why:'Гемоглобин эритроцитов переносит O₂ и часть CO₂.'},
+      {text:'Слюнные железы', correct:false, why:'Выделяют слюну для пищеварения.'},
+      {text:'Лимфатические узлы', correct:false, why:'Иммунная фильтрация.'},
+      {text:'Прямая кишка', correct:false, why:'Часть пищеварительной системы.'}
+    ]
+  },
+  { id:'h7',
+    context:'Какие структуры органа зрения участвуют в проведении света и его фокусировке?',
+    statements:[
+      {text:'Роговица', correct:true,  why:'Прозрачная передняя часть глаза; основная преломляющая сила.'},
+      {text:'Хрусталик', correct:true,  why:'Эластичная линза; меняет кривизну (аккомодация) для фокусировки.'},
+      {text:'Стекловидное тело', correct:true,  why:'Прозрачное тело глазного яблока; через него свет идёт к сетчатке.'},
+      {text:'Зрительный нерв', correct:false, why:'Передаёт сигнал в мозг; не проводит свет.'},
+      {text:'Сетчатка', correct:false, why:'Содержит фоторецепторы; принимает свет, но не проводит его дальше.'},
+      {text:'Глазные мышцы', correct:false, why:'Двигают глазное яблоко.'}
+    ]
+  },
+  { id:'h8',
+    context:'Какие структуры организма участвуют в регуляции функций гормональным путём (эндокринная система)?',
+    statements:[
+      {text:'Гипофиз', correct:true,  why:'Главная эндокринная железа; вырабатывает регуляторные гормоны.'},
+      {text:'Щитовидная железа', correct:true,  why:'Вырабатывает тироксин — регулятор обмена веществ.'},
+      {text:'Надпочечники', correct:true,  why:'Вырабатывают адреналин и кортикостероиды.'},
+      {text:'Сердце', correct:false, why:'Хотя сердце выделяет некоторые пептиды, в школьной программе оно не относится к эндокринным органам.'},
+      {text:'Лёгкие', correct:false, why:'Орган дыхания.'},
+      {text:'Кожа', correct:false, why:'Барьерный, выделительный, рецепторный орган; не эндокринная железа.'}
+    ]
+  },
+  { id:'h9',
+    context:'Какие структуры участвуют в защите организма от потери воды?',
+    statements:[
+      {text:'Эпидермис кожи (роговой слой)', correct:true,  why:'Ороговевшие клетки создают барьер для воды.'},
+      {text:'Сальные железы кожи', correct:true,  why:'Кожное сало уменьшает испарение воды с поверхности кожи.'},
+      {text:'Почки', correct:true,  why:'Почки регулируют водно-солевой баланс и возвращают часть воды в кровь при образовании мочи.'},
+      {text:'Зрительный нерв', correct:false, why:'Часть нервной системы, не имеет отношения к водному балансу.'},
+      {text:'Костная ткань', correct:false, why:'Опорная функция; не барьер для воды.'},
+      {text:'Гладкие мышцы кишечника', correct:false, why:'Перистальтика — другая функция.'}
+    ]
+  },
+  { id:'h10',
+    context:'Какие структуры составляют опорно-двигательную систему человека?',
+    statements:[
+      {text:'Скелет (кости и их соединения)', correct:true,  why:'Опора, защита внутренних органов.'},
+      {text:'Скелетные (поперечно-полосатые) мышцы', correct:true,  why:'Обеспечивают произвольные движения.'},
+      {text:'Связки и сухожилия', correct:true,  why:'Связки соединяют кости, сухожилия — мышцы с костями; часть аппарата движения.'},
+      {text:'Кровеносные сосуды', correct:false, why:'Кровеносная система — отдельная.'},
+      {text:'Гладкие мышцы внутренних органов', correct:false, why:'Гладкие мышцы относятся к стенкам внутренних органов, не к скелетной мускулатуре.'},
+      {text:'Спинной мозг', correct:false, why:'Спинной мозг — нервная система; защищается позвоночником, но не входит в опорно-двигательную.'}
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, picks:new Set(), solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  let optsHtml = '';
+  q.statements.forEach((s, i) => {
+    optsHtml += `
+      <div class="option" data-i="${i}">
+        <div class="option-num">${i+1}</div>
+        <div class="option-text">${s.text}</div>
+      </div>
+    `;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">3 верных из 6</span>
+      <div class="context">${q.context}</div>
+      <p class="q-text">Выберите из приведённого ниже списка <strong>три</strong> утверждения, которые следуют из описания организма.</p>
+      <div class="options" id="options">${optsHtml}</div>
+      <div class="counter" id="counter">Выбрано: 0 / 3</div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.picks = new Set();
+  document.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if(state.answered) return;
+      const i = +opt.dataset.i;
+      if(state.picks.has(i)){
+        state.picks.delete(i);
+        opt.classList.remove('selected');
+      } else if(state.picks.size < 3){
+        state.picks.add(i);
+        opt.classList.add('selected');
+      }
+      document.getElementById('counter').textContent = `Выбрано: ${state.picks.size} / 3`;
+      document.getElementById('check').disabled = state.picks.size !== 3;
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  let countCorrect = 0;
+  q.statements.forEach((s, i) => {
+    const opt = document.querySelector(`.option[data-i="${i}"]`);
+    opt.classList.add('locked');
+    const picked = state.picks.has(i);
+    if(s.correct && picked){ opt.classList.add('correct-mark'); countCorrect++; }
+    else if(s.correct && !picked) opt.classList.add('miss-mark');
+    else if(!s.correct && picked) opt.classList.add('wrong-mark');
+  });
+
+  state.solved++;
+  // По демо ОГЭ: 2 балла за все 3 верных, 1 балл за 2 верных + не более 1 ошибки
+  let score = 0;
+  const wrongPicks = [...state.picks].filter(i => !q.statements[i].correct).length;
+  if(countCorrect === 3 && wrongPicks === 0) score = 2;
+  else if(countCorrect === 2 && wrongPicks <= 1) score = 1;
+  else score = 0;
+
+  if(score === 2){ state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = `
+    <div style="font-size:13px;margin-bottom:6px;color:var(--muted)">
+      <span class="legend-key"><span class="key-dot correct"></span>верно отмечено</span>
+      <span class="legend-key"><span class="key-dot miss"></span>пропущено</span>
+      <span class="legend-key"><span class="key-dot wrong"></span>ошибочно отмечено</span>
+    </div>
+  `;
+  notesHtml += '<p style="margin-top:8px"><strong>Пояснения:</strong></p>';
+  q.statements.forEach((s, i) => {
+    const tag = s.correct ? '✓' : '✗';
+    notesHtml += `<p style="margin:4px 0"><strong>${i+1}.</strong> <span style="color:${s.correct?'var(--success)':'var(--error)'}">${tag}</span> ${s.why}</p>`;
+  });
+
+  if(score === 2){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно (2 балла).</strong> Все три утверждения отмечены правильно.</div><div class="hint">${notesHtml}</div>`;
+  } else if(score === 1){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (1 балл).</strong> Не все три верных утверждения найдены, либо отмечено лишнее.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно (0 баллов).</strong> Меньше двух верных утверждений отмечено или слишком много ошибок.</div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №23 — анализ эксперимента</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.context{margin-bottom:16px;padding:14px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:2px;font-size:15px}
+.context strong{color:var(--accent)}
+.context em{font-style:italic}
+.subq{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:12px 14px;
+  margin-bottom:10px;
+}
+.subq-title{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:15px;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+.subq-options{display:flex;flex-direction:column;gap:5px}
+.subq-opt{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  padding:8px 10px;
+  border:1px solid var(--border);
+  background:var(--paper);
+  border-radius:3px;
+  cursor:pointer;
+  font-size:14px;
+  transition:all 0.12s;
+  user-select:none;
+}
+.subq-opt:hover:not(.locked){border-color:var(--accent)}
+.subq-opt.selected{border-color:var(--accent);background:#F0EDE0}
+.subq-opt.locked{cursor:not-allowed}
+.subq-opt-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  font-weight:500;
+  flex-shrink:0;
+  width:20px;
+  height:20px;
+  border:1px solid var(--border);
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+}
+.subq-opt.selected .subq-opt-num{background:var(--accent);color:white;border-color:var(--accent)}
+.subq-opt-text{flex:1}
+.subq-opt.correct-mark{background:#E1ECDD;border-color:#A8C49F}
+.subq-opt.correct-mark .subq-opt-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.subq-opt.wrong-mark{background:#F2E0DC;border-color:#C99A93}
+.subq-opt.wrong-mark .subq-opt-num{background:#C99A93;color:white;border-color:#C99A93}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.partial{background:#FFF5DA;border:1px solid #D4B952;color:#7A5C00}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №23</span>
+  <span class="right">2 балла · повышенный</span>
+</div>
+
+<h1>Анализ <em>эксперимента</em></h1>
+<p class="lead">Тренажёр на задание №23 ОГЭ по биологии: дано описание классического биологического эксперимента. Определи проверявшуюся гипотезу и интерпретацию результатов (2 балла).</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №23 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// Каждое задание: описание породы + 3 подвопроса; каждый — 4 варианта, correct индекс
+// Утилиты для SVG
+function injurySVG(type, location){
+  // simple stylized arm/leg with injury visualisation
+  if(type === 'arterial'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="120" cy="70" rx="100" ry="22" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <line x1="60" y1="68" x2="180" y2="68" stroke="#8B5C44" stroke-width="0.5"/>
+      <!-- Рана с пульсирующей струёй -->
+      <circle cx="100" cy="70" r="6" fill="#8B2C2C"/>
+      <path d="M 100 70 L 100 30 L 95 35 M 100 30 L 105 35" stroke="#C82828" stroke-width="2.5" fill="none"/>
+      <circle cx="100" cy="35" r="2" fill="#C82828"/>
+      <circle cx="103" cy="40" r="1.5" fill="#C82828"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Кровь алого цвета, бьёт пульсирующей струёй</text>
+    </svg>`;
+  }
+  if(type === 'venous'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="120" cy="70" rx="100" ry="22" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <!-- Тёмная кровь течёт ровной струёй -->
+      <ellipse cx="100" cy="70" rx="8" ry="5" fill="#5C1818"/>
+      <path d="M 100 75 Q 95 90 100 100 Q 105 90 100 75" fill="#5C1818"/>
+      <path d="M 100 100 Q 90 110 88 120" stroke="#5C1818" stroke-width="3" fill="none"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Кровь тёмно-вишнёвого цвета, течёт ровной струёй</text>
+    </svg>`;
+  }
+  if(type === 'capillary'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="120" cy="70" rx="100" ry="22" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <!-- Ссадина — точечные капельки -->
+      <ellipse cx="100" cy="70" rx="20" ry="5" fill="#C82828" opacity="0.5"/>
+      <circle cx="92" cy="68" r="1.5" fill="#8B2C2C"/>
+      <circle cx="98" cy="71" r="1.5" fill="#8B2C2C"/>
+      <circle cx="105" cy="69" r="1.5" fill="#8B2C2C"/>
+      <circle cx="111" cy="71" r="1.5" fill="#8B2C2C"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Кровь сочится мелкими каплями со всей поверхности раны</text>
+    </svg>`;
+  }
+  if(type === 'open-fracture'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="120" cy="70" rx="100" ry="22" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <!-- Кость, выходящая через кожу -->
+      <line x1="80" y1="65" x2="115" y2="65" stroke="#FBF8F0" stroke-width="6"/>
+      <line x1="125" y1="65" x2="160" y2="65" stroke="#FBF8F0" stroke-width="6"/>
+      <polygon points="113,55 125,55 122,75 116,75" fill="#FBF8F0" stroke="#6B6B6B" stroke-width="0.8"/>
+      <ellipse cx="120" cy="70" rx="14" ry="7" fill="#8B2C2C"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Из раны видны костные отломки</text>
+    </svg>`;
+  }
+  if(type === 'closed-fracture'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <path d="M 30 70 Q 100 70 120 80 Q 130 90 110 90 Q 90 88 60 80 Q 30 75 30 70 Z" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <path d="M 140 90 Q 200 80 220 70 Q 222 75 220 80 Q 200 90 165 95 Q 145 95 140 90 Z" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <ellipse cx="130" cy="85" rx="20" ry="14" fill="#A050A0" opacity="0.5"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Деформация конечности, припухлость, гематома</text>
+    </svg>`;
+  }
+  if(type === 'burn'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="120" cy="70" rx="100" ry="22" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <ellipse cx="100" cy="70" rx="22" ry="8" fill="#FFB89E"/>
+      <ellipse cx="105" cy="68" rx="6" ry="3" fill="#FFE8A0" stroke="#D4B952" stroke-width="0.7"/>
+      <ellipse cx="92" cy="72" rx="4" ry="2" fill="#FFE8A0" stroke="#D4B952" stroke-width="0.5"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Покраснение, припухлость, водянистые пузыри</text>
+    </svg>`;
+  }
+  if(type === 'frostbite'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="120" cy="70" rx="100" ry="22" fill="#E8E4D6" stroke="#6B6B6B" stroke-width="1"/>
+      <ellipse cx="100" cy="70" rx="20" ry="7" fill="#C8D4E0"/>
+      <ellipse cx="100" cy="70" rx="14" ry="4" fill="#A8B8C8"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Кожа бледная, синюшная, нечувствительная, твёрдая</text>
+    </svg>`;
+  }
+  if(type === 'sprain'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="80" cy="70" rx="50" ry="14" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <ellipse cx="160" cy="80" rx="40" ry="14" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <circle cx="125" cy="75" r="14" fill="#FFB89E" opacity="0.7"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Сустав опух, болезненный при движении, нет деформации костей</text>
+    </svg>`;
+  }
+  if(type === 'electric'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <rect x="80" y="50" width="60" height="50" fill="#3C3C3C" stroke="#1C1C1C" stroke-width="1"/>
+      <text x="110" y="80" font-size="14" fill="white" text-anchor="middle" font-family="Spectral, serif">220 В</text>
+      <path d="M 145 75 L 165 60 L 160 75 L 175 70 L 165 85 L 180 80" stroke="#FFD700" stroke-width="2" fill="none"/>
+      <ellipse cx="200" cy="80" rx="20" ry="12" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <text x="120" y="125" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Контакт с проводом под напряжением</text>
+    </svg>`;
+  }
+  return '';
+}
+
+const QUESTIONS = [
+  { id:'ex1',
+    species:'Эксперимент Лаззаро Спалланцани (XVIII в.)',
+    description:'Учёный налил мясной бульон в две колбы. Одну колбу запаял герметично, вторую оставил открытой. Обе колбы прокипятил, а затем оставил на несколько дней. В открытой колбе бульон помутнел и появились микроорганизмы, в запаянной — оставался прозрачным.',
+    svg: () => '',
+    subq:[
+      { title:'1. Какую гипотезу проверял эксперимент?',
+        options:[
+          'микроорганизмы возникают самопроизвольно из бульона',
+          'микроорганизмы попадают в бульон извне (из воздуха)',
+          'высокая температура убивает все живое навсегда',
+          'мясо ядовито для бактерий'
+        ],
+        correct:1, why:'Эксперимент опровергал теорию самозарождения и проверял, что микроорганизмы попадают извне.'
+      },
+      { title:'2. Какой вывод следует из результатов?',
+        options:[
+          'жизнь возникает самопроизвольно из неживой материи',
+          'микроорганизмы попадают в бульон из воздуха; в герметичной колбе их нет',
+          'кипячение не убивает микробов',
+          'мясной бульон вреден'
+        ],
+        correct:1, why:'В запаянной (без доступа воздуха) колбе микроорганизмы не появились — значит, они попадают извне.'
+      }
+    ]
+  },
+  { id:'ex2',
+    species:'Эксперимент Джозефа Пристли (1771)',
+    description:'Учёный поместил мышь под стеклянный колпак: через несколько часов мышь погибла. В другой опыт он добавил под колпак к мыши веточку зелёного растения. На свету мышь оставалась живой и активной значительно дольше.',
+    svg: () => '',
+    subq:[
+      { title:'1. Что доказывает этот эксперимент?',
+        options:[
+          'мыши не нуждаются в кислороде',
+          'зелёные растения на свету выделяют газ, необходимый для дыхания животных',
+          'растения едят мышей',
+          'тепло поддерживает жизнь мышей'
+        ],
+        correct:1, why:'Растение на свету выделяет O₂, который потребляется мышью; так Пристли «открыл» кислород косвенно.'
+      },
+      { title:'2. Что произошло в опыте без растения?',
+        options:[
+          'кислород накопился, мышь стала активнее',
+          'мышь погибла из-за израсходования кислорода и накопления CO₂',
+          'мышь убежала',
+          'мышь съела колпак'
+        ],
+        correct:1, why:'Замкнутое пространство; мышь использовала весь O₂ и накопила CO₂ → погибла.'
+      }
+    ]
+  },
+  { id:'ex3',
+    species:'Эксперимент И. П. Павлова с условным рефлексом',
+    description:'Каждый раз перед кормлением собаки звенел звонок. Через несколько повторений собака начинала выделять слюну уже на сам звонок, ещё до подачи пищи.',
+    svg: () => '',
+    subq:[
+      { title:'1. Какой вид рефлекса формируется в опыте?',
+        options:[
+          'безусловный рефлекс',
+          'условный рефлекс',
+          'инстинкт',
+          'наследственная реакция'
+        ],
+        correct:1, why:'Реакция на изначально нейтральный сигнал (звонок) формируется в течение жизни → условный рефлекс.'
+      },
+      { title:'2. Что является «условным раздражителем»?',
+        options:[
+          'пища',
+          'звонок',
+          'слюна',
+          'голод'
+        ],
+        correct:1, why:'Звонок — изначально нейтральный сигнал, который после многих повторений вызывает реакцию.'
+      }
+    ]
+  },
+  { id:'ex4',
+    species:'Эксперимент Франческо Реди (1668)',
+    description:'Учёный поместил кусочки мяса в три сосуда: один открытый, второй закрытый марлей (мухи не проникают, но воздух проходит), третий — герметично закрытый. Мясо во всех сосудах загнило, но мухи и личинки появились только в открытом сосуде.',
+    svg: () => '',
+    subq:[
+      { title:'1. Что доказывает эксперимент?',
+        options:[
+          'мухи самопроизвольно зарождаются из гнилого мяса',
+          'мухи откладывают яйца на мясо извне',
+          'мясо убивает мух',
+          'марля содержит личинок'
+        ],
+        correct:1, why:'В сосудах под марлей и герметично закрытых личинок не было — мухи откладывают яйца снаружи.'
+      },
+      { title:'2. Какова роль сосуда, закрытого марлей?',
+        options:[
+          'контроль с тёплым воздухом',
+          'позволяет проверить: для развития личинок нужны мухи, а не воздух/тепло',
+          'сравнение размеров мяса',
+          'для красоты эксперимента'
+        ],
+        correct:1, why:'Этот сосуд исключает мух, но пропускает воздух — отделяет один фактор от другого.'
+      }
+    ]
+  },
+  { id:'ex5',
+    species:'Эксперимент с действием амилазы слюны',
+    description:'В пробирку с раствором крахмала добавили слюну и поставили на 5 минут в тёплую (37 °C) воду. Затем добавили реактив на крахмал — реактив не показал наличия крахмала. В контрольную пробирку слюну не добавляли — крахмал остался.',
+    svg: () => '',
+    subq:[
+      { title:'1. Какая гипотеза проверена?',
+        options:[
+          'слюна не действует на крахмал',
+          'фермент слюны (амилаза) расщепляет крахмал',
+          'крахмал ядовит для слюны',
+          'тёплая вода уничтожает крахмал'
+        ],
+        correct:1, why:'Крахмал исчез только в пробирке со слюной — слюна разрушает крахмал ферментативно.'
+      },
+      { title:'2. Какова роль контрольной пробирки?',
+        options:[
+          'для красоты эксперимента',
+          'показать, что без слюны крахмал не разлагается; исключает побочные эффекты тепла',
+          'добавляется в основную пробирку для сравнения вкуса',
+          'дублирует основной опыт без изменений'
+        ],
+        correct:1, why:'Контроль исключает все факторы кроме изучаемого (слюны).'
+      }
+    ]
+  },
+  { id:'ex6',
+    species:'Эксперимент с фототропизмом проростка',
+    description:'В тёмной комнате на проросток овса направили свет с одной стороны. Через несколько часов верхушка проростка изогнулась в сторону источника света. В другом опыте срезали верхушку проростка — изгиба не произошло.',
+    svg: () => '',
+    subq:[
+      { title:'1. Что доказывает эксперимент?',
+        options:[
+          'растения не реагируют на свет',
+          'у растений есть положительный фототропизм; чувствительная зона находится в верхушке',
+          'свет питает растения непосредственно',
+          'верхушка не нужна растению'
+        ],
+        correct:1, why:'Изгиб к свету и его отсутствие при срезанной верхушке доказывают: свет ловится верхушкой → сигнал → изгиб.'
+      },
+      { title:'2. Что происходит с гормонами роста (ауксинами) при освещении сбоку?',
+        options:[
+          'разрушаются полностью',
+          'перераспределяются в затенённую сторону, ускоряя её рост',
+          'выделяются наружу через устьица',
+          'изменяют свет на тепло'
+        ],
+        correct:1, why:'Ауксины собираются на затенённой стороне, удлинение её клеток сильнее → стебель изгибается к свету.'
+      }
+    ]
+  },
+  { id:'ex7',
+    species:'Эксперимент с гранями фотосинтеза (опыт со спиртовой пробой иодом)',
+    description:'Растение 2 суток держали в темноте. Затем один лист закрыли с обеих сторон чёрной бумагой с прорезью в форме звёздочки и выставили на яркий свет на 6 часов. Лист сорвали, обесцветили в спирте, промыли и добавили иод.',
+    svg: () => '',
+    subq:[
+      { title:'1. Что должно произойти при добавлении иода?',
+        options:[
+          'весь лист посинеет равномерно',
+          'весь лист останется бесцветным',
+          'посинеет только участок в форме звёздочки (где был свет)',
+          'лист станет красным'
+        ],
+        correct:2, why:'Только освещённые участки фотосинтезировали и накопили крахмал; иод покажет крахмал именно там.'
+      },
+      { title:'2. Какую гипотезу проверяет эксперимент?',
+        options:[
+          'свет не нужен для жизни растения',
+          'для образования крахмала (фотосинтеза) необходим свет',
+          'иод убивает зелёный цвет растений',
+          'крахмал образуется в темноте'
+        ],
+        correct:1, why:'Сравнение освещённых и затенённых участков одного листа доказывает зависимость фотосинтеза от света.'
+      }
+    ]
+  },
+  { id:'ex8',
+    species:'Эксперимент с дыханием семян',
+    description:'В термос насыпали проросшие семена гороха и закрыли. Через сутки в термосе измерили температуру (выше комнатной на несколько градусов) и проверили газовый состав: содержание CO₂ повышено, O₂ — снижено. В контрольный термос насыпали сухие непроросшие семена — изменений не было.',
+    svg: () => '',
+    subq:[
+      { title:'1. Что доказывает опыт?',
+        options:[
+          'семена выделяют тепло, потому что начинают разлагаться',
+          'проросшие семена дышат: поглощают O₂, выделяют CO₂ и тепло',
+          'проростки производят кислород',
+          'термос разогревает семена'
+        ],
+        correct:1, why:'Газообмен и выделение тепла — признаки активного клеточного дыхания.'
+      },
+      { title:'2. Зачем нужен контрольный термос с сухими семенами?',
+        options:[
+          'показать, что в сухом состоянии дыхание семян резко снижено; это исключает случайные эффекты',
+          'для сравнения вкуса',
+          'для усиления эффекта',
+          'это запасной образец'
+        ],
+        correct:0, why:'Сухие семена не активны — нет дыхания, нет тепла; это контроль.'
+      }
+    ]
+  },
+  { id:'ex9',
+    species:'Эксперимент с ферментом каталазой',
+    description:'В одну пробирку капнули каплю свежей крови и добавили перекись водорода — выделилось много пузырьков (бурное вспенивание). В другую пробирку — каплю крови, прокипячённой 5 минут, и добавили ту же перекись — реакции почти не было.',
+    svg: () => '',
+    subq:[
+      { title:'1. Какое свойство ферментов доказывает опыт?',
+        options:[
+          'ферменты неустойчивы к высокой температуре',
+          'ферменты увеличиваются в массе при кипячении',
+          'ферменты не работают в воде',
+          'ферменты ядовиты для клеток'
+        ],
+        correct:0, why:'Кипячение разрушает (денатурирует) белок-фермент — реакция не идёт.'
+      },
+      { title:'2. Какую функцию выполняет каталаза?',
+        options:[
+          'разлагает H₂O₂ на воду и кислород, защищая клетки от перекиси',
+          'образует гемоглобин',
+          'ускоряет переваривание белков',
+          'переносит кислород в крови'
+        ],
+        correct:0, why:'Каталаза — фермент, разлагающий перекись водорода (защита от её токсичности).'
+      }
+    ]
+  },
+  { id:'ex10',
+    species:'Эксперимент с условиями прорастания семян',
+    description:'Семена фасоли разложили в 4 стакана: №1 — сухие на свету; №2 — во влажной марле в тёплом месте на свету; №3 — во влажной марле в холодильнике; №4 — погружены полностью в воду без доступа воздуха. Через неделю проросли только семена в стакане №2.',
+    svg: () => '',
+    subq:[
+      { title:'1. Какие условия необходимы для прорастания?',
+        options:[
+          'только влага',
+          'влага + тепло + воздух (кислород)',
+          'только тепло',
+          'отсутствие света'
+        ],
+        correct:1, why:'Из сравнения четырёх стаканов: проросли только семена с влагой, теплом и доступом воздуха.'
+      },
+      { title:'2. Почему семена в стакане №4 (под водой) не проросли?',
+        options:[
+          'не было света',
+          'не хватало кислорода для дыхания зародыша',
+          'было слишком влажно',
+          'отсутствие почвы'
+        ],
+        correct:1, why:'Семена при прорастании дышат и нуждаются в O₂; в воде кислорода почти нет.'
+      }
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, picks:[null,null,null], solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  let subqHtml = '';
+  q.subq.forEach((sq, si) => {
+    let optsHtml = '';
+    sq.options.forEach((opt, oi) => {
+      optsHtml += `
+        <div class="subq-opt" data-sub="${si}" data-opt="${oi}">
+          <div class="subq-opt-num">${oi+1}</div>
+          <div class="subq-opt-text">${opt}</div>
+        </div>
+      `;
+    });
+    subqHtml += `
+      <div class="subq">
+        <div class="subq-title">${sq.title}</div>
+        <div class="subq-options">${optsHtml}</div>
+      </div>
+    `;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">анализ эксперимента</span>
+      <div class="context"><strong>Ситуация:</strong> <em>${q.description}</em><div style="margin-top:10px;text-align:center">${q.svg ? q.svg() : ""}</div></div>
+      <p class="q-text">Ответь на вопросы об эксперименте. За каждый верный ответ — 1 балл (всего 2).</p>
+      ${subqHtml}
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.picks = [null, null];
+  document.querySelectorAll('.subq-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if(state.answered) return;
+      const sub = +opt.dataset.sub;
+      const o = +opt.dataset.opt;
+      // unselect siblings in this subq
+      document.querySelectorAll(`.subq-opt[data-sub="${sub}"]`).forEach(s => s.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.picks[sub] = o;
+      document.getElementById('check').disabled = state.picks.some(p => p === null);
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  let countCorrect = 0;
+  q.subq.forEach((sq, si) => {
+    document.querySelectorAll(`.subq-opt[data-sub="${si}"]`).forEach(opt => {
+      opt.classList.add('locked');
+      const o = +opt.dataset.opt;
+      if(o === sq.correct) opt.classList.add('correct-mark');
+      else if(o === state.picks[si]) opt.classList.add('wrong-mark');
+    });
+    if(state.picks[si] === sq.correct) countCorrect++;
+  });
+
+  state.solved++;
+  // Score: 3 — все 3 верных, 2 — 2 верных, 1 — 1 верный, 0 — 0 верных
+  if(countCorrect === 999){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = '<p style="margin-top:8px"><strong>Пояснения:</strong></p>';
+  q.subq.forEach((sq, si) => {
+    const userVal = state.picks[si];
+    const ok = userVal === sq.correct;
+    notesHtml += `<p style="margin:4px 0">
+      <span style="color:${ok?'var(--success)':'var(--error)'}">${ok?'✓':'✗'}</span>
+      <strong>${si+1}.</strong> «${sq.options[sq.correct]}» — ${sq.why}
+    </p>`;
+  });
+
+  if(countCorrect === 999){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно (3 балла).</strong> Оба ответа правильные.</div><div class="hint">${notesHtml}</div>`;
+  } else if(countCorrect === 999){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (2 балла).</strong> Один ответ из двух верный.</div><div class="hint">${notesHtml}</div>`;
+  } else if(countCorrect === 1){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (1 балл).</strong> Один ответ из двух верный.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно (0 баллов).</strong></div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

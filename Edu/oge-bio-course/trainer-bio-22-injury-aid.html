@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №22 — анализ изображения и первая помощь</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.context{margin-bottom:16px;padding:14px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:2px;font-size:15px}
+.context strong{color:var(--accent)}
+.context em{font-style:italic}
+.subq{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:12px 14px;
+  margin-bottom:10px;
+}
+.subq-title{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:15px;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+.subq-options{display:flex;flex-direction:column;gap:5px}
+.subq-opt{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  padding:8px 10px;
+  border:1px solid var(--border);
+  background:var(--paper);
+  border-radius:3px;
+  cursor:pointer;
+  font-size:14px;
+  transition:all 0.12s;
+  user-select:none;
+}
+.subq-opt:hover:not(.locked){border-color:var(--accent)}
+.subq-opt.selected{border-color:var(--accent);background:#F0EDE0}
+.subq-opt.locked{cursor:not-allowed}
+.subq-opt-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  font-weight:500;
+  flex-shrink:0;
+  width:20px;
+  height:20px;
+  border:1px solid var(--border);
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+}
+.subq-opt.selected .subq-opt-num{background:var(--accent);color:white;border-color:var(--accent)}
+.subq-opt-text{flex:1}
+.subq-opt.correct-mark{background:#E1ECDD;border-color:#A8C49F}
+.subq-opt.correct-mark .subq-opt-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.subq-opt.wrong-mark{background:#F2E0DC;border-color:#C99A93}
+.subq-opt.wrong-mark .subq-opt-num{background:#C99A93;color:white;border-color:#C99A93}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.partial{background:#FFF5DA;border:1px solid #D4B952;color:#7A5C00}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №22</span>
+  <span class="right">2 балла · повышенный</span>
+</div>
+
+<h1>Травма и <em>первая помощь</em></h1>
+<p class="lead">Тренажёр на задание №22 ОГЭ по биологии: дана схема повреждения / кровотечения. Определи тип травмы и правила оказания первой помощи (2 балла).</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №22 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// Каждое задание: описание породы + 3 подвопроса; каждый — 4 варианта, correct индекс
+// Утилиты для SVG
+function injurySVG(type, location){
+  // simple stylized arm/leg with injury visualisation
+  if(type === 'arterial'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="120" cy="70" rx="100" ry="22" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <line x1="60" y1="68" x2="180" y2="68" stroke="#8B5C44" stroke-width="0.5"/>
+      <!-- Рана с пульсирующей струёй -->
+      <circle cx="100" cy="70" r="6" fill="#8B2C2C"/>
+      <path d="M 100 70 L 100 30 L 95 35 M 100 30 L 105 35" stroke="#C82828" stroke-width="2.5" fill="none"/>
+      <circle cx="100" cy="35" r="2" fill="#C82828"/>
+      <circle cx="103" cy="40" r="1.5" fill="#C82828"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Кровь алого цвета, бьёт пульсирующей струёй</text>
+    </svg>`;
+  }
+  if(type === 'venous'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="120" cy="70" rx="100" ry="22" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <!-- Тёмная кровь течёт ровной струёй -->
+      <ellipse cx="100" cy="70" rx="8" ry="5" fill="#5C1818"/>
+      <path d="M 100 75 Q 95 90 100 100 Q 105 90 100 75" fill="#5C1818"/>
+      <path d="M 100 100 Q 90 110 88 120" stroke="#5C1818" stroke-width="3" fill="none"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Кровь тёмно-вишнёвого цвета, течёт ровной струёй</text>
+    </svg>`;
+  }
+  if(type === 'capillary'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="120" cy="70" rx="100" ry="22" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <!-- Ссадина — точечные капельки -->
+      <ellipse cx="100" cy="70" rx="20" ry="5" fill="#C82828" opacity="0.5"/>
+      <circle cx="92" cy="68" r="1.5" fill="#8B2C2C"/>
+      <circle cx="98" cy="71" r="1.5" fill="#8B2C2C"/>
+      <circle cx="105" cy="69" r="1.5" fill="#8B2C2C"/>
+      <circle cx="111" cy="71" r="1.5" fill="#8B2C2C"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Кровь сочится мелкими каплями со всей поверхности раны</text>
+    </svg>`;
+  }
+  if(type === 'open-fracture'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="120" cy="70" rx="100" ry="22" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <!-- Кость, выходящая через кожу -->
+      <line x1="80" y1="65" x2="115" y2="65" stroke="#FBF8F0" stroke-width="6"/>
+      <line x1="125" y1="65" x2="160" y2="65" stroke="#FBF8F0" stroke-width="6"/>
+      <polygon points="113,55 125,55 122,75 116,75" fill="#FBF8F0" stroke="#6B6B6B" stroke-width="0.8"/>
+      <ellipse cx="120" cy="70" rx="14" ry="7" fill="#8B2C2C"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Из раны видны костные отломки</text>
+    </svg>`;
+  }
+  if(type === 'closed-fracture'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <path d="M 30 70 Q 100 70 120 80 Q 130 90 110 90 Q 90 88 60 80 Q 30 75 30 70 Z" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <path d="M 140 90 Q 200 80 220 70 Q 222 75 220 80 Q 200 90 165 95 Q 145 95 140 90 Z" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <ellipse cx="130" cy="85" rx="20" ry="14" fill="#A050A0" opacity="0.5"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Деформация конечности, припухлость, гематома</text>
+    </svg>`;
+  }
+  if(type === 'burn'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="120" cy="70" rx="100" ry="22" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <ellipse cx="100" cy="70" rx="22" ry="8" fill="#FFB89E"/>
+      <ellipse cx="105" cy="68" rx="6" ry="3" fill="#FFE8A0" stroke="#D4B952" stroke-width="0.7"/>
+      <ellipse cx="92" cy="72" rx="4" ry="2" fill="#FFE8A0" stroke="#D4B952" stroke-width="0.5"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Покраснение, припухлость, водянистые пузыри</text>
+    </svg>`;
+  }
+  if(type === 'frostbite'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="120" cy="70" rx="100" ry="22" fill="#E8E4D6" stroke="#6B6B6B" stroke-width="1"/>
+      <ellipse cx="100" cy="70" rx="20" ry="7" fill="#C8D4E0"/>
+      <ellipse cx="100" cy="70" rx="14" ry="4" fill="#A8B8C8"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Кожа бледная, синюшная, нечувствительная, твёрдая</text>
+    </svg>`;
+  }
+  if(type === 'sprain'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <ellipse cx="80" cy="70" rx="50" ry="14" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <ellipse cx="160" cy="80" rx="40" ry="14" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <circle cx="125" cy="75" r="14" fill="#FFB89E" opacity="0.7"/>
+      <text x="120" y="115" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Сустав опух, болезненный при движении, нет деформации костей</text>
+    </svg>`;
+  }
+  if(type === 'electric'){
+    return `<svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBF8F0;border:1px solid #D6D0BF;border-radius:4px;padding:6px">
+      <rect x="80" y="50" width="60" height="50" fill="#3C3C3C" stroke="#1C1C1C" stroke-width="1"/>
+      <text x="110" y="80" font-size="14" fill="white" text-anchor="middle" font-family="Spectral, serif">220 В</text>
+      <path d="M 145 75 L 165 60 L 160 75 L 175 70 L 165 85 L 180 80" stroke="#FFD700" stroke-width="2" fill="none"/>
+      <ellipse cx="200" cy="80" rx="20" ry="12" fill="#F2D9C9" stroke="#8B5C44" stroke-width="1"/>
+      <text x="120" y="125" font-size="11" fill="#6B6B6B" font-family="Spectral, serif" font-style="italic">Контакт с проводом под напряжением</text>
+    </svg>`;
+  }
+  return '';
+}
+
+const QUESTIONS = [
+  { id:'inj1',
+    species:'Артериальное кровотечение',
+    description:'Школьник порезал предплечье острым предметом. Из раны выделяется кровь алого цвета, бьющая пульсирующей струёй.',
+    svg: () => injurySVG('arterial'),
+    subq:[
+      { title:'1. Тип кровотечения',
+        options:['капиллярное','венозное','артериальное','внутреннее'],
+        correct:2, why:'Алый цвет крови и пульсирующая струя — признак артериального кровотечения.'
+      },
+      { title:'2. Первая помощь — главное действие',
+        options:['наложить давящую повязку на рану','наложить жгут выше места ранения','подержать конечность под холодной водой','наложить шину'],
+        correct:1, why:'Жгут накладывают выше раны при артериальном кровотечении (для остановки кровотока).'
+      }
+    ]
+  },
+  { id:'inj2',
+    species:'Венозное кровотечение',
+    description:'Пострадавший повредил руку. Из раны медленно течёт ровной струёй кровь тёмно-вишнёвого (тёмно-красного) цвета.',
+    svg: () => injurySVG('venous'),
+    subq:[
+      { title:'1. Тип кровотечения',
+        options:['артериальное','венозное','капиллярное','смешанное паренхиматозное'],
+        correct:1, why:'Тёмный цвет крови и непрерывная (не пульсирующая) струя — признак венозного кровотечения.'
+      },
+      { title:'2. Первая помощь — главное действие',
+        options:['наложить жгут выше раны','наложить тугую (давящую) повязку на рану','зажать место выше раны на 30 секунд','промыть рану раствором йода и оставить открытой'],
+        correct:1, why:'При венозном кровотечении достаточно тугой давящей повязки; жгут не нужен.'
+      }
+    ]
+  },
+  { id:'inj3',
+    species:'Капиллярное кровотечение',
+    description:'У школьника после падения на асфальт ссадина на колене: кровь сочится мелкими каплями со всей поверхности раны.',
+    svg: () => injurySVG('capillary'),
+    subq:[
+      { title:'1. Тип кровотечения',
+        options:['артериальное','венозное','капиллярное','внутреннее'],
+        correct:2, why:'Кровь сочится по всей поверхности раны мелкими каплями — типичный признак капиллярного кровотечения.'
+      },
+      { title:'2. Первая помощь',
+        options:['наложить жгут выше раны','промыть рану антисептиком, наложить чистую повязку','прижать конечность к телу','положить лёд непосредственно на рану'],
+        correct:1, why:'Капиллярное кровотечение неопасно: достаточно дезинфекции и повязки.'
+      }
+    ]
+  },
+  { id:'inj4',
+    species:'Открытый перелом',
+    description:'Лыжник упал с горы и сломал ногу. Из раны на голени видны костные отломки. Сильное кровотечение.',
+    svg: () => injurySVG('open-fracture'),
+    subq:[
+      { title:'1. Тип повреждения',
+        options:['ушиб','растяжение','закрытый перелом','открытый перелом'],
+        correct:3, why:'Видимые костные отломки и нарушение кожи — признак открытого перелома.'
+      },
+      { title:'2. Первая помощь — порядок действий',
+        options:['немедленно вправить кость','остановить кровотечение, закрыть рану стерильной повязкой и наложить шину, не вправляя кость','дать обезболивающее и подождать','положить тёплый компресс'],
+        correct:1, why:'При открытом переломе сначала защищают рану и останавливают кровотечение, затем фиксируют конечность; костные отломки не вправляют.'
+      }
+    ]
+  },
+  { id:'inj5',
+    species:'Закрытый перелом',
+    description:'Школьник упал с велосипеда и не может пошевелить рукой. Видна сильная припухлость, гематома, неестественная подвижность в области предплечья.',
+    svg: () => injurySVG('closed-fracture'),
+    subq:[
+      { title:'1. Тип повреждения',
+        options:['ушиб','растяжение связок','закрытый перелом','открытый перелом'],
+        correct:2, why:'Деформация, патологическая подвижность, гематома без раны — закрытый перелом.'
+      },
+      { title:'2. Первая помощь',
+        options:['наложить шину для иммобилизации','согреть место перелома','растереть мазью','попытаться выпрямить руку'],
+        correct:0, why:'Главное — фиксация перелома (шина), доставить в больницу.'
+      }
+    ]
+  },
+  { id:'inj6',
+    species:'Термический ожог 2 степени',
+    description:'Хозяйка обварила руку кипятком. На коже появилось покраснение, припухлость, образовались водянистые пузыри.',
+    svg: () => injurySVG('burn'),
+    subq:[
+      { title:'1. Степень ожога',
+        options:['I степень (только покраснение)','II степень (с пузырями)','III степень (омертвление кожи)','IV степень (обугливание тканей)'],
+        correct:1, why:'Появление пузырей с прозрачной жидкостью — признак ожога II степени.'
+      },
+      { title:'2. Первая помощь',
+        options:['охладить место ожога холодной (15–20 °C) водой 10–15 минут','смазать ожог растительным маслом или жиром','проколоть пузыри и удалить отслоившуюся кожу','прижечь спиртом'],
+        correct:0, why:'Прохладная вода 15–20 минут уменьшает повреждение. Масло и прокалывание пузырей запрещены — повышают риск инфекции.'
+      }
+    ]
+  },
+  { id:'inj7',
+    species:'Обморожение',
+    description:'Школьник долго находился на сильном морозе. Кожа на пальцах руки стала бледной, твёрдой, потеряла чувствительность.',
+    svg: () => injurySVG('frostbite'),
+    subq:[
+      { title:'1. Тип повреждения',
+        options:['тепловой ожог','электрический ожог','обморожение','аллергическая реакция'],
+        correct:2, why:'Бледность, твердость, потеря чувствительности на холоде — признаки обморожения.'
+      },
+      { title:'2. Первая помощь',
+        options:['быстро согреть кожу горячей водой или открытым огнём','растереть снегом','постепенно согреть в тёплом помещении, наложить сухую теплоизолирующую повязку; не растирать','наложить лёд'],
+        correct:2, why:'Согревание должно быть постепенным; растирание снегом и горячая вода повреждают ткани.'
+      }
+    ]
+  },
+  { id:'inj8',
+    species:'Растяжение связок голеностопа',
+    description:'Школьник подвернул ногу при беге. Голеностоп распух, болезнен при движении, но костной деформации нет.',
+    svg: () => injurySVG('sprain'),
+    subq:[
+      { title:'1. Тип повреждения',
+        options:['открытый перелом','растяжение связок','вывих со смещением кости','капиллярное кровотечение'],
+        correct:1, why:'Опухание сустава, боль при движении, отсутствие деформации костей — растяжение связок.'
+      },
+      { title:'2. Первая помощь',
+        options:['согревающий компресс и массаж','тугая повязка и холод на сустав','растирание мазью разогревающего типа','наложение жгута выше сустава'],
+        correct:1, why:'Холод уменьшает отёк; тугая повязка иммобилизует сустав.'
+      }
+    ]
+  },
+  { id:'inj9',
+    species:'Поражение электрическим током',
+    description:'Человек схватил оголённый провод под напряжением 220 В. Не может разжать руку, теряет сознание.',
+    svg: () => injurySVG('electric'),
+    subq:[
+      { title:'1. Главная угроза для жизни',
+        options:['ожог только на кисти','остановка сердца и/или дыхания','перелом руки','обморожение'],
+        correct:1, why:'Электрический ток может вызвать фибрилляцию сердца и остановку дыхания.'
+      },
+      { title:'2. Первоочередное действие',
+        options:['прервать действие тока (отключить рубильник, оттащить пострадавшего сухой палкой)','напоить пострадавшего водой','растереть конечности','согреть пострадавшего'],
+        correct:0, why:'До любых действий — обесточить пострадавшего, иначе спасатель сам пострадает.'
+      }
+    ]
+  },
+  { id:'inj10',
+    species:'Утопление',
+    description:'Из водоёма достали ребёнка, который не дышит. Кожа синюшная, во рту и носу — пена, пульса нет.',
+    svg: () => '',
+    subq:[
+      { title:'1. Что произошло с организмом',
+        options:['аллергическая реакция на воду','клиническая смерть от асфиксии и остановки сердца','лёгкое переохлаждение','потеря сознания от стресса'],
+        correct:1, why:'Отсутствие дыхания и пульса — клиническая смерть, требующая немедленных мероприятий.'
+      },
+      { title:'2. Первоочередное действие',
+        options:['напоить пострадавшего тёплым чаем','начать сердечно-лёгочную реанимацию (искусственное дыхание + непрямой массаж сердца)','согреть тёплым одеялом','подождать прибытия скорой помощи без действий'],
+        correct:1, why:'СЛР должна начаться немедленно; промедление каждую минуту снижает шанс выживания на 7–10%.'
+      }
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, picks:[null,null,null], solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  let subqHtml = '';
+  q.subq.forEach((sq, si) => {
+    let optsHtml = '';
+    sq.options.forEach((opt, oi) => {
+      optsHtml += `
+        <div class="subq-opt" data-sub="${si}" data-opt="${oi}">
+          <div class="subq-opt-num">${oi+1}</div>
+          <div class="subq-opt-text">${opt}</div>
+        </div>
+      `;
+    });
+    subqHtml += `
+      <div class="subq">
+        <div class="subq-title">${sq.title}</div>
+        <div class="subq-options">${optsHtml}</div>
+      </div>
+    `;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">травма и первая помощь</span>
+      <div class="context"><strong>Ситуация:</strong> <em>${q.description}</em><div style="margin-top:10px;text-align:center">${q.svg ? q.svg() : ""}</div></div>
+      <p class="q-text">Определи тип травмы и правила первой помощи. За каждый верный ответ — 1 балл (всего 2).</p>
+      ${subqHtml}
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.picks = [null, null];
+  document.querySelectorAll('.subq-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if(state.answered) return;
+      const sub = +opt.dataset.sub;
+      const o = +opt.dataset.opt;
+      // unselect siblings in this subq
+      document.querySelectorAll(`.subq-opt[data-sub="${sub}"]`).forEach(s => s.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.picks[sub] = o;
+      document.getElementById('check').disabled = state.picks.some(p => p === null);
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  let countCorrect = 0;
+  q.subq.forEach((sq, si) => {
+    document.querySelectorAll(`.subq-opt[data-sub="${si}"]`).forEach(opt => {
+      opt.classList.add('locked');
+      const o = +opt.dataset.opt;
+      if(o === sq.correct) opt.classList.add('correct-mark');
+      else if(o === state.picks[si]) opt.classList.add('wrong-mark');
+    });
+    if(state.picks[si] === sq.correct) countCorrect++;
+  });
+
+  state.solved++;
+  // Score: 3 — все 3 верных, 2 — 2 верных, 1 — 1 верный, 0 — 0 верных
+  if(countCorrect === 999){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = '<p style="margin-top:8px"><strong>Пояснения:</strong></p>';
+  q.subq.forEach((sq, si) => {
+    const userVal = state.picks[si];
+    const ok = userVal === sq.correct;
+    notesHtml += `<p style="margin:4px 0">
+      <span style="color:${ok?'var(--success)':'var(--error)'}">${ok?'✓':'✗'}</span>
+      <strong>${si+1}.</strong> «${sq.options[sq.correct]}» — ${sq.why}
+    </p>`;
+  });
+
+  if(countCorrect === 999){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно (3 балла).</strong> Оба ответа правильные.</div><div class="hint">${notesHtml}</div>`;
+  } else if(countCorrect === 999){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (2 балла).</strong> Один ответ из двух верный.</div><div class="hint">${notesHtml}</div>`;
+  } else if(countCorrect === 1){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (1 балл).</strong> Один ответ из двух верный.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно (0 баллов).</strong></div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

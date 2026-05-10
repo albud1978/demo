@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №10 — пропуски в тексте</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.story-title{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:18px;
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+  color:var(--accent);
+  text-align:center;
+  margin:14px 0 12px;
+}
+.story{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:14px 18px;
+  margin-bottom:18px;
+  font-size:16px;
+  line-height:1.7;
+}
+.gap-box{
+  display:inline-block;
+  min-width:100px;
+  padding:1px 8px;
+  margin:0 2px;
+  border:1.5px dashed var(--border);
+  border-radius:4px;
+  text-align:center;
+  font-style:italic;
+  color:var(--muted);
+  cursor:pointer;
+  transition:all 0.15s;
+  font-size:15px;
+  vertical-align:baseline;
+}
+.gap-box:hover:not(.locked){border-color:var(--accent);color:var(--accent)}
+.gap-box.active{border-color:var(--accent);background:var(--accent-soft)}
+.gap-box.filled{
+  border-style:solid;
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  color:var(--accent);
+  font-style:normal;
+  font-weight:500;
+}
+.gap-box.locked{cursor:not-allowed}
+.gap-box.correct-mark{
+  background:#D4E5CD;
+  border-color:#A8C49F;
+  color:var(--success);
+  border-style:solid;
+}
+.gap-box.wrong-mark{
+  background:#F2E0DC;
+  border-color:#C99A93;
+  color:var(--error);
+  border-style:solid;
+}
+.gap-letter{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  font-weight:600;
+  text-transform:uppercase;
+  color:var(--accent);
+  letter-spacing:0.05em;
+  vertical-align:super;
+}
+.tray-label{
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+.tray{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:18px;
+  padding:12px;
+  background:var(--accent-soft);
+  border-radius:4px;
+}
+.tray-btn{
+  font-family:'Spectral',serif;
+  font-size:14px;
+  padding:8px 14px;
+  border:1px solid var(--border);
+  background:white;
+  color:var(--ink);
+  cursor:pointer;
+  border-radius:4px;
+  transition:all 0.12s;
+}
+.tray-btn .num{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  font-weight:500;
+  color:var(--muted);
+  margin-right:6px;
+}
+.tray-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.tray-btn:disabled{opacity:0.3;cursor:not-allowed}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.partial{background:#FFF5DA;border:1px solid #D4B952;color:#7A5C00}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №10</span>
+  <span class="right">2 балла · базовый</span>
+</div>
+
+<h1><em>Пропуски</em> в тексте</h1>
+<p class="lead">Тренажёр на задание №10 ОГЭ по биологии: дан текст с четырьмя пропусками (А, Б, В, Г). Из списка восьми терминов выбери подходящий для каждого пропуска. Не все термины из списка нужно использовать.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №10 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// Каждое задание: title, parts (массив строк/null; null = пропуск), pool (8 терминов), answer (4 цифры)
+// Пропуски в parts — в порядке А, Б, В, Г, обычно ровно 4 пропуска
+const QUESTIONS = [
+  { id:'tx1', title:'Строение нервной ткани',
+    parts:[
+      'Функциональной единицей нервной ткани является ',
+      null, // А
+      '. Это клетка, состоящая из тела и отходящих от неё отростков. Короткие отростки называют ',
+      null, // Б
+      ', они проводят сигнал к телу клетки, а длинный отросток называют ',
+      null, // В
+      '. Он проводит нервный сигнал от тела клетки. В местах многочисленных контактов нервных клеток образуются ',
+      null, // Г
+      '.'
+    ],
+    pool:['миоцит','сома','нейрон','рефлекс','синапсы','аксон','ткань','дендриты'],
+    answer:[3,8,6,5],  // 1-based: нейрон, дендриты, аксон, синапсы
+    notes:[
+      'А — нейрон, основная клетка нервной ткани.',
+      'Б — дендриты, короткие отростки, проводящие сигнал к телу нейрона.',
+      'В — аксон, длинный отросток, проводящий сигнал от тела нейрона.',
+      'Г — синапсы, места контакта нейронов друг с другом.'
+    ]
+  },
+  { id:'tx2', title:'Строение растительной клетки',
+    parts:[
+      'Снаружи растительная клетка покрыта прочной ',
+      null, // А
+      ', содержащей целлюлозу. Внутри неё находится ',
+      null, // Б
+      ' — полужидкое содержимое клетки. Ядро клетки хранит ',
+      null, // В
+      ' информацию. Зелёные пластиды клетки — ',
+      null, // Г
+      ' — содержат пигмент хлорофилл и осуществляют фотосинтез.'
+    ],
+    pool:['клеточная стенка','цитоплазма','митохондрии','наследственную','хлоропласты','рибосомы','двигательную','ядрышко'],
+    answer:[1,2,4,5],
+    notes:[
+      'А — клеточная стенка из целлюлозы — отличительный признак растительной клетки.',
+      'Б — цитоплазма — внутренняя среда клетки.',
+      'В — наследственная информация хранится в ДНК ядра.',
+      'Г — хлоропласты — органоиды фотосинтеза.'
+    ]
+  },
+  { id:'tx3', title:'Кровообращение человека',
+    parts:[
+      'Кровь движется по сосудам, образующим два круга кровообращения. Сосуды, по которым кровь течёт от сердца, называются ',
+      null, // А
+      '. По малому (лёгочному) кругу кровь поступает в ',
+      null, // Б
+      ', где насыщается кислородом. Самые тонкие сосуды, в которых происходит газообмен с тканями, — это ',
+      null, // В
+      '. По венам большого круга, идущим к сердцу, движется ',
+      null, // Г
+      ' кровь.'
+    ],
+    pool:['артерии','капилляры','лёгкие','венозная','вены','печень','артериальная','почки'],
+    answer:[1,3,2,4],
+    notes:[
+      'А — артерии: от сердца.',
+      'Б — лёгкие: газообмен в малом круге.',
+      'В — капилляры: тончайшие сосуды для газообмена.',
+      'Г — венозная: по венам большого круга к сердцу идёт обеднённая кислородом кровь.'
+    ]
+  },
+  { id:'tx4', title:'Дыхательная система человека',
+    parts:[
+      'Воздух поступает через носовую полость, гортань и трахею. Затем он по двум ',
+      null, // А
+      ' разделяется в правое и левое лёгкое. В лёгких бронхи разветвляются на бронхиолы, которые заканчиваются ',
+      null, // Б
+      ' — лёгочными пузырьками. Именно здесь происходит ',
+      null, // В
+      ' между кровью и воздухом. Сокращение и расслабление куполообразной мышцы — ',
+      null, // Г
+      ' — обеспечивает дыхательные движения.'
+    ],
+    pool:['альвеолы','бронхи','пищевода','газообмен','диафрагма','рёбра','артерии','фагоцитоз'],
+    answer:[2,1,4,5],
+    notes:[
+      'А — бронхи: трубчатые ветви, идущие в лёгкие.',
+      'Б — альвеолы: лёгочные пузырьки.',
+      'В — газообмен: O₂ и CO₂ диффундируют через стенку альвеолы и капилляра.',
+      'Г — диафрагма: главная мышца вдоха.'
+    ]
+  },
+  { id:'tx5', title:'Пищеварительная система',
+    parts:[
+      'Переваривание пищи начинается в ротовой полости, где пища измельчается зубами и обрабатывается ',
+      null, // А
+      '. Далее пищевой комок по пищеводу попадает в ',
+      null, // Б
+      ', где под действием соляной кислоты и пепсина расщепляются белки. Окончательное переваривание и всасывание питательных веществ происходит в ',
+      null, // В
+      '. Жёлчь, способствующая перевариванию жиров, вырабатывается в ',
+      null, // Г
+      '.'
+    ],
+    pool:['слюной','желудок','прямой кишке','поджелудочной железе','тонком кишечнике','печени','селезёнке','лимфой'],
+    answer:[1,2,5,6],
+    notes:[
+      'А — слюна: содержит амилазу, расщепляет крахмал.',
+      'Б — желудок: HCl, пепсин расщепляют белки.',
+      'В — тонкий кишечник: основное всасывание.',
+      'Г — печень: выделяет жёлчь, которая эмульгирует жиры.'
+    ]
+  },
+  { id:'tx6', title:'Размножение цветковых растений',
+    parts:[
+      'Главные части цветка — пестик и тычинки. Тычинки производят ',
+      null, // А
+      ', а в нижней части пестика находится ',
+      null, // Б
+      ', содержащая семязачатки. Перенос пыльцы с тычинок на рыльце пестика называется ',
+      null, // В
+      '. После оплодотворения из семязачатков развиваются семена, а из стенок завязи — ',
+      null, // Г
+      '.'
+    ],
+    pool:['пыльцу','завязь','опыление','плод','оплодотворение','семя','чашелистик','лепестки'],
+    answer:[1,2,3,4],
+    notes:[
+      'А — пыльца содержит мужские гаметы.',
+      'Б — завязь — нижняя часть пестика с семязачатками.',
+      'В — опыление: перенос пыльцы.',
+      'Г — плод формируется из стенок завязи.'
+    ]
+  },
+  { id:'tx7', title:'Фотосинтез',
+    parts:[
+      'Фотосинтез — процесс, в котором растения создают органические вещества. Он происходит в зелёных пластидах — ',
+      null, // А
+      ', содержащих пигмент ',
+      null, // Б
+      '. Процесс идёт только при наличии ',
+      null, // В
+      '. В результате из углекислого газа и воды образуется глюкоза и выделяется ',
+      null, // Г
+      ' в атмосферу.'
+    ],
+    pool:['митохондриях','хлоропластах','хлорофилл','углекислый газ','свет','азот','кислород','крахмал'],
+    answer:[2,3,5,7],
+    notes:[
+      'А — хлоропласты, органоиды фотосинтеза.',
+      'Б — хлорофилл, поглощает свет.',
+      'В — свет — обязательное условие фотосинтеза.',
+      'Г — кислород — побочный продукт фотолиза воды.'
+    ]
+  },
+  { id:'tx8', title:'Скелет человека',
+    parts:[
+      'Скелет человека состоит из костей, образующих несколько отделов. Защитой головного мозга служит ',
+      null, // А
+      '. Гибкой основой туловища является ',
+      null, // Б
+      ', состоящий из 33–34 позвонков. Грудная клетка образована грудиной и 12 парами ',
+      null, // В
+      '. К поясу нижней конечности относится ',
+      null, // Г
+      ', обеспечивающий опору внутренних органов малого таза.'
+    ],
+    pool:['череп','лопатки','позвоночник','рёбер','ключица','тазовый пояс','грудина','ключиц'],
+    answer:[1,3,4,6],
+    notes:[
+      'А — череп: защищает головной мозг.',
+      'Б — позвоночник: 33–34 позвонка, опора туловища.',
+      'В — рёбра: 12 пар, формируют грудную клетку.',
+      'Г — тазовый пояс: пояс нижней конечности.'
+    ]
+  },
+  { id:'tx9', title:'Выделительная система',
+    parts:[
+      'Главным органом выделения у человека являются ',
+      null, // А
+      '. Структурно-функциональная единица почки — ',
+      null, // Б
+      '. В нём из крови путём фильтрации образуется первичная моча. После обратного всасывания воды и нужных веществ образуется ',
+      null, // В
+      ' моча, которая по мочеточникам поступает в ',
+      null, // Г
+      ' для временного хранения.'
+    ],
+    pool:['печень','почки','нейрон','нефрон','первичная','вторичная','мочевой пузырь','прямую кишку'],
+    answer:[2,4,6,7],
+    notes:[
+      'А — почки: парный орган мочевыделения.',
+      'Б — нефрон: морфофункциональная единица почки.',
+      'В — вторичная моча образуется после реабсорбции.',
+      'Г — мочевой пузырь: резервуар для мочи.'
+    ]
+  },
+  { id:'tx10', title:'Наследственность',
+    parts:[
+      'У клеточных организмов наследственная информация хранится в виде ',
+      null, // А
+      '. У эукариот она упакована в хромосомы клеточного ядра. Участок ДНК, кодирующий один признак, называется ',
+      null, // Б
+      '. Передача признаков от родителей к потомству — это свойство ',
+      null, // В
+      '. Способность организмов изменяться в зависимости от условий среды называется ',
+      null, // Г
+      '.'
+    ],
+    pool:['РНК','ДНК','клетка','ген','наследственность','раздражимость','изменчивость','рост'],
+    answer:[2,4,5,7],
+    notes:[
+      'А — ДНК: материальный носитель наследственной информации.',
+      'Б — ген: участок ДНК, кодирующий признак.',
+      'В — наследственность: передача признаков потомству.',
+      'Г — изменчивость: способность изменяться.'
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, slots:[null,null,null,null], used:new Set(), activeSlot:0, solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+
+  // Build story HTML with gap boxes
+  const letters = ['А','Б','В','Г'];
+  let storyHtml = '';
+  let gapIdx = 0;
+  q.parts.forEach(p => {
+    if(p === null){
+      storyHtml += `<span class="gap-box" data-slot="${gapIdx}"><span class="gap-letter">${letters[gapIdx]}</span> _____</span>`;
+      gapIdx++;
+    } else {
+      storyHtml += p.replace(/\n/g, '<br>');
+    }
+  });
+
+  // Build tray
+  let trayHtml = '';
+  q.pool.forEach((term, i) => {
+    trayHtml += `<button class="tray-btn" data-num="${i+1}"><span class="num">${i+1}</span>${term}</button>`;
+  });
+
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">пропуски в тексте</span>
+      <p class="q-text">Вставьте в текст «${q.title}» пропущенные элементы из предложенного перечня.</p>
+      <div class="story-title">${q.title}</div>
+      <div class="story" id="story">${storyHtml}</div>
+      <div class="tray-label">Список элементов:</div>
+      <div class="tray" id="tray">${trayHtml}</div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+
+  state.slots = [null,null,null,null];
+  state.used = new Set();
+  state.activeSlot = 0;
+  // mark first slot as active
+  document.querySelectorAll('.gap-box').forEach((box, i) => {
+    if(i === 0) box.classList.add('active');
+    box.addEventListener('click', () => {
+      if(state.answered) return;
+      const i = +box.dataset.slot;
+      // if filled, clear it
+      if(state.slots[i] !== null){
+        const num = state.slots[i];
+        state.slots[i] = null;
+        state.used.delete(num);
+        box.classList.remove('filled');
+        box.innerHTML = `<span class="gap-letter">${letters[i]}</span> _____`;
+        document.querySelector(`.tray-btn[data-num="${num}"]`).disabled = false;
+      }
+      // make this active
+      document.querySelectorAll('.gap-box').forEach(b => b.classList.remove('active'));
+      box.classList.add('active');
+      state.activeSlot = i;
+      document.getElementById('check').disabled = state.slots.some(s => s === null);
+    });
+  });
+
+  document.querySelectorAll('.tray-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(state.answered) return;
+      const num = +btn.dataset.num;
+      if(state.used.has(num)) return;
+      // if active slot already has a value, clear it first
+      if(state.slots[state.activeSlot] !== null){
+        const prevNum = state.slots[state.activeSlot];
+        state.used.delete(prevNum);
+        document.querySelector(`.tray-btn[data-num="${prevNum}"]`).disabled = false;
+      }
+      state.slots[state.activeSlot] = num;
+      state.used.add(num);
+      btn.disabled = true;
+      // update gap box display
+      const box = document.querySelector(`.gap-box[data-slot="${state.activeSlot}"]`);
+      const term = q.pool[num-1];
+      box.classList.add('filled');
+      box.innerHTML = `<span class="gap-letter">${letters[state.activeSlot]}</span> ${term}`;
+      // move active to next empty slot if any
+      box.classList.remove('active');
+      const nextEmpty = state.slots.findIndex(s => s === null);
+      if(nextEmpty !== -1){
+        state.activeSlot = nextEmpty;
+        document.querySelector(`.gap-box[data-slot="${nextEmpty}"]`).classList.add('active');
+      }
+      document.getElementById('check').disabled = state.slots.some(s => s === null);
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  const letters = ['А','Б','В','Г'];
+
+  let countCorrect = 0;
+  q.answer.forEach((corr, i) => {
+    const box = document.querySelector(`.gap-box[data-slot="${i}"]`);
+    box.classList.remove('active');
+    box.classList.add('locked');
+    if(state.slots[i] === corr){
+      box.classList.add('correct-mark');
+      countCorrect++;
+    } else {
+      box.classList.add('wrong-mark');
+    }
+  });
+
+  // Scoring: 2 pts for all 4 correct, 1 pt for one mistake, 0 for more
+  let score = 0;
+  if(countCorrect === 4) score = 2;
+  else if(countCorrect === 3) score = 1;
+  else score = 0;
+
+  state.solved++;
+  if(score === 2){ state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = '<p style="margin-top:8px"><strong>Правильные ответы:</strong></p>';
+  q.answer.forEach((corr, i) => {
+    const term = q.pool[corr-1];
+    const userVal = state.slots[i];
+    const userTerm = userVal !== null ? q.pool[userVal-1] : '—';
+    const ok = userVal === corr;
+    notesHtml += `<p style="margin:4px 0">
+      <strong>${letters[i]}.</strong>
+      <span style="color:${ok?'var(--success)':'var(--error)'}">${ok?'✓':'✗'}</span>
+      <strong>${term}</strong>${!ok?` (вы выбрали: «${userTerm}»)`:''} —
+      <span style="color:var(--muted)">${q.notes[i]}</span>
+    </p>`;
+  });
+
+  if(score === 2){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно (2 балла).</strong> Все четыре пропуска заполнены правильно.</div><div class="hint">${notesHtml}</div>`;
+  } else if(score === 1){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (1 балл).</strong> Три пропуска из четырёх верны.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно (0 баллов).</strong> Только ${countCorrect} верных из 4.</div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

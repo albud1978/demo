@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №26 — расчёт по таблицам</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 14px;line-height:1.5}
+.context{margin-bottom:14px;padding:12px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:2px;font-size:15px}
+.tables{display:grid;gap:12px;margin-bottom:16px}
+.bio-table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  overflow:hidden;
+  font-size:14px;
+}
+.bio-table caption{
+  text-align:left;
+  caption-side:top;
+  padding:6px 0 4px;
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:14px;
+  color:var(--accent);
+}
+.bio-table th{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:13px;
+  text-align:left;
+  padding:8px 10px;
+  background:var(--accent-soft);
+  border-bottom:1px solid var(--border);
+  color:var(--accent);
+}
+.bio-table td{
+  padding:6px 10px;
+  border-bottom:1px solid var(--border);
+}
+.bio-table td:not(:first-child){text-align:right;font-family:'JetBrains Mono',monospace;font-size:13px}
+.bio-table tr:last-child td{border-bottom:none}
+.input-block{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:14px;
+  margin-bottom:14px;
+}
+.input-row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.input-label{font-size:14px;color:var(--muted);min-width:90px}
+input[type="number"]{
+  flex:1;
+  font-family:'JetBrains Mono',monospace;
+  font-size:18px;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:4px;
+  background:var(--paper);
+  color:var(--ink);
+  outline:none;
+}
+input[type="number"]:focus{border-color:var(--accent);background:white}
+input[type="number"]:disabled{cursor:not-allowed;opacity:0.7}
+.unit{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--muted);min-width:60px}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.partial{background:#FFF5DA;border:1px solid #D4B952;color:#7A5C00}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.hint code{font-family:'JetBrains Mono',monospace;font-size:13px;background:white;padding:1px 5px;border-radius:2px}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:28px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №26</span>
+  <span class="right">3 балла · высокий</span>
+</div>
+
+<h1>Расчёт <em>по таблицам</em></h1>
+<p class="lead">Тренажёр на задание №26 ОГЭ по биологии: используя данные таблиц энерготрат и калорийности продуктов, рассчитай суточную потребность или калорийность приёма пищи.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №26 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// === ТАБЛИЦЫ ===
+// Таблица 1: Энерготраты при различных видах деятельности (ккал/мин)
+const ACTIVITY = {
+  'сон':1.2,
+  'чтение':1.6,
+  'спокойная ходьба':3.5,
+  'езда на велосипеде':5.5,
+  'бег трусцой':9.5,
+  'плавание':10.5,
+  'фигурное катание':10.0,
+  'борьба':10.5,
+  'игра в футбол':9.0,
+  'танцы':6.5,
+  'катание на лыжах':12.0,
+  'аэробика':8.0
+};
+
+// Таблица 2: Калорийность некоторых блюд (ккал/порцию)
+const FOODS = {
+  'каша гречневая, 200 г':280,
+  'каша овсяная, 200 г':260,
+  'омлет из 2 яиц':210,
+  'бутерброд с маслом и сыром':215,
+  'котлета мясная, 100 г':250,
+  'котлета рыбная, 100 г':180,
+  'пюре картофельное, 200 г':220,
+  'макароны с маслом, 200 г':320,
+  'салат овощной, 150 г':80,
+  'борщ, 250 г':200,
+  'суп куриный, 250 г':150,
+  'компот, 200 мл':110,
+  'сок фруктовый, 200 мл':95,
+  'хлеб, 50 г':130,
+  'булочка с маком':260,
+  'йогурт, 150 г':130,
+  'банан 1 шт':95,
+  'яблоко 1 шт':70
+};
+
+// Каждое задание: текст + список названий из таблиц 1 и 2 для отображения + расчёт + ответ
+const QUESTIONS = [
+  { id:'c1',
+    context:'Подросток занимался <strong>фигурным катанием</strong> 90 минут.',
+    activities:['сон','чтение','спокойная ходьба','фигурное катание','борьба'],
+    foods:['омлет из 2 яиц','каша овсяная, 200 г','бутерброд с маслом и сыром','компот, 200 мл','банан 1 шт'],
+    question:'Сколько ккал израсходовал подросток за время тренировки?',
+    formula:'Энерготраты = время × скорость расхода',
+    calc:'10,0 ккал/мин × 90 мин = 900 ккал',
+    answer:900,
+    tolerance:0.05,  // допуск ±5%
+    unit:'ккал',
+    note:'Расход энергии при фигурном катании составляет 10 ккал/мин. За 90 минут расход: 10 × 90 = 900 ккал.'
+  },
+  { id:'c2',
+    context:'Ученик во время урока физкультуры играл в футбол 40 минут.',
+    activities:['сон','спокойная ходьба','игра в футбол','танцы','аэробика'],
+    foods:['котлета мясная, 100 г','пюре картофельное, 200 г','салат овощной, 150 г','сок фруктовый, 200 мл','хлеб, 50 г'],
+    question:'Сколько ккал израсходовал ученик за игру в футбол?',
+    formula:'Энерготраты = время × скорость расхода',
+    calc:'9,0 ккал/мин × 40 мин = 360 ккал',
+    answer:360,
+    tolerance:0.05,
+    unit:'ккал',
+    note:'Расход при игре в футбол 9,0 ккал/мин. За 40 минут: 9,0 × 40 = 360 ккал.'
+  },
+  { id:'c3',
+    context:'Девочка-подросток съела на завтрак <strong>омлет из 2 яиц</strong>, <strong>бутерброд с маслом и сыром</strong> и выпила <strong>сок фруктовый 200 мл</strong>.',
+    activities:['сон','чтение','спокойная ходьба','езда на велосипеде'],
+    foods:['омлет из 2 яиц','бутерброд с маслом и сыром','сок фруктовый, 200 мл','компот, 200 мл','банан 1 шт'],
+    question:'Какова калорийность завтрака?',
+    formula:'Сумма калорийности всех блюд',
+    calc:'210 + 215 + 95 = 520 ккал',
+    answer:520,
+    tolerance:0.05,
+    unit:'ккал',
+    note:'Омлет (210) + бутерброд (215) + сок (95) = 520 ккал.'
+  },
+  { id:'c4',
+    context:'Школьник плавал в бассейне 30 минут, затем играл в футбол 60 минут.',
+    activities:['плавание','игра в футбол','танцы','аэробика','борьба'],
+    foods:['борщ, 250 г','котлета рыбная, 100 г','пюре картофельное, 200 г','компот, 200 мл'],
+    question:'Сколько ккал израсходовал школьник за тренировку (всего)?',
+    formula:'Сумма расходов по каждой активности',
+    calc:'10,5 × 30 + 9,0 × 60 = 315 + 540 = 855 ккал',
+    answer:855,
+    tolerance:0.05,
+    unit:'ккал',
+    note:'Плавание: 10,5 × 30 = 315 ккал. Футбол: 9,0 × 60 = 540 ккал. Итого: 855 ккал.'
+  },
+  { id:'c5',
+    context:'Подросток готовится к соревнованиям: 1 час занимается борьбой, 30 минут едет на велосипеде.',
+    activities:['езда на велосипеде','борьба','аэробика','плавание','танцы'],
+    foods:['каша гречневая, 200 г','котлета мясная, 100 г','салат овощной, 150 г','хлеб, 50 г','компот, 200 мл'],
+    question:'Сколько ккал израсходовал подросток?',
+    formula:'Время × скорость для каждого вида деятельности',
+    calc:'10,5 × 60 + 5,5 × 30 = 630 + 165 = 795 ккал',
+    answer:795,
+    tolerance:0.05,
+    unit:'ккал',
+    note:'Борьба: 10,5 × 60 = 630 ккал. Велосипед: 5,5 × 30 = 165 ккал. Итого: 795 ккал.'
+  },
+  { id:'c6',
+    context:'Ученица съела на обед <strong>борщ 250 г</strong>, <strong>котлету мясную 100 г</strong>, <strong>пюре картофельное 200 г</strong> и <strong>компот 200 мл</strong>.',
+    activities:['сон','чтение','спокойная ходьба'],
+    foods:['борщ, 250 г','котлета мясная, 100 г','пюре картофельное, 200 г','компот, 200 мл','хлеб, 50 г'],
+    question:'Какова калорийность обеда?',
+    formula:'Сумма калорийности всех блюд',
+    calc:'200 + 250 + 220 + 110 = 780 ккал',
+    answer:780,
+    tolerance:0.05,
+    unit:'ккал',
+    note:'Борщ (200) + котлета мясная (250) + пюре (220) + компот (110) = 780 ккал.'
+  },
+  { id:'c7',
+    context:'Ребёнок 1,5 часа катался на лыжах.',
+    activities:['катание на лыжах','спокойная ходьба','танцы','аэробика'],
+    foods:['каша гречневая, 200 г','котлета мясная, 100 г','хлеб, 50 г','йогурт, 150 г'],
+    question:'Сколько ккал израсходовал ребёнок?',
+    formula:'Энерготраты = время × скорость',
+    calc:'12,0 × 90 = 1080 ккал',
+    answer:1080,
+    tolerance:0.05,
+    unit:'ккал',
+    note:'Катание на лыжах: 12,0 ккал/мин. За 1,5 часа (90 мин): 12,0 × 90 = 1080 ккал.'
+  },
+  { id:'c8',
+    context:'Девушка занимается аэробикой 60 минут и танцует 30 минут.',
+    activities:['аэробика','танцы','плавание','бег трусцой'],
+    foods:['омлет из 2 яиц','салат овощной, 150 г','йогурт, 150 г','банан 1 шт'],
+    question:'Сколько всего ккал израсходовала девушка?',
+    formula:'Сумма расходов',
+    calc:'8,0 × 60 + 6,5 × 30 = 480 + 195 = 675 ккал',
+    answer:675,
+    tolerance:0.05,
+    unit:'ккал',
+    note:'Аэробика: 8,0 × 60 = 480 ккал. Танцы: 6,5 × 30 = 195 ккал. Итого: 675 ккал.'
+  },
+  { id:'c9',
+    context:'Школьник съел на ужин <strong>макароны с маслом 200 г</strong>, <strong>котлету рыбную 100 г</strong>, <strong>салат овощной 150 г</strong> и <strong>сок фруктовый 200 мл</strong>.',
+    activities:['сон','чтение'],
+    foods:['макароны с маслом, 200 г','котлета рыбная, 100 г','салат овощной, 150 г','сок фруктовый, 200 мл','компот, 200 мл'],
+    question:'Какова калорийность ужина?',
+    formula:'Сумма калорийности',
+    calc:'320 + 180 + 80 + 95 = 675 ккал',
+    answer:675,
+    tolerance:0.05,
+    unit:'ккал',
+    note:'Макароны (320) + котлета рыбная (180) + салат (80) + сок (95) = 675 ккал.'
+  },
+  { id:'c10',
+    context:'Ученик 8 класса бегал трусцой 25 минут, затем плавал в бассейне 35 минут. После тренировки съел <strong>булочку с маком</strong> и выпил <strong>сок 200 мл</strong>.',
+    activities:['бег трусцой','плавание','спокойная ходьба'],
+    foods:['булочка с маком','сок фруктовый, 200 мл','банан 1 шт','компот, 200 мл'],
+    question:'Сколько ккал израсходовано в результате тренировки сверх калорийности перекуса (израсходовано минус получено)?',
+    formula:'(время×скорость) для каждого вида деятельности − сумма калорийности перекуса',
+    calc:'(9,5 × 25 + 10,5 × 35) − (260 + 95) = (237,5 + 367,5) − 355 = 605 − 355 = 250 ккал',
+    answer:250,
+    tolerance:0.05,
+    unit:'ккал',
+    note:'Расход: бег 9,5 × 25 = 237,5 ккал, плавание 10,5 × 35 = 367,5 ккал. Всего расход: 605 ккал. Калорийность перекуса: булочка (260) + сок (95) = 355 ккал. Чистый дефицит: 605 − 355 = 250 ккал.'
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function buildTable(caption, header, rows){
+  let html = `<table class="bio-table"><caption>${caption}</caption><thead><tr><th>${header[0]}</th><th>${header[1]}</th></tr></thead><tbody>`;
+  rows.forEach(r => { html += `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`; });
+  html += '</tbody></table>';
+  return html;
+}
+
+function render(){
+  const q = state.current;
+  const actRows = q.activities.map(name => [name, ACTIVITY[name].toString().replace('.', ',')]);
+  const foodRows = q.foods.map(name => [name, FOODS[name].toString()]);
+
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">расчёт</span>
+      <div class="context">${q.context}</div>
+      <div class="tables">
+        ${buildTable('Таблица 1. Энерготраты при различных видах деятельности', ['Вид деятельности','ккал/мин'], actRows)}
+        ${buildTable('Таблица 2. Калорийность некоторых блюд', ['Блюдо','ккал'], foodRows)}
+      </div>
+      <p class="q-text">${q.question}</p>
+      <div class="input-block">
+        <div class="input-row">
+          <span class="input-label">Ответ:</span>
+          <input type="number" id="answer" placeholder="число" step="any" autocomplete="off">
+          <span class="unit">${q.unit}</span>
+        </div>
+      </div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  const inp = document.getElementById('answer');
+  inp.focus();
+  inp.addEventListener('input', () => {
+    document.getElementById('check').disabled = inp.value.trim() === '';
+  });
+  inp.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
+      if(!state.answered) check();
+      else next();
+    }
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  const inp = document.getElementById('answer');
+  const userVal = parseFloat(inp.value.replace(',', '.'));
+  if(isNaN(userVal)) return;
+
+  const diff = Math.abs(userVal - q.answer);
+  const tol = q.answer * q.tolerance;
+  const ok = diff <= tol;
+  const close = diff <= q.answer * 0.15;  // 15% — частично
+
+  state.solved++;
+  let score = 0;
+  if(ok) score = 3;
+  else if(close) score = 1;
+
+  if(score === 3){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  const formattedAns = q.answer.toString().replace('.', ',');
+  let notesHtml = `
+    <p><strong>Решение:</strong></p>
+    <p>${q.formula}</p>
+    <p><code>${q.calc}</code></p>
+    <p>${q.note}</p>
+  `;
+
+  if(score === 3){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно (3 балла).</strong> Ответ: ${formattedAns} ${q.unit}.</div><div class="hint">${notesHtml}</div>`;
+  } else if(score === 1){
+    fb.innerHTML = `<div class="feedback partial"><strong>Близко (1 балл).</strong> Точный ответ: ${formattedAns} ${q.unit}, ваш: ${userVal} ${q.unit}.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно (0 баллов).</strong> Правильный ответ: ${formattedAns} ${q.unit}, ваш: ${userVal} ${q.unit}.</div><div class="hint">${notesHtml}</div>`;
+  }
+  inp.disabled = true;
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

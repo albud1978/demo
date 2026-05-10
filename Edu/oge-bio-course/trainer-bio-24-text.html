@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №24 — текст и вопросы</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.context{margin-bottom:16px;padding:18px 20px;background:white;border:1px solid var(--border);border-radius:4px;font-size:15px;max-height:380px;overflow-y:auto}
+.context p{margin:0 0 10px}
+.context p:last-child{margin-bottom:0}
+.context strong{color:var(--accent)}
+.context em{font-style:italic}
+.subq{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:12px 14px;
+  margin-bottom:10px;
+}
+.subq-title{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:15px;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+.subq-options{display:flex;flex-direction:column;gap:5px}
+.subq-opt{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  padding:8px 10px;
+  border:1px solid var(--border);
+  background:var(--paper);
+  border-radius:3px;
+  cursor:pointer;
+  font-size:14px;
+  transition:all 0.12s;
+  user-select:none;
+}
+.subq-opt:hover:not(.locked){border-color:var(--accent)}
+.subq-opt.selected{border-color:var(--accent);background:#F0EDE0}
+.subq-opt.locked{cursor:not-allowed}
+.subq-opt-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  font-weight:500;
+  flex-shrink:0;
+  width:20px;
+  height:20px;
+  border:1px solid var(--border);
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+}
+.subq-opt.selected .subq-opt-num{background:var(--accent);color:white;border-color:var(--accent)}
+.subq-opt-text{flex:1}
+.subq-opt.correct-mark{background:#E1ECDD;border-color:#A8C49F}
+.subq-opt.correct-mark .subq-opt-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.subq-opt.wrong-mark{background:#F2E0DC;border-color:#C99A93}
+.subq-opt.wrong-mark .subq-opt-num{background:#C99A93;color:white;border-color:#C99A93}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.partial{background:#FFF5DA;border:1px solid #D4B952;color:#7A5C00}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №24</span>
+  <span class="right">3 балла · повышенный</span>
+</div>
+
+<h1>Биологический <em>текст</em></h1>
+<p class="lead">Тренажёр на задание №24 ОГЭ по биологии: прочитай биологический текст и ответь на 3 вопроса по содержанию (по 1 баллу за каждый, всего 3).</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №24 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// Каждое задание: описание породы + 3 подвопроса; каждый — 4 варианта, correct индекс
+const QUESTIONS = [
+  { id:'tx1', species:'',
+    description:`<p><strong>Гомеостаз — постоянство внутренней среды</strong></p>
+<p>Внутренняя среда организма — это кровь, лимфа и тканевая жидкость. Несмотря на постоянное поступление и расходование веществ, состав внутренней среды поддерживается на относительно постоянном уровне. Это явление называется гомеостазом.</p>
+<p>Гомеостаз обеспечивается совместной работой нервной и эндокринной систем. Информация о состоянии внутренней среды поступает в центральную нервную систему через рецепторы. В ответ нервная система регулирует работу органов, а эндокринная — выделяет гормоны, влияющие на обмен веществ.</p>
+<p>Например, при понижении уровня глюкозы в крови поджелудочная железа выделяет гормон глюкагон, который стимулирует расщепление гликогена в печени до глюкозы. При повышении уровня глюкозы выделяется инсулин, который, наоборот, способствует переводу глюкозы в гликоген.</p>
+<p>Поддержание постоянной температуры тела — также пример гомеостаза. При перегреве расширяются сосуды кожи и активизируется потоотделение, при охлаждении — сосуды сужаются, может возникать дрожь, генерирующая тепло.</p>`,
+    subq:[
+      { title:'1. Что обозначает термин «гомеостаз»?',
+        options:[
+          'процесс размножения клеток',
+          'постоянство состава и свойств внутренней среды организма',
+          'теплопродукция организма',
+          'ответ на раздражение'
+        ],
+        correct:1, why:'В тексте: «состав внутренней среды поддерживается на относительно постоянном уровне. Это явление называется гомеостазом».'
+      },
+      { title:'2. Какие системы участвуют в регуляции гомеостаза?',
+        options:[
+          'опорно-двигательная и пищеварительная',
+          'нервная и эндокринная',
+          'выделительная и кровеносная',
+          'дыхательная и пищеварительная'
+        ],
+        correct:1, why:'В тексте: «Гомеостаз обеспечивается совместной работой нервной и эндокринной систем».'
+      },
+      { title:'3. Что произойдёт при повышении уровня глюкозы в крови?',
+        options:[
+          'выделится глюкагон',
+          'выделится инсулин, и глюкоза перейдёт в гликоген',
+          'разрушится поджелудочная железа',
+          'снизится температура тела'
+        ],
+        correct:1, why:'В тексте: «При повышении уровня глюкозы выделяется инсулин, который способствует переводу глюкозы в гликоген».'
+      }
+    ]
+  },
+  { id:'tx2', species:'',
+    description:`<p><strong>Симбиоз и его формы</strong></p>
+<p>Симбиоз — это длительное совместное существование организмов двух или более видов. В природе встречаются разные формы симбиоза.</p>
+<p>Мутуализм — взаимовыгодное сожительство, при котором оба партнёра получают пользу. Пример — клубеньковые бактерии и бобовые растения: бактерии получают питательные вещества, а растение — азот, который бактерии «фиксируют» из атмосферы.</p>
+<p>Комменсализм — отношения, при которых один организм получает выгоду, а другой не страдает и не получает пользы. Например, рыбы-прилипалы прикрепляются к акулам, питаются остатками их пищи; самой акуле это безразлично.</p>
+<p>Паразитизм — отношения, при которых один организм (паразит) живёт за счёт другого (хозяина) и наносит ему вред. Бычий цепень в кишечнике человека, аскарида, малярийный плазмодий — все паразиты.</p>
+<p>Лишайники — особый случай: они состоят из гриба и одноклеточной водоросли (или цианобактерии). Гриб обеспечивает водоросль водой и минералами, а водоросль создаёт органику фотосинтезом. Это классический пример мутуализма.</p>`,
+    subq:[
+      { title:'1. Какие отношения связывают клубеньковые бактерии и бобовые растения?',
+        options:[
+          'комменсализм','паразитизм','мутуализм','хищничество'
+        ],
+        correct:2, why:'В тексте: «бактерии получают питательные вещества, а растение — азот... оба партнёра получают пользу» = мутуализм.'
+      },
+      { title:'2. Какая форма симбиоза описывает рыбу-прилипалу и акулу?',
+        options:[
+          'паразитизм','комменсализм','хищничество','мутуализм'
+        ],
+        correct:1, why:'В тексте: «один получает выгоду, а другой не страдает и не получает пользы» = комменсализм.'
+      },
+      { title:'3. Из чего состоит лишайник?',
+        options:[
+          'из двух грибов',
+          'из гриба и водоросли (или цианобактерии)',
+          'из двух водорослей',
+          'из паразита и хозяина'
+        ],
+        correct:1, why:'В тексте: «состоят из гриба и одноклеточной водоросли (или цианобактерии)».'
+      }
+    ]
+  },
+  { id:'tx3', species:'',
+    description:`<p><strong>Дыхание организмов</strong></p>
+<p>Дыхание — биологическое окисление органических веществ с целью получения энергии. У большинства живых существ оно идёт с использованием кислорода (аэробное дыхание).</p>
+<p>В аэробном дыхании сложные органические вещества (например, глюкоза) расщепляются до углекислого газа и воды. Энергия запасается в виде АТФ, которая используется клеткой для всех процессов жизнедеятельности.</p>
+<p>У человека и других млекопитающих основное место клеточного дыхания — митохондрии. На внутренней мембране митохондрий идёт процесс окислительного фосфорилирования.</p>
+<p>Анаэробное дыхание (брожение) идёт без кислорода: глюкоза распадается лишь частично, и образуется значительно меньше АТФ. У дрожжей продуктом брожения является спирт и углекислый газ; у молочнокислых бактерий — молочная кислота. В мышцах человека при сильной нагрузке тоже идёт молочнокислое брожение, накопление молочной кислоты вызывает чувство усталости.</p>`,
+    subq:[
+      { title:'1. Что является конечными продуктами аэробного дыхания глюкозы?',
+        options:[
+          'спирт и углекислый газ',
+          'углекислый газ и вода',
+          'молочная кислота и кислород',
+          'аммиак и вода'
+        ],
+        correct:1, why:'В тексте: «глюкоза расщепляется до углекислого газа и воды».'
+      },
+      { title:'2. Где идёт основное окисление в клетках млекопитающих?',
+        options:[
+          'в ядре','в рибосомах','в митохондриях','в хлоропластах'
+        ],
+        correct:2, why:'В тексте: «основное место клеточного дыхания — митохондрии».'
+      },
+      { title:'3. Что вызывает чувство усталости в мышцах при сильной нагрузке?',
+        options:[
+          'избыток кислорода',
+          'накопление молочной кислоты',
+          'недостаток глюкозы в крови',
+          'избыток АТФ'
+        ],
+        correct:1, why:'В тексте: «накопление молочной кислоты вызывает чувство усталости».'
+      }
+    ]
+  },
+  { id:'tx4', species:'',
+    description:`<p><strong>Эволюция органического мира</strong></p>
+<p>Эволюция — это историческое развитие живых организмов, сопровождающееся возникновением новых видов. Современная теория эволюции была создана Чарльзом Дарвином в XIX веке.</p>
+<p>Дарвин выделил три главные движущие силы эволюции: <strong>наследственная изменчивость</strong>, <strong>борьба за существование</strong> и <strong>естественный отбор</strong>.</p>
+<p>Изменчивость заключается в том, что особи одного вида не идентичны: у них есть незначительные различия в признаках. Часть этих различий наследуется. Борьба за существование возникает потому, что любая популяция стремится к неограниченному размножению, но ресурсов всегда недостаточно. В результате выживают и оставляют потомство особи с более полезными признаками — это и есть естественный отбор.</p>
+<p>За миллионы лет естественный отбор приводит к формированию приспособлений (адаптаций) и образованию новых видов. Одно из доказательств эволюции — палеонтологическая летопись: в более древних слоях горных пород встречаются более простые формы жизни, в молодых — более сложные.</p>`,
+    subq:[
+      { title:'1. Кто создал современную теорию эволюции?',
+        options:[
+          'Карл Линней','Чарльз Дарвин','Грегор Мендель','Аристотель'
+        ],
+        correct:1, why:'В тексте: «Современная теория эволюции была создана Чарльзом Дарвином».'
+      },
+      { title:'2. Какие три фактора Дарвин назвал движущими силами эволюции?',
+        options:[
+          'наследственность, рост, размножение',
+          'наследственная изменчивость, борьба за существование, естественный отбор',
+          'климат, питание, размножение',
+          'мутация, генотип, фенотип'
+        ],
+        correct:1, why:'В тексте: «выделил три главные движущие силы эволюции: наследственная изменчивость, борьба за существование, естественный отбор».'
+      },
+      { title:'3. Какая закономерность видна в палеонтологической летописи?',
+        options:[
+          'более древние слои содержат сложные формы',
+          'в более древних слоях — простые формы, в молодых — сложные',
+          'все слои содержат одинаковые формы',
+          'в молодых слоях нет окаменелостей'
+        ],
+        correct:1, why:'В тексте: «в более древних слоях горных пород встречаются более простые формы жизни, в молодых — более сложные».'
+      }
+    ]
+  },
+  { id:'tx5', species:'',
+    description:`<p><strong>Иммунитет</strong></p>
+<p>Иммунитет — способность организма противостоять чужеродным агентам: вирусам, бактериям, ядам, изменённым собственным клеткам. Различают неспецифический (врождённый) и специфический (приобретённый) иммунитет.</p>
+<p>Неспецифический иммунитет действует одинаково против любых чужеродных агентов. К нему относятся: барьеры (кожа, слизистые оболочки), фагоцитоз (поглощение микробов лейкоцитами), вещества крови (лизоцим, интерферон).</p>
+<p>Специфический иммунитет развивается в ответ на конкретный антиген. В крови вырабатываются антитела — специальные белки, способные связываться только с этим антигеном и обезвреживать его. Антитела вырабатываются B-лимфоцитами.</p>
+<p>Существует два способа приобрести специфический иммунитет. <strong>Активный</strong>: после перенесённой болезни или вакцинации (введение ослабленных микробов или их частей вызывает иммунный ответ). <strong>Пассивный</strong>: введение готовых антител (например, противодифтерийной сыворотки).</p>`,
+    subq:[
+      { title:'1. Что такое антитела?',
+        options:[
+          'это вирусы',
+          'это белки крови, обезвреживающие конкретные антигены',
+          'это разрушенные эритроциты',
+          'это гормоны иммунитета'
+        ],
+        correct:1, why:'В тексте: «Антитела — специальные белки, способные связываться только с этим антигеном и обезвреживать его».'
+      },
+      { title:'2. Какой иммунитет действует против любых чужеродных агентов?',
+        options:[
+          'специфический','неспецифический','пассивный','искусственный'
+        ],
+        correct:1, why:'В тексте: «Неспецифический иммунитет действует одинаково против любых чужеродных агентов».'
+      },
+      { title:'3. Чем отличается активный иммунитет от пассивного?',
+        options:[
+          'активный возникает после введения готовых антител, пассивный — после болезни',
+          'активный — после болезни или вакцинации, пассивный — после введения готовых антител',
+          'различия нет',
+          'активный — врождённый, пассивный — приобретённый'
+        ],
+        correct:1, why:'В тексте описано: активный — после болезни или вакцинации, пассивный — после введения готовых антител.'
+      }
+    ]
+  },
+  { id:'tx6', species:'',
+    description:`<p><strong>Фотосинтез</strong></p>
+<p>Фотосинтез — процесс образования органических веществ из неорганических с использованием энергии света. Он идёт в зелёных частях растений, цианобактериях и некоторых других микроорганизмах.</p>
+<p>Местом фотосинтеза в клетках растений являются хлоропласты — пластиды, содержащие пигмент хлорофилл. Хлорофилл поглощает энергию света и преобразует её в химическую.</p>
+<p>Суммарное уравнение фотосинтеза: 6CO₂ + 6H₂O + свет = C₆H₁₂O₆ + 6O₂. Из углекислого газа и воды на свету образуется глюкоза и выделяется кислород.</p>
+<p>Фотосинтез проходит в две фазы. В <strong>световой фазе</strong> (на мембранах тилакоидов) происходит расщепление воды (фотолиз), выделяется кислород, образуются молекулы АТФ и НАДФ•Н. В <strong>тёмновой фазе</strong> (в строме хлоропласта) из углекислого газа и веществ, образованных в световой фазе, синтезируется глюкоза.</p>
+<p>Значение фотосинтеза огромно: создаются органические вещества — основа всей пищевой цепи; выделяется кислород, поддерживающий дыхание; снижается концентрация СО₂ в атмосфере.</p>`,
+    subq:[
+      { title:'1. Где в клетке идёт фотосинтез?',
+        options:[
+          'в ядре','в митохондриях','в хлоропластах','в рибосомах'
+        ],
+        correct:2, why:'В тексте: «Местом фотосинтеза... являются хлоропласты».'
+      },
+      { title:'2. Какие исходные вещества и продукты фотосинтеза?',
+        options:[
+          'O₂ и глюкоза → CO₂ и H₂O',
+          'CO₂ и H₂O → глюкоза и O₂',
+          'белок и крахмал → CO₂ и H₂O',
+          'AТФ → глюкоза'
+        ],
+        correct:1, why:'Из суммарного уравнения: 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂.'
+      },
+      { title:'3. Что происходит в световой фазе фотосинтеза?',
+        options:[
+          'синтезируется глюкоза из CO₂',
+          'идёт расщепление воды, выделяется O₂, образуется АТФ',
+          'разлагается АТФ',
+          'формируются хлоропласты'
+        ],
+        correct:1, why:'В тексте: «В световой фазе... происходит расщепление воды, выделяется кислород, образуются молекулы АТФ и НАДФ•Н».'
+      }
+    ]
+  },
+  { id:'tx7', species:'',
+    description:`<p><strong>Кровь и её состав</strong></p>
+<p>Кровь — жидкая ткань, циркулирующая в кровеносной системе. У взрослого человека её около 5 литров. Кровь состоит из жидкой части — плазмы (около 55%) — и форменных элементов (около 45%).</p>
+<p><strong>Эритроциты</strong> — красные кровяные клетки, содержащие гемоглобин. Они транспортируют кислород от лёгких к тканям и углекислый газ обратно. У человека эритроциты лишены ядра, что увеличивает площадь для гемоглобина. Их около 4–5 млн в 1 мм³ крови, живут около 120 дней.</p>
+<p><strong>Лейкоциты</strong> — белые кровяные клетки, отвечающие за иммунитет. Разные виды лейкоцитов выполняют разные функции: одни способны к фагоцитозу (поглощению чужеродных частиц), другие участвуют в выработке антител. У человека лейкоцитов 4–9 тысяч в 1 мм³, ядро есть у всех.</p>
+<p><strong>Тромбоциты</strong> — мелкие кровяные пластинки, обеспечивают свёртывание крови при повреждении сосудов. В 1 мм³ их 200–400 тысяч.</p>`,
+    subq:[
+      { title:'1. Какую функцию выполняют эритроциты?',
+        options:[
+          'свёртывание крови',
+          'выработку антител',
+          'транспорт O₂ и CO₂',
+          'переваривание пищи'
+        ],
+        correct:2, why:'В тексте: «транспортируют кислород от лёгких к тканям и углекислый газ обратно».'
+      },
+      { title:'2. Какая группа клеток крови участвует в иммунной защите: одни фагоцитируют, другие помогают вырабатывать антитела?',
+        options:[
+          'эритроцит','лейкоцит','тромбоцит','плазма'
+        ],
+        correct:1, why:'В тексте: разные виды лейкоцитов обеспечивают фагоцитоз и участие в выработке антител.'
+      },
+      { title:'3. Почему у человека эритроциты лишены ядра?',
+        options:[
+          'это случайная мутация',
+          'это увеличивает площадь для гемоглобина',
+          'это уменьшает массу клетки',
+          'это позволяет им делиться быстрее'
+        ],
+        correct:1, why:'В тексте: «лишены ядра, что увеличивает площадь для гемоглобина».'
+      }
+    ]
+  },
+  { id:'tx8', species:'',
+    description:`<p><strong>Регуляция работы сердца</strong></p>
+<p>Сердце сокращается в среднем 60–80 раз в минуту, обеспечивая непрерывную циркуляцию крови. Регуляция работы сердца осуществляется двумя путями: нервным и гуморальным.</p>
+<p>Нервная регуляция идёт через парасимпатический отдел (блуждающий нерв) и симпатический отдел вегетативной нервной системы. Парасимпатическая система <strong>замедляет</strong> работу сердца, симпатическая — <strong>ускоряет</strong>.</p>
+<p>Гуморальная регуляция связана с действием химических веществ, переносимых кровью. Адреналин (гормон надпочечников) учащает и усиливает сокращения сердца. Ионы калия замедляют работу сердца, ионы кальция, наоборот, усиливают её.</p>
+<p>Сердце имеет свою собственную проводящую систему — синусно-предсердный (синусный) узел задаёт ритм работы. Это автоматия сердца: оно может работать даже изолированно от нервной системы.</p>`,
+    subq:[
+      { title:'1. Сколько раз в минуту в среднем сокращается сердце?',
+        options:[
+          '20–30 раз','60–80 раз','100–120 раз','150–200 раз'
+        ],
+        correct:1, why:'В тексте: «Сердце сокращается в среднем 60–80 раз в минуту».'
+      },
+      { title:'2. Какой гормон учащает и усиливает работу сердца?',
+        options:[
+          'инсулин','тироксин','адреналин','глюкагон'
+        ],
+        correct:2, why:'В тексте: «Адреналин... учащает и усиливает сокращения сердца».'
+      },
+      { title:'3. Что обеспечивает автоматизм сердца?',
+        options:[
+          'блуждающий нерв',
+          'симпатический нерв',
+          'синусно-предсердный (синусный) узел',
+          'кора больших полушарий'
+        ],
+        correct:2, why:'В тексте: «синусно-предсердный (синусный) узел задаёт ритм работы. Это автоматия сердца».'
+      }
+    ]
+  },
+  { id:'tx9', species:'',
+    description:`<p><strong>Бактерии — древнейшие обитатели Земли</strong></p>
+<p>Бактерии — одноклеточные прокариотические организмы. Они появились на Земле около 3,5 миллиардов лет назад и долгое время были единственной формой жизни.</p>
+<p>Бактериальная клетка не имеет оформленного ядра: ДНК расположена в цитоплазме в области, называемой нуклеоид. Также у бактерий нет мембранных органоидов: митохондрий, эндоплазматической сети, аппарата Гольджи. Зато есть рибосомы и клеточная стенка из муреина.</p>
+<p>По форме бактерии бывают шаровидные (кокки), палочковидные (бациллы), извитые (вибрионы, спириллы). Размножаются простым делением клетки надвое каждые 20–30 минут в благоприятных условиях.</p>
+<p>Роль бактерий в природе огромна: они разлагают органические остатки (редуценты), фиксируют атмосферный азот, участвуют в круговоротах серы, фосфора, углерода. Полезные бактерии используются человеком в пищевой промышленности (молочнокислые бактерии), при получении лекарств. Болезнетворные бактерии вызывают тиф, туберкулёз, холеру, ангину.</p>`,
+    subq:[
+      { title:'1. Где у бактерий находится ДНК?',
+        options:[
+          'в оформленном ядре',
+          'в цитоплазме, в области нуклеоида',
+          'в митохондриях',
+          'в клеточной стенке'
+        ],
+        correct:1, why:'В тексте: «ДНК расположена в цитоплазме в области, называемой нуклеоид».'
+      },
+      { title:'2. Из чего состоит клеточная стенка бактерии?',
+        options:[
+          'из целлюлозы','из муреина','из хитина','из ДНК'
+        ],
+        correct:1, why:'В тексте: «есть... клеточная стенка из муреина».'
+      },
+      { title:'3. Какие бактерии используются в пищевой промышленности?',
+        options:[
+          'болезнетворные','молочнокислые','туберкулёзные','холерные'
+        ],
+        correct:1, why:'В тексте: «Полезные бактерии используются человеком в пищевой промышленности (молочнокислые бактерии)».'
+      }
+    ]
+  },
+  { id:'tx10', species:'',
+    description:`<p><strong>Нервная регуляция</strong></p>
+<p>Нервная регуляция — это управление функциями организма с помощью нервной системы. У человека её осуществляют центральная нервная система (головной и спинной мозг) и периферическая нервная система (нервы и нервные узлы).</p>
+<p>Основной структурно-функциональной единицей нервной системы является <strong>нейрон</strong>. Нейрон состоит из тела, коротких отростков (<strong>дендритов</strong>) и одного длинного отростка (<strong>аксона</strong>). Дендриты принимают сигналы от других клеток и передают их к телу нейрона; аксон передаёт сигнал от нейрона дальше.</p>
+<p>Сигналы между нейронами передаются в местах их контакта — <strong>синапсах</strong>. В синапсе сигнал из электрического превращается в химический: выделяются особые вещества — медиаторы (нейромедиаторы), которые действуют на следующий нейрон.</p>
+<p>Базовый принцип работы нервной системы — <strong>рефлекс</strong>. Это ответная реакция организма на раздражение, осуществляемая через ЦНС. Путь, по которому проходит сигнал, называется <strong>рефлекторной дугой</strong>: рецептор → чувствительный нейрон → ЦНС (вставочный нейрон) → двигательный нейрон → рабочий орган.</p>`,
+    subq:[
+      { title:'1. Какие отростки нейрона передают сигнал к телу клетки?',
+        options:[
+          'аксоны','дендриты','синапсы','медиаторы'
+        ],
+        correct:1, why:'В тексте: «Дендриты принимают сигналы от других клеток и передают их к телу нейрона».'
+      },
+      { title:'2. Что называется синапсом?',
+        options:[
+          'тело нейрона',
+          'место контакта между нейронами',
+          'клеточная стенка нейрона',
+          'оболочка аксона'
+        ],
+        correct:1, why:'В тексте: «Сигналы между нейронами передаются в местах их контакта — синапсах».'
+      },
+      { title:'3. Какова правильная последовательность в рефлекторной дуге?',
+        options:[
+          'мышца → ЦНС → рецептор',
+          'рецептор → чувствительный нейрон → ЦНС → двигательный нейрон → рабочий орган',
+          'аксон → дендрит → ядро',
+          'ЦНС → рецептор → мышца'
+        ],
+        correct:1, why:'В тексте: «рецептор → чувствительный нейрон → ЦНС (вставочный нейрон) → двигательный нейрон → рабочий орган».'
+      }
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, picks:[null,null,null], solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  let subqHtml = '';
+  q.subq.forEach((sq, si) => {
+    let optsHtml = '';
+    sq.options.forEach((opt, oi) => {
+      optsHtml += `
+        <div class="subq-opt" data-sub="${si}" data-opt="${oi}">
+          <div class="subq-opt-num">${oi+1}</div>
+          <div class="subq-opt-text">${opt}</div>
+        </div>
+      `;
+    });
+    subqHtml += `
+      <div class="subq">
+        <div class="subq-title">${sq.title}</div>
+        <div class="subq-options">${optsHtml}</div>
+      </div>
+    `;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">текст и вопросы</span>
+      <div class="context"><strong></strong> ${q.description}</div>
+      <p class="q-text">Ответь на вопросы по тексту. За каждый верный ответ — 1 балл (всего 3).</p>
+      ${subqHtml}
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.picks = [null, null, null];
+  document.querySelectorAll('.subq-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if(state.answered) return;
+      const sub = +opt.dataset.sub;
+      const o = +opt.dataset.opt;
+      // unselect siblings in this subq
+      document.querySelectorAll(`.subq-opt[data-sub="${sub}"]`).forEach(s => s.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.picks[sub] = o;
+      document.getElementById('check').disabled = state.picks.some(p => p === null);
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  let countCorrect = 0;
+  q.subq.forEach((sq, si) => {
+    document.querySelectorAll(`.subq-opt[data-sub="${si}"]`).forEach(opt => {
+      opt.classList.add('locked');
+      const o = +opt.dataset.opt;
+      if(o === sq.correct) opt.classList.add('correct-mark');
+      else if(o === state.picks[si]) opt.classList.add('wrong-mark');
+    });
+    if(state.picks[si] === sq.correct) countCorrect++;
+  });
+
+  state.solved++;
+  // Score: 3 — все 3 верных, 2 — 2 верных, 1 — 1 верный, 0 — 0 верных
+  if(countCorrect === 3){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = '<p style="margin-top:8px"><strong>Пояснения:</strong></p>';
+  q.subq.forEach((sq, si) => {
+    const userVal = state.picks[si];
+    const ok = userVal === sq.correct;
+    notesHtml += `<p style="margin:4px 0">
+      <span style="color:${ok?'var(--success)':'var(--error)'}">${ok?'✓':'✗'}</span>
+      <strong>${si+1}.</strong> «${sq.options[sq.correct]}» — ${sq.why}
+    </p>`;
+  });
+
+  if(countCorrect === 3){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно (3 балла).</strong> Все три характеристики определены правильно.</div><div class="hint">${notesHtml}</div>`;
+  } else if(countCorrect === 2){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (2 балла).</strong> Две характеристики из трёх верны.</div><div class="hint">${notesHtml}</div>`;
+  } else if(countCorrect === 1){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (1 балл).</strong> Только одна характеристика верна.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно (0 баллов).</strong></div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

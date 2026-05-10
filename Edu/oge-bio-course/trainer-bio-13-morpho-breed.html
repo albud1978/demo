@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №13 — морфологический анализ по плану</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.context{margin-bottom:16px;padding:14px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:2px;font-size:15px}
+.context strong{color:var(--accent)}
+.context em{font-style:italic}
+.subq{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:12px 14px;
+  margin-bottom:10px;
+}
+.subq-title{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:15px;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+.subq-options{display:flex;flex-direction:column;gap:5px}
+.subq-opt{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  padding:8px 10px;
+  border:1px solid var(--border);
+  background:var(--paper);
+  border-radius:3px;
+  cursor:pointer;
+  font-size:14px;
+  transition:all 0.12s;
+  user-select:none;
+}
+.subq-opt:hover:not(.locked){border-color:var(--accent)}
+.subq-opt.selected{border-color:var(--accent);background:#F0EDE0}
+.subq-opt.locked{cursor:not-allowed}
+.subq-opt-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  font-weight:500;
+  flex-shrink:0;
+  width:20px;
+  height:20px;
+  border:1px solid var(--border);
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+}
+.subq-opt.selected .subq-opt-num{background:var(--accent);color:white;border-color:var(--accent)}
+.subq-opt-text{flex:1}
+.subq-opt.correct-mark{background:#E1ECDD;border-color:#A8C49F}
+.subq-opt.correct-mark .subq-opt-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.subq-opt.wrong-mark{background:#F2E0DC;border-color:#C99A93}
+.subq-opt.wrong-mark .subq-opt-num{background:#C99A93;color:white;border-color:#C99A93}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.partial{background:#FFF5DA;border:1px solid #D4B952;color:#7A5C00}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №13</span>
+  <span class="right">3 балла · повышенный</span>
+</div>
+
+<h1>Морфо-анализ <em>по плану</em></h1>
+<p class="lead">Тренажёр на задание №13 ОГЭ по биологии: дано описание породы животного. По трём пунктам плана определи характеристики (по 1 баллу за каждый верный ответ).</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №13 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// Каждое задание: описание породы + 3 подвопроса; каждый — 4 варианта, correct индекс
+const QUESTIONS = [
+  { id:'m1',
+    species:'Курица породы Леггорн',
+    description:'Лёгкая яичная порода кур; оперение белое, плотное; ноги жёлтые; гребень листовидный, ярко-красный. Курицы небольших размеров (~1,8 кг). Отличаются высокой яйценоскостью (260–280 яиц в год); окраска скорлупы белая. Темперамент подвижный, активны на выгуле.',
+    subq:[
+      { title:'1. Хозяйственное направление породы',
+        options:['мясное (бройлеры)','яичное','мясо-яичное','декоративное'],
+        correct:1, why:'Прямо следует из «лёгкая яичная порода» и «высокая яйценоскость 260–280 яиц/год».'
+      },
+      { title:'2. Окраска оперения',
+        options:['чёрная с золотистым воротником','белая','рыжая','пёстрая (полосатая)'],
+        correct:1, why:'В описании прямо указано «оперение белое».'
+      },
+      { title:'3. Особенность, связанная с продуктивностью',
+        options:['масса тушки 4–5 кг','откладывают яйца с белой скорлупой','имеют пышный пуховой покров','используются для боёв'],
+        correct:1, why:'В описании «окраска скорлупы белая» — типичный признак яичных пород.'
+      }
+    ]
+  },
+  { id:'m2',
+    species:'Кролик породы Серый великан',
+    description:'Крупная мясо-шкурковая порода. Окраска шерсти серо-заячья (агути), ровная по всему телу. Масса взрослого самца до 7 кг. Длина тела до 65 см. Шерсть густая, мех средней длины, подшёрсток плотный. Используется для получения мяса и шкурок.',
+    subq:[
+      { title:'1. Хозяйственное направление породы',
+        options:['исключительно декоративное','исключительно пуховое','мясо-шкурковое','исключительно мясное'],
+        correct:2, why:'В описании прямо указано «используется для получения мяса и шкурок».'
+      },
+      { title:'2. Окраска шерсти',
+        options:['чисто белая','чёрная','серо-заячья (агути)','рыжая с белым нагрудником'],
+        correct:2, why:'В описании «окраска шерсти серо-заячья (агути)».'
+      },
+      { title:'3. Размеры животного',
+        options:['мелкие (до 1 кг)','средние (2–3 кг)','крупные (до 7 кг)','гигантские (свыше 12 кг)'],
+        correct:2, why:'Из описания: «масса до 7 кг» — крупная порода, но не самая большая.'
+      }
+    ]
+  },
+  { id:'m3',
+    species:'Корова голштинской породы',
+    description:'Молочная порода крупного рогатого скота. Крупные животные с чёрно-пёстрой окраской (реже красно-пёстрой). Голова с длинной мордой, рога направлены в стороны. Высокий годовой удой — до 8000–10000 кг молока. Жирность молока 3,6%.',
+    subq:[
+      { title:'1. Направление продуктивности',
+        options:['мясное','молочное','мясо-молочное','рабочее (тягловое)'],
+        correct:1, why:'Прямо: «молочная порода», высокий удой 8000–10000 кг/год.'
+      },
+      { title:'2. Окраска',
+        options:['однотонная белая','чёрно-пёстрая','тёмно-бурая (палевая)','красная без белых пятен'],
+        correct:1, why:'Из описания: «чёрно-пёстрая (реже красно-пёстрая)».'
+      },
+      { title:'3. Особенность экстерьера',
+        options:['массивная мускулатура (мясной тип)','короткие ноги и бочкообразное туловище','удлинённое туловище и развитое вымя — типичный молочный тип','наличие горба на спине'],
+        correct:2, why:'Высокий удой и крупные размеры — признак молочной породы.'
+      }
+    ]
+  },
+  { id:'m4',
+    species:'Свинья породы Крупная белая',
+    description:'Мясо-сальная порода. Окраска кожи и щетины розово-белая. Масса хряка до 350 кг, свиноматки — 250 кг. Голова умеренной величины с прямым профилем; уши средние, направлены вперёд и в стороны. Высокая плодовитость — 11–12 поросят в опоросе. Используется в мясном свиноводстве.',
+    subq:[
+      { title:'1. Направление продуктивности',
+        options:['исключительно сальное','мясо-сальное','исключительно беконное','декоративное'],
+        correct:1, why:'Прямо: «мясо-сальная порода», используется в мясном свиноводстве.'
+      },
+      { title:'2. Окраска',
+        options:['чёрная с белой полосой','чёрно-пёстрая','розово-белая','рыжая'],
+        correct:2, why:'Из описания: «окраска кожи и щетины розово-белая».'
+      },
+      { title:'3. Хозяйственная характеристика',
+        options:['малая плодовитость (1–2 поросёнка)','низкий вес (40–50 кг)','высокая плодовитость (11–12 поросят)','используется для верховой езды'],
+        correct:2, why:'В описании указана плодовитость 11–12 поросят — высокая.'
+      }
+    ]
+  },
+  { id:'m5',
+    species:'Овца романовской породы',
+    description:'Шубно-овчинная порода грубошёрстных овец. Шерсть состоит из чёрного остевого волоса и белого пуха, что придаёт серо-голубоватый оттенок. Овцы среднего размера, плодовитые: рождают 2–3 ягнят за окот. Хвост короткий, тощий. Отличается выносливостью в холодном климате и высоким качеством овчины.',
+    subq:[
+      { title:'1. Хозяйственное направление породы',
+        options:['тонкорунное','шубно-овчинное','исключительно молочное','декоративное'],
+        correct:1, why:'Прямо: «шубно-овчинная порода».'
+      },
+      { title:'2. Тип шерсти',
+        options:['тонкая однородная (мериносы)','грубая, неоднородная: ость + пух','короткая щетинистая','шерсти нет (голая порода)'],
+        correct:1, why:'В описании: «грубошёрстных», «остевой волос и пух» — неоднородная шерсть.'
+      },
+      { title:'3. Биологическая особенность',
+        options:['низкая плодовитость (1 ягнёнок)','высокая плодовитость (2–3 ягнёнка)','раздельнополость (только самцы)','откладывают яйца'],
+        correct:1, why:'Из описания: «рождают 2–3 ягнят за окот».'
+      }
+    ]
+  },
+  { id:'m6',
+    species:'Лошадь породы Орловский рысак',
+    description:'Русская легкоупряжная порода лошадей. Масть преимущественно серая или серая в яблоках; реже гнедая или вороная. Высота в холке 158–170 см. Продолговатое туловище, длинная шея, сухие конечности, лёгкий ход. Способна развивать рысь без перехода в галоп. Используется в спортивных бегах и легкоупряжной работе.',
+    subq:[
+      { title:'1. Хозяйственное направление',
+        options:['тяжеловозная (для перевозки тяжестей)','легкоупряжная (рысистая)','верховая (спорт + кавалерия)','мясо-молочная'],
+        correct:1, why:'Прямо: «легкоупряжная», «способна развивать рысь», «спортивные бега».'
+      },
+      { title:'2. Преобладающая масть',
+        options:['серая (или серая в яблоках)','чисто чёрная (вороная)','пегая (с большими белыми пятнами)','соловая (золотистая)'],
+        correct:0, why:'В описании: «преимущественно серая или серая в яблоках».'
+      },
+      { title:'3. Особенность движения',
+        options:['тихий шаг — основной аллюр','рысь без перехода в галоп','прыжок длиной до 8 м','плавание под водой'],
+        correct:1, why:'Из описания: «способна развивать рысь без перехода в галоп».'
+      }
+    ]
+  },
+  { id:'m7',
+    species:'Утка пекинская',
+    description:'Мясная порода уток. Оперение чисто белое; клюв и плюсны оранжево-жёлтые. Масса селезня — 4 кг, утки — 3,5 кг. Утки скороспелые: молодняк готов к убою в возрасте 50–60 дней. Яйценоскость средняя (100–120 яиц в год). Используется в основном для получения мяса.',
+    subq:[
+      { title:'1. Хозяйственное направление',
+        options:['исключительно яичное','мясное','декоративное','пуховое'],
+        correct:1, why:'Прямо: «мясная порода», скороспелость для убоя.'
+      },
+      { title:'2. Окраска оперения',
+        options:['чёрно-зелёная (как у диких крякв)','чисто белая','полосатая (агути)','шоколадно-коричневая'],
+        correct:1, why:'Из описания: «оперение чисто белое».'
+      },
+      { title:'3. Хозяйственная особенность',
+        options:['яйценоскость свыше 300 яиц/год','скороспелость (50–60 дней до убоя)','масса 1 кг','живёт более 30 лет'],
+        correct:1, why:'Из описания: «молодняк готов к убою в возрасте 50–60 дней».'
+      }
+    ]
+  },
+  { id:'m8',
+    species:'Овчарка немецкая (служебная порода)',
+    description:'Крупная служебная собака. Высота в холке 55–65 см, масса 22–40 кг. Шерсть средней длины с густым подшёрстком; окрас чёрно-рыжий с тёмной «маской», иногда зонарно-серый. Уши стоячие, треугольной формы. Используется в полиции, армии, как поводырь, в розыскной службе.',
+    subq:[
+      { title:'1. Назначение породы',
+        options:['исключительно декоративная (комнатная)','охотничья борзая (преследование зверя)','служебная (полиция, охрана, розыск)','стайная пастушья'],
+        correct:2, why:'Прямо: «служебная собака», «полиция, армия, розыскная служба».'
+      },
+      { title:'2. Тип шерсти',
+        options:['короткая, гладкая (как у дога)','длинная пушистая (как у пекинеса)','шерсть средней длины с подшёрстком','полное отсутствие шерсти'],
+        correct:2, why:'Из описания: «средней длины с густым подшёрстком».'
+      },
+      { title:'3. Размер',
+        options:['миниатюрный (до 25 см и 4 кг)','средний-крупный (55–65 см, до 40 кг)','гигантский (свыше 80 см и 80 кг)','очень мелкий (до 1 кг)'],
+        correct:1, why:'Из описания: высота 55–65 см, масса 22–40 кг.'
+      }
+    ]
+  },
+  { id:'m9',
+    species:'Голубь породы Дутыш',
+    description:'Декоративная порода голубей. Окраска белая, чёрная, красная или жёлтая. Птица среднего размера. Главная особенность — увеличенный «зоб», который птица надувает при возбуждении до размеров шара. Грудь приподнята, хвост опущен, ноги длинные. Полёт ограниченный.',
+    subq:[
+      { title:'1. Хозяйственное направление',
+        options:['мясное','спортивное (почтовое)','декоративное','исключительно для разведения в неволе как лабораторное'],
+        correct:2, why:'Прямо: «декоративная порода голубей».'
+      },
+      { title:'2. Главная отличительная особенность',
+        options:['длинный хохолок на голове','раздутый зоб шарообразной формы','перепончатые лапы','хвост длиной более 50 см'],
+        correct:1, why:'Прямо: «увеличенный зоб, который птица надувает до размеров шара».'
+      },
+      { title:'3. Лётные качества',
+        options:['отличные — гонщик скоростной','полёт ограниченный','совершенно нелётная','подводное плавание вместо полёта'],
+        correct:1, why:'Прямо: «полёт ограниченный».'
+      }
+    ]
+  },
+  { id:'m10',
+    species:'Корова чёрно-пёстрой породы',
+    description:'Молочная порода крупного рогатого скота. Окраска чёрно-пёстрая, рисунок неравномерный. Масса коров 500–650 кг, быков — до 900 кг. Удой составляет 4500–5500 кг молока в год при жирности около 3,6%. Используется прежде всего для производства молока.',
+    subq:[
+      { title:'1. Направление продуктивности',
+        options:['молочное','мясное','мясо-молочное','рабочее (тягловое)'],
+        correct:0, why:'Чёрно-пёстрая порода относится к молочному направлению продуктивности.'
+      },
+      { title:'2. Окраска',
+        options:['однотонная белая','палевая (светло-жёлтая)','чёрно-пёстрая','рыжая с белыми пятнами'],
+        correct:2, why:'Прямо: «окраска чёрно-пёстрая».'
+      },
+      { title:'3. Производственная характеристика',
+        options:['удой 4500–5500 кг молока в год','преимущественно откорм на мясо','производят только шерсть','откладывают яйца'],
+        correct:0, why:'Для молочной породы ключевой производственный показатель — годовой удой.'
+      }
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, picks:[null,null,null], solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  let subqHtml = '';
+  q.subq.forEach((sq, si) => {
+    let optsHtml = '';
+    sq.options.forEach((opt, oi) => {
+      optsHtml += `
+        <div class="subq-opt" data-sub="${si}" data-opt="${oi}">
+          <div class="subq-opt-num">${oi+1}</div>
+          <div class="subq-opt-text">${opt}</div>
+        </div>
+      `;
+    });
+    subqHtml += `
+      <div class="subq">
+        <div class="subq-title">${sq.title}</div>
+        <div class="subq-options">${optsHtml}</div>
+      </div>
+    `;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">морфо-анализ по плану</span>
+      <div class="context"><strong>${q.species}.</strong> <em>${q.description}</em></div>
+      <p class="q-text">Определи характеристики по плану. За каждый верный пункт — 1 балл (всего 3).</p>
+      ${subqHtml}
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.picks = [null, null, null];
+  document.querySelectorAll('.subq-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if(state.answered) return;
+      const sub = +opt.dataset.sub;
+      const o = +opt.dataset.opt;
+      // unselect siblings in this subq
+      document.querySelectorAll(`.subq-opt[data-sub="${sub}"]`).forEach(s => s.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.picks[sub] = o;
+      document.getElementById('check').disabled = state.picks.some(p => p === null);
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  let countCorrect = 0;
+  q.subq.forEach((sq, si) => {
+    document.querySelectorAll(`.subq-opt[data-sub="${si}"]`).forEach(opt => {
+      opt.classList.add('locked');
+      const o = +opt.dataset.opt;
+      if(o === sq.correct) opt.classList.add('correct-mark');
+      else if(o === state.picks[si]) opt.classList.add('wrong-mark');
+    });
+    if(state.picks[si] === sq.correct) countCorrect++;
+  });
+
+  state.solved++;
+  // Score: 3 — все 3 верных, 2 — 2 верных, 1 — 1 верный, 0 — 0 верных
+  if(countCorrect === 3){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = '<p style="margin-top:8px"><strong>Пояснения:</strong></p>';
+  q.subq.forEach((sq, si) => {
+    const userVal = state.picks[si];
+    const ok = userVal === sq.correct;
+    notesHtml += `<p style="margin:4px 0">
+      <span style="color:${ok?'var(--success)':'var(--error)'}">${ok?'✓':'✗'}</span>
+      <strong>${si+1}.</strong> «${sq.options[sq.correct]}» — ${sq.why}
+    </p>`;
+  });
+
+  if(countCorrect === 3){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно (3 балла).</strong> Все три характеристики определены правильно.</div><div class="hint">${notesHtml}</div>`;
+  } else if(countCorrect === 2){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (2 балла).</strong> Две характеристики из трёх верны.</div><div class="hint">${notesHtml}</div>`;
+  } else if(countCorrect === 1){
+    fb.innerHTML = `<div class="feedback partial"><strong>Частично (1 балл).</strong> Только одна характеристика верна.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно (0 баллов).</strong></div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

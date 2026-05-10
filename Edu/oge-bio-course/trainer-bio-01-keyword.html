@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №1 — слово/словосочетание</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2EDE2;
+  --ink:#2C2C2C;
+  --accent:#2D4A2B;
+  --accent-soft:#E8E4D6;
+  --error:#8B2C2C;
+  --success:#2D4A2B;
+  --muted:#6B6B6B;
+  --border:#D6D0BF;
+  --card:#FBF8F0;
+}
+*{box-sizing:border-box}
+body{
+  font-family:'Spectral',Georgia,serif;
+  background:var(--paper);
+  color:var(--ink);
+  max-width:740px;
+  margin:0 auto;
+  padding:24px;
+  line-height:1.6;
+  font-size:17px;
+}
+.meta-bar{
+  display:flex;
+  gap:8px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  margin-bottom:12px;
+}
+.meta-bar > .right{margin-left:auto}
+h1{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:38px;
+  margin:0 0 8px;
+  line-height:1.15;
+}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{
+  font-size:16px;
+  color:var(--muted);
+  margin:0 0 28px;
+  max-width:580px;
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:0;
+  margin-bottom:24px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:4px;
+  overflow:hidden;
+}
+.stat{
+  padding:14px 12px;
+  text-align:left;
+  border-right:1px solid var(--border);
+}
+.stat:last-child{border-right:none}
+.stat-value{
+  font-family:'Fraunces',serif;
+  font-size:30px;
+  font-weight:600;
+  line-height:1;
+  margin-bottom:6px;
+}
+.stat-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  color:var(--muted);
+  letter-spacing:0.06em;
+}
+.q-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:24px;
+  margin-bottom:16px;
+}
+.q-pill{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  background:var(--accent);
+  color:white;
+  padding:3px 10px;
+  border-radius:2px;
+  letter-spacing:0.06em;
+  margin-bottom:12px;
+}
+.q-text{
+  font-size:18px;
+  margin:0 0 18px;
+  line-height:1.5;
+}
+.input-row{
+  display:flex;
+  gap:8px;
+  align-items:stretch;
+  margin-bottom:8px;
+}
+input[type="text"]{
+  flex:1;
+  font-family:'Spectral',serif;
+  font-size:18px;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:4px;
+  background:white;
+  color:var(--ink);
+  outline:none;
+}
+input[type="text"]:focus{border-color:var(--accent)}
+input[type="text"]:disabled{
+  background:#f5f1e6;
+  cursor:not-allowed;
+}
+button{
+  font-family:'Spectral',serif;
+  font-size:16px;
+  padding:10px 20px;
+  border:1px solid var(--accent);
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+  border-radius:4px;
+  transition:opacity 0.15s;
+}
+button:hover:not(:disabled){opacity:0.9}
+button:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+  background:var(--muted);
+  border-color:var(--muted);
+}
+button.secondary{
+  background:white;
+  color:var(--accent);
+}
+.feedback{
+  margin-top:12px;
+  padding:14px 16px;
+  border-radius:4px;
+  font-size:15px;
+  line-height:1.5;
+}
+.feedback.ok{
+  background:#E1ECDD;
+  border:1px solid #A8C49F;
+  color:var(--success);
+}
+.feedback.bad{
+  background:#F2E0DC;
+  border:1px solid #C99A93;
+  color:var(--error);
+}
+.feedback strong{font-weight:600}
+.hint{
+  margin-top:8px;
+  padding:10px 14px;
+  background:var(--accent-soft);
+  border-left:3px solid var(--accent);
+  font-size:14px;
+  color:var(--ink);
+}
+.actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-top:14px;
+}
+.actions .right{margin-left:auto}
+.tag{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  background:var(--accent-soft);
+  color:var(--accent);
+  padding:2px 8px;
+  border-radius:2px;
+  letter-spacing:0.05em;
+  margin-bottom:10px;
+}
+hr{
+  border:none;
+  border-top:1px solid var(--border);
+  margin:32px 0 20px;
+}
+.footer{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--muted);
+  text-align:center;
+  letter-spacing:0.06em;
+}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+  .input-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span>
+  <span>·</span>
+  <span>биология</span>
+  <span>·</span>
+  <span>задание №1</span>
+  <span class="right">1 балл · базовый</span>
+</div>
+
+<h1><em>Слово</em> или словосочетание</h1>
+<p class="lead">Тренажёр на задание №1 ОГЭ по биологии: ответом является одно слово (или короткое словосочетание). Три типа: общее свойство живых систем, профессия биолога, научный метод.</p>
+
+<section class="stats">
+  <div class="stat">
+    <div class="stat-value" id="stat-solved">0</div>
+    <div class="stat-label">пройдено</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" id="stat-acc">—</div>
+    <div class="stat-label">% точности</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" id="stat-streak">0</div>
+    <div class="stat-label">подряд верно</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" id="stat-bank">12</div>
+    <div class="stat-label">в банке</div>
+  </div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №1 · v0.5.1 · 2026-05-09</div>
+
+<script>
+const QUESTIONS = [
+  // === Свойства живых систем (3) ===
+  { id:'p1', type:'property',
+    prompt:'На фотографии собака рычит и оскаливает зубы при появлении незнакомца. Какое <b>общее</b> свойство живых систем иллюстрирует эта реакция?',
+    accept:['раздражимость','возбудимость'],
+    canon:'раздражимость',
+    hint:'Способность организма отвечать на внешнее воздействие — фундаментальное свойство живого.'
+  },
+  { id:'p2', type:'property',
+    prompt:'Курица откладывает яйца, из которых вылупляются цыплята, похожие на родителей. Какое <b>общее</b> свойство живых систем иллюстрирует это явление?',
+    accept:['размножение','воспроизведение'],
+    canon:'размножение',
+    hint:'Воспроизведение себе подобных — необходимое условие сохранения вида.'
+  },
+  { id:'p3', type:'property',
+    prompt:'Из маленького семени вырастает дерево высотой 20 метров. Какое <b>общее</b> свойство живых систем иллюстрирует это явление?',
+    accept:['рост','развитие','рост и развитие'],
+    canon:'рост',
+    hint:'Увеличение размеров и массы — характерная черта живых организмов.'
+  },
+  { id:'p4', type:'property',
+    prompt:'Растения поглощают углекислый газ и выделяют кислород, а животные дышат кислородом и выделяют углекислый газ. Какое <b>общее</b> свойство живых систем иллюстрирует это явление?',
+    accept:['обмен веществ','метаболизм','обмен веществ и энергии'],
+    canon:'обмен веществ',
+    hint:'Газообмен — часть процесса, без которого живой организм не может существовать.'
+  },
+
+  // === Профессии (3) ===
+  { id:'pr1', type:'profession',
+    prompt:'На фотографии учёный изучает строение и развитие зародыша человека на ранних стадиях беременности. Назовите эту профессию.',
+    accept:['эмбриолог'],
+    canon:'эмбриолог',
+    hint:'От греческого «эмбрион» — зародыш.'
+  },
+  { id:'pr2', type:'profession',
+    prompt:'На фотографии учёный изучает насекомых: их строение, поведение и роль в природных сообществах. Назовите эту профессию.',
+    accept:['энтомолог'],
+    canon:'энтомолог',
+    hint:'От греческого «энтомон» — насекомое.'
+  },
+  { id:'pr3', type:'profession',
+    prompt:'На фотографии учёный исследует, как живые организмы взаимодействуют между собой и со средой обитания. Назовите эту профессию.',
+    accept:['эколог'],
+    canon:'эколог',
+    hint:'От греческого «ойкос» — дом, жилище, среда обитания.'
+  },
+  { id:'pr4', type:'profession',
+    prompt:'На фотографии учёный изучает строение, классификацию и распространение растений. Назовите эту профессию.',
+    accept:['ботаник'],
+    canon:'ботаник',
+    hint:'От греческого «ботане» — растение, трава.'
+  },
+
+  // === Методы (4) ===
+  { id:'m1', type:'method',
+    prompt:'Учёный-зоолог в течение нескольких месяцев фиксирует поведение волчьей стаи в естественной среде, не вмешиваясь в жизнь животных. Как называется этот научный метод?',
+    accept:['наблюдение'],
+    canon:'наблюдение',
+    hint:'Метод изучения объекта без активного вмешательства в его жизнь.'
+  },
+  { id:'m2', type:'method',
+    prompt:'Биолог поместил часть растений на свет, а часть — в тёмный шкаф, чтобы выяснить влияние света на их рост. Как называется этот научный метод?',
+    accept:['эксперимент'],
+    canon:'эксперимент',
+    hint:'Метод с активным воздействием на объект для проверки гипотезы.'
+  },
+  { id:'m3', type:'method',
+    prompt:'Ученик с помощью линейки и весов определяет длину и массу проросших семян фасоли. Как называется этот научный метод?',
+    accept:['измерение'],
+    canon:'измерение',
+    hint:'Получение количественных данных с помощью приборов.'
+  },
+  { id:'m4', type:'method',
+    prompt:'Биолог сравнивает строение скелета человека и шимпанзе, отмечая сходства и различия. Как называется этот научный метод?',
+    accept:['сравнение','сравнительный'],
+    canon:'сравнение',
+    hint:'Метод выявления сходств и различий между объектами.'
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = {
+  seen: new Set(),
+  current: null,
+  solved: 0,
+  correct: 0,
+  streak: 0,
+  answered: false
+};
+
+function normalize(s){
+  return (s||'').trim().toLowerCase()
+    .replace(/ё/g,'е')
+    .replace(/[.,!?;:'"«»]/g,'')
+    .replace(/\s+/g,' ');
+}
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){
+    state.seen.clear();
+    return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)];
+  }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function typeLabel(t){
+  return t === 'property' ? 'свойство живых систем'
+       : t === 'profession' ? 'профессия биолога'
+       : 'научный метод';
+}
+
+function render(){
+  const q = state.current;
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">${typeLabel(q.type)}</span>
+      <p class="q-text">${q.prompt}</p>
+      <div class="input-row">
+        <input type="text" id="answer" placeholder="введите ответ одним словом" autocomplete="off" autofocus>
+        <button id="check">Проверить</button>
+      </div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">
+          ID: ${q.id}
+        </span>
+      </div>
+    </div>
+  `;
+  const input = document.getElementById('answer');
+  const checkBtn = document.getElementById('check');
+  const nextBtn = document.getElementById('next');
+  input.focus();
+  input.addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !state.answered) check();
+    else if(e.key === 'Enter' && state.answered) next();
+  });
+  checkBtn.addEventListener('click', check);
+  nextBtn.addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const input = document.getElementById('answer');
+  const userVal = input.value.trim();
+  if(!userVal) return;
+
+  const q = state.current;
+  const norm = normalize(userVal);
+  const ok = q.accept.some(a => normalize(a) === norm);
+
+  state.solved++;
+  if(ok){
+    state.correct++;
+    state.streak++;
+  } else {
+    state.streak = 0;
+  }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  if(ok){
+    fb.innerHTML = `
+      <div class="feedback ok"><strong>Верно.</strong> Ответ: <em>${q.canon}</em>.</div>
+      <div class="hint">${q.hint}</div>
+    `;
+  } else {
+    fb.innerHTML = `
+      <div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: <em>${q.canon}</em>${q.accept.length>1?' (также принимаются: '+q.accept.filter(a=>a!==q.canon).join(', ')+')':''}.</div>
+      <div class="hint">${q.hint}</div>
+    `;
+  }
+  input.disabled = true;
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

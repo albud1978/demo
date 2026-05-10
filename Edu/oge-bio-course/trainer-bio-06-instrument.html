@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 биология №6 — биологические приборы</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 18px;line-height:1.5}
+.bio-table{
+  width:100%;
+  border-collapse:collapse;
+  margin:14px 0 18px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  overflow:hidden;
+}
+.bio-table th{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:14px;
+  text-align:left;
+  padding:10px 14px;
+  background:var(--accent-soft);
+  border-bottom:1px solid var(--border);
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+  color:var(--accent);
+}
+.bio-table td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  font-size:16px;
+}
+.bio-table tr:last-child td{border-bottom:none}
+.bio-gap{
+  display:inline-block;
+  font-style:italic;
+  color:var(--accent);
+  letter-spacing:0.5em;
+  font-weight:500;
+  font-size:20px;
+  vertical-align:middle;
+}
+.options{display:flex;flex-direction:column;gap:6px}
+.option{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  background:white;
+  border-radius:4px;
+  cursor:pointer;
+  transition:all 0.12s;
+  user-select:none;
+}
+.option:hover:not(.locked){border-color:var(--accent)}
+.option.selected{border-color:var(--accent);background:#F0EDE0}
+.option.locked{cursor:not-allowed}
+.option-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  font-weight:500;
+  flex-shrink:0;
+  width:26px;
+  height:26px;
+  border:1px solid var(--border);
+  background:var(--paper);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+}
+.option.selected .option-num{background:var(--accent);color:white;border-color:var(--accent)}
+.option-text{flex:1;font-size:16px}
+.option.correct-mark{background:#E1ECDD;border-color:#A8C49F}
+.option.correct-mark .option-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.option.wrong-mark{background:#F2E0DC;border-color:#C99A93}
+.option.wrong-mark .option-num{background:#C99A93;color:white;border-color:#C99A93}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:4px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>биология</span><span>·</span><span>задание №6</span>
+  <span class="right">1 балл · базовый</span>
+</div>
+
+<h1>Биологические <em>приборы</em></h1>
+<p class="lead">Тренажёр на задание №6 ОГЭ по биологии: дано описание прибора или инструмента, используемого в биологии или медицине. Выбери его название.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · биология · задание №6 · v0.5.1 · 2026-05-09</div>
+
+<script>
+// gapPos: 'left' (пропуск слева, объект) или 'right' (пропуск справа, функция)
+// options: 4 варианта, correct — индекс 0..3
+// Каждое задание — определение и 4 варианта термина; correct — индекс 0..3
+const QUESTIONS = [
+  { id:'i1',
+    definition:'Оптический прибор для рассмотрения и изучения мелких объектов (клеток, микроорганизмов, тонких срезов тканей), невидимых невооружённым глазом.',
+    options:[
+      {text:'лупа', why:'Лупа увеличивает изображение в 2–25 раз; для клеток этого недостаточно.'},
+      {text:'микроскоп', why:'Микроскоп увеличивает в сотни и тысячи раз; используется для изучения клеток.'},
+      {text:'термометр', why:'Прибор для измерения температуры, не для рассмотрения объектов.'},
+      {text:'тонометр', why:'Прибор для измерения артериального давления.'}
+    ],
+    correct:1
+  },
+  { id:'i2',
+    definition:'Прибор для измерения артериального давления крови у человека.',
+    options:[
+      {text:'термометр', why:'Измеряет температуру.'},
+      {text:'фонендоскоп', why:'Прибор для прослушивания тонов сердца и шумов лёгких.'},
+      {text:'тонометр', why:'Тонометр (с манжетой) — стандартный прибор для измерения АД.'},
+      {text:'микроскоп', why:'Прибор для рассмотрения мелких объектов.'}
+    ],
+    correct:2
+  },
+  { id:'i3',
+    definition:'Прибор для прослушивания тонов сердца, шумов лёгких и работы кишечника врачом.',
+    options:[
+      {text:'фонендоскоп (стетоскоп)', why:'Точное определение фонендоскопа.'},
+      {text:'спирометр', why:'Прибор для измерения жизненной ёмкости лёгких.'},
+      {text:'тонометр', why:'Измеряет давление.'},
+      {text:'термометр', why:'Измеряет температуру.'}
+    ],
+    correct:0
+  },
+  { id:'i4',
+    definition:'Прибор для измерения жизненной ёмкости лёгких — наибольшего объёма воздуха, который человек может выдохнуть после максимального вдоха.',
+    options:[
+      {text:'фонендоскоп', why:'Прослушивает тоны и шумы.'},
+      {text:'тонометр', why:'Измеряет давление.'},
+      {text:'спирометр', why:'Точное определение спирометра.'},
+      {text:'весы', why:'Измеряют массу.'}
+    ],
+    correct:2
+  },
+  { id:'i5',
+    definition:'Острый металлический инструмент с заострённым концом, используемый для приготовления микропрепаратов: разделения тканей, перекладывания мелких объектов.',
+    options:[
+      {text:'скальпель', why:'Скальпель — режущий инструмент.'},
+      {text:'препаровальная игла', why:'Точное назначение препаровальной иглы.'},
+      {text:'пинцет', why:'Пинцет — захватывающий инструмент с двумя ножками.'},
+      {text:'пипетка', why:'Пипетка — для дозирования жидкостей.'}
+    ],
+    correct:1
+  },
+  { id:'i6',
+    definition:'Стеклянный или пластиковый сосуд с плоским дном и прозрачной крышкой, используемый для культивирования бактерий и грибов на питательной среде.',
+    options:[
+      {text:'пробирка', why:'Пробирка — узкий цилиндрический сосуд.'},
+      {text:'колба', why:'Колба — сосуд с шаровидным дном и узким горлом.'},
+      {text:'чашка Петри', why:'Точное описание чашки Петри.'},
+      {text:'бюретка', why:'Бюретка — мерный сосуд с краном для титрования.'}
+    ],
+    correct:2
+  },
+  { id:'i7',
+    definition:'Инструмент с двумя пластинами для захвата и удержания мелких объектов при работе с микропрепаратами.',
+    options:[
+      {text:'пинцет', why:'Точное определение пинцета.'},
+      {text:'препаровальная игла', why:'Игла — острый инструмент, не захватывает.'},
+      {text:'скальпель', why:'Режущий инструмент.'},
+      {text:'пипетка', why:'Дозирует жидкости.'}
+    ],
+    correct:0
+  },
+  { id:'i8',
+    definition:'Стеклянный сосуд цилиндрической формы с одним закрытым концом, используемый для проведения химических и биологических опытов с небольшими объёмами жидкости.',
+    options:[
+      {text:'чашка Петри', why:'Чашка Петри — плоский сосуд с крышкой.'},
+      {text:'колба', why:'Колба имеет шаровидную форму и узкое горло.'},
+      {text:'пробирка', why:'Точное описание пробирки.'},
+      {text:'мензурка', why:'Мензурка — мерный сосуд с делениями для измерения объёмов.'}
+    ],
+    correct:2
+  },
+  { id:'i9',
+    definition:'Прибор, увеличивающий мелкие объекты в 2–25 раз; обычно одна линза в оправе с ручкой; используется для осмотра насекомых, частей растений.',
+    options:[
+      {text:'микроскоп', why:'Микроскоп даёт увеличение в сотни-тысячи раз.'},
+      {text:'лупа', why:'Точное определение лупы.'},
+      {text:'бинокль', why:'Бинокль — оптический прибор для удалённых объектов, не увеличивает мелкие близкие.'},
+      {text:'телескоп', why:'Прибор для астрономических наблюдений.'}
+    ],
+    correct:1
+  },
+  { id:'i10',
+    definition:'Прибор для измерения температуры тела человека или температуры окружающей среды.',
+    options:[
+      {text:'тонометр', why:'Измеряет давление.'},
+      {text:'термометр', why:'Точное назначение термометра.'},
+      {text:'спирометр', why:'Измеряет ёмкость лёгких.'},
+      {text:'фонендоскоп', why:'Прослушивает тоны и шумы.'}
+    ],
+    correct:1
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, pick:null, solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function render(){
+  const q = state.current;
+  let optsHtml = '';
+  q.options.forEach((o, i) => {
+    optsHtml += `
+      <div class="option" data-i="${i}">
+        <div class="option-num">${i+1}</div>
+        <div class="option-text">${o.text}</div>
+      </div>
+    `;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">прибор / инструмент</span>
+      <p class="q-text">Какой прибор или инструмент описан?</p>
+      <div style="margin-bottom:14px;padding:14px 16px;background:white;border:1px solid var(--border);border-radius:4px;font-style:italic;font-size:17px">${q.definition}</div>
+      <div class="options" id="options">${optsHtml}</div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  state.pick = null;
+  document.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if(state.answered) return;
+      document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.pick = +opt.dataset.i;
+      document.getElementById('check').disabled = false;
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  const ok = state.pick === q.correct;
+  state.solved++;
+  if(ok){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  q.options.forEach((o, i) => {
+    const opt = document.querySelector(`.option[data-i="${i}"]`);
+    opt.classList.add('locked');
+    if(i === q.correct) opt.classList.add('correct-mark');
+    else if(i === state.pick) opt.classList.add('wrong-mark');
+  });
+
+  const fb = document.getElementById('feedback-area');
+  let notesHtml = '<p style="margin-top:8px"><strong>Пояснения:</strong></p>';
+  q.options.forEach((o, i) => {
+    const tag = i === q.correct ? '✓' : '✗';
+    notesHtml += `<p style="margin:4px 0"><strong>${i+1}.</strong> <span style="color:${i===q.correct?'var(--success)':'var(--error)'}">${tag}</span> ${o.why}</p>`;
+  });
+
+  if(ok){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно.</strong> Ответ: ${q.correct+1}.</div><div class="hint">${notesHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: ${q.correct+1}.</div><div class="hint">${notesHtml}</div>`;
+  }
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>
