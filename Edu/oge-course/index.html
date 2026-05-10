@@ -58,8 +58,9 @@ h1.title em { font-style: italic; font-weight: 300; color: var(--chemistry); }
 .subjects { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 @media (max-width: 900px) { .subjects { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 500px) { .subjects { grid-template-columns: 1fr; } }
-.subject-card { background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; padding: 22px 20px 20px; position: relative; overflow: hidden; }
-.subject-card.ready { border-color: var(--ink); }
+.subject-card { background: var(--bg-card); border: 1px solid var(--rule); border-radius: 2px; padding: 22px 20px 20px; position: relative; overflow: hidden; display: block; color: inherit; text-decoration: none; transition: border-color .15s, transform .15s, box-shadow .15s; }
+a.subject-card.ready { border-color: var(--ink); cursor: pointer; }
+a.subject-card.ready:hover { border-color: var(--bar); transform: translateY(-2px); box-shadow: 0 6px 18px -10px rgba(27,24,20,.35); }
 .subject-card.coming { opacity: 0.55; }
 .subject-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--bar); }
 .subject-card-name { font-family: var(--serif); font-weight: 500; font-size: 22px; letter-spacing: -0.01em; color: var(--bar); }
@@ -177,24 +178,24 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
     <span class="meta">статус по состоянию на 2026-05-06</span>
   </div>
   <div class="subjects">
-    <div class="subject-card ready" style="--bar: #2D4A2B">
+    <a class="subject-card ready" href="#chem" style="--bar: #2D4A2B">
       <div class="subject-card-name">Химия</div>
-      <div class="subject-card-status">22 тренажёра</div>
+      <div class="subject-card-status">22 тренажёра →</div>
       <div class="subject-card-stats">
         <b>23 задания</b> · 38 баллов · 180 мин<br/>
         <span style="color:var(--ink-faint)">часть 1: 19 кратких + часть 2: 4 развёрнутых</span>
       </div>
       <div class="subject-card-tally"><b>Покрыто:</b> ВСЁ — части 1 и 2</div>
-    </div>
-    <div class="subject-card ready" style="--bar: #A05B0F">
+    </a>
+    <a class="subject-card ready" href="#bio" style="--bar: #A05B0F">
       <div class="subject-card-name">Биология</div>
-      <div class="subject-card-status">27 тренажёров</div>
+      <div class="subject-card-status">27 тренажёров →</div>
       <div class="subject-card-stats">
         <b>26 заданий</b> · 47 баллов · 150 мин<br/>
         <span style="color:var(--ink-faint)">часть 1: 21 краткий + часть 2: 5 развёрнутых</span>
       </div>
       <div class="subject-card-tally"><b>Покрыто:</b> ВСЁ — части 1 и 2</div>
-    </div>
+    </a>
     <div class="subject-card coming" style="--bar: #1B3A5E">
       <div class="subject-card-name">Математика</div>
       <div class="subject-card-status">в планах</div>
@@ -216,7 +217,7 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
   </div>
 </section>
 
-<section>
+<section id="chem">
   <div class="section-head">
     <h2>Химия — все тренажёры</h2>
     <span class="meta">22 файла · вся часть 1 + 2</span>
@@ -502,7 +503,7 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
   </div>
 </section>
 
-<section>
+<section id="bio">
   <div class="section-head">
     <h2>Биология — все тренажёры</h2>
     <span class="meta">27 файлов · вся часть 1 + 2 + связка экосистемы</span>
