@@ -157,16 +157,16 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
   <div class="masthead-top">
     <div class="left">
       <span>ОГЭ-2026 <span class="dot">●</span> открытый бесплатный курс</span>
-      <span>v0.6.7</span>
+      <span>v0.7.0</span>
     </div>
-    <span>обновлено 2026-05-06</span>
+    <span>обновлено 2026-05-10</span>
   </div>
   <h1 class="title">ОГЭ-2026<br/><em>тренажёры</em></h1>
   <p class="subtitle">Бесплатные интерактивные тренажёры для самостоятельной подготовки к ОГЭ. <b>Каждый тренажёр</b> — отдельный HTML-файл, открывается двойным кликом, работает офлайн, без регистрации и подписок. Содержание сверено со <b>спецификацией ФИПИ 2026 года</b>.</p>
   <div class="lede-grid">
-    <div class="lede-stat"><div class="num">22</div><div class="lbl">тренажёров<br/>готовы</div></div>
-    <div class="lede-stat"><div class="num">4</div><div class="lbl">предмета<br/>в плане</div></div>
-    <div class="lede-stat"><div class="num">230+</div><div class="lbl">уникальных<br/>заданий</div></div>
+    <div class="lede-stat"><div class="num">49</div><div class="lbl">тренажёров<br/>готовы</div></div>
+    <div class="lede-stat"><div class="num">2 / 4</div><div class="lbl">предмета<br/>покрыто</div></div>
+    <div class="lede-stat"><div class="num">430+</div><div class="lbl">уникальных<br/>заданий</div></div>
     <div class="lede-stat"><div class="num">0&nbsp;₽</div><div class="lbl">стоимость<br/>и навсегда</div></div>
   </div>
 </header>
@@ -186,14 +186,14 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
       </div>
       <div class="subject-card-tally"><b>Покрыто:</b> ВСЁ — части 1 и 2</div>
     </div>
-    <div class="subject-card coming" style="--bar: #A05B0F">
+    <div class="subject-card ready" style="--bar: #A05B0F">
       <div class="subject-card-name">Биология</div>
-      <div class="subject-card-status">в планах</div>
+      <div class="subject-card-status">27 тренажёров</div>
       <div class="subject-card-stats">
         <b>26 заданий</b> · 47 баллов · 150 мин<br/>
         <span style="color:var(--ink-faint)">часть 1: 21 краткий + часть 2: 5 развёрнутых</span>
       </div>
-      <div class="subject-card-tally">скоро</div>
+      <div class="subject-card-tally"><b>Покрыто:</b> ВСЁ — части 1 и 2</div>
     </div>
     <div class="subject-card coming" style="--bar: #1B3A5E">
       <div class="subject-card-name">Математика</div>
@@ -504,14 +504,299 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
 
 <section>
   <div class="section-head">
-    <h2>Остальные предметы</h2>
-    <span class="meta">в разработке</span>
+    <h2>Биология — все тренажёры</h2>
+    <span class="meta">27 файлов · вся часть 1 + 2 + связка экосистемы</span>
   </div>
 
-  <div class="coming-section" style="border-left: 4px solid var(--biology)">
-    <div class="label" style="color:var(--biology)">в разработке</div>
-    <h3>Биология <em>— скоро</em></h3>
-    <p>Самый большой по баллам предмет ОГЭ (47 баллов). 26 заданий, 7 модулей кодификатора: от клетки до экосистемы. Планируются тренажёры на анатомию, систематику, экологические сети, цикл веществ.</p>
+  <div class="intro-note" style="border-left-color: var(--biology)">
+    <p>Тренажёры идут <b>по номерам экзамена</b>: №1 → 21 — часть 1 (короткие ответы), №19–21 — связка по единой экосистеме в формате реального экзамена (4 балла за один сюжет), №22 → 26 — часть 2 (развёрнутые ответы).</p>
+    <p>Все 26 заданий ОГЭ-2026 по биологии покрыты тренажёрами — это 47 баллов из 47 в экзамене.</p>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Часть 1 · короткие ответы</div>
+      <h3 class="block-title">21 задание · 34 балла</h3>
+      <p class="block-blurb">Тестовая часть экзамена: соответствия, последовательности, выбор нескольких верных ответов, биологические термины, анализ графиков и SVG-рисунков (анатомия, морфология, экология).</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-bio-01-keyword.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№1 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Слово или словосочетание</div>
+        <div class="trainer-blurb">Свойства живых систем · профессия биолога · научный метод</div>
+        <div class="trainer-card-foot"><span class="qcount">12 заданий</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-02-organism-kingdom.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№2 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Соответствие: организм ↔ царство</div>
+        <div class="trainer-blurb">Бактерии, грибы, растения, животные</div>
+        <div class="trainer-card-foot"><span class="qcount">12 пар</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-03-taxa-sequence.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№3 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Систематические таксоны</div>
+        <div class="trainer-blurb">Расставить от наименьшего: вид → род → семейство → отряд → класс</div>
+        <div class="trainer-card-foot"><span class="qcount">10 цепочек</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-04-graph.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№4 КИМ</span>
+          <span class="trainer-tag">2 балла · базовый</span>
+        </div>
+        <div class="trainer-title">Анализ графика</div>
+        <div class="trainer-blurb">SVG-график зависимости величин · 2 верных ответа из 5</div>
+        <div class="trainer-card-foot"><span class="qcount">10 графиков</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-05-process-sequence.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№5 КИМ</span>
+          <span class="trainer-tag">2 балла · базовый</span>
+        </div>
+        <div class="trainer-title">Последовательность процессов</div>
+        <div class="trainer-blurb">Лабораторная инструкция или этапы онтогенеза</div>
+        <div class="trainer-card-foot"><span class="qcount">10 последовательностей</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-06-instrument.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№6 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Биологические приборы</div>
+        <div class="trainer-blurb">Микроскоп, лупа, тонометр, спирометр и др. — 1 из 4</div>
+        <div class="trainer-card-foot"><span class="qcount">10 приборов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-07-organism-description.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№7 КИМ</span>
+          <span class="trainer-tag">2 балла · базовый</span>
+        </div>
+        <div class="trainer-title">Описание организма</div>
+        <div class="trainer-blurb">3 верных утверждения из 6, следующих из описания</div>
+        <div class="trainer-card-foot"><span class="qcount">12 описаний</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-08-table-gap.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№8 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Пропуск в таблице «объект — функция»</div>
+        <div class="trainer-blurb">Понятие на место пропуска, выбор из 4</div>
+        <div class="trainer-card-foot"><span class="qcount">12 таблиц</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-09-multi-choice.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№9 КИМ</span>
+          <span class="trainer-tag">2 балла · базовый</span>
+        </div>
+        <div class="trainer-title">Признаки группы животных или растений</div>
+        <div class="trainer-blurb">3 верных утверждения из 6 о биологической группе</div>
+        <div class="trainer-card-foot"><span class="qcount">12 групп</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-10-text-gaps.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№10 КИМ</span>
+          <span class="trainer-tag">2 балла · базовый</span>
+        </div>
+        <div class="trainer-title">Пропуски в тексте</div>
+        <div class="trainer-blurb">4 пропуска (А, Б, В, Г) · выбор из 8 терминов</div>
+        <div class="trainer-card-foot"><span class="qcount">8 текстов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-11-traits-processes.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№11 КИМ</span>
+          <span class="trainer-tag">2 балла · повышенный</span>
+        </div>
+        <div class="trainer-title">Соответствие: признаки и процессы</div>
+        <div class="trainer-blurb">6 признаков → фотосинтез или дыхание</div>
+        <div class="trainer-card-foot"><span class="qcount">10 наборов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-12-judgments.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№12 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Верны ли суждения А и Б?</div>
+        <div class="trainer-blurb">Два суждения о биологическом объекте; выбор из 4</div>
+        <div class="trainer-card-foot"><span class="qcount">12 пар суждений</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-13-morpho-breed.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№13 КИМ</span>
+          <span class="trainer-tag">3 балла · повышенный</span>
+        </div>
+        <div class="trainer-title">Морфо-анализ по плану</div>
+        <div class="trainer-blurb">Описание породы животного + 3 подвопроса о характеристиках</div>
+        <div class="trainer-card-foot"><span class="qcount">10 пород</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-14-anatomy.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№14 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Анатомия по рисунку</div>
+        <div class="trainer-blurb">SVG-силуэт человека · определи орган по маркеру</div>
+        <div class="trainer-card-foot"><span class="qcount">10 силуэтов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-15-term.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№15 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Биологический термин</div>
+        <div class="trainer-blurb">Определение → название термина (1 из 4)</div>
+        <div class="trainer-card-foot"><span class="qcount">12 терминов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-16-picture-labels.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№16 КИМ</span>
+          <span class="trainer-tag">2 балла · базовый</span>
+        </div>
+        <div class="trainer-title">Подписи к биологическому рисунку</div>
+        <div class="trainer-blurb">SVG-схема (цветок, корень, сердце, скелет рыбы и др.) + 4 подписи</div>
+        <div class="trainer-card-foot"><span class="qcount">10 рисунков</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-17-human-structures.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№17 КИМ</span>
+          <span class="trainer-tag">2 балла · базовый</span>
+        </div>
+        <div class="trainer-title">Структуры организма человека</div>
+        <div class="trainer-blurb">3 структуры из 6, участвующих в процессе</div>
+        <div class="trainer-card-foot"><span class="qcount">10 наборов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-18-bones-skeleton.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№18 КИМ</span>
+          <span class="trainer-tag">2 балла · повышенный</span>
+        </div>
+        <div class="trainer-title">Соответствие: кости и отделы скелета</div>
+        <div class="trainer-blurb">6 костей → верхняя или нижняя конечность</div>
+        <div class="trainer-card-foot"><span class="qcount">10 пар</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-19-ecology.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№19 КИМ</span>
+          <span class="trainer-tag">2 балла · базовый</span>
+        </div>
+        <div class="trainer-title">Экологическая характеристика</div>
+        <div class="trainer-blurb">Продуцент / консумент / редуцент · среда обитания · трофические уровни</div>
+        <div class="trainer-card-foot"><span class="qcount">10 организмов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-20-food-chain.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№20 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Пищевая цепь</div>
+        <div class="trainer-blurb">Расставить 5 звеньев от продуцента к высшему хищнику</div>
+        <div class="trainer-card-foot"><span class="qcount">10 цепей</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-21-biotic-relations.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№21 КИМ</span>
+          <span class="trainer-tag">2 балла · повышенный</span>
+        </div>
+        <div class="trainer-title">Биотические отношения</div>
+        <div class="trainer-blurb">4 пары организмов → хищничество, паразитизм, симбиоз, конкуренция</div>
+        <div class="trainer-card-foot"><span class="qcount">10 наборов</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Связка №19–21</div>
+      <h3 class="block-title">Экосистема — три задания по одному сюжету</h3>
+      <p class="block-blurb">Формат реального экзамена: одна экосистема (8 биомов на выбор) → три связанных задания: №19 экологическая роль + №20 пищевая цепь + №21 биотические отношения. Суммарно 4 балла за один сюжет.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-bio-19-20-21-ecosystem.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№19–21 КИМ</span>
+          <span class="trainer-tag">4 балла · базовый+повышенный</span>
+        </div>
+        <div class="trainer-title">Экосистема — связка трёх заданий</div>
+        <div class="trainer-blurb">Одна экосистема (8 биомов: лес, луг, степь, тайга, водоём, тундра, болото, хвойный лес) → 3 связанных задания: экологическая роль + пищевая цепь + биотические отношения</div>
+        <div class="trainer-card-foot"><span class="qcount">8 экосистем</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Часть 2 · развёрнутые ответы</div>
+      <h3 class="block-title">5 заданий · 13 баллов</h3>
+      <p class="block-blurb">Задания повышенного и высокого уровня: первая помощь по типу травмы, анализ классических экспериментов (Спалланцани, Пристли, Павлов), работа с биологическим текстом, статистическими таблицами, расчёты по таблицам энерготрат и калорийности.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-bio-22-injury-aid.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№22 КИМ</span>
+          <span class="trainer-tag">2 балла · повышенный</span>
+        </div>
+        <div class="trainer-title">Травма и первая помощь</div>
+        <div class="trainer-blurb">SVG-схема повреждения · тип травмы + порядок помощи (2 подвопроса)</div>
+        <div class="trainer-card-foot"><span class="qcount">10 травм</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-23-experiment.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№23 КИМ</span>
+          <span class="trainer-tag">2 балла · повышенный</span>
+        </div>
+        <div class="trainer-title">Анализ эксперимента</div>
+        <div class="trainer-blurb">Описание классического опыта · гипотеза + интерпретация (2 подвопроса)</div>
+        <div class="trainer-card-foot"><span class="qcount">10 опытов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-24-text.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№24 КИМ</span>
+          <span class="trainer-tag">3 балла · высокий</span>
+        </div>
+        <div class="trainer-title">Биологический текст</div>
+        <div class="trainer-blurb">Длинный текст по теме + 3 вопроса по содержанию</div>
+        <div class="trainer-card-foot"><span class="qcount">10 текстов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-25-statistics.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№25 КИМ</span>
+          <span class="trainer-tag">3 балла · высокий</span>
+        </div>
+        <div class="trainer-title">Статистическая таблица</div>
+        <div class="trainer-blurb">Таблица с биологическими данными + 3 вопроса (анализ, расчёты)</div>
+        <div class="trainer-card-foot"><span class="qcount">10 таблиц</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-bio-26-calculation.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№26 КИМ</span>
+          <span class="trainer-tag">3 балла · высокий</span>
+        </div>
+        <div class="trainer-title">Расчёт по таблицам</div>
+        <div class="trainer-blurb">Таблицы энерготрат и калорийности · численный ответ с допуском ±5%</div>
+        <div class="trainer-card-foot"><span class="qcount">10 расчётов</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="intro-note" style="margin-top:48px;border-left-color:var(--biology)">
+    <p style="font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--biology);text-transform:uppercase;margin-bottom:8px">биология покрыта полностью</p>
+    <p><b>Все 26 заданий ОГЭ-2026 по биологии</b> покрыты тренажёрами — это 47 баллов из 47 в экзамене.</p>
+    <p><b>Часть 1</b> (21 задание, 34 балла) и <b>часть 2</b> (5 заданий, 13 баллов) проработаны в формате интерактивных тренажёров с пошаговыми разборами и автопроверкой. Дополнительно — <b>связка №19–21</b> по единой экосистеме (формат реального экзамена).</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <h2>Остальные предметы</h2>
+    <span class="meta">в разработке</span>
   </div>
 
   <div class="coming-section" style="border-left: 4px solid var(--math)">
@@ -550,7 +835,7 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
 </section>
 
 <footer>
-  <span>ОГЭ-2026 · v0.6.7 · открытый бесплатный курс · 2026-05-06</span>
+  <span>ОГЭ-2026 · v0.7.0 · открытый бесплатный курс · 2026-05-10</span>
   <div class="right">
     <span>источники: <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a></span>
   </div>
