@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 математика №18 — площадь по клеточкам</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="katex/katex.min.css">
+<script src="katex/katex.min.js"></script>
+<script src="katex/contrib/auto-render.min.js"></script>
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 14px;line-height:1.5}
+.expr-wrap{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:14px;
+  margin-bottom:18px;
+  text-align:center;
+  min-height:80px;
+}
+.expr-wrap svg{display:block;margin:0 auto;max-width:100%;height:auto}
+.input-block{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:14px;
+  margin-bottom:14px;
+}
+.input-row{display:flex;gap:8px;align-items:center}
+.input-label{font-size:14px;color:var(--muted);min-width:60px}
+input[type="text"]{
+  flex:1;
+  font-family:'JetBrains Mono',monospace;
+  font-size:18px;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:4px;
+  background:var(--paper);
+  color:var(--ink);
+  outline:none;
+}
+input[type="text"]:focus{border-color:var(--accent);background:white}
+input[type="text"]:disabled{cursor:not-allowed;opacity:0.7}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:6px 0}
+.hint .step{padding-left:14px;border-left:2px solid var(--accent);margin:8px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+  .expr-wrap{font-size:18px}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>математика</span><span>·</span><span>задание №18</span>
+  <span class="right">1 балл · базовый</span>
+</div>
+
+<h1>Площадь <em>на клеточной бумаге</em></h1>
+<p class="lead">Тренажёр на задание №18 ОГЭ по математике: на клеточной бумаге изображена фигура. Найди её площадь (в кв. единицах) или соотношение площадей. Размер клетки — 1×1.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · математика · задание №18 · v0.1.0 · 2026-05-10</div>
+
+<script>
+const QUESTIONS = [
+  { id:'a1',
+    figure:`<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" role="img">
+      <defs><pattern id="grid1" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#D6D0BF" stroke-width="0.6"/>
+      </pattern></defs>
+      <rect width="320" height="200" fill="white"/>
+      <rect width="320" height="200" fill="url(#grid1)"/>
+      <circle cx="80" cy="100" r="20" fill="none" stroke="#2D4A2B" stroke-width="1.6"/>
+      <circle cx="220" cy="100" r="60" fill="none" stroke="#2D4A2B" stroke-width="1.6"/>
+    </svg>`,
+    answer:9,
+    steps:[
+      'Радиус меньшего круга: $r = 1$ клетка',
+      'Радиус большего круга: $R = 3$ клетки',
+      'Отношение площадей: $\dfrac{S_{\text{больш}}}{S_{\text{мал}}} = \left(\dfrac{R}{r}\right)^2 = 3^2 = 9$'
+    ],
+    question:'Во сколько раз площадь большего круга больше меньшего?'
+  },
+  { id:'a2',
+    figure:`<svg viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg" role="img">
+      <defs><pattern id="grid2" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#D6D0BF" stroke-width="0.6"/>
+      </pattern></defs>
+      <rect width="240" height="180" fill="white"/>
+      <rect width="240" height="180" fill="url(#grid2)"/>
+      <polygon points="40,140 120,140 40,80" fill="rgba(45,74,43,0.15)" stroke="#2D4A2B" stroke-width="1.6"/>
+    </svg>`,
+    answer:6,
+    steps:[
+      'Прямоугольный треугольник с катетами 4 и 3 клетки',
+      '$S = \dfrac{1}{2} \cdot 4 \cdot 3 = 6$'
+    ],
+    question:'Найдите площадь треугольника.'
+  },
+  { id:'a3',
+    figure:`<svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg" role="img">
+      <defs><pattern id="grid3" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#D6D0BF" stroke-width="0.6"/>
+      </pattern></defs>
+      <rect width="280" height="180" fill="white"/>
+      <rect width="280" height="180" fill="url(#grid3)"/>
+      <polygon points="40,140 140,140 200,60 100,60" fill="rgba(45,74,43,0.15)" stroke="#2D4A2B" stroke-width="1.6"/>
+    </svg>`,
+    answer:20,
+    steps:[
+      'Параллелограмм: основание $a = 5$ клеток, высота $h = 4$ клетки',
+      '$S = a \cdot h = 5 \cdot 4 = 20$'
+    ],
+    question:'Найдите площадь параллелограмма.'
+  },
+  { id:'a4',
+    figure:`<svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg" role="img">
+      <defs><pattern id="grid4" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#D6D0BF" stroke-width="0.6"/>
+      </pattern></defs>
+      <rect width="280" height="180" fill="white"/>
+      <rect width="280" height="180" fill="url(#grid4)"/>
+      <polygon points="40,140 220,140 180,60 80,60" fill="rgba(45,74,43,0.15)" stroke="#2D4A2B" stroke-width="1.6"/>
+    </svg>`,
+    answer:28,
+    steps:[
+      'Трапеция: основания $a = 9$ и $b = 5$ клеток, высота $h = 4$',
+      '$S = \dfrac{a+b}{2} \cdot h = \dfrac{14}{2} \cdot 4 = 28$'
+    ],
+    question:'Найдите площадь трапеции.'
+  },
+  { id:'a5',
+    figure:`<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" role="img">
+      <defs><pattern id="grid5" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#D6D0BF" stroke-width="0.6"/>
+      </pattern></defs>
+      <rect width="280" height="200" fill="white"/>
+      <rect width="280" height="200" fill="url(#grid5)"/>
+      <polygon points="40,160 200,160 100,40" fill="rgba(45,74,43,0.15)" stroke="#2D4A2B" stroke-width="1.6"/>
+    </svg>`,
+    answer:24,
+    steps:[
+      'Треугольник: основание $a = 8$, высота $h = 6$',
+      '$S = \dfrac{1}{2} \cdot 8 \cdot 6 = 24$'
+    ],
+    question:'Найдите площадь треугольника.'
+  },
+  { id:'a6',
+    figure:`<svg viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg" role="img">
+      <defs><pattern id="grid6" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#D6D0BF" stroke-width="0.6"/>
+      </pattern></defs>
+      <rect width="240" height="220" fill="white"/>
+      <rect width="240" height="220" fill="url(#grid6)"/>
+      <polygon points="120,30 200,110 120,190 40,110" fill="rgba(45,74,43,0.15)" stroke="#2D4A2B" stroke-width="1.6"/>
+    </svg>`,
+    answer:32,
+    steps:[
+      'Ромб: диагонали $d_1 = 8$ и $d_2 = 8$ клеток',
+      '$S = \dfrac{d_1 \cdot d_2}{2} = \dfrac{8 \cdot 8}{2} = 32$'
+    ],
+    question:'Найдите площадь ромба.'
+  },
+  { id:'a7',
+    figure:`<svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" role="img">
+      <defs><pattern id="grid7" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#D6D0BF" stroke-width="0.6"/>
+      </pattern></defs>
+      <rect width="280" height="220" fill="white"/>
+      <rect width="280" height="220" fill="url(#grid7)"/>
+      <polygon points="40,180 240,180 200,60 80,60" fill="rgba(45,74,43,0.15)" stroke="#2D4A2B" stroke-width="1.6"/>
+    </svg>`,
+    answer:48,
+    steps:[
+      'Трапеция: $a = 10$, $b = 6$, $h = 6$',
+      '$S = \dfrac{16}{2} \cdot 6 = 48$'
+    ],
+    question:'Найдите площадь четырёхугольника.'
+  },
+  { id:'a8',
+    figure:`<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img">
+      <defs><pattern id="grid8" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#D6D0BF" stroke-width="0.6"/>
+      </pattern></defs>
+      <rect width="240" height="240" fill="white"/>
+      <rect width="240" height="240" fill="url(#grid8)"/>
+      <circle cx="120" cy="120" r="80" fill="rgba(45,74,43,0.15)" stroke="#2D4A2B" stroke-width="1.6"/>
+      <line x1="120" y1="120" x2="200" y2="120" stroke="#2D4A2B" stroke-width="1" stroke-dasharray="3,2"/>
+    </svg>`,
+    answer:'16*Math.PI',
+    answerOverride:50.27,
+    steps:[
+      'Радиус $R = 4$ клетки',
+      '$S = \pi R^2 = 16\pi \approx 50{,}3$'
+    ],
+    question:'Найдите площадь круга (используйте $\\pi \\approx 3{,}14$).'
+  },
+  { id:'a9',
+    figure:`<svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg" role="img">
+      <defs><pattern id="grid9" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#D6D0BF" stroke-width="0.6"/>
+      </pattern></defs>
+      <rect width="220" height="200" fill="white"/>
+      <rect width="220" height="200" fill="url(#grid9)"/>
+      <rect x="40" y="40" width="140" height="100" fill="rgba(45,74,43,0.15)" stroke="#2D4A2B" stroke-width="1.6"/>
+    </svg>`,
+    answer:35,
+    steps:[
+      'Прямоугольник: $a = 7$, $b = 5$',
+      '$S = 7 \cdot 5 = 35$'
+    ],
+    question:'Найдите площадь прямоугольника.'
+  },
+  { id:'a10',
+    figure:`<svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" role="img">
+      <defs><pattern id="grid10" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#D6D0BF" stroke-width="0.6"/>
+      </pattern></defs>
+      <rect width="280" height="220" fill="white"/>
+      <rect width="280" height="220" fill="url(#grid10)"/>
+      <polygon points="80,40 160,40 200,100 160,160 80,160 40,100" fill="rgba(45,74,43,0.15)" stroke="#2D4A2B" stroke-width="1.6"/>
+    </svg>`,
+    answer:36,
+    steps:[
+      'Шестиугольник можно разбить на прямоугольник $4 \\times 6$ в центре и два равных треугольника по бокам',
+      'Прямоугольник $4 \\times 6$: $S_1 = 24$',
+      'Каждый боковой треугольник: основание $6$, высота $2$, площадь $\\frac{1}{2} \\cdot 6 \\cdot 2 = 6$',
+      'Сумма: $24 + 2 \\cdot 6 = 36$'
+    ],
+    question:'Найдите площадь шестиугольника.'
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function rerenderMath(el){
+  if(window.renderMathInElement){
+    renderMathInElement(el, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+  }
+}
+
+function render(){
+  const q = state.current;
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">площадь</span>
+      <p class="q-text">${q.question || "Найдите площадь фигуры:"}</p>
+      <div class="expr-wrap" id="expr-wrap">${q.figure}</div>
+      <div class="input-block">
+        <div class="input-row">
+          <span class="input-label">Ответ:</span>
+          <input type="text" id="answer" placeholder="число" autocomplete="off">
+        </div>
+      </div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  rerenderMath(document.getElementById('expr-wrap'));
+  const inp = document.getElementById('answer');
+  inp.focus();
+  inp.addEventListener('input', () => {
+    document.getElementById('check').disabled = inp.value.trim() === '';
+  });
+  inp.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
+      if(!state.answered) check();
+      else next();
+    }
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+
+function parseUserNumber(raw){
+  const s = String(raw).trim().replace(',', '.').replace(/\s+/g, '');
+  if(!s) return NaN;
+  const frac = s.match(/^([+-]?(?:\d+(?:\.\d+)?|\.\d+))\/([+-]?(?:\d+(?:\.\d+)?|\.\d+))$/);
+  if(frac){
+    const den = Number(frac[2]);
+    return den === 0 ? NaN : Number(frac[1]) / den;
+  }
+  return Number(s);
+}
+
+function answerNumber(v){
+  if(typeof v === 'number') return v;
+  if(typeof v === 'string'){
+    const s = v.trim().replace(',', '.');
+    const direct = parseUserNumber(s);
+    if(!Number.isNaN(direct)) return direct;
+    // Только для внутренних эталонов из банка задач, не для пользовательского ввода.
+    if(/^[0-9+\-*/().\sMathPIsqrt]+$/.test(s)){
+      try{
+        const val = Function('"use strict"; return (' + s + ');')();
+        return Number.isFinite(val) ? val : NaN;
+      }catch(e){ return NaN; }
+    }
+  }
+  return NaN;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  const inp = document.getElementById('answer');
+  // Принимаем и точку, и запятую
+  const userVal = parseUserNumber(inp.value);
+  if(isNaN(userVal)) return;
+
+  // Точное равенство с допуском 0.001 (округления)
+  const ok = Math.abs(userVal - answerNumber(q.answer)) <= 0.001;
+
+  state.solved++;
+  if(ok){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  const formattedAns = q.answer.toString().replace('.', ',');
+  let stepsHtml = '<p style="margin:6px 0"><strong>Решение:</strong></p>';
+  q.steps.forEach(s => {
+    stepsHtml += `<p class="step">${s}</p>`;
+  });
+  stepsHtml += `<p style="margin:6px 0"><strong>Ответ:</strong> ${formattedAns}</p>`;
+
+  if(ok){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно.</strong> Ответ: ${formattedAns}.</div><div class="hint" id="hint">${stepsHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: ${formattedAns}, ваш: ${userVal}.</div><div class="hint" id="hint">${stepsHtml}</div>`;
+  }
+  rerenderMath(document.getElementById('hint'));
+
+  inp.disabled = true;
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

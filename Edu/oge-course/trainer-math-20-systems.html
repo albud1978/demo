@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 математика №20 — система уравнений</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="katex/katex.min.css">
+<script src="katex/katex.min.js"></script>
+<script src="katex/contrib/auto-render.min.js"></script>
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 14px;line-height:1.5}
+.expr-wrap{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:18px 16px;
+  margin-bottom:16px;
+  font-size:16px;
+  min-height:60px;
+  overflow-x:auto;
+  text-align:center;
+}
+.expr-wrap .katex-display{margin:0;text-align:center}
+.input-block{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:14px;
+  margin-bottom:14px;
+}
+.input-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.input-pair > div{display:flex;gap:8px;align-items:center}
+.input-pair label{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);min-width:30px}
+.input-block input{
+  flex:1;
+  font-family:'JetBrains Mono',monospace;
+  font-size:16px;
+  padding:8px 12px;
+  border:1px solid var(--border);
+  border-radius:4px;
+  background:var(--paper);
+  color:var(--ink);
+  outline:none;
+}
+.input-block input:focus{border-color:var(--accent);background:white}
+.input-block input:disabled{cursor:not-allowed;opacity:0.7}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.solution{
+  margin-top:8px;
+  padding:14px 16px;
+  background:var(--accent-soft);
+  border-left:3px solid var(--accent);
+  border-radius:0 4px 4px 0;
+  font-size:14px;
+}
+.solution .step{margin:8px 0;padding-left:12px;border-left:2px solid var(--accent)}
+.solution .step p{margin:4px 0}
+.solution h4{font-family:'Fraunces',serif;font-weight:600;font-size:14px;color:var(--accent);margin:6px 0 8px;text-transform:uppercase;letter-spacing:0.04em}
+.criteria{
+  margin-top:12px;
+  padding:10px 14px;
+  background:#FFF8E0;
+  border:1px solid #D4B952;
+  border-radius:4px;
+  font-size:13px;
+}
+.criteria h4{margin:0 0 6px;font-family:'Fraunces',serif;font-weight:600;font-size:13px;color:#7A5C00}
+.criteria ul{margin:0;padding-left:22px}
+.criteria li{margin:3px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>математика</span><span>·</span><span>задание №20</span>
+  <span class="right">2 балла · повышенный</span>
+</div>
+
+<h1>Система <em>уравнений</em></h1>
+<p class="lead">Тренажёр на задание №20 ОГЭ по математике (часть 2): реши систему уравнений. Введи пару чисел (x, y) — система проверит ответ. Затем посмотри эталонное решение и оцени свой ход решения.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">8</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · математика · задание №20 · v0.1.0 · 2026-05-10</div>
+
+<script>
+const QUESTIONS = [
+  {
+    "id": "sys1",
+    "expr": "\\begin{cases} (x-6)(y-7) = 0, \\\\ \\dfrac{y-4}{x+y-10} = 3 \\end{cases}",
+    "answers": [
+      {
+        "x": 4,
+        "y": 7
+      }
+    ],
+    "steps": [
+      "Из первого уравнения: $x = 6$ или $y = 7$.",
+      "Случай $x = 6$: подставим во второе уравнение: $\\dfrac{y-4}{6+y-10} = 3 \\Rightarrow \\dfrac{y-4}{y-4} = 3$. Получаем $1 = 3$ — нет решений.",
+      "Случай $y = 7$: подставим: $\\dfrac{7-4}{x+7-10} = 3 \\Rightarrow \\dfrac{3}{x-3} = 3 \\Rightarrow x - 3 = 1 \\Rightarrow x = 4$.",
+      "Ответ: $(4; 7)$."
+    ],
+    "criteria": [
+      "Обоснованно получен верный ответ — 2 балла",
+      "Решение доведено до конца, но допущены вычислительные ошибки — 1 балл",
+      "Решение не соответствует критериям — 0 баллов"
+    ]
+  },
+  {
+    "id": "sys2",
+    "expr": "\\begin{cases} x + y = 5, \\\\ x^2 - y^2 = 15 \\end{cases}",
+    "answers": [
+      {
+        "x": 4,
+        "y": 1
+      }
+    ],
+    "steps": [
+      "Разность квадратов: $x^2 - y^2 = (x-y)(x+y) = (x-y) \\cdot 5 = 15$.",
+      "Откуда: $x - y = 3$.",
+      "Получаем систему: $x + y = 5$ и $x - y = 3$.",
+      "Сложение: $2x = 8 \\Rightarrow x = 4$. Тогда $y = 1$.",
+      "Ответ: $(4; 1)$."
+    ],
+    "criteria": [
+      "Обоснованно получен верный ответ — 2 балла",
+      "Решение доведено до конца, но допущены вычислительные ошибки — 1 балл"
+    ]
+  },
+  {
+    "id": "sys3",
+    "expr": "\\begin{cases} 2x + 3y = 13, \\\\ x - y = 1 \\end{cases}",
+    "answers": [
+      {
+        "x": 3.2,
+        "y": 2.2
+      }
+    ],
+    "steps": [
+      "Из второго: $x = y + 1$.",
+      "Подставим в первое: $2(y+1) + 3y = 13 \\Rightarrow 5y + 2 = 13 \\Rightarrow y = 2{,}2$.",
+      "Тогда $x = 2{,}2 + 1 = 3{,}2$.",
+      "Ответ: $(3{,}2; 2{,}2)$."
+    ],
+    "criteria": [
+      "Обоснованно получен верный ответ — 2 балла",
+      "Решение доведено до конца, но допущены вычислительные ошибки — 1 балл"
+    ]
+  },
+  {
+    "id": "sys4",
+    "expr": "\\begin{cases} (x-2)(y+3) = 0, \\\\ \\dfrac{x+1}{y-2} = 1 \\end{cases}",
+    "answers": [
+      {
+        "x": 2,
+        "y": 5
+      },
+      {
+        "x": -6,
+        "y": -3
+      }
+    ],
+    "steps": [
+      "Из первого уравнения: $x = 2$ или $y = -3$.",
+      "Случай $x = 2$: $\\dfrac{2+1}{y-2} = 1 \\Rightarrow y - 2 = 3 \\Rightarrow y = 5$.",
+      "Проверка: $(2-2)(5+3)=0$, $\\dfrac{3}{3}=1$, значит $(2;5)$ — решение.",
+      "Случай $y = -3$: $\\dfrac{x+1}{-3-2} = 1 \\Rightarrow x + 1 = -5 \\Rightarrow x = -6$.",
+      "Проверка: $(-6-2)(-3+3)=0$, $\\dfrac{-5}{-5}=1$, значит $(-6;-3)$ — решение.",
+      "Ответ: $(2;5)$ или $(-6;-3)$."
+    ],
+    "criteria": [
+      "Обоснованно получены оба верных ответа — 2 балла",
+      "Получено только одно из решений или с ошибками — 1 балл"
+    ]
+  },
+  {
+    "id": "sys5",
+    "expr": "\\begin{cases} x^2 + y^2 = 25, \\\\ x + y = 7 \\end{cases}",
+    "answers": [
+      {
+        "x": 3,
+        "y": 4
+      },
+      {
+        "x": 4,
+        "y": 3
+      }
+    ],
+    "steps": [
+      "Из второго: $y = 7 - x$.",
+      "Подставим в первое: $x^2 + (7-x)^2 = 25$.",
+      "Раскроем: $x^2 + 49 - 14x + x^2 = 25 \\Rightarrow 2x^2 - 14x + 24 = 0 \\Rightarrow x^2 - 7x + 12 = 0$.",
+      "По теореме Виета: $x_1 = 3, x_2 = 4$.",
+      "Ответы: $(3; 4)$ и $(4; 3)$."
+    ],
+    "criteria": [
+      "Обоснованно получены оба ответа — 2 балла",
+      "Найден только один ответ — 1 балл"
+    ]
+  },
+  {
+    "id": "sys6",
+    "expr": "\\begin{cases} xy = 12, \\\\ x + y = 7 \\end{cases}",
+    "answers": [
+      {
+        "x": 3,
+        "y": 4
+      },
+      {
+        "x": 4,
+        "y": 3
+      }
+    ],
+    "steps": [
+      "По теореме Виета (обратной): $x$ и $y$ — корни уравнения $t^2 - 7t + 12 = 0$.",
+      "Корни: $t_1 = 3$, $t_2 = 4$.",
+      "Ответы: $(3; 4)$ и $(4; 3)$."
+    ],
+    "criteria": [
+      "Получены оба ответа — 2 балла",
+      "Только один — 1 балл"
+    ]
+  },
+  {
+    "id": "sys7",
+    "expr": "\\begin{cases} x - y = 1, \\\\ xy = 12 \\end{cases}",
+    "answers": [
+      {
+        "x": 4,
+        "y": 3
+      },
+      {
+        "x": -3,
+        "y": -4
+      }
+    ],
+    "steps": [
+      "Из первого уравнения: $x = y + 1$.",
+      "Подставим во второе: $(y+1)y = 12 \\Rightarrow y^2 + y - 12 = 0$.",
+      "Разложим: $(y+4)(y-3)=0$, значит $y=3$ или $y=-4$.",
+      "Если $y=3$, то $x=4$. Если $y=-4$, то $x=-3$.",
+      "Ответ: $(4;3)$ или $(-3;-4)$."
+    ],
+    "criteria": [
+      "Обоснованно получен верный ответ — 2 балла"
+    ]
+  },
+  {
+    "id": "sys8",
+    "expr": "\\begin{cases} \\dfrac{1}{x} + \\dfrac{1}{y} = \\dfrac{5}{6}, \\\\ x + y = 5 \\end{cases}",
+    "answers": [
+      {
+        "x": 2,
+        "y": 3
+      },
+      {
+        "x": 3,
+        "y": 2
+      }
+    ],
+    "steps": [
+      "Приведём первое к общему знаменателю: $\\dfrac{x+y}{xy} = \\dfrac{5}{6}$.",
+      "Подставим $x + y = 5$: $\\dfrac{5}{xy} = \\dfrac{5}{6}$, откуда $xy = 6$.",
+      "Получили: $x + y = 5$, $xy = 6$. По обратной теореме Виета: корни $t^2 - 5t + 6 = 0$.",
+      "Корни: $t_1 = 2$, $t_2 = 3$.",
+      "Ответы: $(2; 3)$ и $(3; 2)$."
+    ],
+    "criteria": [
+      "Получены оба ответа — 2 балла"
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, solved:0, correct:0, streak:0, answered:false, solutionShown:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function rerenderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+  }
+}
+
+
+function parseUserNumber(raw){
+  const s = String(raw).trim().replace(',', '.').replace(/\s+/g, '');
+  if(!s) return NaN;
+  const frac = s.match(/^([+-]?(?:\d+(?:\.\d+)?|\.\d+))\/([+-]?(?:\d+(?:\.\d+)?|\.\d+))$/);
+  if(frac){
+    const den = Number(frac[2]);
+    return den === 0 ? NaN : Number(frac[1]) / den;
+  }
+  return Number(s);
+}
+
+function answerNumber(v){
+  if(typeof v === 'number') return v;
+  if(typeof v === 'string'){
+    const s = v.trim().replace(',', '.');
+    const direct = parseUserNumber(s);
+    if(!Number.isNaN(direct)) return direct;
+    // Только для внутренних эталонов из банка задач, не для пользовательского ввода.
+    if(/^[0-9+\-*/().\sMathPIsqrt]+$/.test(s)){
+      try{
+        const val = Function('"use strict"; return (' + s + ');')();
+        return Number.isFinite(val) ? val : NaN;
+      }catch(e){ return NaN; }
+    }
+  }
+  return NaN;
+}
+
+function checkAnswer(userX, userY, q){
+  // Проверяем во всех корректных ответах с допуском
+  const all = [...(q.answers || []), ...(q.answersAlt || [])];
+  for(const ans of all){
+    if(Math.abs(userX - answerNumber(ans.x)) <= 0.01 && Math.abs(userY - answerNumber(ans.y)) <= 0.01) return true;
+  }
+  return false;
+}
+
+function render(){
+  const q = state.current;
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">система уравнений</span>
+      <p class="q-text">Решите систему уравнений:</p>
+      <div class="expr-wrap" id="expr-wrap">$$${q.expr}$$</div>
+      <div class="input-block">
+        <div class="input-pair">
+          <div><label>x =</label><input type="text" id="ans-x" placeholder="значение" autocomplete="off"></div>
+          <div><label>y =</label><input type="text" id="ans-y" placeholder="значение" autocomplete="off"></div>
+        </div>
+        <div style="font-size:13px;color:var(--muted);margin-top:8px">Если решений несколько — введите любое.</div>
+      </div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="show-solution">Показать решение</button>
+        <span class="right"><button class="secondary" id="next" disabled>Следующая →</button></span>
+      </div>
+      <div style="margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:right">ID: ${q.id}</div>
+    </div>
+  `;
+  rerenderMath(document.getElementById('expr-wrap'));
+
+  const inpX = document.getElementById('ans-x');
+  const inpY = document.getElementById('ans-y');
+  inpX.focus();
+  const updateBtn = () => {
+    document.getElementById('check').disabled = inpX.value.trim() === '' || inpY.value.trim() === '';
+  };
+  inpX.addEventListener('input', updateBtn);
+  inpY.addEventListener('input', updateBtn);
+
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('show-solution').addEventListener('click', () => showSolution(false));
+  document.getElementById('next').addEventListener('click', next);
+
+  state.answered = false;
+  state.solutionShown = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  const inpX = document.getElementById('ans-x');
+  const inpY = document.getElementById('ans-y');
+  const userX = parseUserNumber(inpX.value);
+  const userY = parseUserNumber(inpY.value);
+  if(isNaN(userX) || isNaN(userY)) return;
+
+  const ok = checkAnswer(userX, userY, q);
+  state.solved++;
+  if(ok){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  const ansList = (q.answers || []).map(a => `(${a.x}; ${a.y})`).join(' или ') ||
+                  (q.answersAlt || []).map(a => `(${a.x}; ${a.y})`).join(' или ');
+  fb.innerHTML = ok
+    ? `<div class="feedback ok"><strong>Верно.</strong> Один из верных ответов: ${ansList}.</div>`
+    : `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: ${ansList}. Ваш: (${userX}; ${userY}).</div>`;
+
+  inpX.disabled = true;
+  inpY.disabled = true;
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  showSolution(true);
+  updateStats();
+}
+
+function showSolution(afterCheck){
+  if(state.solutionShown) return;
+  state.solutionShown = true;
+  const q = state.current;
+  const fb = document.getElementById('feedback-area');
+  let stepsHtml = '<div class="solution"><h4>Эталонное решение:</h4>';
+  q.steps.forEach(s => { stepsHtml += `<div class="step"><p>${s}</p></div>`; });
+  stepsHtml += '</div>';
+  if(q.criteria){
+    stepsHtml += '<div class="criteria"><h4>Критерии оценивания (макс. 2 балла):</h4><ul>';
+    q.criteria.forEach(c => { stepsHtml += `<li>${c}</li>`; });
+    stepsHtml += '</ul></div>';
+  }
+  fb.innerHTML += stepsHtml;
+  rerenderMath(fb);
+  if(!afterCheck){
+    state.solved++;
+    state.streak = 0;
+    state.answered = true;
+    document.getElementById('next').disabled = false;
+    updateStats();
+  }
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

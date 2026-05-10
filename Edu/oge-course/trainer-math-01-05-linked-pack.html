@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 математика №1–5 — связка (практическая задача)</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="katex/katex.min.css">
+<script src="katex/katex.min.js"></script>
+<script src="katex/contrib/auto-render.min.js"></script>
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:760px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:620px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.context{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:16px 20px;
+  margin-bottom:18px;
+  font-size:15px;
+  line-height:1.6;
+}
+.context p{margin:0 0 10px}
+.context p:last-child{margin-bottom:0}
+.bio-table{width:100%;border-collapse:collapse;background:#FAFAF5;margin:10px 0;font-size:14px}
+.bio-table th{font-family:'Fraunces',serif;font-weight:600;font-size:13px;text-align:center;padding:8px 10px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--border)}
+.bio-table td{padding:6px 10px;text-align:center;border:1px solid var(--border);font-family:'JetBrains Mono',monospace}
+.bio-table td:first-child{font-family:'Spectral',serif;font-weight:500;text-align:left}
+.subq{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:14px 16px;
+  margin-bottom:10px;
+}
+.subq-title{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:15px;
+  color:var(--accent);
+  margin-bottom:8px;
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+}
+.subq-title-text{flex:1;padding-right:12px}
+.subq-points{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);font-weight:400}
+.subq-question{font-size:15px;margin-bottom:10px}
+.subq-input{display:flex;gap:8px;align-items:center}
+.subq-input input{
+  flex:1;
+  font-family:'JetBrains Mono',monospace;
+  font-size:16px;
+  padding:8px 12px;
+  border:1px solid var(--border);
+  border-radius:4px;
+  background:var(--paper);
+  color:var(--ink);
+  outline:none;
+}
+.subq-input input:focus{border-color:var(--accent);background:white}
+.subq-input input:disabled{cursor:not-allowed;opacity:0.7}
+.subq-input .unit{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);min-width:50px}
+.subq-status{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.subq-status.ok{background:#A8C49F;color:white}
+.subq-status.bad{background:#C99A93;color:white}
+.subq-step{
+  background:var(--accent-soft);
+  border-left:3px solid var(--accent);
+  padding:8px 12px;
+  margin-top:8px;
+  font-size:14px;
+  border-radius:0 4px 4px 0;
+}
+.subq-step p{margin:4px 0}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.partial{background:#FFF5DA;border:1px solid #D4B952;color:#7A5C00}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:28px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>математика</span><span>·</span><span>задания №1–5</span>
+  <span class="right">5 баллов · базовый</span>
+</div>
+
+<h1>Связка <em>№1–5</em></h1>
+<p class="lead">Тренажёр на задания №1–5 ОГЭ по математике: дан практический текст с описанием ситуации (шины, печь, тарифы и т. п.). По нему нужно ответить на 5 связанных вопросов — каждый по 1 баллу, всего 5.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">5</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · математика · задания №1–5 · v0.1.0 · 2026-05-10</div>
+
+<script>
+// Каждый кейс: {id, theme, context, sub[5]} — 5 sub-вопросов с числовыми ответами
+const QUESTIONS = [
+
+  // === Кейс 1: Автомобильные шины (из демо ОГЭ-2026) ===
+  { id:'tires',
+    theme:'Автомобильные шины',
+    context:`<p><strong>Автомобильные шины.</strong> Автомобильное колесо состоит из металлического диска и резиновой шины. Диаметр диска совпадает с диаметром внутреннего отверстия шины.</p>
+<p>Маркировка шины 195/65 R15 означает: первое число — ширина шины $B$ в миллиметрах; второе число — высота боковины $H$ в процентах от ширины (т. е. $H = B \\cdot 0{,}65$); буква R — радиальная конструкция; число после R — диаметр диска $d$ в дюймах ($1$ дюйм = $25{,}4$ мм).</p>
+<p>Общий диаметр колеса: $D = d + 2H$ (в одних единицах).</p>
+<p>Завод устанавливает на свои автомобили шины <strong>175/70 R12</strong>. Ниже — таблица разрешённых заменителей:</p>
+<table class="bio-table">
+<thead><tr><th>Ширина шины (мм)</th><th>12</th><th>13</th><th>14</th></tr></thead>
+<tbody>
+<tr><td>175</td><td>175/70</td><td>175/65</td><td>—</td></tr>
+<tr><td>185</td><td>—</td><td>185/60</td><td>—</td></tr>
+<tr><td>195</td><td>—</td><td>195/60</td><td>—</td></tr>
+</tbody></table>`,
+    sub:[
+      { num:1,
+        question:'Шины какой наибольшей ширины можно установить на автомобиль, если диаметр диска равен 13 дюймам? (в мм)',
+        answer:195, tol:0, unit:'мм',
+        steps:['В столбце «13 дюймов» допустимы 175/65, 185/60 и 195/60.','Наибольшая ширина — 195 мм.']
+      },
+      { num:2,
+        question:'Сколько мм составляет высота боковины шины с маркировкой 165/65 R14?',
+        answer:107.25, tol:0.01, unit:'мм',
+        steps:['$H = 165 \\cdot 0{,}65$','$H = 107{,}25$ мм']
+      },
+      { num:3,
+        question:'Найдите общий диаметр колеса, выходящего с завода (175/70 R12). (в мм)',
+        answer:549.8, tol:0.5, unit:'мм',
+        steps:[
+          'Высота боковины: $H = 175 \\cdot 0{,}7 = 122{,}5$ мм',
+          'Диаметр диска: $d = 12 \\cdot 25{,}4 = 304{,}8$ мм',
+          '$D = d + 2H = 304{,}8 + 245 = 549{,}8$ мм'
+        ]
+      },
+      { num:4,
+        question:'На сколько мм радиус колеса с шиной 185/60 R13 меньше радиуса колеса с шиной 175/65 R13?',
+        answer:2.75, tol:0.01, unit:'мм',
+        steps:[
+          'Радиус = $\\dfrac{D}{2}$. Диаметр диска одинаковый (R13).',
+          'Высота боковины 185/60: $H_1 = 185 \\cdot 0{,}6 = 111$ мм',
+          'Высота боковины 175/65: $H_2 = 175 \\cdot 0{,}65 = 113{,}75$ мм',
+          'Разность радиусов = разность высот боковин: $113{,}75 - 111 = 2{,}75$ мм'
+        ]
+      },
+      { num:5,
+        question:'На сколько процентов увеличится пробег за один оборот колеса при замене заводских шин на 175/65 R13? Округлите до десятых.',
+        answer:1.4, tol:0.05, unit:'%',
+        steps:[
+          'Пробег за оборот пропорционален длине окружности, т. е. диаметру.',
+          'Заводской диаметр (175/70 R12): $D_0 = 12 \\cdot 25{,}4 + 2 \\cdot 175 \\cdot 0{,}7 = 304{,}8 + 245 = 549{,}8$ мм',
+          'Новый (175/65 R13): $D_1 = 13 \\cdot 25{,}4 + 2 \\cdot 175 \\cdot 0{,}65 = 330{,}2 + 227{,}5 = 557{,}7$ мм',
+          'Прирост: $\\dfrac{557{,}7 - 549{,}8}{549{,}8} \\cdot 100\\% \\approx 1{,}44\\%$',
+          'Округляем до десятых: $1{,}4\\%$'
+        ]
+      }
+    ]
+  },
+
+  // === Кейс 2: Печь и теплопотери ===
+  { id:'stove',
+    theme:'Кирпичная печь',
+    context:`<p><strong>Кирпичная печь в загородном доме.</strong> Печь имеет квадратное основание со стороной $a$ и высоту $h$. Площадь её боковой поверхности равна $S_{\\text{бок}} = 4ah$. Печь отделана кафелем; цена кафеля — $С$ рублей за квадратный метр.</p>
+<p>Теплоотдача такой печи зависит от площади боковой поверхности и составляет $Q = 0{,}6 \\cdot S_{\\text{бок}}$ кВт (когда $S_{\\text{бок}}$ в м²).</p>
+<p>В доме хозяин планирует поставить печь со стороной основания $a = 0{,}9$ м и высотой $h = 2$ м. Цена кафеля $C = 1500$ руб/м².</p>`,
+    sub:[
+      { num:1,
+        question:'Найдите площадь боковой поверхности печи (в м²).',
+        answer:7.2, tol:0.01, unit:'м²',
+        steps:['$S_{\\text{бок}} = 4 \\cdot 0{,}9 \\cdot 2 = 7{,}2$ м²']
+      },
+      { num:2,
+        question:'Сколько рублей нужно заплатить за кафель для отделки боковой поверхности?',
+        answer:10800, tol:0, unit:'руб',
+        steps:['$7{,}2 \\cdot 1500 = 10\\,800$ рублей']
+      },
+      { num:3,
+        question:'Какую тепловую мощность (в кВт) даёт такая печь?',
+        answer:4.32, tol:0.005, unit:'кВт',
+        steps:['$Q = 0{,}6 \\cdot 7{,}2 = 4{,}32$ кВт']
+      },
+      { num:4,
+        question:'Хозяин рассматривает увеличение высоты до $h = 2{,}4$ м (сторона $a$ та же). На сколько м² увеличится боковая поверхность?',
+        answer:1.44, tol:0.005, unit:'м²',
+        steps:[
+          'Новое: $S_1 = 4 \\cdot 0{,}9 \\cdot 2{,}4 = 8{,}64$ м²',
+          'Старое: $S_0 = 7{,}2$ м²',
+          'Разность: $8{,}64 - 7{,}2 = 1{,}44$ м²'
+        ]
+      },
+      { num:5,
+        question:'На сколько процентов увеличится тепловая мощность при таком увеличении высоты? Округлите до целого.',
+        answer:20, tol:0.5, unit:'%',
+        steps:[
+          'Поскольку $Q \\sim S_{\\text{бок}} \\sim h$, мощность вырастет на столько же процентов, что и высота.',
+          'Прирост высоты: $\\dfrac{2{,}4 - 2}{2} \\cdot 100\\% = 20\\%$',
+          'Соответственно, мощность вырастет на $20\\%$.'
+        ]
+      }
+    ]
+  },
+
+  // === Кейс 3: Тарифные планы интернета ===
+  { id:'internet',
+    theme:'Тарифные планы',
+    context:`<p><strong>Тарифные планы интернет-провайдера.</strong> Семья выбирает между двумя тарифами на домашний интернет.</p>
+<p><strong>Тариф «Базовый»:</strong> абонентская плата $300$ руб/мес и дополнительно $5$ руб за каждый ГБ сверх $20$ ГБ включённых в плату.</p>
+<p><strong>Тариф «Премиум»:</strong> абонентская плата $750$ руб/мес, безлимитный трафик.</p>
+<p>В среднем семья потребляет $V$ ГБ в месяц. Хозяин планирует, что $V = 80$ ГБ.</p>`,
+    sub:[
+      { num:1,
+        question:'Сколько рублей в месяц составит абонентская плата за «Премиум» в год?',
+        answer:9000, tol:0, unit:'руб',
+        steps:['$750 \\cdot 12 = 9000$ руб']
+      },
+      { num:2,
+        question:'При расходе 80 ГБ в месяц сколько рублей в месяц составит плата по тарифу «Базовый»?',
+        answer:600, tol:0, unit:'руб',
+        steps:[
+          'Превышение лимита: $80 - 20 = 60$ ГБ',
+          'Доплата: $60 \\cdot 5 = 300$ руб',
+          'Итого: $300 + 300 = 600$ руб/мес'
+        ]
+      },
+      { num:3,
+        question:'На сколько рублей в год выгоднее «Базовый» при таком потреблении?',
+        answer:1800, tol:0, unit:'руб',
+        steps:[
+          'Разность за месяц: $750 - 600 = 150$ руб',
+          'За год: $150 \\cdot 12 = 1800$ руб'
+        ]
+      },
+      { num:4,
+        question:'При каком количестве ГБ в месяц расходы по тарифам сравняются? (Дать ответ в ГБ)',
+        answer:110, tol:0, unit:'ГБ',
+        steps:[
+          'Уравнение: $300 + 5(V - 20) = 750$',
+          '$5(V - 20) = 450$',
+          '$V - 20 = 90$, откуда $V = 110$ ГБ'
+        ]
+      },
+      { num:5,
+        question:'На сколько процентов больше тарифа «Базовый» составляет тариф «Премиум» при потреблении 80 ГБ? Округлите до целого.',
+        answer:25, tol:0.5, unit:'%',
+        steps:[
+          '«Премиум»: $750$ руб',
+          '«Базовый» при 80 ГБ: $600$ руб',
+          'Разность: $750 - 600 = 150$ руб',
+          'Доля от «Базового»: $\\dfrac{150}{600} \\cdot 100\\% = 25\\%$'
+        ]
+      }
+    ]
+  },
+
+  // === Кейс 4: Полис ОСАГО ===
+  { id:'osago',
+    theme:'Полис ОСАГО',
+    context:`<p><strong>Стоимость полиса ОСАГО.</strong> Стоимость рассчитывается по формуле: $T = T_{\\text{баз}} \\cdot K_T \\cdot K_{\\text{БМ}} \\cdot K_{\\text{ВС}} \\cdot K_O$, где:</p>
+<ul style="margin:6px 0 10px 22px;padding:0">
+<li>$T_{\\text{баз}}$ — базовый тариф (для легкового авто 5500 руб);</li>
+<li>$K_T$ — территориальный коэффициент;</li>
+<li>$K_{\\text{БМ}}$ — коэффициент бонус-малус (зависит от страховой истории);</li>
+<li>$K_{\\text{ВС}}$ — коэффициент возраста и стажа;</li>
+<li>$K_O$ — коэффициент ограничения числа лиц, допущенных к управлению.</li>
+</ul>
+<p>Семья Ивановых страхует свой автомобиль. Их данные: $K_T = 1{,}3$, $K_{\\text{БМ}} = 0{,}8$, $K_{\\text{ВС}} = 1{,}0$, $K_O = 1{,}0$.</p>`,
+    sub:[
+      { num:1,
+        question:'Найдите стоимость полиса ОСАГО для Ивановых (в рублях).',
+        answer:5720, tol:0.5, unit:'руб',
+        steps:[
+          '$T = 5500 \\cdot 1{,}3 \\cdot 0{,}8 \\cdot 1{,}0 \\cdot 1{,}0$',
+          '$T = 5500 \\cdot 1{,}04 = 5720$ руб'
+        ]
+      },
+      { num:2,
+        question:'В прошлом году коэффициент $K_{\\text{БМ}}$ у Ивановых был $1{,}0$ (без скидки). Сколько они платили тогда (в рублях)?',
+        answer:7150, tol:0.5, unit:'руб',
+        steps:[
+          '$T = 5500 \\cdot 1{,}3 \\cdot 1{,}0 \\cdot 1{,}0 \\cdot 1{,}0 = 7150$ руб'
+        ]
+      },
+      { num:3,
+        question:'На сколько процентов снизилась стоимость полиса в этом году по сравнению с прошлым? Ответ — целое число.',
+        answer:20, tol:0.5, unit:'%',
+        steps:[
+          'Снижение: $\\dfrac{7150 - 5720}{7150} \\cdot 100\\%$',
+          '$= \\dfrac{1430}{7150} \\cdot 100\\% = 20\\%$',
+          'Также видно из коэффициента: $K_{\\text{БМ}} = 0{,}8$ означает скидку $20\\%$.'
+        ]
+      },
+      { num:4,
+        question:'Если включить в полис ещё одного водителя, коэффициент $K_O$ станет $1{,}8$. Сколько в этом случае будет стоить полис (в рублях)?',
+        answer:10296, tol:1, unit:'руб',
+        steps:[
+          '$T = 5500 \\cdot 1{,}3 \\cdot 0{,}8 \\cdot 1{,}0 \\cdot 1{,}8$',
+          '$T = 5720 \\cdot 1{,}8 = 10\\,296$ руб'
+        ]
+      },
+      { num:5,
+        question:'На сколько рублей увеличится стоимость полиса при включении второго водителя?',
+        answer:4576, tol:1, unit:'руб',
+        steps:[
+          'Разность: $10\\,296 - 5720 = 4576$ руб'
+        ]
+      }
+    ]
+  },
+
+  // === Кейс 5: Теплицы и площадь участка ===
+  { id:'greenhouse',
+    theme:'Теплицы на участке',
+    context:`<p><strong>Дачник планирует поставить теплицы.</strong> Участок прямоугольной формы $20 \\times 30$ м. Теплицы — также прямоугольные, размером $3 \\times 6$ м каждая.</p>
+<p>Между теплицами и от теплиц до краёв участка должно быть не менее $1$ м для прохода. Теплицы устанавливаются параллельно длинной стороне участка ($30$ м).</p>
+<p>Стоимость одной теплицы 25 000 руб; стоимость подготовки участка (фундамент) — 1500 руб/м² под теплицей.</p>`,
+    sub:[
+      { num:1,
+        question:'Найдите площадь всего участка (в м²).',
+        answer:600, tol:0, unit:'м²',
+        steps:['$S = 20 \\cdot 30 = 600$ м²']
+      },
+      { num:2,
+        question:'Какова площадь одной теплицы (в м²)?',
+        answer:18, tol:0, unit:'м²',
+        steps:['$S_1 = 3 \\cdot 6 = 18$ м²']
+      },
+      { num:3,
+        question:'Сколько теплиц можно поставить вдоль длинной стороны (длина 30 м, длина теплицы 6 м, проходы по 1 м с обеих сторон каждой теплицы)? Подсказка: общая длина $n$ теплиц с проходами равна $1 + n \\cdot (6 + 1) = 1 + 7n$, и она $\\le 30$.',
+        answer:4, tol:0, unit:'шт',
+        steps:[
+          'Условие: $1 + 7n \\le 30$',
+          '$7n \\le 29$',
+          '$n \\le 4{,}14$, целая часть — $4$.'
+        ]
+      },
+      { num:4,
+        question:'Сколько рублей стоит закупка 4 теплиц?',
+        answer:100000, tol:0, unit:'руб',
+        steps:['$4 \\cdot 25\\,000 = 100\\,000$ руб']
+      },
+      { num:5,
+        question:'Сколько рублей стоит фундамент под все 4 теплицы?',
+        answer:108000, tol:0, unit:'руб',
+        steps:[
+          'Площадь под 4 теплицами: $4 \\cdot 18 = 72$ м²',
+          'Стоимость: $72 \\cdot 1500 = 108\\,000$ руб'
+        ]
+      }
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, picks:[null,null,null,null,null], solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function rerenderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+  }
+}
+
+function render(){
+  const q = state.current;
+  let subqHtml = '';
+  q.sub.forEach((sq, si) => {
+    subqHtml += `
+      <div class="subq" data-si="${si}">
+        <div class="subq-title">
+          <span class="subq-title-text">№${sq.num}.</span>
+          <span class="subq-points">1 балл</span>
+        </div>
+        <div class="subq-question">${sq.question}</div>
+        <div class="subq-input">
+          <input type="text" data-si="${si}" placeholder="число" autocomplete="off">
+          <span class="unit">${sq.unit}</span>
+          <span class="subq-status" id="status-${si}"></span>
+        </div>
+        <div id="step-${si}"></div>
+      </div>
+    `;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">${q.theme}</span>
+      <div class="context">${q.context}</div>
+      ${subqHtml}
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить все</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  rerenderMath(document.getElementById('main'));
+
+  state.picks = [null, null, null, null, null];
+  document.querySelectorAll('input[type="text"][data-si]').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const filledCount = Array.from(document.querySelectorAll('input[type="text"][data-si]'))
+                              .filter(i => i.value.trim() !== '').length;
+      document.getElementById('check').disabled = filledCount === 0;
+    });
+    inp.addEventListener('keydown', e => {
+      if(e.key === 'Enter'){
+        if(!state.answered){
+          // переход к следующему inputу или проверка
+          const allInputs = Array.from(document.querySelectorAll('input[type="text"][data-si]'));
+          const idx = allInputs.indexOf(e.target);
+          if(idx < allInputs.length - 1){
+            allInputs[idx+1].focus();
+          } else {
+            check();
+          }
+        } else {
+          next();
+        }
+      }
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+  // фокус на первом поле
+  setTimeout(() => document.querySelector('input[type="text"][data-si="0"]')?.focus(), 100);
+}
+
+
+function parseUserNumber(raw){
+  const s = String(raw).trim().replace(',', '.').replace(/\s+/g, '');
+  if(!s) return NaN;
+  const frac = s.match(/^([+-]?(?:\d+(?:\.\d+)?|\.\d+))\/([+-]?(?:\d+(?:\.\d+)?|\.\d+))$/);
+  if(frac){
+    const den = Number(frac[2]);
+    return den === 0 ? NaN : Number(frac[1]) / den;
+  }
+  return Number(s);
+}
+
+function answerNumber(v){
+  if(typeof v === 'number') return v;
+  if(typeof v === 'string'){
+    const s = v.trim().replace(',', '.');
+    const direct = parseUserNumber(s);
+    if(!Number.isNaN(direct)) return direct;
+    // Только для внутренних эталонов из банка задач, не для пользовательского ввода.
+    if(/^[0-9+\-*/().\sMathPIsqrt]+$/.test(s)){
+      try{
+        const val = Function('"use strict"; return (' + s + ');')();
+        return Number.isFinite(val) ? val : NaN;
+      }catch(e){ return NaN; }
+    }
+  }
+  return NaN;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  let countCorrect = 0;
+  q.sub.forEach((sq, si) => {
+    const inp = document.querySelector(`input[data-si="${si}"]`);
+    const val = inp.value.replace(',', '.').trim();
+    const userVal = val === '' ? NaN : parseUserNumber(val);
+    state.picks[si] = userVal;
+    inp.disabled = true;
+    const status = document.getElementById(`status-${si}`);
+    const stepBlock = document.getElementById(`step-${si}`);
+    let stepsHtml = '<div class="subq-step">';
+    sq.steps.forEach(s => {
+      stepsHtml += `<p>${s}</p>`;
+    });
+    stepsHtml += `<p><strong>Ответ:</strong> ${sq.answer.toString().replace('.', ',')} ${sq.unit}</p></div>`;
+    stepBlock.innerHTML = stepsHtml;
+    if(!isNaN(userVal) && Math.abs(userVal - answerNumber(sq.answer)) <= sq.tol){
+      status.classList.add('ok');
+      status.textContent = '✓';
+      countCorrect++;
+    } else {
+      status.classList.add('bad');
+      status.textContent = '✗';
+    }
+  });
+  rerenderMath(document.getElementById('main'));
+
+  state.solved++;
+  if(countCorrect === 5){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  let cls = 'bad', msg;
+  if(countCorrect === 5){ cls = 'ok'; msg = `<strong>Верно (5 баллов).</strong> Все пять подзадач решены правильно.`; }
+  else if(countCorrect >= 1){ cls = 'partial'; msg = `<strong>Частично (${countCorrect} ${countCorrect===1?'балл':'балла'}).</strong> Из 5 подзадач решено ${countCorrect}.`; }
+  else { msg = `<strong>0 баллов.</strong> Ни одна подзадача не решена правильно. Изучи решения и попробуй следующий кейс.`; }
+  fb.innerHTML = `<div class="feedback ${cls}">${msg}</div>`;
+
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

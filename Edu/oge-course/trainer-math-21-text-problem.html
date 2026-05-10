@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 математика №21 — текстовая задача</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="katex/katex.min.css">
+<script src="katex/katex.min.js"></script>
+<script src="katex/contrib/auto-render.min.js"></script>
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 14px;line-height:1.5}
+.expr-wrap{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:18px 16px;
+  margin-bottom:16px;
+  font-size:16px;
+  min-height:60px;
+  overflow-x:auto;
+  text-align:center;
+}
+.expr-wrap .katex-display{margin:0;text-align:center}
+.input-block{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:14px;
+  margin-bottom:14px;
+}
+.input-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.input-pair > div{display:flex;gap:8px;align-items:center}
+.input-pair label{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);min-width:30px}
+.input-block input{
+  flex:1;
+  font-family:'JetBrains Mono',monospace;
+  font-size:16px;
+  padding:8px 12px;
+  border:1px solid var(--border);
+  border-radius:4px;
+  background:var(--paper);
+  color:var(--ink);
+  outline:none;
+}
+.input-block input:focus{border-color:var(--accent);background:white}
+.input-block input:disabled{cursor:not-allowed;opacity:0.7}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.solution{
+  margin-top:8px;
+  padding:14px 16px;
+  background:var(--accent-soft);
+  border-left:3px solid var(--accent);
+  border-radius:0 4px 4px 0;
+  font-size:14px;
+}
+.solution .step{margin:8px 0;padding-left:12px;border-left:2px solid var(--accent)}
+.solution .step p{margin:4px 0}
+.solution h4{font-family:'Fraunces',serif;font-weight:600;font-size:14px;color:var(--accent);margin:6px 0 8px;text-transform:uppercase;letter-spacing:0.04em}
+.criteria{
+  margin-top:12px;
+  padding:10px 14px;
+  background:#FFF8E0;
+  border:1px solid #D4B952;
+  border-radius:4px;
+  font-size:13px;
+}
+.criteria h4{margin:0 0 6px;font-family:'Fraunces',serif;font-weight:600;font-size:13px;color:#7A5C00}
+.criteria ul{margin:0;padding-left:22px}
+.criteria li{margin:3px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>математика</span><span>·</span><span>задание №21</span>
+  <span class="right">2 балла · повышенный</span>
+</div>
+
+<h1>Текстовая <em>задача</em></h1>
+<p class="lead">Тренажёр на задание №21 ОГЭ по математике (часть 2): задачи на проценты, смеси, движение, совместную работу. Введи численный ответ; затем посмотри эталонное решение и сверь свой ход решения.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">8</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · математика · задание №21 · v0.1.0 · 2026-05-10</div>
+
+<script>
+const QUESTIONS = [
+  { id:'tx1',
+    expr:'\\text{Имеются два сосуда с растворами кислоты по 10 кг и 16 кг разной концентрации. Если их слить, получится раствор 55\\%. Если слить равные массы — получится 61\\%. Сколько процентов кислоты в первом сосуде?}',
+    answers:[{value:87, tol:0.5}],
+    steps:[
+      'Пусть концентрации $c_1$ и $c_2$ (в %).',
+      'Слив всё: $\\dfrac{10c_1 + 16c_2}{26} = 55$, откуда $10c_1 + 16c_2 = 1430$.',
+      'Слив равные массы: $\\dfrac{c_1 + c_2}{2} = 61$, откуда $c_1 + c_2 = 122$.',
+      'Из второго: $c_2 = 122 - c_1$. Подставим в первое: $10c_1 + 16(122 - c_1) = 1430$.',
+      '$10c_1 + 1952 - 16c_1 = 1430 \\Rightarrow -6c_1 = -522 \\Rightarrow c_1 = 87$.',
+      'Ответ: 87%.'
+    ],
+    criteria:['Ход решения верный, получен верный ответ — 2 балла', 'Верно составлена модель, но ошибки в решении — 1 балл']
+  },
+  { id:'tx2',
+    expr:'\\text{Поезд проехал из A в B со скоростью 60 км/ч, а обратно — со скоростью 40 км/ч. Найдите среднюю скорость на всём пути.}',
+    answers:[{value:48, tol:0.5}],
+    steps:[
+      'Обозначим расстояние AB через $S$.',
+      'Время туда: $t_1 = \\dfrac{S}{60}$. Время обратно: $t_2 = \\dfrac{S}{40}$.',
+      'Общее время: $t = t_1 + t_2 = \\dfrac{S}{60} + \\dfrac{S}{40} = \\dfrac{2S+3S}{120} = \\dfrac{S}{24}$.',
+      'Общий путь: $2S$. Средняя скорость: $v = \\dfrac{2S}{S/24} = 48$ км/ч.',
+      'Ответ: 48 км/ч.'
+    ],
+    criteria:['Верный ответ с обоснованием — 2 балла']
+  },
+  { id:'tx3',
+    expr:'\\text{Двое рабочих, работая вместе, выполнят заказ за 6 дней. Один из них выполнит весь заказ за 10 дней. За сколько дней выполнит весь заказ второй рабочий?}',
+    answers:[{value:15, tol:0}],
+    steps:[
+      'Производительность первого: $\\dfrac{1}{10}$ работы в день.',
+      'Производительность совместная: $\\dfrac{1}{6}$ работы в день.',
+      'Производительность второго: $\\dfrac{1}{6} - \\dfrac{1}{10} = \\dfrac{5-3}{30} = \\dfrac{1}{15}$.',
+      'Значит, второй сделает работу за 15 дней.',
+      'Ответ: 15.'
+    ],
+    criteria:['Верный ответ с обоснованием — 2 балла']
+  },
+  { id:'tx4',
+    expr:'\\text{Магазин снизил цену на товар сначала на 20\\%, потом ещё на 10\\%. На сколько процентов в итоге снизилась цена?}',
+    answers:[{value:28, tol:0}],
+    steps:[
+      'Пусть исходная цена 100.',
+      'После первой скидки: $100 \\cdot 0{,}8 = 80$.',
+      'После второй скидки: $80 \\cdot 0{,}9 = 72$.',
+      'Снижение: $100 - 72 = 28$, т. е. 28%.',
+      'Ответ: 28%.'
+    ],
+    criteria:['Верный ответ с обоснованием — 2 балла']
+  },
+  { id:'tx5',
+    expr:'\\text{Туристический катер прошёл расстояние между двумя пристанями по течению за 4 часа, а обратно — за 5 часов. Найдите скорость течения, если собственная скорость катера 18 км/ч.}',
+    answers:[{value:2, tol:0}],
+    steps:[
+      'Пусть скорость течения $v$ км/ч. Скорость по течению: $18+v$, против: $18-v$.',
+      'Расстояние одинаково: $4(18+v) = 5(18-v)$.',
+      '$72 + 4v = 90 - 5v \\Rightarrow 9v = 18 \\Rightarrow v = 2$.',
+      'Ответ: 2 км/ч.'
+    ],
+    criteria:['Верный ответ с обоснованием — 2 балла']
+  },
+  { id:'tx6',
+    expr:'\\text{Из города A в город B одновременно выехали два автомобиля. Скорость первого 80 км/ч, второго — 60 км/ч. Через сколько часов первый автомобиль будет на 60 км впереди второго?}',
+    answers:[{value:3, tol:0}],
+    steps:[
+      'Разница скоростей: $80 - 60 = 20$ км/ч.',
+      'Время до отрыва на 60 км: $\\dfrac{60}{20} = 3$ часа.',
+      'Ответ: 3.'
+    ],
+    criteria:['Верный ответ — 2 балла']
+  },
+  { id:'tx7',
+    expr:'\\text{Сплав состоит из 30\\% серебра. Сколько граммов чистого серебра нужно добавить к 200 г сплава, чтобы получить 50\\%-ный сплав?}',
+    answers:[{value:80, tol:0}],
+    steps:[
+      'В исходном сплаве серебра: $200 \\cdot 0{,}3 = 60$ г.',
+      'Пусть добавили $x$ г чистого серебра. Тогда:',
+      '$\\dfrac{60 + x}{200 + x} = 0{,}5$.',
+      '$60 + x = 100 + 0{,}5x \\Rightarrow 0{,}5x = 40 \\Rightarrow x = 80$.',
+      'Ответ: 80 г.'
+    ],
+    criteria:['Верный ответ с обоснованием — 2 балла']
+  },
+  { id:'tx8',
+    expr:'\\text{Сумма двух чисел равна 26, а их произведение равно 165. Найдите большее из этих чисел.}',
+    answers:[{value:15, tol:0}],
+    steps:[
+      'По обратной теореме Виета числа — корни уравнения $t^2 - 26t + 165 = 0$.',
+      'Дискриминант: $D = 676 - 660 = 16$, $\\sqrt{D} = 4$.',
+      'Корни: $t = \\dfrac{26 \\pm 4}{2}$, т. е. $11$ и $15$.',
+      'Большее: 15.',
+      'Ответ: 15.'
+    ],
+    criteria:['Верный ответ с обоснованием — 2 балла']
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, solved:0, correct:0, streak:0, answered:false, solutionShown:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function rerenderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+  }
+}
+
+
+function parseUserNumber(raw){
+  const s = String(raw).trim().replace(',', '.').replace(/\s+/g, '');
+  if(!s) return NaN;
+  const frac = s.match(/^([+-]?(?:\d+(?:\.\d+)?|\.\d+))\/([+-]?(?:\d+(?:\.\d+)?|\.\d+))$/);
+  if(frac){
+    const den = Number(frac[2]);
+    return den === 0 ? NaN : Number(frac[1]) / den;
+  }
+  return Number(s);
+}
+
+function answerNumber(v){
+  if(typeof v === 'number') return v;
+  if(typeof v === 'string'){
+    const s = v.trim().replace(',', '.');
+    const direct = parseUserNumber(s);
+    if(!Number.isNaN(direct)) return direct;
+    // Только для внутренних эталонов из банка задач, не для пользовательского ввода.
+    if(/^[0-9+\-*/().\sMathPIsqrt]+$/.test(s)){
+      try{
+        const val = Function('"use strict"; return (' + s + ');')();
+        return Number.isFinite(val) ? val : NaN;
+      }catch(e){ return NaN; }
+    }
+  }
+  return NaN;
+}
+
+function checkSingle(userVal, q){
+  const all = q.answers || [];
+  for(const a of all){
+    const tol = a.tol !== undefined ? a.tol : 0.01;
+    if(Math.abs(userVal - answerNumber(a.value)) <= tol) return true;
+  }
+  return false;
+}
+
+function render(){
+  const q = state.current;
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">текстовая задача</span>
+      <p class="q-text">Решите задачу:</p>
+      <div class="expr-wrap" id="expr-wrap">$$${q.expr}$$</div>
+      <div class="input-block">
+        <div style="display:flex;gap:8px;align-items:center">
+          <label style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);min-width:60px">Ответ:</label>
+          <input type="text" id="ans-x" placeholder="число" autocomplete="off" style="flex:1;font-family:'JetBrains Mono',monospace;font-size:16px;padding:8px 12px;border:1px solid var(--border);border-radius:4px;background:var(--paper);color:var(--ink);outline:none;">
+        </div>
+      </div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="show-solution">Показать решение</button>
+        <span class="right"><button class="secondary" id="next" disabled>Следующая →</button></span>
+      </div>
+      <div style="margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:right">ID: ${q.id}</div>
+    </div>
+  `;
+  rerenderMath(document.getElementById('expr-wrap'));
+
+  const inpX = document.getElementById('ans-x');
+  inpX.focus();
+  const updateBtn = () => {
+    document.getElementById('check').disabled = inpX.value.trim() === '';
+  };
+  inpX.addEventListener('input', updateBtn);
+
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('show-solution').addEventListener('click', () => showSolution(false));
+  document.getElementById('next').addEventListener('click', next);
+
+  state.answered = false;
+  state.solutionShown = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  const inpX = document.getElementById('ans-x');
+  const userVal = parseUserNumber(inpX.value);
+  if(isNaN(userVal)) return;
+
+  const ok = checkSingle(userVal, q);
+  state.solved++;
+  if(ok){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  const ansList = (q.answers || []).map(a => a.value.toString().replace('.', ',')).join(' или ');
+  fb.innerHTML = ok
+    ? `<div class="feedback ok"><strong>Верно.</strong> Ответ: ${ansList}.</div>`
+    : `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: ${ansList}. Ваш: ${userVal}.</div>`;
+
+  inpX.disabled = true;
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  showSolution(true);
+  updateStats();
+}
+
+function showSolution(afterCheck){
+  if(state.solutionShown) return;
+  state.solutionShown = true;
+  const q = state.current;
+  const fb = document.getElementById('feedback-area');
+  let stepsHtml = '<div class="solution"><h4>Эталонное решение:</h4>';
+  q.steps.forEach(s => { stepsHtml += `<div class="step"><p>${s}</p></div>`; });
+  stepsHtml += '</div>';
+  if(q.criteria){
+    stepsHtml += '<div class="criteria"><h4>Критерии оценивания (макс. 2 балла):</h4><ul>';
+    q.criteria.forEach(c => { stepsHtml += `<li>${c}</li>`; });
+    stepsHtml += '</ul></div>';
+  }
+  fb.innerHTML += stepsHtml;
+  rerenderMath(fb);
+  if(!afterCheck){
+    state.solved++;
+    state.streak = 0;
+    state.answered = true;
+    document.getElementById('next').disabled = false;
+    updateStats();
+  }
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

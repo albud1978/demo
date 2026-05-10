@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 математика №13 — неравенство по графику</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="katex/katex.min.css">
+<script src="katex/katex.min.js"></script>
+<script src="katex/contrib/auto-render.min.js"></script>
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 14px;line-height:1.5}
+.svg-wrap{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:14px;
+  margin-bottom:16px;
+  text-align:center;
+}
+.svg-wrap svg{display:block;margin:0 auto;max-width:100%;height:auto}
+.options{display:flex;flex-direction:column;gap:6px}
+.option{display:flex;gap:10px;align-items:center;padding:12px 14px;border:1px solid var(--border);background:white;border-radius:4px;cursor:pointer;transition:all 0.12s;user-select:none}
+.option:hover:not(.locked){border-color:var(--accent)}
+.option.selected{border-color:var(--accent);background:#F0EDE0}
+.option.locked{cursor:not-allowed}
+.option-num{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;flex-shrink:0;width:28px;height:28px;border:1px solid var(--border);background:var(--paper);display:flex;align-items:center;justify-content:center;border-radius:50%}
+.option.selected .option-num{background:var(--accent);color:white;border-color:var(--accent)}
+.option-text{flex:1;font-size:18px}
+.option.correct-mark{background:#E1ECDD;border-color:#A8C49F}
+.option.correct-mark .option-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.option.wrong-mark{background:#F2E0DC;border-color:#C99A93}
+.option.wrong-mark .option-num{background:#C99A93;color:white;border-color:#C99A93}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:6px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>математика</span><span>·</span><span>задание №13</span>
+  <span class="right">1 балл · базовый</span>
+</div>
+
+<h1><em>Неравенство</em> по графику</h1>
+<p class="lead">Тренажёр на задание №13 ОГЭ по математике: на числовой прямой изображено решение неравенства. Из четырёх вариантов выбери соответствующее неравенство.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · математика · задание №13 · v0.1.0 · 2026-05-10</div>
+
+<script>
+// SVG-числовая прямая: показывает диапазон [xMin, xMax] с тиками и точкой A в позиции x_a
+function buildInequality(xMin, xMax, ticks, regions){
+  const W = 600, H = 70;
+  const PAD = 30;
+  const innerW = W - 2*PAD;
+  const xToPx = x => PAD + (x - xMin) / (xMax - xMin) * innerW;
+  let html = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img">`;
+  html += `<line x1="${PAD-10}" y1="35" x2="${W-PAD+10}" y2="35" stroke="#2C2C2C" stroke-width="1.4"/>`;
+  html += `<polygon points="${W-PAD+10},35 ${W-PAD+2},31 ${W-PAD+2},39" fill="#2C2C2C"/>`;
+  regions.forEach(r => {
+    const xFrom = r.from === null ? PAD - 10 : xToPx(r.from);
+    const xTo = r.to === null ? W - PAD + 10 : xToPx(r.to);
+    html += `<line x1="${xFrom}" y1="35" x2="${xTo}" y2="35" stroke="#2D4A2B" stroke-width="4"/>`;
+    if(r.from === null){
+      html += `<polygon points="${PAD-10},35 ${PAD-2},31 ${PAD-2},39" fill="#2D4A2B"/>`;
+    }
+  });
+  ticks.forEach(t => {
+    const x = xToPx(t);
+    html += `<line x1="${x}" y1="30" x2="${x}" y2="40" stroke="#2C2C2C" stroke-width="1.2"/>`;
+    html += `<text x="${x}" y="58" text-anchor="middle" font-size="13" fill="#6B6B6B" font-family="JetBrains Mono, monospace">${t}</text>`;
+  });
+  regions.forEach(r => {
+    if(r.from !== null){
+      const xPx = xToPx(r.from);
+      const fill = r.fromOpen ? 'white' : '#2D4A2B';
+      html += `<circle cx="${xPx}" cy="35" r="5" fill="${fill}" stroke="#2D4A2B" stroke-width="1.5"/>`;
+    }
+    if(r.to !== null){
+      const xPx = xToPx(r.to);
+      const fill = r.toOpen ? 'white' : '#2D4A2B';
+      html += `<circle cx="${xPx}" cy="35" r="5" fill="${fill}" stroke="#2D4A2B" stroke-width="1.5"/>`;
+    }
+  });
+  html += `</svg>`;
+  return html;
+}
+
+const QUESTIONS = [
+  { id:'i1', xMin:-3, xMax:10, ticks:[-3, 0, 7, 10],
+    regions:[{from:0, to:7, fromOpen:false, toOpen:false}],
+    options:['x^2 - 7x \\le 0', 'x^2 - 49 \\ge 0', 'x^2 - 7x \\ge 0', 'x^2 - 49 \\le 0'],
+    correct:0,
+    note:'$x^2 - 7x \\le 0 \\Leftrightarrow x(x-7) \\le 0$. Корни: 0 и 7, парабола вверх — решение [0; 7]. Концы закрашены (нестрогое неравенство).'
+  },
+  { id:'i2', xMin:-5, xMax:5, ticks:[-5, -2, 2, 5],
+    regions:[{from:null, to:-2, fromOpen:false, toOpen:true}, {from:2, to:null, fromOpen:true, toOpen:false}],
+    options:['x^2 < 4', 'x^2 > 4', 'x^2 \\le 4', 'x < 2'],
+    correct:1,
+    note:'$x^2 > 4$ означает $x < -2$ или $x > 2$. Точки $\\pm 2$ открыты — строгое неравенство.'
+  },
+  { id:'i3', xMin:-3, xMax:7, ticks:[-3, 0, 3, 7],
+    regions:[{from:null, to:0, fromOpen:false, toOpen:true}, {from:3, to:null, fromOpen:true, toOpen:false}],
+    options:['x(x-3) > 0', 'x(x-3) < 0', 'x(x-3) \\ge 0', 'x(x-3) \\le 0'],
+    correct:0,
+    note:'$x(x-3) > 0$: парабола вверх с корнями 0 и 3. Положительна вне корней — точки открыты.'
+  },
+  { id:'i4', xMin:-5, xMax:5, ticks:[-5, -3, 3, 5],
+    regions:[{from:-3, to:3, fromOpen:false, toOpen:false}],
+    options:['x^2 < 9', 'x^2 > 9', 'x^2 \\le 9', 'x^2 \\ge 9'],
+    correct:2,
+    note:'$x^2 \\le 9 \\Leftrightarrow -3 \\le x \\le 3$. Концы закрашены — нестрогое неравенство.'
+  },
+  { id:'i5', xMin:-2, xMax:8, ticks:[-2, 1, 5, 8],
+    regions:[{from:1, to:5, fromOpen:true, toOpen:true}],
+    options:['(x-1)(x-5) > 0', '(x-1)(x-5) < 0', '(x+1)(x+5) > 0', '(x-1)(x+5) < 0'],
+    correct:1,
+    note:'$(x-1)(x-5) < 0$: парабола вверх с корнями 1 и 5 — отрицательна между корнями. Концы открыты.'
+  },
+  { id:'i6', xMin:-5, xMax:3, ticks:[-5, -4, 0, 3],
+    regions:[{from:null, to:-4, fromOpen:false, toOpen:false}, {from:0, to:null, fromOpen:false, toOpen:false}],
+    options:['x(x+4) \\ge 0', 'x(x+4) \\le 0', '(x-4)(x) \\ge 0', '(x+4)x < 0'],
+    correct:0,
+    note:'$x(x+4) \\ge 0$: корни $-4$ и $0$. Парабола вверх — неотрицательна вне корней. Концы закрашены.'
+  },
+  { id:'i7', xMin:-2, xMax:8, ticks:[-2, 2, 6, 8],
+    regions:[{from:2, to:6, fromOpen:false, toOpen:false}],
+    options:['(x-2)(x-6) \\le 0', '(x-2)(x-6) \\ge 0', '(x+2)(x-6) \\le 0', 'x(x-6) \\le 0'],
+    correct:0,
+    note:'$(x-2)(x-6) \\le 0$: корни 2 и 6, между ними произведение неположительно. Концы закрашены.'
+  },
+  { id:'i8', xMin:-3, xMax:5, ticks:[-3, -1, 4, 5],
+    regions:[{from:null, to:-1, fromOpen:true, toOpen:true}, {from:4, to:null, fromOpen:true, toOpen:false}],
+    options:['(x+1)(x-4) > 0', '(x+1)(x-4) < 0', '(x-1)(x+4) > 0', '(x+1)(x-4) \\ge 0'],
+    correct:0,
+    note:'$(x+1)(x-4) > 0$: корни $-1$ и $4$. Положительна вне корней — строгое неравенство, концы открыты.'
+  },
+  { id:'i9', xMin:-2, xMax:6, ticks:[-2, 0, 5, 6],
+    regions:[{from:0, to:5, fromOpen:true, toOpen:true}],
+    options:['x(x-5) < 0', 'x(x-5) > 0', 'x(x-5) \\le 0', 'x(x-5) \\ge 0'],
+    correct:0,
+    note:'$x(x-5) < 0$: корни 0 и 5, между корнями отрицательна. Концы открыты.'
+  },
+  { id:'i10', xMin:-6, xMax:6, ticks:[-6, -2, 2, 6],
+    regions:[{from:null, to:-2, fromOpen:false, toOpen:false}, {from:2, to:null, fromOpen:false, toOpen:false}],
+    options:['x^2 \\ge 4', 'x^2 \\le 4', 'x^2 < 4', '|x| \\le 2'],
+    correct:0,
+    note:'$x^2 \\ge 4 \\Leftrightarrow x \\le -2$ или $x \\ge 2$. Концы закрашены.'
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, pick:null, solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function rerenderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+  }
+}
+
+function render(){
+  const q = state.current;
+  let optsHtml = '';
+  q.options.forEach((o, i) => {
+    optsHtml += `<div class="option" data-i="${i}"><div class="option-num">${i+1}</div><div class="option-text">$${o}$</div></div>`;
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">неравенство</span>
+      <p class="q-text">Укажите неравенство, решение которого изображено на рисунке:</p>
+      <div class="svg-wrap">${buildInequality(q.xMin, q.xMax, q.ticks, q.regions)}</div>
+      <div class="options" id="options">${optsHtml}</div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  rerenderMath(document.getElementById('options'));
+  state.pick = null;
+  document.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if(state.answered) return;
+      document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.pick = +opt.dataset.i;
+      document.getElementById('check').disabled = false;
+    });
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  const ok = state.pick === q.correct;
+  state.solved++;
+  if(ok){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+  q.options.forEach((o, i) => {
+    const opt = document.querySelector(`.option[data-i="${i}"]`);
+    opt.classList.add('locked');
+    if(i === q.correct) opt.classList.add('correct-mark');
+    else if(i === state.pick) opt.classList.add('wrong-mark');
+  });
+  const fb = document.getElementById('feedback-area');
+  if(ok){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно.</strong> Ответ: ${q.correct+1}.</div><div class="hint" id="hint">${q.note}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: ${q.correct+1}.</div><div class="hint" id="hint">${q.note}</div>`;
+  }
+  rerenderMath(document.getElementById('hint'));
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

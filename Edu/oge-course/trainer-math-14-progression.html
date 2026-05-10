@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 математика №14 — последовательность</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="katex/katex.min.css">
+<script src="katex/katex.min.js"></script>
+<script src="katex/contrib/auto-render.min.js"></script>
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:740px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:580px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.q-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;background:var(--accent);color:white;padding:3px 10px;border-radius:2px;letter-spacing:0.06em;margin-bottom:12px}
+.q-text{font-size:18px;margin:0 0 14px;line-height:1.5}
+.expr-wrap{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:24px 16px;
+  margin-bottom:18px;
+  text-align:center;
+  font-size:22px;
+  min-height:80px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.input-block{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:14px;
+  margin-bottom:14px;
+}
+.input-row{display:flex;gap:8px;align-items:center}
+.input-label{font-size:14px;color:var(--muted);min-width:60px}
+input[type="text"]{
+  flex:1;
+  font-family:'JetBrains Mono',monospace;
+  font-size:18px;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:4px;
+  background:var(--paper);
+  color:var(--ink);
+  outline:none;
+}
+input[type="text"]:focus{border-color:var(--accent);background:white}
+input[type="text"]:disabled{cursor:not-allowed;opacity:0.7}
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 20px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{margin-top:12px;padding:14px 16px;border-radius:4px;font-size:15px;line-height:1.5}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.hint{margin-top:8px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink)}
+.hint p{margin:6px 0}
+.hint .step{padding-left:14px;border-left:2px solid var(--accent);margin:8px 0}
+.actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+.actions .right{margin-left:auto}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+  .expr-wrap{font-size:18px}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>математика</span><span>·</span><span>задание №14</span>
+  <span class="right">1 балл · базовый</span>
+</div>
+
+<h1>Прогрессии и <em>линейные задачи</em></h1>
+<p class="lead">Тренажёр на задание №14 ОГЭ по математике: задачи на арифметические/геометрические прогрессии, линейные изменения, проценты, движение.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-solved">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-acc">—</div><div class="stat-label">% точности</div></div>
+  <div class="stat"><div class="stat-value" id="stat-streak">0</div><div class="stat-label">подряд верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-bank">10</div><div class="stat-label">в банке</div></div>
+</section>
+
+<main id="main"></main>
+
+<hr>
+<div class="footer">ОГЭ-2026 · математика · задание №14 · v0.1.0 · 2026-05-10</div>
+
+<script>
+const QUESTIONS = [
+  { id:'pr1',
+    expr:'\text{Вещество охлаждали 10 минут. Каждую минуту температура падала на 9°C. Начальная температура +6°C. Какова температура через 4 минуты?}',
+    answer:-30,
+    steps:[
+      'Через 4 минуты температура изменилась на  \cdot (-9) = -36°C$',
+      'Новая температура:  - 36 = -30°C$'
+    ]
+  },
+  { id:'pr2',
+    expr:'\text{В арифметической прогрессии } a_1 = 5, d = 3.\text{ Найдите } a_{10}.',
+    answer:32,
+    steps:[
+      ' = a_1 + d(n-1)$',
+      '{10} = 5 + 3 \cdot 9 = 5 + 27 = 32$'
+    ]
+  },
+  { id:'pr3',
+    expr:'\text{В арифметической прогрессии } a_1 = -4, a_5 = 12.\text{ Найдите разность } d.',
+    answer:4,
+    steps:[
+      ' = a_1 + 4d$',
+      '2 = -4 + 4d$',
+      'd = 16$, откуда  = 4$'
+    ]
+  },
+  { id:'pr4',
+    expr:'\text{Найдите сумму первых 20 членов арифм. прогрессии, где } a_1 = 2, d = 3.',
+    answer:610,
+    steps:[
+      ' = \dfrac{(2a_1 + d(n-1)) \cdot n}{2}$',
+      '{20} = \dfrac{(4 + 3 \cdot 19) \cdot 20}{2} = \dfrac{61 \cdot 20}{2} = 610$'
+    ]
+  },
+  { id:'pr5',
+    expr:'\text{Турист идёт со скоростью 5 км/ч. За какое время (в часах) он пройдёт 12 км?}',
+    answer:2.4,
+    steps:[
+      ' = \dfrac{S}{v} = \dfrac{12}{5} = 2{,}4$ часа'
+    ]
+  },
+  { id:'pr6',
+    expr:'\text{Геом. прогрессия: } b_1 = 3, q = 2.\text{ Найдите } b_5.',
+    answer:48,
+    steps:[
+      ' = b_1 \cdot q^{n-1}$',
+      ' = 3 \cdot 2^4 = 3 \cdot 16 = 48$'
+    ]
+  },
+  { id:'pr7',
+    expr:'\text{Цена телефона уменьшилась на 20\% и стала 12 000 рублей. Какой была первоначальная цена?}',
+    answer:15000,
+    steps:[
+      '/bin/sh{,}8x = 12\,000$',
+      ' = 12\,000 / 0{,}8 = 15\,000$ руб'
+    ]
+  },
+  { id:'pr8',
+    expr:'\text{Поезд за первый час прошёл 60 км, потом увеличил скорость на 10 км/ч. Какое расстояние он пройдёт за следующие 3 часа?}',
+    answer:210,
+    steps:[
+      'Новая скорость: 0 + 10 = 70$ км/ч',
+      'За 3 часа: 0 \cdot 3 = 210$ км'
+    ]
+  },
+  { id:'pr9',
+    expr:'\text{В арифм. прогрессии } a_3 = 7, a_7 = 19.\text{ Найдите } a_1.',
+    answer:1,
+    steps:[
+      ' - a_3 = 4d$',
+      '9 - 7 = 4d$,  = 3$',
+      ' = a_3 - 2d = 7 - 6 = 1$'
+    ]
+  },
+  { id:'pr10',
+    expr:'\text{Принтер печатает 12 страниц в минуту. Сколько страниц напечатает за 25 минут?}',
+    answer:300,
+    steps:[
+      '2 \cdot 25 = 300$ страниц'
+    ]
+  }
+];
+
+document.getElementById('stat-bank').textContent = QUESTIONS.length;
+
+let state = { seen:new Set(), current:null, solved:0, correct:0, streak:0, answered:false };
+
+function pickQuestion(){
+  const left = QUESTIONS.filter(q => !state.seen.has(q.id));
+  if(left.length === 0){ state.seen.clear(); return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+  return left[Math.floor(Math.random()*left.length)];
+}
+
+function updateStats(){
+  document.getElementById('stat-solved').textContent = state.solved;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent =
+    state.solved === 0 ? '—' : Math.round(100 * state.correct / state.solved) + '%';
+}
+
+function rerenderMath(el){
+  if(window.renderMathInElement){
+    renderMathInElement(el, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+  }
+}
+
+function render(){
+  const q = state.current;
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="q-card">
+      <span class="q-pill">последовательность</span>
+      <p class="q-text">Решите задачу:</p>
+      <div class="expr-wrap" id="expr-wrap">$$${q.expr}$$</div>
+      <div class="input-block">
+        <div class="input-row">
+          <span class="input-label">Ответ:</span>
+          <input type="text" id="answer" placeholder="число" autocomplete="off">
+        </div>
+      </div>
+      <div id="feedback-area"></div>
+      <div class="actions">
+        <button class="primary" id="check" disabled>Проверить</button>
+        <button class="secondary" id="next" disabled>Следующий →</button>
+        <span class="right" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">ID: ${q.id}</span>
+      </div>
+    </div>
+  `;
+  rerenderMath(document.getElementById('expr-wrap'));
+  const inp = document.getElementById('answer');
+  inp.focus();
+  inp.addEventListener('input', () => {
+    document.getElementById('check').disabled = inp.value.trim() === '';
+  });
+  inp.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
+      if(!state.answered) check();
+      else next();
+    }
+  });
+  document.getElementById('check').addEventListener('click', check);
+  document.getElementById('next').addEventListener('click', next);
+  state.answered = false;
+}
+
+
+function parseUserNumber(raw){
+  const s = String(raw).trim().replace(',', '.').replace(/\s+/g, '');
+  if(!s) return NaN;
+  const frac = s.match(/^([+-]?(?:\d+(?:\.\d+)?|\.\d+))\/([+-]?(?:\d+(?:\.\d+)?|\.\d+))$/);
+  if(frac){
+    const den = Number(frac[2]);
+    return den === 0 ? NaN : Number(frac[1]) / den;
+  }
+  return Number(s);
+}
+
+function answerNumber(v){
+  if(typeof v === 'number') return v;
+  if(typeof v === 'string'){
+    const s = v.trim().replace(',', '.');
+    const direct = parseUserNumber(s);
+    if(!Number.isNaN(direct)) return direct;
+    // Только для внутренних эталонов из банка задач, не для пользовательского ввода.
+    if(/^[0-9+\-*/().\sMathPIsqrt]+$/.test(s)){
+      try{
+        const val = Function('"use strict"; return (' + s + ');')();
+        return Number.isFinite(val) ? val : NaN;
+      }catch(e){ return NaN; }
+    }
+  }
+  return NaN;
+}
+
+function check(){
+  if(state.answered) return;
+  const q = state.current;
+  const inp = document.getElementById('answer');
+  // Принимаем и точку, и запятую
+  const userVal = parseUserNumber(inp.value);
+  if(isNaN(userVal)) return;
+
+  // Точное равенство с допуском 0.001 (округления)
+  const ok = Math.abs(userVal - answerNumber(q.answer)) <= 0.001;
+
+  state.solved++;
+  if(ok){ state.correct++; state.streak++; } else { state.streak = 0; }
+  state.answered = true;
+
+  const fb = document.getElementById('feedback-area');
+  const formattedAns = q.answer.toString().replace('.', ',');
+  let stepsHtml = '<p style="margin:6px 0"><strong>Решение:</strong></p>';
+  q.steps.forEach(s => {
+    stepsHtml += `<p class="step">${s}</p>`;
+  });
+  stepsHtml += `<p style="margin:6px 0"><strong>Ответ:</strong> ${formattedAns}</p>`;
+
+  if(ok){
+    fb.innerHTML = `<div class="feedback ok"><strong>Верно.</strong> Ответ: ${formattedAns}.</div><div class="hint" id="hint">${stepsHtml}</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: ${formattedAns}, ваш: ${userVal}.</div><div class="hint" id="hint">${stepsHtml}</div>`;
+  }
+  rerenderMath(document.getElementById('hint'));
+
+  inp.disabled = true;
+  document.getElementById('check').disabled = true;
+  document.getElementById('next').disabled = false;
+  document.getElementById('next').focus();
+  updateStats();
+}
+
+function next(){
+  state.current = pickQuestion();
+  state.seen.add(state.current.id);
+  render();
+}
+
+next();
+</script>
+</body>
+</html>

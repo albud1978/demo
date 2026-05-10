@@ -160,16 +160,16 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
   <div class="masthead-top">
     <div class="left">
       <span>ОГЭ-2026 <span class="dot">●</span> открытый бесплатный курс</span>
-      <span>v0.7.0</span>
+      <span>v0.8.0</span>
     </div>
     <span>обновлено 2026-05-10</span>
   </div>
   <h1 class="title">ОГЭ-2026<br/><em>тренажёры</em></h1>
   <p class="subtitle">Бесплатные интерактивные тренажёры для самостоятельной подготовки к ОГЭ. <b>Каждый тренажёр</b> — отдельный HTML-файл, открывается двойным кликом, работает офлайн, без регистрации и подписок. Содержание сверено со <b>спецификацией ФИПИ 2026 года</b>.</p>
   <div class="lede-grid">
-    <div class="lede-stat"><div class="num">49</div><div class="lbl">тренажёров<br/>готовы</div></div>
-    <div class="lede-stat"><div class="num">2 / 4</div><div class="lbl">предмета<br/>покрыто</div></div>
-    <div class="lede-stat"><div class="num">430+</div><div class="lbl">уникальных<br/>заданий</div></div>
+    <div class="lede-stat"><div class="num">70</div><div class="lbl">тренажёров<br/>готовы</div></div>
+    <div class="lede-stat"><div class="num">3 / 4</div><div class="lbl">предмета<br/>покрыто</div></div>
+    <div class="lede-stat"><div class="num">530+</div><div class="lbl">уникальных<br/>заданий</div></div>
     <div class="lede-stat"><div class="num">0&nbsp;₽</div><div class="lbl">стоимость<br/>и навсегда</div></div>
   </div>
 </header>
@@ -198,15 +198,15 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
       </div>
       <div class="subject-card-tally"><b>Покрыто:</b> ВСЁ — части 1 и 2</div>
     </a>
-    <div class="subject-card coming" style="--bar: #1B3A5E">
+    <a class="subject-card ready" href="#math" style="--bar: #1B3A5E">
       <div class="subject-card-name">Математика</div>
-      <div class="subject-card-status">в планах</div>
+      <div class="subject-card-status">21 тренажёр →</div>
       <div class="subject-card-stats">
         <b>25 заданий</b> · 31 балл · 235 мин<br/>
-        <span style="color:var(--ink-faint)">блок 1–5 + алгебра + геометрия</span>
+        <span style="color:var(--ink-faint)">связка №1–5 + алгебра + геометрия</span>
       </div>
-      <div class="subject-card-tally">скоро</div>
-    </div>
+      <div class="subject-card-tally"><b>Покрыто:</b> ВСЁ — части 1 и 2</div>
+    </a>
     <div class="subject-card coming" style="--bar: #7A1F2B">
       <div class="subject-card-name">Русский язык</div>
       <div class="subject-card-status">в планах</div>
@@ -796,16 +796,247 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
   </div>
 </section>
 
+<section id="math">
+  <div class="section-head">
+    <h2>Математика — все тренажёры</h2>
+    <span class="meta">21 файл · вся часть 1 + 2 + связка №1–5</span>
+  </div>
+
+  <div class="intro-note" style="border-left-color: var(--math)">
+    <p>Тренажёры идут <b>по номерам экзамена</b>: связка №1–5 (одна сюжетная задача с 5 подвопросами), №6–19 — часть 1 (короткие ответы), №20–25 — часть 2 (развёрнутые ответы с эталоном решения и критериями оценки).</p>
+    <p>Все 25 заданий ОГЭ-2026 по математике покрыты тренажёрами — это 31 балл из 31 в экзамене. Формулы рендерятся локальным KaTeX, всё работает офлайн.</p>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Связка №1–5 · практико-ориентированная задача</div>
+      <h3 class="block-title">Один сюжет — 5 подвопросов</h3>
+      <p class="block-blurb">Формат реального экзамена: единый практический контекст (шины, печь, тарифы, ОСАГО, теплицы) и 5 связанных подвопросов. Суммарно 5 баллов за один сюжет.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-math-01-05-linked-pack.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№1–5 КИМ</span>
+          <span class="trainer-tag">5 баллов · базовый</span>
+        </div>
+        <div class="trainer-title">Связка: один контекст, 5 вопросов</div>
+        <div class="trainer-blurb">5 кейсов: шины (демо), печь, тарифы, ОСАГО, теплицы</div>
+        <div class="trainer-card-foot"><span class="qcount">5 кейсов</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Часть 1 · короткие ответы</div>
+      <h3 class="block-title">14 заданий · 14 баллов</h3>
+      <p class="block-blurb">Алгебра и геометрия с numeric input или single-choice + SVG: числовые выражения, иррациональные преобразования, квадратные уравнения, вероятности, графики функций, прогрессии, тригонометрия в треугольнике, окружности, площади на клеточной бумаге, истинные геометрические утверждения.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-math-06-numeric-expression.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№6 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Числовое выражение</div>
+        <div class="trainer-blurb">Дроби, корни, степени · numeric + KaTeX</div>
+        <div class="trainer-card-foot"><span class="qcount">10 выражений</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-07-number-line.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№7 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Число на координатной прямой</div>
+        <div class="trainer-blurb">SVG-числовая прямая · 1 из 4</div>
+        <div class="trainer-card-foot"><span class="qcount">10 точек</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-08-irrational.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№8 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Иррациональные выражения</div>
+        <div class="trainer-blurb">Преобразования с корнями · разность квадратов</div>
+        <div class="trainer-card-foot"><span class="qcount">10 преобр.</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-09-quadratic.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№9 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Квадратное уравнение</div>
+        <div class="trainer-blurb">Дискриминант, теорема Виета · меньший корень</div>
+        <div class="trainer-card-foot"><span class="qcount">10 уравнений</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-10-probability.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№10 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Вероятность</div>
+        <div class="trainer-blurb">Равновозможные исходы · кубики, шары, лотерея</div>
+        <div class="trainer-card-foot"><span class="qcount">10 задач</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-11-function-graph.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№11 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Функции и графики</div>
+        <div class="trainer-blurb">3×3 matching · автогенерация графиков из JS</div>
+        <div class="trainer-card-foot"><span class="qcount">10 наборов</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-12-formula.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№12 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Расчёт по формуле</div>
+        <div class="trainer-blurb">F = ma, E = mv²/2 — найти неизвестную</div>
+        <div class="trainer-card-foot"><span class="qcount">10 формул</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-13-inequality.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№13 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Неравенство по графику</div>
+        <div class="trainer-blurb">SVG-числовая прямая · регионы решения · 1 из 4</div>
+        <div class="trainer-card-foot"><span class="qcount">10 неравенств</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-14-progression.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№14 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Прогрессии и линейные задачи</div>
+        <div class="trainer-blurb">Арифм./геом. прогрессия · проценты · движение</div>
+        <div class="trainer-card-foot"><span class="qcount">10 задач</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-15-trigonometry.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№15 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Тригонометрия в треугольнике</div>
+        <div class="trainer-blurb">sin/cos/tan · теорема Пифагора</div>
+        <div class="trainer-card-foot"><span class="qcount">10 треугольников</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-16-circles.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№16 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Окружность: углы и хорды</div>
+        <div class="trainer-blurb">Центральные/вписанные углы · касательные</div>
+        <div class="trainer-card-foot"><span class="qcount">10 окружностей</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-17-quadrilaterals.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№17 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Многоугольники и площади</div>
+        <div class="trainer-blurb">Трапеции, параллелограммы, ромбы</div>
+        <div class="trainer-card-foot"><span class="qcount">10 фигур</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-18-grid-area.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№18 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Площадь на клеточной бумаге</div>
+        <div class="trainer-blurb">SVG-grid · треугольники, ромбы, круги</div>
+        <div class="trainer-card-foot"><span class="qcount">10 фигур</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-19-geometric-statements.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№19 КИМ</span>
+          <span class="trainer-tag">1 балл · базовый</span>
+        </div>
+        <div class="trainer-title">Истинные геометрические утверждения</div>
+        <div class="trainer-blurb">3 утверждения · multi-select 1-3 из 3</div>
+        <div class="trainer-card-foot"><span class="qcount">10 наборов</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Часть 2 · развёрнутые ответы</div>
+      <h3 class="block-title">6 заданий · 12 баллов</h3>
+      <p class="block-blurb">Системы уравнений, текстовые задачи на проценты/смеси/движение, исследование функции с параметром, геометрия (вычисление, доказательство, комплексная задача). Каждый тренажёр: numeric ответ с допуском + кнопка «показать решение» с эталоном и критериями оценки на 2 балла.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-math-20-systems.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№20 КИМ</span>
+          <span class="trainer-tag">2 балла · повышенный</span>
+        </div>
+        <div class="trainer-title">Система уравнений</div>
+        <div class="trainer-blurb">Ввод пары (x; y) · эталон решения · критерии оценки</div>
+        <div class="trainer-card-foot"><span class="qcount">10 систем</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-21-text-problem.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№21 КИМ</span>
+          <span class="trainer-tag">2 балла · повышенный</span>
+        </div>
+        <div class="trainer-title">Текстовая задача</div>
+        <div class="trainer-blurb">Проценты, смеси, движение · numeric + эталон</div>
+        <div class="trainer-card-foot"><span class="qcount">10 текстовых задач</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-22-function.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№22 КИМ</span>
+          <span class="trainer-tag">2 балла · повышенный</span>
+        </div>
+        <div class="trainer-title">Исследование функции</div>
+        <div class="trainer-blurb">Построение графика · нахождение параметра m</div>
+        <div class="trainer-card-foot"><span class="qcount">10 функций</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-23-geometry-calc.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№23 КИМ</span>
+          <span class="trainer-tag">2 балла · повышенный</span>
+        </div>
+        <div class="trainer-title">Геометрия — вычисление</div>
+        <div class="trainer-blurb">Длины, площади, радиусы · numeric ответ</div>
+        <div class="trainer-card-foot"><span class="qcount">10 задач</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-24-geometry-proof.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№24 КИМ</span>
+          <span class="trainer-tag">2 балла · высокий</span>
+        </div>
+        <div class="trainer-title">Геометрия — доказательство</div>
+        <div class="trainer-blurb">Self-check: эталон доказательства · критерии</div>
+        <div class="trainer-card-foot"><span class="qcount">10 доказательств</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-math-25-geometry-complex.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№25 КИМ</span>
+          <span class="trainer-tag">2 балла · высокий</span>
+        </div>
+        <div class="trainer-title">Геометрия — комплексная</div>
+        <div class="trainer-blurb">Несколько приёмов · numeric + эталон</div>
+        <div class="trainer-card-foot"><span class="qcount">10 задач</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="intro-note" style="margin-top:48px;border-left-color:var(--math)">
+    <p style="font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--math);text-transform:uppercase;margin-bottom:8px">математика покрыта полностью</p>
+    <p><b>Все 25 заданий ОГЭ-2026 по математике</b> покрыты тренажёрами — это 31 балл из 31 в экзамене.</p>
+    <p><b>Часть 1</b> (19 заданий, 19 баллов: связка №1–5 + №6–19) и <b>часть 2</b> (6 заданий, 12 баллов: №20–25) проработаны в формате интерактивных тренажёров с автопроверкой numeric ответов и эталонными решениями для self-check.</p>
+  </div>
+</section>
+
 <section>
   <div class="section-head">
     <h2>Остальные предметы</h2>
     <span class="meta">в разработке</span>
-  </div>
-
-  <div class="coming-section" style="border-left: 4px solid var(--math)">
-    <div class="label" style="color:var(--math)">в разработке</div>
-    <h3>Математика <em>— скоро</em></h3>
-    <p>Обязательный предмет. 25 заданий, два модуля — алгебра и геометрия + практико-ориентированный сюжетный блок (1–5: шины, печки, ОСАГО, тарифы, квартиры). Планируются интерактивные геометрические задачи и графические тренажёры функций.</p>
   </div>
 
   <div class="coming-section" style="border-left: 4px solid var(--russian)">
@@ -838,7 +1069,7 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
 </section>
 
 <footer>
-  <span>ОГЭ-2026 · v0.7.0 · открытый бесплатный курс · 2026-05-10</span>
+  <span>ОГЭ-2026 · v0.8.0 · открытый бесплатный курс · 2026-05-10</span>
   <div class="right">
     <span>источники: <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a></span>
   </div>
