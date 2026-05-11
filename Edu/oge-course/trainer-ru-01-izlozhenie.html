@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 русский №1 — сжатое изложение</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:780px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:620px}
+h2{font-family:'Fraunces',serif;font-weight:600;font-size:22px;margin:32px 0 14px;color:var(--accent)}
+h3{font-family:'Fraunces',serif;font-weight:600;font-size:18px;margin:24px 0 10px;color:var(--ink)}
+
+.variant-bar{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding:10px 16px;background:var(--card);border:1px solid var(--border);border-radius:4px;flex-wrap:wrap}
+.variant-info{font-size:14px;color:var(--ink)}
+.variant-info strong{color:var(--accent)}
+.variant-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-left:auto}
+
+.text-block{background:white;border:1px solid var(--border);border-radius:4px;padding:16px 20px;margin-bottom:18px;font-size:15.5px;line-height:1.7}
+.text-block p{margin:0 0 12px}
+.text-block p:last-child{margin-bottom:0}
+.text-block .source{margin-top:14px;text-align:right;font-style:italic;color:var(--muted);font-size:14px}
+
+.callout{background:var(--accent-soft);border-left:3px solid var(--accent);padding:12px 16px;margin:14px 0;border-radius:0 4px 4px 0;font-size:14.5px}
+.callout strong{color:var(--accent)}
+
+details.reading{background:white;border:1px solid var(--border);border-radius:4px;margin-bottom:14px}
+details.reading summary{padding:14px 20px;font-family:'Fraunces',serif;font-weight:600;font-size:16px;color:var(--accent);cursor:pointer;user-select:none;list-style:none}
+details.reading summary::after{content:'▼';float:right;font-size:13px;transition:transform 0.2s}
+details.reading[open] summary::after{transform:rotate(180deg)}
+details.reading .content{padding:0 20px 16px;border-top:1px solid var(--border);padding-top:14px}
+
+.write-block{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:18px 22px;margin-bottom:18px}
+.word-count{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.word-count strong{font-size:15px;color:var(--ink);font-family:'Fraunces',serif}
+.word-count.ok strong{color:var(--success)}
+.word-count.warn strong{color:#B07A2C}
+textarea{width:100%;min-height:220px;font-family:'Spectral',Georgia,serif;font-size:16px;padding:12px 14px;border:1px solid var(--border);border-radius:4px;background:white;color:var(--ink);outline:none;line-height:1.6;resize:vertical}
+textarea:focus{border-color:var(--accent)}
+
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 22px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px;margin-right:8px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 22px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:hover{background:var(--accent-soft)}
+button.compact{font-family:'Spectral',serif;font-size:13px;padding:6px 14px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.compact:hover{background:var(--accent-soft)}
+
+.criteria{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:18px 22px;margin-bottom:18px}
+.criterion{display:grid;grid-template-columns:1fr auto;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);align-items:start}
+.criterion:last-child{border-bottom:none}
+.criterion-title{font-family:'Fraunces',serif;font-weight:600;font-size:16px;margin-bottom:6px}
+.criterion-desc{font-size:14px;color:var(--muted);line-height:1.55}
+.criterion-desc ul{margin:4px 0;padding-left:20px}
+.criterion-desc li{margin:3px 0}
+.score-pickers{display:flex;gap:4px;align-items:center}
+.score-picker{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;width:32px;height:32px;border:1px solid var(--border);background:white;color:var(--ink);cursor:pointer;border-radius:4px}
+.score-picker:hover{border-color:var(--accent);color:var(--accent)}
+.score-picker.selected{background:var(--accent);color:white;border-color:var(--accent)}
+
+.summary-card{background:var(--accent-soft);border:1px solid var(--accent);border-radius:4px;padding:20px 24px;margin:24px 0;text-align:center}
+.summary-card h3{font-family:'Fraunces',serif;color:var(--accent);margin:0 0 8px;font-size:24px}
+.summary-card .total{font-family:'Fraunces',serif;font-size:48px;font-weight:600;color:var(--accent);margin:8px 0;line-height:1}
+.summary-card .breakdown{font-size:14px;color:var(--muted);margin-top:8px}
+
+.reference-text{background:white;border:1px dashed var(--border);border-radius:4px;padding:14px 18px;margin-bottom:14px;font-size:15px;line-height:1.7}
+.reference-text p{margin:0 0 10px}
+.reference-text p:last-child{margin-bottom:0}
+
+.microthemes{background:white;border:1px solid var(--border);border-radius:4px;padding:14px 18px;margin-bottom:14px}
+.microtheme{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:10px 0;border-bottom:1px solid var(--border);align-items:start;font-size:14.5px}
+.microtheme:last-child{border-bottom:none}
+.microtheme .num{font-family:'Fraunces',serif;font-weight:600;color:var(--accent);font-size:18px}
+
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .criterion{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>русский</span><span>·</span><span>задание №1</span>
+  <span class="right">6 баллов · базовый</span>
+</div>
+
+<h1>Сжатое <em>изложение</em></h1>
+<p class="lead">Тренажёр на задание №1 ОГЭ по русскому языку: на экзамене ученик слушает аудиозапись (дважды), записывает в черновике, затем пишет сжатое изложение. Здесь — тренировочный вариант: исходный текст ниже, пиши изложение в окне и сверяйся с эталоном по 3 критериям. В банке 5 текстов на разные темы.</p>
+
+<div class="variant-bar">
+  <div class="variant-info">Вариант: <strong id="v-info">—</strong></div>
+  <button class="compact" id="switch-btn">Сменить вариант →</button>
+  <div class="variant-meta" id="v-meta"></div>
+</div>
+
+<div class="callout">
+  <strong>Как тренироваться:</strong> сначала прочитай исходный текст один раз. Закрой его и попробуй передать главное содержание каждой микротемы. Затем ещё раз прочитай и допиши то, что упустил. Объём изложения — <strong>не менее 70 слов</strong>. Используй приёмы сжатия: исключение, обобщение, упрощение.
+</div>
+
+<h2>Исходный текст</h2>
+
+<details class="reading" open>
+  <summary id="text-summary">Текст для изложения</summary>
+  <div class="content" id="text-content"></div>
+</details>
+
+<h3>Микротемы текста</h3>
+<p style="font-size:14px;color:var(--muted);margin-bottom:10px">В изложении должны быть отражены все 3 микротемы. Если упустишь или добавишь одну — потеряешь 1 балл (ИК1).</p>
+
+<div class="microthemes" id="microthemes-list"></div>
+
+<h2>Твоё сжатое изложение</h2>
+
+<div class="write-block">
+  <div class="word-count" id="word-count"><strong id="word-num">0</strong> <span id="word-label">слов · нужно не менее 70</span></div>
+  <textarea id="user-text" placeholder="Напиши сжатое изложение здесь. Передай главное содержание каждой из 3 микротем. Применяй приёмы сжатия: исключение второстепенного, обобщение, упрощение."></textarea>
+</div>
+
+<div style="margin-bottom:24px">
+  <button class="primary" id="show-reference">Показать эталонное изложение</button>
+  <button class="secondary" id="show-techniques">Приёмы сжатия →</button>
+</div>
+
+<div id="techniques-area"></div>
+<div id="reference-area"></div>
+
+<h2>Самооценка по критериям</h2>
+<p style="font-size:14px;color:var(--muted);margin-bottom:14px">После того как напишешь изложение и сверишь его с эталоном, оцени себя по 3 критериям. Максимум — 6 баллов.</p>
+
+<div class="criteria">
+  <div class="criterion">
+    <div>
+      <div class="criterion-title">ИК1 · Содержание изложения</div>
+      <div class="criterion-desc">
+        <ul>
+          <li><strong>2 балла</strong> — все 3 микротемы переданы точно</li>
+          <li><strong>1 балл</strong> — упущена или добавлена 1 микротема</li>
+          <li><strong>0 баллов</strong> — упущено или добавлено больше 1 микротемы</li>
+        </ul>
+      </div>
+    </div>
+    <div class="score-pickers">
+      <button class="score-picker" data-cr="ik1" data-val="0">0</button>
+      <button class="score-picker" data-cr="ik1" data-val="1">1</button>
+      <button class="score-picker" data-cr="ik1" data-val="2">2</button>
+    </div>
+  </div>
+
+  <div class="criterion">
+    <div>
+      <div class="criterion-title">ИК2 · Сжатие исходного текста</div>
+      <div class="criterion-desc">
+        <ul>
+          <li><strong>2 балла</strong> — применил один или несколько приёмов сжатия на протяжении всего текста</li>
+          <li><strong>1 балл</strong> — применил приёмы сжатия для 2 микротем</li>
+          <li><strong>0 баллов</strong> — применил приёмы только для 1 микротемы или не применил вовсе</li>
+        </ul>
+      </div>
+    </div>
+    <div class="score-pickers">
+      <button class="score-picker" data-cr="ik2" data-val="0">0</button>
+      <button class="score-picker" data-cr="ik2" data-val="1">1</button>
+      <button class="score-picker" data-cr="ik2" data-val="2">2</button>
+    </div>
+  </div>
+
+  <div class="criterion">
+    <div>
+      <div class="criterion-title">ИК3 · Логичность речи</div>
+      <div class="criterion-desc">
+        <ul>
+          <li><strong>2 балла</strong> — логические ошибки отсутствуют</li>
+          <li><strong>1 балл</strong> — допущены 1–2 логические ошибки</li>
+          <li><strong>0 баллов</strong> — допущено 3 логические ошибки или более</li>
+        </ul>
+      </div>
+    </div>
+    <div class="score-pickers">
+      <button class="score-picker" data-cr="ik3" data-val="0">0</button>
+      <button class="score-picker" data-cr="ik3" data-val="1">1</button>
+      <button class="score-picker" data-cr="ik3" data-val="2">2</button>
+    </div>
+  </div>
+</div>
+
+<div id="total-area"></div>
+
+<hr>
+<div class="footer">ОГЭ-2026 · русский · задание №1 · v0.6.1-audited · 2026-05-11</div>
+
+<script>
+// Банк текстов для №1 (изложение)
+// Каждый текст ~180-200 слов, 3 микротемы, эталон сжатия ~120-140 слов
+
+const IZ_BANK = [
+  // ===== Вариант 1: Гранин про учителей (из демо) =====
+  {
+    id: 'iz1',
+    author: 'По Д. А. Гранину',
+    topic: 'Учителя',
+    wordsCount: 199,
+    fullText: `<p>Хороших книг о школе написано немало. Но мне интересно было бы исследовать одну линию в этой огромной теме: что остаётся от учителя, от класса в характере человека, кроме знаний. В сущности, у каждого взрослого есть свои впечатления, свои воспоминания о школе. Плохие или хорошие. Одни учителя помнятся, другие нет, одни товарищи из класса врезались в память, другие забылись. И не всегда это можно объяснить степенью дружбы. Нет, тут действуют иные, глубоко скрытые, очевидно, сложные причины.</p>
+<p>Кроме талантливых учителей, есть и другие — любимые учителя. Наверное, любимых учителей больше, чем талантливых. Наверное, можно заслужить любовь и не имея отпущенных природой педагогических способностей. Талантливым стать нельзя, а вот любимым стать можно.</p>
+<p>Наша любовь к учителям рождалась по-разному. Как и все, я вспоминаю бывших своих учителей. Кто из них получал нашу любовь? Физику преподавал нам известный профессор. Он блестяще ставил опыты, умел рассказать материал доходчиво, образно. Но физику мы полюбили раньше, полюбили благодаря молоденькой учительнице. Кажется, она преподавала тогда первый год и не очень хорошо сама знала некоторые тонкости, но всё равно мы её любили. Вероятно, за то, что она любила нас, за то, что ей было весело с нами, интересно, за то, что она не скрывала своих промахов и открыто переживала их.</p>`,
+    microthemes: [
+      'У каждого взрослого есть свои воспоминания о школе. Объяснить, как люди остаются в памяти, сложно.',
+      'Есть учителя талантливые, есть любимые. Талантливым стать нельзя, а любимым — можно.',
+      'Наша любовь к учителям рождалась по-разному. Физику мы полюбили благодаря молоденькой учительнице. Она любила нас, не скрывала своих промахов и открыто переживала их.'
+    ],
+    reference: `<p>Хороших книг о школе написано немало. Но интересно исследовать одну линию: что остаётся от учителя, от класса в характере человека, кроме знаний. У каждого взрослого есть свои воспоминания о школе. Одни учителя помнятся, другие нет. И не всегда это можно объяснить степенью дружбы — действуют скрытые сложные причины.</p>
+<p>Кроме талантливых учителей, есть и любимые. Любимых, наверное, больше, чем талантливых. Можно заслужить любовь и не имея педагогических способностей. Талантливым стать нельзя, а любимым — можно.</p>
+<p>Наша любовь к учителям рождалась по-разному. Физику нам преподавал известный профессор: он блестяще ставил опыты, умел рассказывать. Но физику мы полюбили благодаря молоденькой учительнице. Она преподавала первый год и не всё знала, но мы её любили: за то, что она любила нас, ей было с нами интересно, она не скрывала своих промахов и открыто переживала их.</p>`,
+    referenceWords: 128
+  },
+
+  // ===== Вариант 2: Дружба =====
+  {
+    id: 'iz2',
+    author: 'Тренировочный текст',
+    topic: 'Настоящая дружба',
+    wordsCount: 163,
+    fullText: `<p>Что такое настоящая дружба? Это слово часто звучит в обыденной речи, но за ним кроется глубокий смысл. В жизни любого человека встречается множество людей: одноклассники, коллеги, соседи. Однако из всего этого окружения настоящими друзьями становятся единицы. Дружба — это редкий дар, и далеко не каждый может его принять или подарить.</p>
+<p>Настоящая дружба проверяется временем и испытаниями. Когда у человека всё хорошо, рядом с ним легко: можно радоваться вместе, смеяться, разделять успехи. Но настоящий друг — это тот, кто остаётся рядом, когда наступают трудные времена. Когда болезнь, неудача, обида — друг приходит без приглашения и просто молча помогает. Именно в такие моменты становится ясно, кто рядом по-настоящему, а кто только до первой беды.</p>
+<p>Дружба требует усилий. Нельзя ничего получить, не вложив. Друг — это не зеркало, в котором ты видишь свои достижения, а человек, с которым ты растёшь. Он может не соглашаться с тобой, может говорить неприятные истины. Но именно в этом и есть ценность дружбы: она учит быть лучше, чем ты есть, и принимать другого без условий.</p>`,
+    microthemes: [
+      'Настоящая дружба — редкий дар. В окружении любого человека много людей, но друзей становятся лишь единицы.',
+      'Настоящая дружба проверяется временем и испытаниями. Друг остаётся рядом в трудные моменты — это и отличает его от приятеля.',
+      'Дружба требует усилий. Друг — это человек, с которым ты растёшь; он может говорить неприятные истины, и в этом её ценность.'
+    ],
+    reference: `<p>Что такое настоящая дружба? За этим словом кроется глубокий смысл. В жизни любого человека встречается много людей, но настоящими друзьями становятся единицы. Дружба — это редкий дар.</p>
+<p>Настоящая дружба проверяется испытаниями. Когда всё хорошо, рядом легко быть. Но настоящий друг — тот, кто остаётся в трудные времена. В моменты болезни, неудачи или обиды друг приходит и молча помогает. Тогда и становится ясно, кто рядом по-настоящему, а кто — только до первой беды.</p>
+<p>Дружба требует усилий. Друг — не зеркало, а человек, с которым ты растёшь. Он может говорить неприятные истины и не соглашаться с тобой. В этом её ценность: она учит быть лучше и принимать другого без условий.</p>`,
+    referenceWords: 104
+  },
+
+  // ===== Вариант 3: Детство =====
+  {
+    id: 'iz3',
+    author: 'Тренировочный текст',
+    topic: 'Детство и родительский дом',
+    wordsCount: 160,
+    fullText: `<p>Детство — это удивительная пора, к которой каждый из нас обращается на протяжении всей жизни. Это время, когда мир открывается человеку в первый раз: вкус хлеба, тепло материнских рук, звуки родного дома. Все эти ощущения остаются в памяти на десятки лет, формируя то, что мы называем характером.</p>
+<p>Родительский дом — это не просто стены и крыша. Это особое пространство, где складывается личность человека. Здесь учат самому главному: как говорить «спасибо», как делиться куском хлеба, как утешать плачущего. Эти простые правила, выученные в детстве, становятся фундаментом всей будущей жизни. Что бы ни случилось с человеком потом, дом всегда остаётся точкой опоры, к которой можно мысленно вернуться в трудный час.</p>
+<p>Иногда уже взрослыми мы начинаем замечать в себе привычки родителей, бабушек, дедушек. Мы говорим их словами, завариваем чай по их рецепту, любим те же блюда. И понимаем: всё это родом из дома. Память детства неуловима, но она пронизывает всю нашу жизнь. Именно поэтому к детству хочется возвращаться — там корни того, кто мы есть сегодня.</p>`,
+    microthemes: [
+      'Детство — удивительная пора, когда мир открывается человеку впервые. Ощущения детства остаются в памяти на десятилетия и формируют характер.',
+      'Родительский дом — особое пространство, где складывается личность. Простые правила, выученные дома, становятся фундаментом всей жизни и точкой опоры в трудный час.',
+      'Взрослыми мы замечаем в себе привычки родителей — слова, рецепты, вкусы. Память детства пронизывает всю нашу жизнь, ведь там корни того, кто мы есть.'
+    ],
+    reference: `<p>Детство — удивительная пора, к которой обращается каждый человек. Это время, когда мир открывается впервые: вкус хлеба, тепло материнских рук, звуки родного дома. Эти ощущения остаются в памяти десятилетиями и формируют характер.</p>
+<p>Родительский дом — это особое пространство, где складывается личность. Здесь учат говорить «спасибо», делиться, утешать. Эти простые правила становятся фундаментом всей жизни. Что бы ни случилось потом, дом остаётся точкой опоры.</p>
+<p>Взрослыми мы замечаем в себе привычки родителей: их слова, рецепты, любимые блюда. Это родом из дома. Память детства пронизывает всю нашу жизнь, ведь там — корни того, кто мы есть.</p>`,
+    referenceWords: 90
+  },
+
+  // ===== Вариант 4: Книги =====
+  {
+    id: 'iz4',
+    author: 'Тренировочный текст',
+    topic: 'Книги и чтение',
+    wordsCount: 159,
+    fullText: `<p>Зачем людям нужны книги? В эпоху интернета этот вопрос звучит особенно часто. Но книги остаются особым видом общения с миром, который не может заменить ни один экран. Открывая книгу, человек попадает в чужую жизнь, в чужие мысли, в чужое время. И возвращается уже другим.</p>
+<p>Книги — это окно в миры, которых мы никогда не увидим сами. Мы не побываем в средневековой Европе, не пройдём по африканской саванне, не сядем за чашкой чая с философом из прошлого века. Но через книги всё это становится близким и понятным. Расширяя круг прочитанного, человек расширяет границы собственного существования. Он живёт больше одной жизни — он живёт многими.</p>
+<p>Чтение учит думать. Когда мы пробегаем глазами короткие сообщения в телефоне, мысль остаётся поверхностной. Книга же требует внимания, она заставляет следить за развитием идей, сопоставлять, рассуждать. Поэтому читающий человек никогда не одинок — у него всегда есть собеседники: герои книг, авторы, целые поколения. С такой компанией трудно скучать, и человек, любящий книги, обычно остаётся живым умом до глубокой старости.</p>`,
+    microthemes: [
+      'Книги — особый вид общения с миром, который не заменить экраном. Они переносят человека в чужую жизнь, и он возвращается другим.',
+      'Книги — окно в миры, которых иначе не увидеть. Через них становятся близкими разные эпохи и культуры; человек проживает не одну жизнь, а многие.',
+      'Чтение учит думать; читающий человек не одинок, ведь у него всегда есть собеседники — герои книг, авторы, целые поколения.'
+    ],
+    reference: `<p>Зачем людям нужны книги? В эпоху интернета этот вопрос звучит часто. Но книги остаются особым видом общения, который не заменить экраном. Открывая книгу, человек попадает в чужую жизнь и возвращается другим.</p>
+<p>Книги — это окно в миры, которые мы не увидим сами. Мы не побываем в средневековой Европе, не пройдём по саванне, не побеседуем с философом из прошлого. Но через книги всё это становится близким. Расширяя круг прочитанного, человек проживает не одну жизнь, а многие.</p>
+<p>Чтение учит думать. Короткие сообщения в телефоне делают мысль поверхностной, а книга требует внимания, заставляет рассуждать. Поэтому читающий человек никогда не одинок: у него всегда есть собеседники — герои книг и их авторы.</p>`,
+    referenceWords: 106
+  },
+
+  // ===== Вариант 5: Природа =====
+  {
+    id: 'iz5',
+    author: 'Тренировочный текст',
+    topic: 'Природа',
+    wordsCount: 161,
+    fullText: `<p>Что значит для человека природа? Сейчас, когда города растут, а леса исчезают, ответ на этот вопрос становится особенно важным. Природа — это не просто красивый пейзаж за окном. Это часть нас самих, без которой жизнь становится бедной и тревожной.</p>
+<p>Природа лечит. Учёные давно установили: достаточно нескольких часов в лесу, у моря или в поле, чтобы у человека снизилось давление, успокоился пульс, прояснились мысли. Никакая таблетка не заменит этого естественного состояния. Природа возвращает то ощущение покоя, которое мы теряем в городском шуме. Шум листьев, шум дождя, шум прибоя — всё это лекарство от усталости современной жизни.</p>
+<p>Природа также учит. Наблюдая за сменой времён года, за полётом птиц, за упорным ростом маленького побега, человек начинает понимать важные вещи о жизни: о терпении, о цикличности, о силе слабых. Дети, выросшие рядом с природой, обычно более внимательны и спокойны. И в этой простоте, в этой каждодневной встрече с лесом или рекой — настоящая школа жизни, которой не научит ни одна книга. Поэтому беречь природу — значит беречь самих себя.</p>`,
+    microthemes: [
+      'Природа — не просто пейзаж, а часть нас самих, без которой жизнь становится бедной и тревожной.',
+      'Природа лечит: возвращает покой, снижает давление, успокаивает; шум листьев, дождя или прибоя — это лекарство от усталости.',
+      'Природа учит важным вещам о жизни — терпению, цикличности, силе слабых. Беречь природу — значит беречь самих себя.'
+    ],
+    reference: `<p>Что значит для человека природа? Когда города растут, а леса исчезают, ответ важен особенно. Природа — не просто пейзаж, а часть нас, без которой жизнь становится бедной.</p>
+<p>Природа лечит. Учёные установили: нескольких часов в лесу, у моря или в поле достаточно, чтобы снизилось давление, прояснились мысли. Никакая таблетка не заменит этого. Природа возвращает покой, который мы теряем в городском шуме.</p>
+<p>Природа также учит. Наблюдая за сменой времён года и упорным ростом побега, человек понимает важные вещи: терпение, цикличность, силу слабых. Дети, выросшие у природы, обычно внимательнее и спокойнее. В этой простой встрече с лесом или рекой — настоящая школа жизни. Беречь природу — значит беречь себя.</p>`,
+    referenceWords: 103
+  }
+];
+
+
+let currentIz = null;
+let scores = { ik1: null, ik2: null, ik3: null };
+
+function pickRandomIz(){
+  const idx = Math.floor(Math.random() * IZ_BANK.length);
+  return IZ_BANK[idx];
+}
+
+function loadVariant(v){
+  currentIz = v;
+  document.getElementById('v-info').textContent = v.topic + ' (' + v.author + ')';
+  document.getElementById('v-meta').textContent = v.id + ' · ' + v.wordsCount + ' слов';
+  document.getElementById('text-summary').textContent = 'Текст для изложения (' + v.author + ', ' + v.wordsCount + ' слов)';
+  document.getElementById('text-content').innerHTML = v.fullText + '<p class="source">(' + v.author + ')</p>';
+
+  let mtHtml = '';
+  v.microthemes.forEach((mt, i) => {
+    mtHtml += `<div class="microtheme"><div class="num">${i+1}</div><div>${mt}</div></div>`;
+  });
+  document.getElementById('microthemes-list').innerHTML = mtHtml;
+
+  // reset state
+  document.getElementById('user-text').value = '';
+  document.getElementById('word-num').textContent = '0';
+  document.getElementById('word-label').textContent = 'слов · нужно не менее 70';
+  document.getElementById('word-count').classList.remove('ok', 'warn');
+  document.getElementById('reference-area').innerHTML = '';
+  document.getElementById('techniques-area').innerHTML = '';
+  document.getElementById('total-area').innerHTML = '';
+  scores = { ik1: null, ik2: null, ik3: null };
+  document.querySelectorAll('.score-picker').forEach(b => b.classList.remove('selected'));
+}
+
+document.getElementById('switch-btn').addEventListener('click', () => {
+  if(currentIz && document.getElementById('user-text').value.trim().length > 0){
+    if(!confirm('Сменить вариант? Написанный текст и оценки будут сброшены.')) return;
+  }
+  let v;
+  do { v = pickRandomIz(); } while(IZ_BANK.length > 1 && v.id === currentIz?.id);
+  loadVariant(v);
+});
+
+// Подсчёт слов
+const ta = document.getElementById('user-text');
+const wordNum = document.getElementById('word-num');
+const wordLabel = document.getElementById('word-label');
+const wordCount = document.getElementById('word-count');
+
+function countWords(text){
+  return text.trim().split(/\s+/).filter(w => w.length > 0).length;
+}
+
+ta.addEventListener('input', () => {
+  const n = ta.value.trim() === '' ? 0 : countWords(ta.value);
+  wordNum.textContent = n;
+  wordCount.classList.remove('ok', 'warn');
+  if(n === 0){
+    wordLabel.textContent = 'слов · нужно не менее 70';
+  } else if(n < 70){
+    wordLabel.textContent = 'из 70 минимум · нужно ещё ' + (70-n);
+    wordCount.classList.add('warn');
+  } else if(n > 130){
+    wordLabel.textContent = 'слов · хорошо, но не растягивай';
+    wordCount.classList.add('ok');
+  } else {
+    wordLabel.textContent = 'слов · норма достигнута';
+    wordCount.classList.add('ok');
+  }
+});
+
+// Эталон
+document.getElementById('show-reference').addEventListener('click', () => {
+  document.getElementById('reference-area').innerHTML = `
+    <h3 style="margin-top:24px">Эталонное сжатое изложение</h3>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:10px">Это один из возможных вариантов. Сравни структуру и приёмы сжатия со своим текстом.</p>
+    <div class="reference-text">
+      ${currentIz.reference}
+      <p style="font-size:13px;color:var(--muted);margin-top:10px"><strong>Слов в эталоне:</strong> ≈ ${currentIz.referenceWords}. Это близко к идеальному объёму для сжатого изложения.</p>
+    </div>
+  `;
+  document.getElementById('reference-area').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+// Приёмы сжатия
+document.getElementById('show-techniques').addEventListener('click', () => {
+  document.getElementById('techniques-area').innerHTML = `
+    <h3 style="margin-top:24px">Три основных приёма сжатия</h3>
+    <div class="reference-text">
+      <p><strong>1. Исключение:</strong> убираем второстепенные подробности, повторы, синонимы, уточнения, примеры, отступления. <br><em>Исходник:</em> «Одни учителя помнятся, другие нет, одни товарищи из класса врезались в память, другие забылись.» → <em>Сжатие:</em> «Одни помнятся, другие забываются».</p>
+      <p><strong>2. Обобщение:</strong> объединяем перечисление в одно понятие, частные случаи — в общий.<br><em>Исходник:</em> «он блестяще ставил опыты, умел рассказать материал доходчиво, образно» → <em>Сжатие:</em> «он блестяще преподавал».</p>
+      <p><strong>3. Упрощение:</strong> заменяем сложные конструкции более простыми (сложное предложение → простое, прямую речь → косвенную, причастный оборот → определение).<br><em>Исходник:</em> «Наверное, любимых учителей больше, чем талантливых. Наверное, можно заслужить любовь и не имея отпущенных природой педагогических способностей.» → <em>Сжатие:</em> «Любимых учителей больше, чем талантливых; любовь можно заслужить и без особых педагогических способностей».</p>
+    </div>
+  `;
+  document.getElementById('techniques-area').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+// Самооценка
+document.querySelectorAll('.score-picker').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const cr = btn.dataset.cr;
+    const val = +btn.dataset.val;
+    scores[cr] = val;
+    document.querySelectorAll('.score-picker[data-cr="' + cr + '"]').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    updateTotal();
+  });
+});
+
+function updateTotal(){
+  const allSet = Object.values(scores).every(v => v !== null);
+  if(!allSet) return;
+  const total = scores.ik1 + scores.ik2 + scores.ik3;
+  let comment;
+  if(total === 6) comment = 'Идеально. Все 3 микротемы переданы, есть приёмы сжатия, логика безупречна.';
+  else if(total >= 4) comment = 'Хороший результат. Поработай над тем критерием, где балл ниже максимума.';
+  else if(total >= 2) comment = 'Средний результат. Перечитай эталон и попробуй сжать текст с другими приёмами.';
+  else comment = 'Нужна систематическая работа: разбери приёмы сжатия и попробуй снова.';
+
+  document.getElementById('total-area').innerHTML = `
+    <div class="summary-card">
+      <h3>Итог за изложение</h3>
+      <div class="total">${total} / 6</div>
+      <p>${comment}</p>
+      <div class="breakdown">ИК1: ${scores.ik1}/2 · ИК2: ${scores.ik2}/2 · ИК3: ${scores.ik3}/2</div>
+    </div>
+  `;
+}
+
+// Init: pick random variant on load
+loadVariant(pickRandomIz());
+</script>
+</body>
+</html>

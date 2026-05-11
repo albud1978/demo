@@ -160,16 +160,16 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
   <div class="masthead-top">
     <div class="left">
       <span>ОГЭ-2026 <span class="dot">●</span> открытый бесплатный курс</span>
-      <span>v0.8.0</span>
+      <span>v1.0.0</span>
     </div>
-    <span>обновлено 2026-05-10</span>
+    <span>обновлено 2026-05-11</span>
   </div>
   <h1 class="title">ОГЭ-2026<br/><em>тренажёры</em></h1>
   <p class="subtitle">Бесплатные интерактивные тренажёры для самостоятельной подготовки к ОГЭ. <b>Каждый тренажёр</b> — отдельный HTML-файл, открывается двойным кликом, работает офлайн, без регистрации и подписок. Содержание сверено со <b>спецификацией ФИПИ 2026 года</b>.</p>
   <div class="lede-grid">
-    <div class="lede-stat"><div class="num">70</div><div class="lbl">тренажёров<br/>готовы</div></div>
-    <div class="lede-stat"><div class="num">3 / 4</div><div class="lbl">предмета<br/>покрыто</div></div>
-    <div class="lede-stat"><div class="num">530+</div><div class="lbl">уникальных<br/>заданий</div></div>
+    <div class="lede-stat"><div class="num">78</div><div class="lbl">тренажёров<br/>готовы</div></div>
+    <div class="lede-stat"><div class="num">4 / 4</div><div class="lbl">предмета<br/>покрыто</div></div>
+    <div class="lede-stat"><div class="num">580+</div><div class="lbl">уникальных<br/>заданий</div></div>
     <div class="lede-stat"><div class="num">0&nbsp;₽</div><div class="lbl">стоимость<br/>и навсегда</div></div>
   </div>
 </header>
@@ -177,7 +177,7 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
 <section>
   <div class="section-head">
     <h2>Предметы</h2>
-    <span class="meta">статус по состоянию на 2026-05-10</span>
+    <span class="meta">статус по состоянию на 2026-05-11</span>
   </div>
   <div class="subjects">
     <a class="subject-card ready" href="#chem" style="--bar: #2D4A2B">
@@ -207,15 +207,15 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
       </div>
       <div class="subject-card-tally"><b>Покрыто:</b> ВСЁ — части 1 и 2</div>
     </a>
-    <div class="subject-card coming" style="--bar: #7A1F2B">
+    <a class="subject-card ready" href="#russian" style="--bar: #7A1F2B">
       <div class="subject-card-name">Русский язык</div>
-      <div class="subject-card-status">в планах</div>
+      <div class="subject-card-status">8 тренажёров →</div>
       <div class="subject-card-stats">
         <b>13 заданий</b> · 37 баллов · 235 мин<br/>
-        <span style="color:var(--ink-faint)">изложение + тесты + сочинение</span>
+        <span style="color:var(--ink-faint)">изложение + тесты + сочинение + устное собеседование</span>
       </div>
-      <div class="subject-card-tally">скоро</div>
-    </div>
+      <div class="subject-card-tally"><b>Покрыто:</b> ВСЁ — письменный + устный</div>
+    </a>
   </div>
 </section>
 
@@ -1033,16 +1033,133 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
   </div>
 </section>
 
-<section>
+<section id="russian">
   <div class="section-head">
-    <h2>Остальные предметы</h2>
-    <span class="meta">в разработке</span>
+    <h2>Русский язык — все тренажёры</h2>
+    <span class="meta">8 файлов · письменный экзамен (37 баллов) + устное собеседование (20 баллов)</span>
   </div>
 
-  <div class="coming-section" style="border-left: 4px solid var(--russian)">
-    <div class="label" style="color:var(--russian)">в разработке</div>
-    <h3>Русский язык <em>— скоро</em></h3>
-    <p>Обязательный предмет. 13 заданий: сжатое изложение, тестовая часть, сочинение-рассуждение на выбор. Планируются тренажёры на синтаксический и пунктуационный анализ, орфографию, лексику.</p>
+  <div class="intro-note" style="border-left-color: var(--russian)">
+    <p>Русский — единственный предмет, где помимо письменного ОГЭ есть отдельный <b>устный экзамен‑допуск</b> (итоговое собеседование). В курсе они оцениваются раздельно: письменный — 37 баллов, устный — 20 баллов с зачётом от 10. Письменная часть проработана через банк из 5 текстов изложения, 5 комплексных вариантов части 2 и 15 эталонных сочинений.</p>
+    <p>Часть тренажёров основана на <b>авторских материалах</b> и прошла предметный аудит (раунды 1–2 + спот‑чек v0.6.1); это указано на самих тренажёрах.</p>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Часть 1 · сжатое изложение</div>
+      <h3 class="block-title">№1 КИМ — текст и микротемы</h3>
+      <p class="block-blurb">Прослушали (или прочитали) текст — сжато передали 3 микротемы. В тренажёре банк из 5 текстов (Гранин про учителей + дружба, детство, книги, природа), счётчик слов в реальном времени, эталон каждой микротемы и 3 критерия самопроверки (ИК1+ИК2+ИК3).</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-ru-01-izlozhenie.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№1 КИМ</span>
+          <span class="trainer-tag">изложение · 6 баллов</span>
+        </div>
+        <div class="trainer-title">Сжатое изложение</div>
+        <div class="trainer-blurb">Банк из 5 текстов · счётчик слов · эталон каждой микротемы · 3 критерия с самооценкой ИК1+ИК2+ИК3.</div>
+        <div class="trainer-card-foot"><span class="qcount">5 текстов</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Часть 2 · краткие ответы по тексту</div>
+      <h3 class="block-title">5 комплексных вариантов · 11 заданий = 11 баллов</h3>
+      <p class="block-blurb">Каждый вариант — это микротекст (5 предложений) + 6 самостоятельных заданий + большой текст (30+ предложений) с заданиями на анализ. Темы вариантов: Мировой океан + Гагарин (демо ФИПИ Ю. Нагибина), Лес + дружба, Народные традиции + материнская любовь, Наука + возвращение на родину, Книга‑диалог + путь к мечте.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-ru-complex-var-01.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">Вариант 1</span>
+          <span class="trainer-tag">11 заданий · 11 баллов</span>
+        </div>
+        <div class="trainer-title">Мировой океан + Ю. Нагибин (демо ФИПИ)</div>
+        <div class="trainer-blurb">Микротекст про океан · 6 самостоятельных заданий · текст Ю. Нагибина из официального демо ФИПИ.</div>
+        <div class="trainer-card-foot"><span class="qcount">11 автопроверок</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-ru-complex-var-02.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">Вариант 2</span>
+          <span class="trainer-tag">11 заданий · 11 баллов</span>
+        </div>
+        <div class="trainer-title">Лес + дружба (Петя и Серёжа)</div>
+        <div class="trainer-blurb">Микротекст про живой лес · 6 самостоятельных · текст про дружбу мальчиков.</div>
+        <div class="trainer-card-foot"><span class="qcount">11 автопроверок</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-ru-complex-var-03.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">Вариант 3</span>
+          <span class="trainer-tag">11 заданий · 11 баллов</span>
+        </div>
+        <div class="trainer-title">Народные традиции + материнская любовь</div>
+        <div class="trainer-blurb">Микротекст про обычаи · 6 самостоятельных · текст про маму и сына.</div>
+        <div class="trainer-card-foot"><span class="qcount">11 автопроверок</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-ru-complex-var-04.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">Вариант 4</span>
+          <span class="trainer-tag">11 заданий · 11 баллов</span>
+        </div>
+        <div class="trainer-title">Наука и упорство + возвращение на родину</div>
+        <div class="trainer-blurb">Микротекст про Эдисона · 6 самостоятельных · текст про Алексея.</div>
+        <div class="trainer-card-foot"><span class="qcount">11 автопроверок</span><span class="open">открыть</span></div>
+      </a>
+      <a class="trainer-card" href="trainer-ru-complex-var-05.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">Вариант 5</span>
+          <span class="trainer-tag">11 заданий · 11 баллов</span>
+        </div>
+        <div class="trainer-title">Книга‑диалог + путь к мечте (Маша‑врач)</div>
+        <div class="trainer-blurb">Микротекст про литературу · 6 самостоятельных · текст про Машу и мечту стать врачом.</div>
+        <div class="trainer-card-foot"><span class="qcount">11 автопроверок</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Часть 3 · сочинение-рассуждение</div>
+      <h3 class="block-title">№13 КИМ — банк из 5 вариантов × 3 темы</h3>
+      <p class="block-blurb">Один из трёх типов задания: 13.1 (на лингвистическую цитату), 13.2 (объяснение фрагмента текста), 13.3 (значение слова). В тренажёре 5 текстов × 3 темы = 15 эталонных сочинений; для каждой темы — отдельный эталон и self‑check по 4 критериям СК1–СК4 (СК2: 0/1/2/3 балла).</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-ru-13-sochinenie.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">№13 КИМ</span>
+          <span class="trainer-tag">сочинение · 7 баллов</span>
+        </div>
+        <div class="trainer-title">Сочинение‑рассуждение (15 эталонов)</div>
+        <div class="trainer-blurb">5 текстов × 3 темы · отдельный эталон для каждой комбинации · самооценка по СК1+СК2+СК3+СК4 (всего 7 баллов).</div>
+        <div class="trainer-card-foot"><span class="qcount">15 эталонов</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-num">Допуск к ОГЭ · итоговое собеседование</div>
+      <h3 class="block-title">Устный экзамен‑допуск (отдельно от письменного ОГЭ)</h3>
+      <p class="block-blurb">Сдают за несколько месяцев до письменного ОГЭ. 4 задания (≈15–16 минут): чтение текста, пересказ с цитатой, монолог на одну из 3 тем, диалог по теме. Зачёт от 10 баллов из 20. Эти баллы не суммируются с письменным экзаменом — это допуск.</p>
+    </div>
+    <div class="trainers">
+      <a class="trainer-card" href="trainer-ru-orals-var-01.html">
+        <div class="trainer-card-head">
+          <span class="trainer-num">У · №1–4</span>
+          <span class="trainer-tag">устно · 20 баллов</span>
+        </div>
+        <div class="trainer-title">Итоговое собеседование · вариант 1 (демо ФИПИ)</div>
+        <div class="trainer-blurb">Чтение текста про Лёню Голикова + пересказ с цитатой + монолог (1 из 3 тем: велопоход / кинотеатр / поколения) + диалог. Таймеры 2+2/2+3/1+3/3 мин, эталонные планы, 13 критериев Ч1–Ч3 + П1–П3 + М1–М2 + Д1 + Р1–Р4.</div>
+        <div class="trainer-card-foot"><span class="qcount">4 этапа · 13 критериев</span><span class="open">открыть</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="intro-note" style="margin-top:48px;border-left-color:var(--russian)">
+    <p style="font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--russian);text-transform:uppercase;margin-bottom:8px">русский покрыт полностью</p>
+    <p><b>Письменный ОГЭ‑2026 по русскому языку</b> покрыт тренажёрами на 24 балла из 37 (содержание); 13 баллов грамотности и фактической точности оцениваются экспертом и на тренажёрах вынесены в self‑check.</p>
+    <p><b>Итоговое собеседование</b> (устный экзамен‑допуск) представлено отдельным тренажёром на материале демо ФИПИ‑2026: чтение, пересказ, монолог, диалог — 20 баллов, зачёт от 10.</p>
   </div>
 </section>
 
@@ -1069,7 +1186,7 @@ footer .right { display: flex; gap: 18px; flex-wrap: wrap; }
 </section>
 
 <footer>
-  <span>ОГЭ-2026 · v0.8.0 · открытый бесплатный курс · 2026-05-10</span>
+  <span>ОГЭ-2026 · v1.0.0 · открытый бесплатный курс · 2026-05-11 · все 4 предмета</span>
   <div class="right">
     <span>источники: <a href="https://fipi.ru/oge" target="_blank">fipi.ru/oge</a></span>
   </div>

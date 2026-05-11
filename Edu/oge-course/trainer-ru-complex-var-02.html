@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 русский — комплексный вариант №2 (часть 2)</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:780px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:620px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.stat{padding:14px 12px;text-align:left;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-value{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1;margin-bottom:6px}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+h2{font-family:'Fraunces',serif;font-weight:600;font-size:22px;margin:32px 0 14px;color:var(--accent)}
+.text-block{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:16px 20px;
+  margin-bottom:18px;
+  font-size:15.5px;
+  line-height:1.7;
+}
+.text-block.collapsible{position:relative}
+.text-block .sent-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--accent);
+  margin-right:2px;
+  vertical-align:super;
+  font-weight:500;
+}
+.text-block .source{
+  margin-top:14px;
+  text-align:right;
+  font-style:italic;
+  color:var(--muted);
+  font-size:14px;
+}
+details.big-text{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  margin-bottom:18px;
+}
+details.big-text summary{
+  padding:14px 20px;
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:16px;
+  color:var(--accent);
+  cursor:pointer;
+  user-select:none;
+  list-style:none;
+}
+details.big-text summary::after{
+  content:'▼';
+  float:right;
+  font-size:13px;
+  transition:transform 0.2s;
+}
+details.big-text[open] summary::after{transform:rotate(180deg)}
+details.big-text .content{
+  padding:0 20px 16px;
+  font-size:15px;
+  line-height:1.7;
+  border-top:1px solid var(--border);
+  padding-top:14px;
+}
+
+.task{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:18px 22px;
+  margin-bottom:14px;
+}
+.task-head{
+  display:flex;
+  align-items:baseline;
+  gap:12px;
+  margin-bottom:8px;
+}
+.task-num{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:22px;
+  color:var(--accent);
+  min-width:30px;
+}
+.task-points{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  background:var(--accent);
+  color:white;
+  padding:2px 8px;
+  border-radius:2px;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+}
+.task-question{
+  font-size:15.5px;
+  margin:6px 0 12px;
+  line-height:1.5;
+}
+.task-context{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:10px 14px;
+  margin-bottom:10px;
+  font-size:14.5px;
+  line-height:1.65;
+}
+.options{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.option{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:9px 12px;
+  border:1px solid var(--border);
+  background:white;
+  border-radius:4px;
+  cursor:pointer;
+  transition:all 0.12s;
+  user-select:none;
+  font-size:14.5px;
+  line-height:1.5;
+}
+.option:hover:not(.locked){border-color:var(--accent)}
+.option.selected{border-color:var(--accent);background:#F0EDE0}
+.option.locked{cursor:not-allowed}
+.option-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  font-weight:500;
+  flex-shrink:0;
+  width:24px;
+  height:24px;
+  border:1px solid var(--border);
+  background:var(--paper);
+  display:flex;align-items:center;justify-content:center;
+  border-radius:4px;
+}
+.option.selected .option-num{background:var(--accent);color:white;border-color:var(--accent)}
+.option.true-mark{background:#E1ECDD;border-color:#A8C49F}
+.option.true-mark .option-num{background:#A8C49F;color:white;border-color:#A8C49F}
+.option.false-mark{background:#F2E0DC;border-color:#C99A93}
+.option.false-mark .option-num{background:#C99A93;color:white;border-color:#C99A93}
+
+.matching{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.match-row{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:14px;
+  align-items:start;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  background:white;
+  border-radius:4px;
+  font-size:14.5px;
+}
+.match-letter{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  color:var(--accent);
+  font-size:18px;
+  min-width:24px;
+}
+.match-rule{font-size:14px;line-height:1.5;color:var(--ink)}
+.match-pickers{
+  display:flex;gap:6px;margin-top:8px;
+}
+.match-picker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;font-weight:500;
+  width:32px;height:32px;
+  border:1px solid var(--border);
+  background:var(--paper);color:var(--ink);
+  cursor:pointer;border-radius:4px;
+}
+.match-picker:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.match-picker.selected{background:var(--accent);color:white;border-color:var(--accent)}
+.match-picker:disabled{cursor:not-allowed}
+.match-rules-list{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:10px 14px;
+  margin-top:10px;
+  font-size:14px;
+  line-height:1.55;
+}
+.match-rules-list ol{margin:0;padding-left:24px}
+.match-rules-list li{margin:5px 0}
+
+.text-input{
+  font-family:'JetBrains Mono',monospace;
+  font-size:15px;
+  width:100%;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:4px;
+  background:white;
+  color:var(--ink);
+  outline:none;
+  margin-bottom:10px;
+}
+.text-input:focus{border-color:var(--accent)}
+.text-input:disabled{cursor:not-allowed;opacity:0.7}
+
+button.check-btn{
+  font-family:'Spectral',serif;font-size:15px;
+  padding:7px 16px;
+  border:1px solid var(--accent);
+  background:var(--accent);color:white;
+  cursor:pointer;border-radius:4px;
+}
+button.check-btn:hover:not(:disabled){opacity:0.9}
+button.check-btn:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+
+.feedback{
+  margin-top:10px;
+  padding:11px 14px;
+  border-radius:4px;
+  font-size:14px;
+  line-height:1.55;
+}
+.feedback.ok{background:#E1ECDD;border:1px solid #A8C49F;color:var(--success)}
+.feedback.bad{background:#F2E0DC;border:1px solid #C99A93;color:var(--error)}
+.feedback strong{font-weight:600}
+.feedback .why{margin-top:6px;font-size:13.5px;font-weight:400}
+
+.summary-card{
+  background:var(--accent-soft);
+  border:1px solid var(--accent);
+  border-radius:4px;
+  padding:18px 22px;
+  margin:24px 0;
+  text-align:center;
+}
+.summary-card h3{font-family:'Fraunces',serif;color:var(--accent);margin:0 0 8px;font-size:24px}
+.summary-card p{margin:6px 0;font-size:15px}
+.summary-card .total{font-family:'Fraunces',serif;font-size:42px;font-weight:600;color:var(--accent);margin:8px 0}
+
+button.master-btn{
+  font-family:'Spectral',serif;font-size:17px;
+  padding:12px 28px;
+  border:1px solid var(--accent);
+  background:var(--accent);color:white;
+  cursor:pointer;border-radius:4px;
+  margin:18px auto;
+  display:block;
+}
+button.master-btn:hover:not(:disabled){opacity:0.9}
+
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-right:1px solid var(--border)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>русский</span><span>·</span><span>часть 2 · вариант №2</span>
+  <span class="right">11 баллов · базовый</span>
+</div>
+
+<h1>Комплексный <em>вариант №2</em></h1>
+<p class="lead">Тренировочный вариант №2 части 2 ОГЭ по русскому языку (задания 2–12). Материал — тренировочный микротекст про лес и текст о дружбе в школе. По каждому заданию — мгновенная проверка с эталоном и пояснением.</p>
+
+<section class="stats">
+  <div class="stat"><div class="stat-value" id="stat-done">0</div><div class="stat-label">пройдено</div></div>
+  <div class="stat"><div class="stat-value" id="stat-correct">0</div><div class="stat-label">верно</div></div>
+  <div class="stat"><div class="stat-value" id="stat-points">0</div><div class="stat-label">баллов из 11</div></div>
+  <div class="stat"><div class="stat-value" id="stat-pct">—</div><div class="stat-label">% точности</div></div>
+</section>
+
+<h2>Задания 2, 3 — по микротексту</h2>
+
+<div class="text-block">
+  <p><span class="sent-num">(1)</span>Лес — это сложный живой организм. <span class="sent-num">(2)</span>Каждое дерево здесь связано с другими через корни, образуя единую сеть. <span class="sent-num">(3)</span>По этой сети деревья обмениваются питательными веществами и даже предупреждают друг друга о приближении вредителей. <span class="sent-num">(4)</span>Учёные доказали: взрослые деревья делятся своими ресурсами с молодыми сеянцами, как родители с детьми. <span class="sent-num">(5)</span>Поэтому, когда мы говорим о лесе, мы говорим не о собрании отдельных растений, а о большой, единой жизни.</p>
+</div>
+
+<div id="t2" class="task"></div>
+<div id="t3" class="task"></div>
+
+<h2>Задания 4–9 — самостоятельные</h2>
+<div id="t4" class="task"></div>
+<div id="t5" class="task"></div>
+<div id="t6" class="task"></div>
+<div id="t7" class="task"></div>
+<div id="t8" class="task"></div>
+<div id="t9" class="task"></div>
+
+<h2>Задания 10–12 — по тексту о дружбе</h2>
+
+<details class="big-text" id="big-text">
+  <summary>Прочитать полный текст (тренировочный, 33 предложения)</summary>
+  <div class="content" id="big-text-content"></div>
+</details>
+
+<div id="t10" class="task"></div>
+<div id="t11" class="task"></div>
+<div id="t12" class="task"></div>
+
+<button class="master-btn" id="show-summary">Показать итог по всем заданиям</button>
+
+<div id="summary-area"></div>
+
+<hr>
+<div class="footer">ОГЭ-2026 · русский · часть 2 · вариант №2 · v0.6.1-audited · 2026-05-11</div>
+
+<script>
+// ====== Данные тренажёра ======
+
+// Большой тренировочный текст для заданий 10–12
+const NAGIBIN_TEXT = `<p><span class="sent-num">(1)</span>Петя перешёл в новую школу в середине учебного года. <span class="sent-num">(2)</span>Это был седьмой класс, и в коллективе уже сложились свои отношения, в которые новичку войти было непросто.</p>
+<p><span class="sent-num">(3)</span>Первые дни прошли тяжело. <span class="sent-num">(4)</span>Над Петей подсмеивались: над его очками, над тем, как он говорит, над тем, что он отличник. <span class="sent-num">(5)</span>Особенно усердствовала компания, в которой верховодил высокий парень по имени Кирилл. <span class="sent-num">(6)</span>Они «подшучивали»: то портфель спрячут, то ножку подставят, то прозвище придумают такое, что мама бы не одобрила.</p>
+<p><span class="sent-num">(7)</span>Петя терпел. <span class="sent-num">(8)</span>Дома он не жаловался: не хотел расстраивать маму. <span class="sent-num">(9)</span>А в школе старался не показывать обиду, потому что знал — это только обрадует мучителей.</p>
+<p><span class="sent-num">(10)</span>В классе был мальчик по имени Серёжа. <span class="sent-num">(11)</span>Он был немногословный, держался в стороне от шумной компании Кирилла, но и не дружил ни с кем особенно близко. <span class="sent-num">(12)</span>Серёжа всё видел, но в первые недели молчал.</p>
+<p><span class="sent-num">(13)</span>Однажды, после уроков, Кирилл с друзьями зажал Петю в углу раздевалки. <span class="sent-num">(14)</span>«А ну-ка, отличник, отдавай дневник, посмотрим, какие там пятёрочки!» — захохотал Кирилл. <span class="sent-num">(15)</span>Петя сжал портфель и молчал, понимая, что силы неравны.</p>
+<p><span class="sent-num">(16)</span>И тогда из-за вешалок вышел Серёжа. <span class="sent-num">(17)</span>Он встал между Петей и Кириллом, посмотрел спокойно и сказал негромко: «Хватит уже. Идите отсюда».</p>
+<p><span class="sent-num">(18)</span>Кирилл удивился, но решил не отступать: «А ты что, защитник? <span class="sent-num">(19)</span>Чего лезешь?» — «А того лезу, что давно бы лез, — ответил Серёжа. — <span class="sent-num">(20)</span>Просто думал, что вы сами поумнеете». <span class="sent-num">(21)</span>Кирилл сделал шаг, но Серёжа не отступил. <span class="sent-num">(22)</span>За спиной у Серёжи стоял Петя.</p>
+<p><span class="sent-num">(23)</span>Что-то изменилось в эту минуту. <span class="sent-num">(24)</span>Не было драки — Кирилл пробурчал что-то и ушёл с друзьями. <span class="sent-num">(25)</span>Но к Пете в этот вечер по дороге домой подошёл уже не одинокий новичок, а человек, у которого появился друг.</p>
+<p><span class="sent-num">(26)</span>«Почему ты раньше не вступился?» — спросил Петя. <span class="sent-num">(27)</span>«Не хотел лезть в чужое, — пожал плечами Серёжа. — <span class="sent-num">(28)</span>Думал, может, ты сам справишься. <span class="sent-num">(29)</span>А сегодня понял, что одному тебе не справиться. <span class="sent-num">(30)</span>Друзья как раз для этого и нужны: помочь, когда силы кончаются».</p>
+<p><span class="sent-num">(31)</span>Они шли молча, и Петя думал, что настоящий друг — это не тот, кто всегда рядом и смеётся за компанию. <span class="sent-num">(32)</span>Настоящий друг — это тот, кто появляется в нужный момент. <span class="sent-num">(33)</span>И ему не надо клясться в верности — он просто стоит за твоей спиной.</p>
+<p class="source">(Тренировочный текст)</p>`;
+document.getElementById('big-text-content').innerHTML = NAGIBIN_TEXT;
+
+// Задания
+const TASKS = [
+  { id:2, type:'multi',
+    question:'Укажите варианты ответов, в которых верно определена грамматическая основа в одном из предложений или в одной из частей сложного предложения текста.',
+    options:[
+      'Лес — организм (предложение 1)',
+      'каждое дерево (предложение 2)',
+      'деревья обмениваются (и) предупреждают (предложение 3)',
+      'учёные доказали (предложение 4)',
+      'мы говорим (предложение 5)'
+    ],
+    correct:'1345',
+    why:'(1) «Лес — организм» — составное именное сказуемое (с пропущенной связкой). (2) «каждое дерево связано» — основа с краткой формой страд. причастия; вариант неполный, нет сказуемого. (3) Однородные сказуемые «обмениваются» и «предупреждают». (4) «учёные доказали» — основа главной части БСП. (5) «мы говорим» — основа главной части СПП с придаточным времени.'
+  },
+  { id:3, type:'multi',
+    question:'Укажите варианты ответов, в которых даны верные характеристики предложений текста.',
+    options:[
+      'Предложение 1 — сложноподчинённое.',
+      'В предложении 2 содержится деепричастный оборот.',
+      'Предложение 3 осложнено однородными сказуемыми.',
+      'Предложение 4 — бессоюзное сложное.',
+      'Предложение 5 — простое, осложнённое однородными членами.'
+    ],
+    correct:'234',
+    why:'(1) Простое с тире между подлежащим и сказуемым. (2) «образуя единую сеть» — деепричастный оборот. (3) «обмениваются» и «предупреждают» — однородные сказуемые. (4) Двоеточие между частями + смысловые отношения пояснения = БСП. (5) Это СПП с придаточным времени («когда мы говорим...») и однородными сказуемыми в главной части — не простое.'
+  },
+  { id:4, type:'matching',
+    question:'Установите соответствие между пунктуационными правилами и предложениями, которые могут служить примерами для приведённых пунктуационных правил.',
+    rules:[
+      { letter:'А', text:'Между подлежащим и сказуемым, выраженными существительными в именительном падеже, ставится тире.' },
+      { letter:'Б', text:'Однородные определения разделяются запятой.' },
+      { letter:'В', text:'Обращения выделяются запятыми.' }
+    ],
+    examples:[
+      'Знание — сила, которую нельзя купить ни за какие деньги.',
+      'В саду росли высокие, стройные сосны.',
+      'Друзья, давайте жить дружно и помогать друг другу!',
+      'Учитель объяснил материал чётко и понятно.',
+      'В Москве много театров, музеев и парков.'
+    ],
+    correct:'123',
+    why:'А → 1: «Знание — сила» — оба существительных стоят в именительном падеже, между ними ставится тире. Б → 2: «высокие, стройные» — однородные определения. В → 3: «Друзья» — обращение в начале предложения. Пример 5 теперь служит нейтральным дистрактором: в нём нет тире между подлежащим и сказуемым.'
+  },
+  { id:5, type:'text-digits',
+    question:'Расставьте знаки препинания. Укажите все цифры, на месте которых должны стоять запятые.',
+    context:'Лесной воздух (1) пропитанный смолой и хвоей (2) лечит лучше любых лекарств. Поэтому врачи (3) когда хотят восстановить здоровье пациента (4) часто рекомендуют поездку в санаторий (5) расположенный в сосновом бору. И даже короткая прогулка (6) по тенистой тропинке (7) среди старых деревьев (8) приносит ощутимое облегчение.',
+    correct:'12345',
+    why:'(1, 2) — причастный оборот «пропитанный смолой и хвоей» обособляется. (3, 4) — придаточное времени «когда хотят восстановить здоровье». (5) — причастный оборот «расположенный в сосновом бору». (6, 7) — НЕ запятая (тропинка по чему — не обособление, а уточнение места, спорный случай). (8) — НЕ запятая (нет необходимости отделять). Ответ — 12345 (без 6, 7, 8).'
+  },
+  { id:6, type:'multi',
+    question:'Укажите варианты ответов, в которых дано верное объяснение написания выделенного слова.',
+    options:[
+      'РАСПИСАНИЕ — на конце приставки перед буквой, обозначающей глухой согласный, пишется С.',
+      'СЕРЕБРЯНЫЙ — в суффиксе прилагательного, образованного от существительного с помощью суффикса -ЯН-, пишется одна Н.',
+      'ИНТЕРЕСНО — в кратком прилагательном среднего рода пишется одна Н.',
+      'НЕКОГО — в отрицательном местоимении под ударением пишется приставка НЕ-.',
+      'ПОЛ-ЛИМОНА — пишется через дефис, потому что вторая часть слова начинается с буквы Л.'
+    ],
+    correct:'1245',
+    why:'(1) Верно — приставка РАС- перед глухим П даёт С. (2) Верно — суффикс -ЯН- даёт одну Н (исключения: стеклянный, оловянный, деревянный). (3) Неверно — правило сформулировано неточно: в кратком прилагательном пишется столько же Н, сколько в полном, а не зависит от рода. (4) Верно — в отрицательных местоимениях под ударением — НЕ, без ударения — НИ. (5) Верно — ПОЛ- перед Л пишется через дефис.'
+  },
+  { id:7, type:'text-digits',
+    question:'Прочитайте текст. Вставьте пропущенные буквы. Укажите все цифры, на месте которых пишется буква Е.',
+    context:'В продолжени..(1) урока учитель пр..(2)дварительно объяснил новый материал, а ребята вним..(3)тельно слушали. Один из мальчиков пр..(4)поднял руку и сп..(5)росил о том, что ему было непонятно. Учитель пр..(6)сел рядом с ним и пр..(7)дложил разобрать пример вместе. После урока все обсужд..(8)ли то, чему науч..(9)лись.',
+    correct:'127',
+    why:'(1) «В продолжение урока» — Е (предлог в значении «в течение»). (2) «предварительно» — Е (словарная приставка ПРЕД-). (7) «предложил» — Е (словарная приставка ПРЕД- от «предлагать», корень с чередованием -лаг-/-лож-). Прочие пропуски с другими буквами: (3) «внимательно» — А (от словарного «внимАние»); (4) «приподнял» — И (приставка ПРИ-, неполное действие); (5) «спросил» — О (корень -прос-, проверочное «спрОсит»); (6) «присел» — И (приставка ПРИ-, неполное действие); (8) «обсуждали» — А (суффикс глагольной основы -А-); (9) «научились» — И (суффикс -И- глагола «научить»).'
+  },
+  { id:8, type:'text-word',
+    question:'Раскройте скобки и запишите слово «триста» в соответствующей форме, соблюдая нормы современного русского литературного языка.',
+    context:'Расстояние между деревнями составляет более (триста) километров.',
+    correct:['трёхсот', 'трехсот'],
+    why:'Числительное «триста» в косвенных падежах склоняется в обеих частях: трёхсот (Р. п.), трёмстам (Д. п.), трёмястами (Т. п.), о трёхстах (П. п.). Здесь — Р. п.: «более трёхсот километров».'
+  },
+  { id:9, type:'text-word',
+    question:'Замените словосочетание «школьный учебник», построенное на основе согласования, синонимичным словосочетанием со связью управление. Напишите получившееся словосочетание, соблюдая нормы современного русского литературного языка.',
+    correct:['учебникдляшколы'],
+    why:'Согласование «школьный учебник» (прилагательное + существительное) заменяется управлением: главное слово «учебник» управляет предложно-падежной формой «для школы». Вариант «учебник школы» не является точным синонимом: он скорее означает принадлежность конкретной школе.'
+  },
+  { id:10, type:'multi',
+    question:'Какие из высказываний соответствуют содержанию текста? Укажите номера ответов.',
+    options:[
+      'Петя жаловался дома маме на одноклассников.',
+      'Серёжа сразу подошёл к Пете в первые дни и предложил дружбу.',
+      'Серёжа защитил Петю в раздевалке, не вступая в драку.',
+      'Кирилл и его друзья отступили после слов Серёжи.',
+      'Петя в конце текста понимает, что настоящий друг появляется в нужный момент.'
+    ],
+    correct:'345',
+    why:'(1) Неверно — «Дома он не жаловался: не хотел расстраивать маму» (предл. 8). (2) Неверно — Серёжа первые недели молчал (предл. 12). (3) Верно — «Не было драки» (предл. 24). (4) Верно — «Кирилл пробурчал что-то и ушёл с друзьями» (предл. 24). (5) Верно — предл. 31–33.'
+  },
+  { id:11, type:'multi',
+    question:'Укажите варианты ответов, в которых средством выразительности речи является метафора.',
+    options:[
+      'Кирилл с друзьями зажал Петю в углу раздевалки.',
+      'Петя сжал портфель и молчал, понимая, что силы неравны.',
+      'За спиной у Серёжи стоял Петя.',
+      'Друзья как раз для этого и нужны: помочь, когда силы кончаются.',
+      'И ему не надо клясться в верности — он просто стоит за твоей спиной.'
+    ],
+    correct:'45',
+    why:'(4) «силы кончаются» — метафора (силы как ресурс, который заканчивается). (5) «стоит за твоей спиной» — метафора (физическое положение как символ поддержки). (1) Прямое значение. (2) Прямое значение. (3) Прямое значение.'
+  },
+  { id:12, type:'text-word',
+    question:'В предложениях 1–22 найдите синоним к слову «обидчик». Выпишите этот синоним.',
+    correct:['мучителей'],
+    why:'В предложении 9 употреблено слово «мучителей»: «не показывать обиду, потому что знал — это только обрадует мучителей». В задании требуется выписать слово в той форме, в какой оно стоит в тексте, поэтому правильный ответ — «мучителей».'
+  }
+];
+
+// ====== Состояние ======
+const state = {};
+TASKS.forEach(t => {
+  state[t.id] = { picks: t.type === 'multi' ? new Set() : null,
+                  matchPicks: t.type === 'matching' ? {} : null,
+                  text: '',
+                  answered: false,
+                  correct: false };
+});
+
+function updateGlobalStats(){
+  let done=0, correct=0, points=0;
+  TASKS.forEach(t => {
+    if(state[t.id].answered){
+      done++;
+      if(state[t.id].correct){ correct++; points++; }
+    }
+  });
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-correct').textContent = correct;
+  document.getElementById('stat-points').textContent = points;
+  document.getElementById('stat-pct').textContent = done === 0 ? '—' : Math.round(100*correct/done) + '%';
+}
+
+// ====== Рендер заданий ======
+
+function renderMulti(t){
+  const div = document.getElementById('t' + t.id);
+  let optsHtml = '<div class="options">';
+  t.options.forEach((o, i) => {
+    optsHtml += `<div class="option" data-i="${i+1}"><div class="option-num">${i+1}</div><div>${o}</div></div>`;
+  });
+  optsHtml += '</div>';
+  div.innerHTML = `
+    <div class="task-head">
+      <div class="task-num">№${t.id}</div>
+      <span class="task-points">1 балл</span>
+    </div>
+    <p class="task-question">${t.question}</p>
+    ${optsHtml}
+    <button class="check-btn" id="check-${t.id}" disabled>Проверить</button>
+    <div id="fb-${t.id}"></div>
+  `;
+  div.querySelectorAll('.option').forEach(o => {
+    o.addEventListener('click', () => {
+      if(state[t.id].answered) return;
+      const i = +o.dataset.i;
+      const set = state[t.id].picks;
+      if(set.has(i)){ set.delete(i); o.classList.remove('selected'); }
+      else { set.add(i); o.classList.add('selected'); }
+      document.getElementById('check-' + t.id).disabled = set.size === 0;
+    });
+  });
+  document.getElementById('check-' + t.id).addEventListener('click', () => checkMulti(t));
+}
+
+function checkMulti(t){
+  if(state[t.id].answered) return;
+  const userAns = [...state[t.id].picks].sort((a,b)=>a-b).join('');
+  const correctSet = new Set(t.correct.split('').map(Number));
+  const userSet = state[t.id].picks;
+  let ok = userSet.size === correctSet.size;
+  if(ok) for(const v of correctSet) if(!userSet.has(v)){ ok = false; break; }
+  state[t.id].answered = true;
+  state[t.id].correct = ok;
+
+  // Mark options
+  t.options.forEach((_, i) => {
+    const opt = document.querySelector(`#t${t.id} .option[data-i="${i+1}"]`);
+    opt.classList.add('locked');
+    const num = i+1;
+    if(correctSet.has(num)) opt.classList.add('true-mark');
+    else if(userSet.has(num)) opt.classList.add('false-mark');
+  });
+
+  const fb = document.getElementById('fb-' + t.id);
+  fb.innerHTML = ok
+    ? `<div class="feedback ok"><strong>Верно.</strong> Ответ: <code>${t.correct}</code>.<div class="why">${t.why}</div></div>`
+    : `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: <code>${t.correct}</code>, ваш: <code>${userAns || '—'}</code>.<div class="why">${t.why}</div></div>`;
+  document.getElementById('check-' + t.id).disabled = true;
+  updateGlobalStats();
+}
+
+function renderMatching(t){
+  const div = document.getElementById('t' + t.id);
+  let rulesHtml = '<div class="matching">';
+  t.rules.forEach((r, ri) => {
+    let pickers = '<div class="match-pickers">';
+    for(let n=1; n<=5; n++){
+      pickers += `<button class="match-picker" data-rule="${ri}" data-pick="${n}">${n}</button>`;
+    }
+    pickers += '</div>';
+    rulesHtml += `
+      <div class="match-row">
+        <div class="match-letter">${r.letter})</div>
+        <div>
+          <div class="match-rule">${r.text}</div>
+          ${pickers}
+        </div>
+      </div>`;
+  });
+  rulesHtml += '</div>';
+
+  let exHtml = '<div class="match-rules-list"><strong>Предложения:</strong><ol>';
+  t.examples.forEach(ex => { exHtml += `<li>${ex}</li>`; });
+  exHtml += '</ol></div>';
+
+  div.innerHTML = `
+    <div class="task-head"><div class="task-num">№${t.id}</div><span class="task-points">1 балл</span></div>
+    <p class="task-question">${t.question}</p>
+    ${exHtml}
+    ${rulesHtml}
+    <button class="check-btn" id="check-${t.id}" disabled>Проверить</button>
+    <div id="fb-${t.id}"></div>
+  `;
+  div.querySelectorAll('.match-picker').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(state[t.id].answered) return;
+      const r = +btn.dataset.rule, p = +btn.dataset.pick;
+      state[t.id].matchPicks[r] = p;
+      div.querySelectorAll(`.match-picker[data-rule="${r}"]`).forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      const allChosen = Object.keys(state[t.id].matchPicks).length === t.rules.length;
+      document.getElementById('check-' + t.id).disabled = !allChosen;
+    });
+  });
+  document.getElementById('check-' + t.id).addEventListener('click', () => checkMatching(t));
+}
+
+function checkMatching(t){
+  if(state[t.id].answered) return;
+  const picks = state[t.id].matchPicks;
+  const userAns = t.rules.map((_, i) => picks[i]).join('');
+  const ok = userAns === t.correct;
+  state[t.id].answered = true;
+  state[t.id].correct = ok;
+
+  // Lock all
+  document.querySelectorAll(`#t${t.id} .match-picker`).forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('fb-' + t.id);
+  fb.innerHTML = ok
+    ? `<div class="feedback ok"><strong>Верно.</strong> Ответ: <code>${t.correct}</code>.<div class="why">${t.why}</div></div>`
+    : `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: <code>${t.correct}</code>, ваш: <code>${userAns}</code>.<div class="why">${t.why}</div></div>`;
+  document.getElementById('check-' + t.id).disabled = true;
+  updateGlobalStats();
+}
+
+function renderTextDigits(t){
+  const div = document.getElementById('t' + t.id);
+  div.innerHTML = `
+    <div class="task-head"><div class="task-num">№${t.id}</div><span class="task-points">1 балл</span></div>
+    <p class="task-question">${t.question}</p>
+    ${t.context ? `<div class="task-context">${t.context}</div>` : ''}
+    <input type="text" class="text-input" id="inp-${t.id}" placeholder="цифры подряд, например 123" autocomplete="off">
+    <button class="check-btn" id="check-${t.id}" disabled>Проверить</button>
+    <div id="fb-${t.id}"></div>
+  `;
+  const inp = document.getElementById('inp-' + t.id);
+  inp.addEventListener('input', () => {
+    document.getElementById('check-' + t.id).disabled = inp.value.trim() === '';
+  });
+  inp.addEventListener('keydown', e => { if(e.key==='Enter' && !state[t.id].answered) checkTextDigits(t); });
+  document.getElementById('check-' + t.id).addEventListener('click', () => checkTextDigits(t));
+}
+
+function checkTextDigits(t){
+  if(state[t.id].answered) return;
+  const inp = document.getElementById('inp-' + t.id);
+  const raw = inp.value.replace(/[^0-9]/g, '');
+  const userSorted = raw.split('').sort().join('');
+  const correctSorted = t.correct.split('').sort().join('');
+  const ok = userSorted === correctSorted && raw.length > 0;
+  state[t.id].answered = true;
+  state[t.id].correct = ok;
+  inp.disabled = true;
+
+  const fb = document.getElementById('fb-' + t.id);
+  fb.innerHTML = ok
+    ? `<div class="feedback ok"><strong>Верно.</strong> Ответ: <code>${t.correct}</code>.<div class="why">${t.why}</div></div>`
+    : `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: <code>${t.correct}</code>, ваш: <code>${raw || '—'}</code>.<div class="why">${t.why}</div></div>`;
+  document.getElementById('check-' + t.id).disabled = true;
+  updateGlobalStats();
+}
+
+function renderTextWord(t){
+  const div = document.getElementById('t' + t.id);
+  div.innerHTML = `
+    <div class="task-head"><div class="task-num">№${t.id}</div><span class="task-points">1 балл</span></div>
+    <p class="task-question">${t.question}</p>
+    ${t.context ? `<div class="task-context">${t.context}</div>` : ''}
+    <input type="text" class="text-input" id="inp-${t.id}" placeholder="слово или словосочетание" autocomplete="off">
+    <button class="check-btn" id="check-${t.id}" disabled>Проверить</button>
+    <div id="fb-${t.id}"></div>
+  `;
+  const inp = document.getElementById('inp-' + t.id);
+  inp.addEventListener('input', () => {
+    document.getElementById('check-' + t.id).disabled = inp.value.trim() === '';
+  });
+  inp.addEventListener('keydown', e => { if(e.key==='Enter' && !state[t.id].answered) checkTextWord(t); });
+  document.getElementById('check-' + t.id).addEventListener('click', () => checkTextWord(t));
+}
+
+function normalize(s){
+  return s.toLowerCase().replace(/ё/g, 'е').replace(/[\s\-—–.,;:!?'"]/g, '').trim();
+}
+
+function checkTextWord(t){
+  if(state[t.id].answered) return;
+  const inp = document.getElementById('inp-' + t.id);
+  const userVal = inp.value.trim();
+  const norm = normalize(userVal);
+  const ok = t.correct.some(c => normalize(c) === norm);
+  state[t.id].answered = true;
+  state[t.id].correct = ok;
+  inp.disabled = true;
+
+  const fb = document.getElementById('fb-' + t.id);
+  const correctDisplay = t.correct.join(' / ');
+  fb.innerHTML = ok
+    ? `<div class="feedback ok"><strong>Верно.</strong> Ответ: <code>${correctDisplay}</code>.<div class="why">${t.why}</div></div>`
+    : `<div class="feedback bad"><strong>Не точно.</strong> Правильный ответ: <code>${correctDisplay}</code>, ваш: <code>${userVal || '—'}</code>.<div class="why">${t.why}</div></div>`;
+  document.getElementById('check-' + t.id).disabled = true;
+  updateGlobalStats();
+}
+
+// ====== Запуск ======
+
+TASKS.forEach(t => {
+  if(t.type === 'multi') renderMulti(t);
+  else if(t.type === 'matching') renderMatching(t);
+  else if(t.type === 'text-digits') renderTextDigits(t);
+  else if(t.type === 'text-word') renderTextWord(t);
+});
+
+document.getElementById('show-summary').addEventListener('click', () => {
+  let done = 0, correct = 0;
+  TASKS.forEach(t => {
+    if(state[t.id].answered){ done++; if(state[t.id].correct) correct++; }
+  });
+  let msg;
+  if(done === 0) msg = '<p>Решений ещё нет. Пройдите хотя бы несколько заданий.</p>';
+  else if(done < TASKS.length) msg = `<p>Из 11 заданий пройдено: <strong>${done}</strong>, правильно: <strong>${correct}</strong>.</p><p style="font-size:14px;color:var(--muted)">Завершите оставшиеся, чтобы увидеть итог по всему варианту.</p>`;
+  else {
+    let pct = Math.round(100 * correct / TASKS.length);
+    let msg5 = correct >= 9 ? 'Отличный результат — твердая «4–5».' :
+               correct >= 7 ? 'Хорошо — на «4». Поработай над оставшимися.' :
+               correct >= 5 ? 'Есть над чем работать — повтори правила и попробуй снова.' :
+                              'Нужна систематическая работа над всеми темами части 2.';
+    msg = `<div class="total">${correct} / ${TASKS.length}</div><p>Это ${pct}% от части 2.</p><p>${msg5}</p>`;
+  }
+  document.getElementById('summary-area').innerHTML = `<div class="summary-card"><h3>Итог по варианту</h3>${msg}</div>`;
+});
+
+updateGlobalStats();
+</script>
+</body>
+</html>

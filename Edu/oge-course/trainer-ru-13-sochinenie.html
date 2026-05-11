@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГЭ-2026 русский №13 — сочинение-рассуждение</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2EDE2;--ink:#2C2C2C;--accent:#2D4A2B;--accent-soft:#E8E4D6;--error:#8B2C2C;--success:#2D4A2B;--muted:#6B6B6B;--border:#D6D0BF;--card:#FBF8F0}
+*{box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;background:var(--paper);color:var(--ink);max-width:780px;margin:0 auto;padding:24px;line-height:1.6;font-size:17px}
+.meta-bar{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap}
+.meta-bar > .right{margin-left:auto}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:38px;margin:0 0 8px;line-height:1.15}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:16px;color:var(--muted);margin:0 0 28px;max-width:620px}
+h2{font-family:'Fraunces',serif;font-weight:600;font-size:22px;margin:32px 0 14px;color:var(--accent)}
+h3{font-family:'Fraunces',serif;font-weight:600;font-size:18px;margin:24px 0 10px;color:var(--ink)}
+
+.variant-bar{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding:10px 16px;background:var(--card);border:1px solid var(--border);border-radius:4px;flex-wrap:wrap}
+.variant-info{font-size:14px;color:var(--ink)}
+.variant-info strong{color:var(--accent)}
+.variant-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-left:auto}
+
+.callout{background:var(--accent-soft);border-left:3px solid var(--accent);padding:12px 16px;margin:14px 0;border-radius:0 4px 4px 0;font-size:14.5px}
+.callout strong{color:var(--accent)}
+
+details.big-text{background:white;border:1px solid var(--border);border-radius:4px;margin-bottom:18px}
+details.big-text summary{padding:14px 20px;font-family:'Fraunces',serif;font-weight:600;font-size:16px;color:var(--accent);cursor:pointer;user-select:none;list-style:none}
+details.big-text summary::after{content:'▼';float:right;font-size:13px;transition:transform 0.2s}
+details.big-text[open] summary::after{transform:rotate(180deg)}
+details.big-text .content{padding:0 20px 16px;font-size:15px;line-height:1.7;border-top:1px solid var(--border);padding-top:14px}
+.sent-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);margin-right:2px;vertical-align:super;font-weight:500}
+
+.theme-picker{display:grid;gap:10px;margin-bottom:18px}
+.theme-card{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:14px 18px;border:1px solid var(--border);background:white;border-radius:4px;cursor:pointer;transition:all 0.12s}
+.theme-card:hover:not(.locked){border-color:var(--accent)}
+.theme-card.selected{border-color:var(--accent);background:#F0EDE0;border-width:2px;padding:13px 17px}
+.theme-num{font-family:'Fraunces',serif;font-weight:600;color:var(--accent);font-size:18px;min-width:40px}
+.theme-text{flex:1}
+.theme-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.theme-q{font-size:15.5px;line-height:1.5}
+
+.write-block{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:18px 22px;margin-bottom:18px}
+.word-count{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.word-count strong{font-size:15px;color:var(--ink);font-family:'Fraunces',serif}
+.word-count.ok strong{color:var(--success)}
+.word-count.warn strong{color:#B07A2C}
+textarea{width:100%;min-height:280px;font-family:'Spectral',Georgia,serif;font-size:16px;padding:12px 14px;border:1px solid var(--border);border-radius:4px;background:white;color:var(--ink);outline:none;line-height:1.6;resize:vertical}
+textarea:focus{border-color:var(--accent)}
+
+button.primary{font-family:'Spectral',serif;font-size:16px;padding:10px 22px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;border-radius:4px;margin-right:8px}
+button.primary:hover:not(:disabled){opacity:0.9}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;background:var(--muted);border-color:var(--muted)}
+button.secondary{font-family:'Spectral',serif;font-size:16px;padding:10px 22px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.secondary:hover{background:var(--accent-soft)}
+button.compact{font-family:'Spectral',serif;font-size:13px;padding:6px 14px;border:1px solid var(--accent);background:white;color:var(--accent);cursor:pointer;border-radius:4px}
+button.compact:hover{background:var(--accent-soft)}
+
+.criteria{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:18px 22px;margin-bottom:18px}
+.criterion{display:grid;grid-template-columns:1fr auto;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);align-items:start}
+.criterion:last-child{border-bottom:none}
+.criterion-title{font-family:'Fraunces',serif;font-weight:600;font-size:16px;margin-bottom:6px}
+.criterion-desc{font-size:14px;color:var(--muted);line-height:1.55}
+.criterion-desc ul{margin:4px 0;padding-left:20px}
+.criterion-desc li{margin:3px 0}
+.score-pickers{display:flex;gap:4px;align-items:center}
+.score-picker{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;width:32px;height:32px;border:1px solid var(--border);background:white;color:var(--ink);cursor:pointer;border-radius:4px}
+.score-picker:hover{border-color:var(--accent);color:var(--accent)}
+.score-picker.selected{background:var(--accent);color:white;border-color:var(--accent)}
+
+.summary-card{background:var(--accent-soft);border:1px solid var(--accent);border-radius:4px;padding:20px 24px;margin:24px 0;text-align:center}
+.summary-card h3{font-family:'Fraunces',serif;color:var(--accent);margin:0 0 8px;font-size:24px}
+.summary-card .total{font-family:'Fraunces',serif;font-size:48px;font-weight:600;color:var(--accent);margin:8px 0;line-height:1}
+.summary-card .breakdown{font-size:14px;color:var(--muted);margin-top:8px}
+
+.reference-text{background:white;border:1px dashed var(--border);border-radius:4px;padding:14px 18px;margin-bottom:14px;font-size:15px;line-height:1.7}
+.reference-text p{margin:0 0 10px}
+.reference-text p:last-child{margin-bottom:0}
+
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 20px}
+.footer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.06em}
+@media(max-width:560px){
+  body{padding:16px}
+  h1{font-size:30px}
+  .criterion{grid-template-columns:1fr}
+  .theme-card{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="meta-bar">
+  <span>● ОГЭ-2026</span><span>·</span><span>русский</span><span>·</span><span>задание №13</span>
+  <span class="right">7 баллов · базовый</span>
+</div>
+
+<h1>Сочинение-<em>рассуждение</em></h1>
+<p class="lead">Тренажёр на задание №13 ОГЭ: на выбор 3 темы (13.1 лингвистическая, 13.2 по фрагменту, 13.3 жизненный вопрос). Объём — не менее 70 слов. Структура: тезис → 2 примера из текста → вывод. В банке 5 вариантов с разными текстами.</p>
+
+<div class="variant-bar">
+  <div class="variant-info">Вариант: <strong id="v-info">—</strong></div>
+  <button class="compact" id="switch-btn">Сменить вариант →</button>
+  <div class="variant-meta" id="v-meta"></div>
+</div>
+
+<div class="callout">
+  <strong>Композиция сочинения-рассуждения:</strong> 1) <em>Тезис</em> (ответ на вопрос темы). 2) <em>Доказательство</em>: два примера из прочитанного текста с указанием номеров предложений или цитат. 3) <em>Вывод</em>.
+</div>
+
+<h2>Исходный текст</h2>
+
+<details class="big-text">
+  <summary id="text-summary">Прочитать полный текст</summary>
+  <div class="content" id="big-text-content"></div>
+</details>
+
+<h2>Выбери тему</h2>
+<p style="font-size:14px;color:var(--muted);margin-bottom:12px">На экзамене нужно выбрать <strong>только одну</strong> тему. Здесь — для тренировки можно пробовать любую и переключаться.</p>
+
+<div class="theme-picker" id="theme-picker"></div>
+
+<h2>Твоё сочинение</h2>
+
+<div class="write-block">
+  <div class="word-count" id="word-count"><strong id="word-num">0</strong> <span id="word-label">слов · нужно не менее 70</span></div>
+  <textarea id="user-text" placeholder="Сначала выбери тему выше, потом пиши сочинение здесь. Структура: тезис → 2 примера из текста → вывод."></textarea>
+</div>
+
+<div style="margin-bottom:24px">
+  <button class="primary" id="show-reference" disabled>Показать эталонное сочинение</button>
+  <button class="secondary" id="show-tips">Подсказки по композиции →</button>
+</div>
+
+<div id="tips-area"></div>
+<div id="reference-area"></div>
+
+<h2>Самооценка по критериям</h2>
+<p style="font-size:14px;color:var(--muted);margin-bottom:14px">После того как напишешь сочинение и сверишь его с эталоном, оцени себя по 4 критериям. Максимум — 7 баллов.</p>
+
+<div class="criteria">
+  <div class="criterion">
+    <div>
+      <div class="criterion-title">СК1 · Наличие ответа на вопрос</div>
+      <div class="criterion-desc">
+        <ul>
+          <li><strong>1 балл</strong> — дал ответ на вопрос, сформулированный в теме</li>
+          <li><strong>0 баллов</strong> — не ответил на вопрос или ответил неправильно</li>
+        </ul>
+      </div>
+    </div>
+    <div class="score-pickers">
+      <button class="score-picker" data-cr="sk1" data-val="0">0</button>
+      <button class="score-picker" data-cr="sk1" data-val="1">1</button>
+    </div>
+  </div>
+
+  <div class="criterion">
+    <div>
+      <div class="criterion-title">СК2 · Наличие примеров</div>
+      <div class="criterion-desc">
+        <ul>
+          <li><strong>3 балла</strong> — привёл 2 примера из прочитанного текста, подтверждающих рассуждения</li>
+          <li><strong>2 балла</strong> — привёл 1 пример из текста</li>
+          <li><strong>1 балл</strong> — привёл пример(ы) только из жизненного или читательского опыта</li>
+          <li><strong>0 баллов</strong> — не привёл ни одного примера</li>
+        </ul>
+      </div>
+    </div>
+    <div class="score-pickers">
+      <button class="score-picker" data-cr="sk2" data-val="0">0</button>
+      <button class="score-picker" data-cr="sk2" data-val="1">1</button>
+      <button class="score-picker" data-cr="sk2" data-val="2">2</button>
+      <button class="score-picker" data-cr="sk2" data-val="3">3</button>
+    </div>
+  </div>
+
+  <div class="criterion">
+    <div>
+      <div class="criterion-title">СК3 · Логичность речи</div>
+      <div class="criterion-desc">
+        <ul>
+          <li><strong>2 балла</strong> — логические ошибки отсутствуют</li>
+          <li><strong>1 балл</strong> — 1–2 логические ошибки</li>
+          <li><strong>0 баллов</strong> — 3 и более логических ошибок</li>
+        </ul>
+      </div>
+    </div>
+    <div class="score-pickers">
+      <button class="score-picker" data-cr="sk3" data-val="0">0</button>
+      <button class="score-picker" data-cr="sk3" data-val="1">1</button>
+      <button class="score-picker" data-cr="sk3" data-val="2">2</button>
+    </div>
+  </div>
+
+  <div class="criterion">
+    <div>
+      <div class="criterion-title">СК4 · Композиционная стройность</div>
+      <div class="criterion-desc">
+        <ul>
+          <li><strong>1 балл</strong> — трёхчастная композиция (тезис → доказательство → вывод), ошибок нет</li>
+          <li><strong>0 баллов</strong> — композиция нарушена или ≥1 ошибки в построении</li>
+        </ul>
+      </div>
+    </div>
+    <div class="score-pickers">
+      <button class="score-picker" data-cr="sk4" data-val="0">0</button>
+      <button class="score-picker" data-cr="sk4" data-val="1">1</button>
+    </div>
+  </div>
+</div>
+
+<div id="total-area"></div>
+
+<hr>
+<div class="footer">ОГЭ-2026 · русский · задание №13 · v0.6.1-audited · 2026-05-11</div>
+
+<script>
+// Банк текстов для №13 (сочинение)
+// Каждый вариант: 1 нумерованный текст (~25-35 предложений) + 3 темы (13.1, 13.2, 13.3) + 3 эталонных сочинения
+
+const SO_BANK = [
+  // ===== Вариант 1: Нагибин про Гагарина (из демо) =====
+  {
+    id: 'so1',
+    author: 'По Ю. М. Нагибину',
+    topic: 'Честность',
+    sourceText: `<p><span class="sent-num">(1)</span>После своего исторического полёта Юрий Гагарин стал нарасхват. <span class="sent-num">(2)</span>Его хотели видеть все страны и все народы, короли и президенты, люди военных и штатских профессий, самые прославленные и безвестные. <span class="sent-num">(3)</span>И Гагарин охотно встречался со всеми желающими. <span class="sent-num">(4)</span>Но охотнее всего шёл он к курсантам лётных училищ, как бы возвращался в собственную юность, в её лучшую, золотую пору.</p>
+<p><span class="sent-num">(5)</span>Как-то раз, когда официальная встреча уже закончилась и дружеский разговор перекочевал из торжественного зала в чахлый садик лётной школы, один из курсантов спросил, заикаясь от волнения:</p>
+<p>— Товарищ майор… о чём вы думали… тогда?</p>
+<p>— <span class="sent-num">(6)</span>Когда «тогда»? — спросил с улыбкой Гагарин и по тому, как дружно грохнули окружающие, понял, что задавшему вопрос курсанту в привычку вызывать смех.</p>
+<p>— <span class="sent-num">(7)</span>Ну, в общем… я что хотел спросить… когда вы по дорожке шли?</p>
+<p><span class="sent-num">(8)</span>Курсанты снова грохнули, но Гагарин остался подчёркнуто серьёзен, и смех сразу погас.</p>
+<p>— <span class="sent-num">(9)</span>Вы имеете в виду Внуковский аэродром? <span class="sent-num">(10)</span>Рапорт Правительству?</p>
+<p>— <span class="sent-num">(11)</span>Во… во!.. — обрадовался курсант, достал из кармана мятый носовой платочек и вытер вспотевший лоб.</p>
+<p><span class="sent-num">(12)</span>Теперь уже все были серьёзны, и не по добровольному принуждению, а потому, что наивный вопрос курсанта затронул что-то важное в молодых душах. <span class="sent-num">(13)</span>Гагарин шёл через аэродром на глазах всего мира, и это было для них кульминацией жизни героя, сказочным триумфом, так редко, увы, выпадающим на долю смертного. <span class="sent-num">(14)</span>О чём же думал герой в это высшее мгновение своей жизни?</p>
+<p><span class="sent-num">(15)</span>И Гагарин с обычной чуткостью уловил настроение окружающих, значительность их ожидания. <span class="sent-num">(16)</span>Конечно же, ребята мечтают о подвигах, о невероятных полётах, о славе и ждут чего-то высокого и одухотворённого. <span class="sent-num">(17)</span>Герой должен был думать о планетарном, вселенском, вечном. <span class="sent-num">(18)</span>Они хотят получить сейчас и Небо, и Звёзды, и Человечество, и Эпоху, и все Высшие ценности…</p>
+<p><span class="sent-num">(19)</span>Но Гагарин молчал, и пауза угрожающе затянулась. <span class="sent-num">(20)</span>Он был сейчас очень далеко отсюда, от этого чахлого садика, тёплого вечера, юношеских доверчивых лиц, в другом времени и пространстве.</p>
+<p>…<span class="sent-num">(21)</span>В тот раз в одиночке сурдокамеры держали не так уж долго, но он чувствовал себя на редкость плохо: болела и кружилась голова, мутило, тело казалось чужим, а ноги — ватными. <span class="sent-num">(22)</span>Может, что-то там испортилось, нарушилась подача воздуха? <span class="sent-num">(23)</span>Но Королёв спрашивает испытуемых о самочувствии, и все как один молодцевато отвечают: «Отлично!» — «<span class="sent-num">(24)</span>К выполнению задания готовы?» — «<span class="sent-num">(25)</span>Так точно!» <span class="sent-num">(26)</span>Неужели одному ему так не повезло? «<span class="sent-num">(27)</span>Как самочувствие, товарищ Гагарин?» — «<span class="sent-num">(28)</span>Отличное… — <span class="sent-num">(29)</span>Нет, он не может врать Королёву и без запинки добавляет: Хотя и не очень». — «<span class="sent-num">(30)</span>К выполнению задания готовы?» — «<span class="sent-num">(31)</span>Сделаю, что могу, но лучше бы в другой раз». <span class="sent-num">(32)</span>И в результате — высшая оценка. <span class="sent-num">(33)</span>То было, оказывается, испытание на честность. <span class="sent-num">(34)</span>Им специально создали тяжёлые условия в камерах. <span class="sent-num">(35)</span>Но ведь нельзя считать, что ты сдал испытания на честность раз и навсегда. <span class="sent-num">(36)</span>Всю жизнь человек сдаёт эти испытания и в большом, и в малом.</p>
+<p>— <span class="sent-num">(37)</span>Видишь ли, дружок, — сказал Гагарин курсанту, — у меня тогда развязался шнурок на ботинке. <span class="sent-num">(38)</span>И я об одном думал, как бы на него не наступить. <span class="sent-num">(39)</span>Не то, представляешь, какой позор: в космос слетал, а тут на ровном месте растянулся…</p>
+<p>…<span class="sent-num">(40)</span>Ночью курсант никак не мог уснуть. <span class="sent-num">(41)</span>Он ворочался на койке, вздыхал, крякал, что-то бормотал, тысячи раз повторял в воображении подвиг Гагарина и твёрдо знал: если его пошлют в космос, он не оплошает. <span class="sent-num">(42)</span>Не дрогнет. <span class="sent-num">(43)</span>Разве что побледнеет. <span class="sent-num">(44)</span>И даже песню споёт в космосе, если надо, хотя ему медведь на ухо наступил. <span class="sent-num">(45)</span>Но когда он пытался представить себя в средоточии мирового внимания, душа в нём сворачивалась, как прокисшее молоко. <span class="sent-num">(46)</span>Он видел себя на космодроме, видел в космическом корабле, но не видел на красной тропочке славы, по которой легко, уверенно, сосредоточенно и радостно прошагал Гагарин. <span class="sent-num">(47)</span>Ведь чтобы идти так на глазах всего света, надо что-то большое нести в себе. <span class="sent-num">(48)</span>А он, курсант, постоянно думал о всякой чепухе: о девушках, футболе, кинофильмах, мелких происшествиях окружающей жизни, несданных зачётах… <span class="sent-num">(49)</span>Такому пустому, нулевому человеку нечего делать в скрещении мировых лучей. <span class="sent-num">(50)</span>И, следуя обратным ходом, он начинал сомневаться в своих возможностях совершить подвиг. <span class="sent-num">(51)</span>А если не будет подвига, то зачем тогда жить?</p>
+<p><span class="sent-num">(52)</span>Гагарин вернул ему веру в себя. <span class="sent-num">(53)</span>Впервые за много дней курсант засыпа́л счастливым.</p>
+<p style="margin-top:14px;text-align:right;font-style:italic;color:var(--muted)">(По Ю. М. Нагибину)</p>`,
+    topics: {
+      '131': 'Каковы функции многоточия в тексте?',
+      '132': 'Как Вы понимаете смысл предложений 35, 36 текста: «Но ведь нельзя считать, что ты сдал испытания на честность раз и навсегда. Всю жизнь человек сдаёт эти испытания и в большом, и в малом»?',
+      '133': 'Почему в жизни важно быть честным?'
+    },
+    references: {
+      '131': `<p>Многоточие — пунктуационный знак, который придаёт письменной речи выразительность и многозначность. В тексте Ю. М. Нагибина многоточие выполняет несколько важных функций.</p>
+<p>Во-первых, оно передаёт прерывистость, заикание, эмоциональное волнение героя. Так, в предложении 11 — «Во… во!.. — обрадовался курсант» — многоточие показывает, что курсант от волнения не может произнести слово целиком. Это создаёт живое ощущение реальной речи, а не сухого пересказа.</p>
+<p>Во-вторых, многоточие отделяет смысловые блоки и переходит из одного времени и пространства в другое. В предложении 21 — «…(21)В тот раз в одиночке сурдокамеры держали не так уж долго…» — многоточие в начале показывает, что Гагарин мысленно переносится в прошлое, во время испытания. Это художественный сигнал «пауза, переключение сцены».</p>
+<p>Таким образом, многоточие в тексте Нагибина передаёт и эмоциональное состояние героев, и художественные переходы между сценами.</p>`,
+      '132': `<p>В предложениях 35 и 36 автор утверждает важную мысль: честность — это не разовое испытание, а постоянная внутренняя работа. Я понимаю это так: человек не может «однажды и навсегда» доказать, что он честен; жизнь ежедневно ставит его перед выбором — солгать или сказать правду, и от этого выбора зависит, останется ли он честным человеком.</p>
+<p>Подтверждение этой мысли мы находим в самой истории Гагарина. В предложениях 27–31 описано испытание в сурдокамере. Гагарин чувствовал себя плохо, но не стал врать Королёву — сказал правду о самочувствии. Именно эта правдивость в «малом» (одно простое признание) и принесла ему высшую оценку.</p>
+<p>Другой пример — в предложении 38–39: даже идя по красной дорожке славы, Гагарин не возвышался над собой, а думал о практическом, об обыденном — о незавязанном шнурке. Это тоже честность перед собой: не разыгрывать роль героя, а оставаться обычным человеком.</p>
+<p>Таким образом, мысль автора подтверждается на каждом шаге: честность — это качество, которое проверяется и в великом, и в малом, и каждый день жизни.</p>`,
+      '133': `<p>Честность — одно из самых важных качеств человека. Я считаю, что без неё нельзя ни заслужить доверия окружающих, ни сохранить уважение к самому себе.</p>
+<p>В тексте Ю. М. Нагибина мы видим яркий пример честности. Во время испытания в сурдокамере (предложения 21–32) все курсанты, чувствуя себя плохо, отвечали Королёву «Отлично!», лишь бы получить хороший результат. Гагарин не стал врать: он признался, что ему плохо, и сказал, что задание лучше бы перенести. Именно за эту правду он получил высшую оценку — оказалось, что это и было испытанием на честность.</p>
+<p>Второй пример — в предложениях 37–39. Гагарин признаётся курсанту, что в момент исторического шествия по красной дорожке думал не о подвиге, а о развязавшемся шнурке. Он не приукрашивает свои переживания, не строит из себя возвышенного героя — и это вызывает не насмешку, а уважение.</p>
+<p>Таким образом, честность важна потому, что именно она открывает в человеке настоящее, не показное. Только честный человек становится по-настоящему сильным — и в большом, и в малом.</p>`
+    }
+  },
+
+  // ===== Вариант 2: Дружба =====
+  {
+    id: 'so2',
+    author: 'Тренировочный текст',
+    topic: 'Настоящий друг',
+    sourceText: `<p><span class="sent-num">(1)</span>Петя перешёл в новую школу в середине учебного года. <span class="sent-num">(2)</span>Это был седьмой класс, и в коллективе уже сложились свои отношения, в которые новичку войти было непросто.</p>
+<p><span class="sent-num">(3)</span>Первые дни прошли тяжело. <span class="sent-num">(4)</span>Над Петей подсмеивались: над его очками, над тем, как он говорит, над тем, что он отличник. <span class="sent-num">(5)</span>Особенно усердствовала компания, в которой верховодил высокий парень по имени Кирилл. <span class="sent-num">(6)</span>Они «подшучивали»: то портфель спрячут, то ножку подставят, то прозвище придумают такое, что мама бы не одобрила.</p>
+<p><span class="sent-num">(7)</span>Петя терпел. <span class="sent-num">(8)</span>Дома он не жаловался: не хотел расстраивать маму. <span class="sent-num">(9)</span>А в школе старался не показывать обиду, потому что знал — это только обрадует мучителей.</p>
+<p><span class="sent-num">(10)</span>В классе был мальчик по имени Серёжа. <span class="sent-num">(11)</span>Он был немногословный, держался в стороне от шумной компании Кирилла, но и не дружил ни с кем особенно близко. <span class="sent-num">(12)</span>Серёжа всё видел, но в первые недели молчал.</p>
+<p><span class="sent-num">(13)</span>Однажды, после уроков, Кирилл с друзьями зажал Петю в углу раздевалки. <span class="sent-num">(14)</span>«А ну-ка, отличник, отдавай дневник, посмотрим, какие там пятёрочки!» — захохотал Кирилл. <span class="sent-num">(15)</span>Петя сжал портфель и молчал, понимая, что силы неравны.</p>
+<p><span class="sent-num">(16)</span>И тогда из-за вешалок вышел Серёжа. <span class="sent-num">(17)</span>Он встал между Петей и Кириллом, посмотрел спокойно и сказал негромко: «Хватит уже. Идите отсюда».</p>
+<p><span class="sent-num">(18)</span>Кирилл удивился, но решил не отступать: «А ты что, защитник? <span class="sent-num">(19)</span>Чего лезешь?» — «А того лезу, что давно бы лез, — ответил Серёжа. — <span class="sent-num">(20)</span>Просто думал, что вы сами поумнеете». <span class="sent-num">(21)</span>Кирилл сделал шаг, но Серёжа не отступил. <span class="sent-num">(22)</span>За спиной у Серёжи стоял Петя.</p>
+<p><span class="sent-num">(23)</span>Что-то изменилось в эту минуту. <span class="sent-num">(24)</span>Не было драки — Кирилл пробурчал что-то и ушёл с друзьями. <span class="sent-num">(25)</span>Но к Пете в этот вечер по дороге домой подошёл уже не одинокий новичок, а человек, у которого появился друг.</p>
+<p><span class="sent-num">(26)</span>«Почему ты раньше не вступился?» — спросил Петя. <span class="sent-num">(27)</span>«Не хотел лезть в чужое, — пожал плечами Серёжа. — <span class="sent-num">(28)</span>Думал, может, ты сам справишься. <span class="sent-num">(29)</span>А сегодня понял, что одному тебе не справиться. <span class="sent-num">(30)</span>Друзья как раз для этого и нужны: помочь, когда силы кончаются».</p>
+<p><span class="sent-num">(31)</span>Они шли молча, и Петя думал, что настоящий друг — это не тот, кто всегда рядом и смеётся за компанию. <span class="sent-num">(32)</span>Настоящий друг — это тот, кто появляется в нужный момент. <span class="sent-num">(33)</span>И ему не надо клясться в верности — он просто стоит за твоей спиной.</p>`,
+    topics: {
+      '131': 'Каковы функции тире в тексте?',
+      '132': 'Как Вы понимаете смысл предложений 31–33 текста: «Петя думал, что настоящий друг — это не тот, кто всегда рядом и смеётся за компанию. Настоящий друг — это тот, кто появляется в нужный момент. И ему не надо клясться в верности — он просто стоит за твоей спиной»?',
+      '133': 'Что такое настоящая дружба?'
+    },
+    references: {
+      '131': `<p>Тире — пунктуационный знак, который выполняет в тексте разные функции: грамматические и смысловые. Особенно важна его роль для выразительности речи.</p>
+<p>Во-первых, тире отделяет прямую речь персонажа от слов автора. В предложении 14 — «"А ну-ка, отличник, отдавай дневник, посмотрим, какие там пятёрочки!" — захохотал Кирилл» — тире помогает читателю мгновенно различить, кто говорит, и сохранить динамику диалога.</p>
+<p>Во-вторых, тире усиливает мысль автора, выступая знаком обобщения или вывода. В предложении 33 — «И ему не надо клясться в верности — он просто стоит за твоей спиной» — тире вводит главную мысль, делает её весомой и афористичной.</p>
+<p>Таким образом, тире в этом тексте и оформляет диалог, и подчёркивает важные смыслы. Без него речь была бы менее живой и менее выразительной.</p>`,
+
+      '132': `<p>В заключительных предложениях текста автор выражает важную мысль о сущности дружбы. Я понимаю это так: настоящий друг — это не тот, кто всегда поблизости и поддакивает, а тот, кто появляется именно тогда, когда тебе нужна помощь. И ему не нужно много слов о верности — её доказывает поступок.</p>
+<p>Подтверждение этой мысли мы находим в самой истории. Серёжа в первые недели молчал, не лез в чужое (предложения 12, 27–28). Он не был «громким другом», который ходит с тобой, заявляет о дружбе, смеётся за компанию. Но в момент, когда Петю зажали в раздевалке (предложения 13–17), Серёжа просто вышел и встал между ним и Кириллом. Это был один поступок — и он стоил больше всех слов.</p>
+<p>Таким образом, дружба измеряется не близостью повседневной, а готовностью действовать в трудный момент. Именно об этом и говорят предложения 31–33.</p>`,
+
+      '133': `<p>Настоящая дружба — одно из самых важных явлений в жизни человека. Я считаю, что настоящий друг — это не тот, кто рядом, когда легко и весело, а тот, кто появляется, когда тебе плохо.</p>
+<p>В рассказе мы видим яркий пример такой дружбы. Петя был новичком в классе, над ним смеялись, его задирали (предложения 4–6). Серёжа, который сам был немногословным и держался в стороне, не вмешивался первое время — он думал, что Петя справится сам. Но когда стало ясно, что в одиночку не выстоять, он молча вышел и встал между Петей и обидчиками (предложения 16–22). Это был не громкий жест, не клятва — просто действие в нужный момент.</p>
+<p>Второй пример — слова самого Серёжи в предложении 30: «Друзья как раз для этого и нужны: помочь, когда силы кончаются». В этих простых словах — самая суть настоящей дружбы: не быть рядом всегда, но быть рядом тогда, когда нужно.</p>
+<p>Таким образом, настоящая дружба — это не количество совместного времени, а готовность поддержать в трудный момент. И именно это отличает настоящего друга от приятеля.</p>`
+    }
+  },
+
+  // ===== Вариант 3: Материнская любовь =====
+  {
+    id: 'so3',
+    author: 'Тренировочный текст',
+    topic: 'Материнская любовь',
+    sourceText: `<p><span class="sent-num">(1)</span>Когда я вырос и уехал учиться в другой город, я думал, что наконец стал самостоятельным. <span class="sent-num">(2)</span>У меня была своя комната в общежитии, свои планы, свой режим. <span class="sent-num">(3)</span>Дом, мама, родные стены остались где-то далеко — как будто в другой жизни.</p>
+<p><span class="sent-num">(4)</span>Первое время мне даже было приятно от этой новой свободы. <span class="sent-num">(5)</span>Я мог ложиться спать когда хотел, есть то, что нравилось мне, а не то, что варила мама. <span class="sent-num">(6)</span>Я даже не сразу заметил, как редко стал ей звонить. <span class="sent-num">(7)</span>Сначала — раз в неделю, потом — раз в две, потом — когда вспоминал.</p>
+<p><span class="sent-num">(8)</span>А мама звонила. <span class="sent-num">(9)</span>Не часто, чтобы не мешать, но регулярно. <span class="sent-num">(10)</span>И всегда спрашивала: ел ли я, спал ли, не холодно ли в комнате. <span class="sent-num">(11)</span>Я отвечал коротко, потому что был занят, и думал: «Ну что она опять про еду, я же не маленький». <span class="sent-num">(12)</span>Я не понимал тогда, что это её способ дотянуться до меня через расстояние.</p>
+<p><span class="sent-num">(13)</span>На третьем курсе я серьёзно заболел. <span class="sent-num">(14)</span>Грипп с осложнением — лежал в общежитии, не мог встать. <span class="sent-num">(15)</span>Соседи приносили мне чай, но это было не то. <span class="sent-num">(16)</span>Мне хотелось домой, к маме, к тому супу, который она варила, когда я в детстве болел.</p>
+<p><span class="sent-num">(17)</span>Я позвонил ей. <span class="sent-num">(18)</span>Голос у неё был спокойный, но я слышал — она встревожена. <span class="sent-num">(19)</span>«Я приеду», — сказала она.</p>
+<p><span class="sent-num">(20)</span>Она приехала через ночь, проехав восемь часов на автобусе с пакетами в обеих руках. <span class="sent-num">(21)</span>В пакетах был тот самый суп в банке, обмотанной полотенцем, чтобы не остыл. <span class="sent-num">(22)</span>Морс из клюквы, который она варила всю ночь до автобуса. <span class="sent-num">(23)</span>И книга — старая, из домашней библиотеки, потому что мама помнила: когда я болею, мне легче, если рядом книга.</p>
+<p><span class="sent-num">(24)</span>Она пробыла со мной три дня. <span class="sent-num">(25)</span>Молча сидела рядом, поила, кормила, читала. <span class="sent-num">(26)</span>Я смотрел на её усталое лицо и понимал, что все эти годы, пока я думал, что я стал самостоятельным, она ни на минуту не переставала быть моей мамой. <span class="sent-num">(27)</span>Просто я этого не замечал.</p>
+<p><span class="sent-num">(28)</span>Когда она уехала, я долго сидел один и думал. <span class="sent-num">(29)</span>Думал о том, что материнская любовь — это не громкие слова и не подарки. <span class="sent-num">(30)</span>Это банка горячего супа, привезённая через всю страну. <span class="sent-num">(31)</span>Это голос на другом конце провода, который всегда спрашивает: «А ты ел?». <span class="sent-num">(32)</span>Это та невидимая нить, которая держит тебя, пока ты сам её не оборвёшь. <span class="sent-num">(33)</span>А она — мама — никогда её не обрывает.</p>`,
+    topics: {
+      '131': 'Какова роль вопросительных конструкций в тексте?',
+      '132': 'Как Вы понимаете смысл предложений 30–33 текста: «Это банка горячего супа, привезённая через всю страну. Это голос на другом конце провода, который всегда спрашивает: "А ты ел?". Это та невидимая нить, которая держит тебя, пока ты сам её не оборвёшь. А она — мама — никогда её не обрывает»?',
+      '133': 'Что значит материнская любовь?'
+    },
+    references: {
+      '131': `<p>Вопросительные конструкции помогают показать отношения между героями и внутреннее состояние рассказчика. В этом тексте они связаны прежде всего с материнской заботой.</p>
+<p>Во-первых, косвенные вопросы в предложении 10 — «ел ли я, спал ли, не холодно ли в комнате» — передают постоянное беспокойство матери о сыне. Формально это не самостоятельные вопросительные предложения, а части сложного предложения, поэтому важно говорить именно о вопросительных конструкциях.</p>
+<p>Во-вторых, прямой вопрос в предложении 31 — «А ты ел?» — становится символом любви, которая проявляется не в громких словах, а в простой ежедневной заботе. Повторяемость этого вопроса помогает герою понять: мать всё время пыталась «дотянуться» до него через расстояние.</p>
+<p>Таким образом, вопросительные конструкции раскрывают материнскую любовь: за бытовыми вопросами скрываются тревога, нежность и постоянная связь с ребёнком.</p>`,
+
+      '132': `<p>В заключительных предложениях текста автор открывает важную мысль о сути материнской любви. Я понимаю это так: материнская любовь не выражается в словах или подарках; она проявляется в постоянной, незаметной заботе — в супе, привезённом через полстраны, в неизменном вопросе «А ты ел?», в той невидимой нити, которой мать держит ребёнка всю жизнь.</p>
+<p>Подтверждение этой мысли мы находим в самой истории. Когда герой заболел, мама без долгих разговоров приехала к нему через ночь и проехала восемь часов на автобусе (предложения 19–22). Она привезла именно тот суп в банке, обмотанной полотенцем, морс из клюквы, и даже книгу — то, что было нужно ему ещё в детстве при болезнях. Не было пафосных слов, не было упрёков за редкие звонки — была только эта ежедневная любовь в действии.</p>
+<p>Второй пример — само поведение мамы в течение всех лет. Она звонила «не часто, чтобы не мешать» (предложение 9), и каждый раз спрашивала об одном и том же. Герой не понимал тогда, что это и есть нить, которая его держит. И только болезнь открыла ему глаза: «она ни на минуту не переставала быть моей мамой» (предложение 26).</p>
+<p>Таким образом, материнская любовь — это не громкие жесты, а тихое, постоянное присутствие. Та невидимая нить, которая не рвётся со стороны матери — только со стороны ребёнка, если он перестаёт замечать.</p>`,
+
+      '133': `<p>Материнская любовь — одно из самых сильных и бескорыстных чувств. Я считаю, что это не просто слово, а особое поведение, в котором проявляется готовность матери идти ради ребёнка на любые жертвы и не ждать взамен ничего.</p>
+<p>В рассказе мы видим яркий пример такой любви. Когда сын серьёзно заболел в общежитии в другом городе, мать тут же сорвалась и проехала восемь часов на автобусе с пакетами в руках (предложения 20–23). Она привезла суп в банке, морс из клюквы, который варила всю ночь, и даже старую книгу — потому что помнила, как сын в детстве любил, чтобы рядом была книга, когда болеет. Никаких слов, никаких упрёков — только конкретные действия любви.</p>
+<p>Второй пример — её постоянные звонки и однообразные вопросы (предложения 9–10). Долгие годы сын не понимал, зачем она так настойчиво спрашивает про еду и сон, считал это излишним. И только когда сам оказался больным и беспомощным, осознал: эти вопросы и были той самой нитью, которая его держала всё это время.</p>
+<p>Таким образом, материнская любовь — это бескорыстное, тихое, повседневное присутствие. Это умение быть рядом, когда тебе плохо, и не упрекать, когда тебе хорошо. Это, как пишет автор, та невидимая нить, которая со стороны матери никогда не обрывается.</p>`
+    }
+  },
+
+  // ===== Вариант 4: Родина / родная земля =====
+  {
+    id: 'so4',
+    author: 'Тренировочный текст',
+    topic: 'Любовь к родной земле',
+    sourceText: `<p><span class="sent-num">(1)</span>Алексей уехал из родной деревни в восемнадцать лет — поступать в институт в большом городе. <span class="sent-num">(2)</span>Тогда ему казалось, что он навсегда оставляет позади эту глушь: грунтовую дорогу, развалившуюся школу, серое поле за околицей. <span class="sent-num">(3)</span>«Что там делать? — думал он. — Жизнь там не для меня».</p>
+<p><span class="sent-num">(4)</span>В городе ему было трудно первый год. <span class="sent-num">(5)</span>Но потом он привык. <span class="sent-num">(6)</span>Появились новые друзья, любимая работа, своя квартира. <span class="sent-num">(7)</span>Дом, родители, деревня вспоминались редко — только когда мама звонила и просила приехать на праздник. <span class="sent-num">(8)</span>Алексей всегда отвечал: «Мам, ну что я там буду делать? Я лучше тебе деньгами помогу».</p>
+<p><span class="sent-num">(9)</span>Прошло пятнадцать лет. <span class="sent-num">(10)</span>Алексей стал успешным человеком: своя фирма, машина, отпуск за границей раз в год. <span class="sent-num">(11)</span>Казалось бы — всё, чего он хотел.</p>
+<p><span class="sent-num">(12)</span>Но однажды осенью, когда выдалась свободная неделя, он вдруг почувствовал странное беспокойство. <span class="sent-num">(13)</span>Хотелось куда-то ехать, но не на курорт, а в какое-то место, которое он сам толком не мог назвать. <span class="sent-num">(14)</span>И он сел в машину и поехал — не зная куда.</p>
+<p><span class="sent-num">(15)</span>Через семь часов он оказался у поворота на свою деревню. <span class="sent-num">(16)</span>Он сам удивился — но что-то его сюда привело.</p>
+<p><span class="sent-num">(17)</span>Дорога была всё та же, грунтовая, в выбоинах. <span class="sent-num">(18)</span>Школа всё так же осыпалась штукатуркой. <span class="sent-num">(19)</span>Серое поле за околицей было пустым после уборки.</p>
+<p><span class="sent-num">(20)</span>Но что-то изменилось в нём самом. <span class="sent-num">(21)</span>Он шёл по этой дороге и узнавал каждый поворот, каждое дерево, каждый забор. <span class="sent-num">(22)</span>Вот колодец, у которого он играл в детстве. <span class="sent-num">(23)</span>Вот старая липа, на которой висели качели. <span class="sent-num">(24)</span>Вот окна школы, где он впервые читал стихи.</p>
+<p><span class="sent-num">(25)</span>И вдруг он понял: всё это годами было в нём, никуда не уходило. <span class="sent-num">(26)</span>Просто он сам забыл. <span class="sent-num">(27)</span>А деревня — родная деревня — помнила его и ждала.</p>
+<p><span class="sent-num">(28)</span>Мама встретила его на пороге дома и заплакала. <span class="sent-num">(29)</span>«Я знала, что ты приедешь, — сказала она. — <span class="sent-num">(30)</span>Здесь твои корни. Они никуда не делись».</p>
+<p><span class="sent-num">(31)</span>Алексей стоял на крыльце, смотрел на серое осеннее поле и понимал, что это не глушь. <span class="sent-num">(32)</span>Это его земля. <span class="sent-num">(33)</span>Это место, без которого все остальные места — просто города, где ты гость. <span class="sent-num">(34)</span>А здесь ты — дома.</p>`,
+    topics: {
+      '131': 'Каковы функции прямой речи в тексте?',
+      '132': 'Как Вы понимаете смысл предложений 31–34 текста: «Алексей стоял на крыльце, смотрел на серое осеннее поле и понимал, что это не глушь. Это его земля. Это место, без которого все остальные места — просто города, где ты гость. А здесь ты — дома»?',
+      '133': 'Что такое Родина?'
+    },
+    references: {
+      '131': `<p>Прямая речь — особый способ передачи слов героя в тексте; этот приём оживляет повествование, делает его непосредственным и эмоциональным.</p>
+<p>Во-первых, прямая речь позволяет услышать «живой голос» героя. В предложении 3 Алексей думает: «Что там делать? Жизнь там не для меня». В этих коротких фразах — вся его юношеская самоуверенность, желание уйти в большой мир. Без прямой речи автор сказал бы об этом сухо, а здесь мы как будто слышим интонацию героя.</p>
+<p>Во-вторых, прямая речь показывает изменение героев. В предложениях 8 и 29 разные люди говорят в разные моменты: молодой Алексей отказывается ехать в деревню, а мать через много лет встречает его словами «Я знала, что ты приедешь». Сопоставление этих двух прямых речей показывает, как изменился сам герой за годы.</p>
+<p>Таким образом, прямая речь делает образы живыми и помогает читателю прочувствовать изменения в характере персонажей.</p>`,
+
+      '132': `<p>В заключительных предложениях текста автор раскрывает важную мысль о сути Родины. Я понимаю это так: настоящая Родина — не просто географическое место, а та земля, без которой все другие места становятся чужими; и где бы ты ни жил, по-настоящему «дома» ты можешь чувствовать себя только там, где твои корни.</p>
+<p>Подтверждение этой мысли мы находим в самой истории. Алексей пятнадцать лет жил в большом городе и считал, что нашёл свою жизнь (предложение 10). У него была работа, квартира, отпуск за границей — всё, чего он раньше хотел. Но однажды его потянуло куда-то, и он понял — не на курорт, а домой. Он сам не знал, куда едет, пока не оказался у поворота на родную деревню (предложения 12–15). Что-то изнутри привело его туда.</p>
+<p>Второй пример — то, что он увидел в деревне. Дорога, школа, поле — внешне ничего не изменилось (предложения 17–19). Но изменился он сам: теперь он узнавал каждое дерево, каждый поворот (предложения 21–24). И понял: всё это всегда было в нём, просто он забыл. Деревня — его родная земля — ждала его все эти годы.</p>
+<p>Таким образом, Родина — это не «адрес», а часть тебя самого. Без неё ты можешь жить и быть успешным, но «дома» — только там.</p>`,
+
+      '133': `<p>Что такое Родина? Это один из тех вопросов, на которые легко ответить общими словами и трудно — личным опытом. Я считаю, что Родина — это место, где сложились твои первые впечатления и где остаются твои корни, куда бы потом ни занесла судьба.</p>
+<p>В рассказе мы видим героя, который пятнадцать лет считал, что Родина для него осталась в прошлом. Алексей уехал из деревни в город и думал, что нашёл там свою жизнь: работа, квартира, отпуск за границей (предложения 1–10). Но однажды его вдруг потянуло «куда-то», и он, не зная сам куда, оказался у поворота на свою деревню (предложения 12–15). Именно Родина потянула его туда — та самая деревня, которую он, как ему казалось, давно забыл.</p>
+<p>Второй пример — момент возвращения. Дорога, школа, поле остались такими же — серыми, неказистыми. Но Алексей вдруг узнал каждый поворот, каждое дерево (предложения 21–24). Он понял, что всё это годами было в нём. Мать встретила его словами: «Здесь твои корни. Они никуда не делись» (предложение 30).</p>
+<p>Таким образом, Родина — это не глушь, не город, не «развалившаяся школа». Это место, без которого все остальные места становятся просто пунктами на карте. Только там, где твои корни, ты по-настоящему дома.</p>`
+    }
+  },
+
+  // ===== Вариант 5: Мечта / призвание =====
+  {
+    id: 'so5',
+    author: 'Тренировочный текст',
+    topic: 'Мечта и призвание',
+    sourceText: `<p><span class="sent-num">(1)</span>Маша с десяти лет мечтала стать врачом. <span class="sent-num">(2)</span>Не потому, что в семье были врачи — родители работали на заводе. <span class="sent-num">(3)</span>А потому, что в её детстве была одна история, которая определила всё.</p>
+<p><span class="sent-num">(4)</span>Маше было шесть лет, когда её младший брат тяжело заболел. <span class="sent-num">(5)</span>Высокая температура, что-то с лёгкими — она помнила тогда только то, как мама плакала и как все боялись. <span class="sent-num">(6)</span>В больницу приехала молодая женщина-врач. <span class="sent-num">(7)</span>Она была спокойная, в очках, в белом халате. <span class="sent-num">(8)</span>И когда она сказала: «Всё будет хорошо», — Маша поверила. <span class="sent-num">(9)</span>Поверила полностью, потому что в голосе этой женщины звучала какая-то особенная уверенность.</p>
+<p><span class="sent-num">(10)</span>Брат поправился. <span class="sent-num">(11)</span>А Маша запомнила: вот они, настоящие чудотворцы — врачи. <span class="sent-num">(12)</span>Они приходят, когда плохо, и говорят: «Всё будет хорошо», — и так и происходит.</p>
+<p><span class="sent-num">(13)</span>В школе Маша стала готовиться к медицинскому. <span class="sent-num">(14)</span>Биология, химия, латынь — она вгрызалась в эти предметы с упорством, которого никто от тихой девочки не ожидал. <span class="sent-num">(15)</span>Одноклассники подшучивали: «Машка, ну зачем тебе это? Иди в банк, там зарплата!»</p>
+<p><span class="sent-num">(16)</span>Но она не отвечала. <span class="sent-num">(17)</span>Она помнила того брата, ту маму, ту женщину в белом халате.</p>
+<p><span class="sent-num">(18)</span>В мединститут она поступила со второй попытки. <span class="sent-num">(19)</span>Первая была неудачной — не хватило баллов. <span class="sent-num">(20)</span>Год она работала санитаркой в детской больнице и училась самостоятельно по вечерам. <span class="sent-num">(21)</span>Этот год показал ей реальность: вид крови, грязные палаты, плачущие дети, усталость медсестёр. <span class="sent-num">(22)</span>Многие на её месте бы сдались.</p>
+<p><span class="sent-num">(23)</span>Но Маша не сдалась. <span class="sent-num">(24)</span>Наоборот: чем больше она видела, тем сильнее становилось её желание. <span class="sent-num">(25)</span>Она поняла: мечта — это не красивая картинка. <span class="sent-num">(26)</span>Мечта — это то, что не отпускает тебя, даже когда становится трудно.</p>
+<p><span class="sent-num">(27)</span>Прошло десять лет. <span class="sent-num">(28)</span>Маша стала детским врачом. <span class="sent-num">(29)</span>Однажды в её кабинет пришла молодая мама с плачущим маленьким сыном. <span class="sent-num">(30)</span>Маша осмотрела ребёнка, успокоила маму и сказала спокойно, как когда-то услышала сама: «Всё будет хорошо».</p>
+<p><span class="sent-num">(31)</span>В тот вечер по дороге домой она вдруг подумала: мечты не сбываются сами по себе... <span class="sent-num">(32)</span>Их нужно нести через годы — через сомнения, через провалы, через испытания. <span class="sent-num">(33)</span>И только тогда они становятся не мечтами, а жизнью. <span class="sent-num">(34)</span>Той самой, ради которой стоило стараться.</p>`,
+    topics: {
+      '131': 'Какова роль восклицательных предложений и многоточия в тексте?',
+      '132': 'Как Вы понимаете смысл предложений 31–34 текста: «Мечты не сбываются сами по себе... Их нужно нести через годы — через сомнения, через провалы, через испытания. И только тогда они становятся не мечтами, а жизнью. Той самой, ради которой стоило стараться»?',
+      '133': 'Что такое настоящая мечта?'
+    },
+    references: {
+      '131': `<p>Восклицательные предложения и многоточие помогают передать эмоциональное напряжение текста и отношение героев к мечте.</p>
+<p>Во-первых, в предложении 15 реплика одноклассников заканчивается восклицательным знаком: «Иди в банк, там зарплата!» Такая интонация передаёт напор и насмешливую уверенность окружающих, которые не понимают Машиной мечты и оценивают будущее только с практической стороны.</p>
+<p>Во-вторых, многоточие в предложении 31 — «мечты не сбываются сами по себе...» — передаёт паузу внутреннего размышления. Маша не произносит готовую формулу вслух, а постепенно осознаёт, какой длинный путь стоит за исполнением мечты.</p>
+<p>Таким образом, восклицательный знак показывает внешнее давление и чужую насмешку, а многоточие — внутреннюю тишину, в которой героиня осмысляет свой путь.</p>`,
+
+      '132': `<p>В заключительных предложениях текста автор раскрывает важную мысль о пути к мечте. Я понимаю это так: мечта не реализуется сама собой, как в сказке; чтобы она стала реальностью, человек должен нести её сквозь годы трудностей — сомнения, неудачи, испытания. И только тогда мечта перестаёт быть фантазией и становится самой жизнью.</p>
+<p>Подтверждение этой мысли мы находим в истории Маши. Когда она впервые поверила в свою мечту стать врачом, это было светлое детское переживание (предложения 8–12). Но затем были годы упорной учёбы, насмешки одноклассников, неудачное поступление в институт, год работы санитаркой с тяжёлым ежедневным трудом (предложения 18–22). Многие на её месте сдались бы — но именно эти испытания и сделали её мечту настоящей.</p>
+<p>Второй пример — реакция Маши на работу санитаркой. Вид крови, плачущих детей, уставших медсестёр (предложение 21) могли отбить желание у любого; а у Маши, наоборот, чем тяжелее становилось, тем сильнее становилось желание (предложения 23–24). Это и есть та внутренняя «несущая сила», о которой говорит автор: мечту нужно нести, даже когда трудно.</p>
+<p>Таким образом, мечта становится жизнью не сама собой, а через упорство и испытания. Только пройдя их, можно сказать: «Ради этого стоило стараться».</p>`,
+
+      '133': `<p>Что такое настоящая мечта? На мой взгляд, это не просто красивая фантазия о будущем, а внутренняя цель, которая не отпускает тебя даже в самые трудные моменты и заставляет идти к ней через годы.</p>
+<p>В тексте мы видим яркий пример настоящей мечты. С шести лет Маша поверила: она станет врачом. Поводом стала история с тяжёлой болезнью брата и спокойной женщиной-врачом, сказавшей «Всё будет хорошо» (предложения 4–9). И эта мечта пронесла её через годы упорной учёбы и насмешек одноклассников: «Машка, ну зачем тебе это? Иди в банк, там зарплата» (предложение 15). Маша не отвечала — она помнила то, ради чего стремится.</p>
+<p>Второй пример — самый сложный момент: после неудачного поступления Маша год работала санитаркой и видела всё «изнутри» — грязь, кровь, усталость (предложения 18–22). Многие бы сдались. Но настоящая мечта тем и отличается, что не отпускает: «чем больше она видела, тем сильнее становилось её желание» (предложение 24). Через десять лет она стала детским врачом и сама произнесла те самые слова: «Всё будет хорошо» (предложение 30).</p>
+<p>Таким образом, настоящая мечта — это не картинка из глянцевого журнала и не сиюминутное желание. Это то, что человек несёт через всю жизнь, через сомнения и испытания. И только тогда мечта становится реальной жизнью.</p>`
+    }
+  }
+];
+
+
+let currentSo = null;
+let selectedTheme = null;
+let scores = { sk1: null, sk2: null, sk3: null, sk4: null };
+
+function pickRandomSo(){
+  const idx = Math.floor(Math.random() * SO_BANK.length);
+  return SO_BANK[idx];
+}
+
+function loadVariant(v){
+  currentSo = v;
+  document.getElementById('v-info').textContent = v.topic + ' (' + v.author + ')';
+  document.getElementById('v-meta').textContent = v.id;
+  document.getElementById('text-summary').textContent = 'Прочитать полный текст (' + v.author + ')';
+  document.getElementById('big-text-content').innerHTML = v.sourceText + '<p style="margin-top:14px;text-align:right;font-style:italic;color:var(--muted)">(' + v.author + ')</p>';
+
+  // Темы
+  let themesHtml = '';
+  themesHtml += '<div class="theme-card" data-theme="131"><div class="theme-num">13.1</div><div class="theme-text"><div class="theme-label">Лингвистическая</div><div class="theme-q">' + v.topics['131'] + '</div></div></div>';
+  themesHtml += '<div class="theme-card" data-theme="132"><div class="theme-num">13.2</div><div class="theme-text"><div class="theme-label">По смыслу фрагмента</div><div class="theme-q">' + v.topics['132'] + '</div></div></div>';
+  themesHtml += '<div class="theme-card" data-theme="133"><div class="theme-num">13.3</div><div class="theme-text"><div class="theme-label">Жизненный вопрос</div><div class="theme-q">' + v.topics['133'] + '</div></div></div>';
+  document.getElementById('theme-picker').innerHTML = themesHtml;
+
+  // Привязываем обработчики
+  document.querySelectorAll('.theme-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedTheme = card.dataset.theme;
+      document.getElementById('show-reference').disabled = false;
+    });
+  });
+
+  // reset state
+  selectedTheme = null;
+  document.getElementById('show-reference').disabled = true;
+  document.getElementById('user-text').value = '';
+  document.getElementById('word-num').textContent = '0';
+  document.getElementById('word-label').textContent = 'слов · нужно не менее 70';
+  document.getElementById('word-count').classList.remove('ok', 'warn');
+  document.getElementById('reference-area').innerHTML = '';
+  document.getElementById('tips-area').innerHTML = '';
+  document.getElementById('total-area').innerHTML = '';
+  scores = { sk1: null, sk2: null, sk3: null, sk4: null };
+  document.querySelectorAll('.score-picker').forEach(b => b.classList.remove('selected'));
+}
+
+document.getElementById('switch-btn').addEventListener('click', () => {
+  if(currentSo && document.getElementById('user-text').value.trim().length > 0){
+    if(!confirm('Сменить вариант? Написанный текст и оценки будут сброшены.')) return;
+  }
+  let v;
+  do { v = pickRandomSo(); } while(SO_BANK.length > 1 && v.id === currentSo?.id);
+  loadVariant(v);
+});
+
+// Подсчёт слов
+const ta = document.getElementById('user-text');
+const wordNum = document.getElementById('word-num');
+const wordLabel = document.getElementById('word-label');
+const wordCount = document.getElementById('word-count');
+
+function countWords(text){
+  return text.trim().split(/\s+/).filter(w => w.length > 0).length;
+}
+
+ta.addEventListener('input', () => {
+  const n = ta.value.trim() === '' ? 0 : countWords(ta.value);
+  wordNum.textContent = n;
+  wordCount.classList.remove('ok', 'warn');
+  if(n === 0){
+    wordLabel.textContent = 'слов · нужно не менее 70';
+  } else if(n < 70){
+    wordLabel.textContent = 'из 70 минимум · нужно ещё ' + (70-n);
+    wordCount.classList.add('warn');
+  } else if(n > 200){
+    wordLabel.textContent = 'слов · хорошо';
+    wordCount.classList.add('ok');
+  } else {
+    wordLabel.textContent = 'слов · норма достигнута';
+    wordCount.classList.add('ok');
+  }
+});
+
+// Эталон
+document.getElementById('show-reference').addEventListener('click', () => {
+  if(!selectedTheme){
+    alert('Сначала выбери тему сочинения');
+    return;
+  }
+  const refText = currentSo.references[selectedTheme];
+  const themeText = currentSo.topics[selectedTheme];
+  const themeNum = '13.' + selectedTheme.substring(2);
+  document.getElementById('reference-area').innerHTML = `
+    <h3 style="margin-top:24px">Эталонное сочинение · ${themeNum}</h3>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:10px"><strong>Тема:</strong> ${themeText}</p>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:10px">Это один из возможных вариантов. Сравни структуру, аргументацию и использование примеров со своим текстом.</p>
+    <div class="reference-text">${refText}</div>
+  `;
+  document.getElementById('reference-area').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+// Подсказки
+document.getElementById('show-tips').addEventListener('click', () => {
+  document.getElementById('tips-area').innerHTML = `
+    <h3 style="margin-top:24px">Подсказки по композиции</h3>
+    <div class="reference-text">
+      <p><strong>Часть 1. Тезис</strong> (1–2 предложения). Ответ на вопрос темы, твоя главная мысль.<br>
+      <em>Полезные начала:</em> «Я считаю, что…», «По моему мнению…», «На мой взгляд…».</p>
+      <p><strong>Часть 2. Два примера из текста</strong> (по 2–3 предложения каждый).<br>
+      Не просто цитируй, а <em>объясни</em>, почему этот пример доказывает твой тезис.<br>
+      <em>Способы обращения к тексту:</em><br>
+      — <em>Цитата:</em> «В предложении N автор пишет: "..."»<br>
+      — <em>Указание номера:</em> «В предложении N описано...».<br>
+      — <em>Пересказ:</em> «В тексте показано, как герой...»</p>
+      <p><strong>Часть 3. Вывод</strong> (1–2 предложения). Обобщение, подтверждение твоего тезиса.<br>
+      <em>Полезные начала:</em> «Таким образом…», «Итак…», «Значит…».</p>
+      <p style="font-size:13px;color:var(--muted);margin-top:14px"><strong>Главное:</strong> 70 слов — это минимум. Лучше написать 120–160 слов. Без двух примеров из текста максимум 4 балла из 7.</p>
+    </div>
+  `;
+  document.getElementById('tips-area').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+// Самооценка
+document.querySelectorAll('.score-picker').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const cr = btn.dataset.cr;
+    const val = +btn.dataset.val;
+    scores[cr] = val;
+    document.querySelectorAll('.score-picker[data-cr="' + cr + '"]').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    updateTotal();
+  });
+});
+
+function updateTotal(){
+  const allSet = Object.values(scores).every(v => v !== null);
+  if(!allSet) return;
+  const total = scores.sk1 + scores.sk2 + scores.sk3 + scores.sk4;
+  let comment;
+  if(total === 7) comment = 'Идеально. Тезис чёткий, оба примера из текста, логика и композиция безупречны.';
+  else if(total >= 5) comment = 'Хороший результат. Проверь критерий с низким баллом.';
+  else if(total >= 3) comment = 'Средний результат. Главная зона роста — приводи 2 примера именно из прочитанного текста.';
+  else comment = 'Нужна работа над композицией: тезис → 2 примера из текста → вывод.';
+
+  document.getElementById('total-area').innerHTML = `
+    <div class="summary-card">
+      <h3>Итог за сочинение</h3>
+      <div class="total">${total} / 7</div>
+      <p>${comment}</p>
+      <div class="breakdown">СК1: ${scores.sk1}/1 · СК2: ${scores.sk2}/3 · СК3: ${scores.sk3}/2 · СК4: ${scores.sk4}/1</div>
+    </div>
+  `;
+}
+
+// Init
+loadVariant(pickRandomSo());
+</script>
+</body>
+</html>
