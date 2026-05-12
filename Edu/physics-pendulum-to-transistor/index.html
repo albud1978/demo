@@ -170,6 +170,17 @@
       linear-gradient(135deg, color-mix(in srgb, var(--accent-1) 18%, var(--bg-deep)), var(--bg-deep));
     border-bottom: 1px solid var(--border);
   }
+  a.card-poster-hit {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    text-decoration: none;
+    color: inherit;
+    outline-offset: 3px;
+  }
+  a.card-poster-hit:focus-visible {
+    outline: 2px solid var(--accent-2);
+  }
   .card-number {
     position: absolute; top: 0; left: 0;
     font-family: var(--serif); font-style: italic;
@@ -809,8 +820,13 @@ function toggleWatched(id) {
   }
 }
 
+function externalLinkAttrs(url) {
+  return /^https?:\/\//i.test(url) ? ' target="_blank" rel="noopener noreferrer"' : '';
+}
+
 function renderCard(ep, watched) {
   const isWatched = watched.includes(ep.id);
+  const ext = externalLinkAttrs(ep.url);
   const verifyLabel = {
     true:          { text: 'Прямая ссылка',  color: '#84cc16' },
     false:         { text: 'Поиск на YouTube', color: '#f59e0b' },
@@ -833,6 +849,7 @@ function renderCard(ep, watched) {
           <span class="dot"></span>
           <span>${ep.duration}</span>
         </div>
+        <a class="card-poster-hit" href="${ep.url}"${ext} aria-label="Открыть источник: ${ep.title.replace(/"/g, '&quot;')}"></a>
       </div>
       <div class="card-body">
         <h2 class="card-title">${ep.title}</h2>
@@ -858,10 +875,10 @@ function renderCard(ep, watched) {
           </div>
           <div class="detail-block">
             <span class="detail-label">Ссылка</span>
-            <a href="${ep.url}" target="_blank" rel="noopener" style="color:var(--accent-2);text-decoration:none;border-bottom:1px dotted var(--accent-2);">${ep.urlNote}</a>
+            <a href="${ep.url}"${ext} style="color:var(--accent-2);text-decoration:none;border-bottom:1px dotted var(--accent-2);">${ep.urlNote}</a>
           </div>
           <div class="card-actions">
-            <a class="btn btn-primary" href="${ep.url}" target="_blank" rel="noopener">
+            <a class="btn btn-primary" href="${ep.url}"${ext}>
               Открыть →
             </a>
             <button class="btn btn-watched" data-watch="${ep.id}">
