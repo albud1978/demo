@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Физика: от маятника до транзистора · Сезон 02</title>
+<meta name="description" content="Полный курс физики в формате сериала. 21 эпизод, 4 акта, от школьной механики до NAND. Все источники с русской озвучкой." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08070d;
+    --bg-deep: #050409;
+    --surface: #13111c;
+    --surface-hi: #1a1828;
+    --text: #f4ede0;
+    --text-dim: #c4bcae;
+    --muted: #7d7689;
+    --border: rgba(255,255,255,0.08);
+    --border-hi: rgba(255,255,255,0.16);
+    --serif: 'Instrument Serif', Georgia, serif;
+    --mono: 'Space Mono', 'JetBrains Mono', monospace;
+    --sans: 'Geist', system-ui, -apple-system, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--sans); font-weight: 400; line-height: 1.55;
+    min-height: 100vh; overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(180,130,80,0.08), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 10%, rgba(80,40,140,0.06), transparent 60%),
+      radial-gradient(ellipse 50% 30% at 10% 60%, rgba(40,120,140,0.05), transparent 60%);
+    background-attachment: fixed;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 100; opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 48px 32px 96px; }
+
+  /* HERO */
+  .hero { padding: 32px 0 56px; border-bottom: 1px solid var(--border); margin-bottom: 56px; position: relative; }
+  .hero-eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.3em;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 32px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .hero-eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(48px, 8vw, 112px); line-height: 0.95;
+    letter-spacing: -0.02em; margin-bottom: 24px;
+  }
+  .hero h1 em { font-style: italic; color: #e8a838; }
+  .hero h1 span.silver { color: #8ec5e8; font-style: italic; }
+  .hero-lede {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(20px, 2.2vw, 28px); line-height: 1.4;
+    color: var(--text-dim); max-width: 760px; margin-bottom: 40px;
+  }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 32px 56px;
+    font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.05em;
+  }
+  .hero-meta-item span {
+    display: block; color: var(--text); font-size: 14px; margin-top: 4px;
+    letter-spacing: 0; font-family: var(--sans);
+  }
+
+  /* PROGRESS */
+  .progress { margin-top: 40px; display: flex; align-items: center; gap: 20px; }
+  .progress-label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+    color: var(--muted); text-transform: uppercase; white-space: nowrap;
+  }
+  .progress-bar { flex: 1; height: 2px; background: var(--border); position: relative; overflow: hidden; }
+  .progress-fill {
+    position: absolute; inset: 0 auto 0 0;
+    background: linear-gradient(90deg, #c4423a, #e8a838, #22d3ee, #84cc3a);
+    width: 0%; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .progress-count {
+    font-family: var(--mono); font-size: 14px; color: var(--text);
+    font-weight: 700; white-space: nowrap;
+  }
+
+  /* ACT DIVIDERS */
+  .act {
+    margin-top: 64px; margin-bottom: 28px;
+    display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: end;
+    padding-bottom: 20px; border-bottom: 1px solid var(--border);
+  }
+  .act-num {
+    font-family: var(--serif); font-style: italic;
+    font-size: 96px; line-height: 0.8; color: var(--act-color, #e8a838);
+    letter-spacing: -0.04em;
+  }
+  .act-title {
+    font-family: var(--serif); font-size: 36px; line-height: 1.1;
+    letter-spacing: -0.01em; margin-bottom: 6px;
+  }
+  .act-subtitle {
+    font-family: var(--serif); font-style: italic;
+    font-size: 17px; color: var(--text-dim); line-height: 1.4;
+    max-width: 540px;
+  }
+  .act-progress {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+    color: var(--muted); text-transform: uppercase; text-align: right;
+    padding-bottom: 8px;
+  }
+  .act-progress strong { color: var(--act-color, #e8a838); }
+
+  /* GRID */
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 24px;
+  }
+
+  /* CARD */
+  .card {
+    --accent-1: #c4423a; --accent-2: #e8a838; --accent-glow: rgba(196,66,58,0.15);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px; overflow: hidden; position: relative;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    display: flex; flex-direction: column;
+    cursor: pointer;
+  }
+  .card:hover {
+    border-color: var(--accent-1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px -8px var(--accent-glow);
+  }
+  .card-details-inner { cursor: default; }
+  .card.watched { opacity: 0.7; }
+  .card.watched .card-number::after {
+    content: '✓'; position: absolute; top: 6px; right: 6px;
+    width: 22px; height: 22px; background: var(--accent-1); color: white;
+    font-family: var(--sans); font-size: 14px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-weight: 700;
+  }
+  .card.expanded { border-color: var(--accent-1); }
+
+  .card-poster {
+    aspect-ratio: 16/10; position: relative; overflow: hidden;
+    background:
+      radial-gradient(circle at 30% 20%, var(--accent-glow), transparent 50%),
+      linear-gradient(135deg, color-mix(in srgb, var(--accent-1) 18%, var(--bg-deep)), var(--bg-deep));
+    border-bottom: 1px solid var(--border);
+  }
+  .card-number {
+    position: absolute; top: 0; left: 0;
+    font-family: var(--serif); font-style: italic;
+    font-size: 200px; line-height: 0.8;
+    color: var(--accent-2); opacity: 0.16; pointer-events: none;
+    transform: translate(-12px, -32px);
+  }
+  .card-source {
+    position: absolute; top: 16px; right: 16px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em;
+    color: var(--text); text-transform: uppercase;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(8px);
+    padding: 6px 10px; border: 1px solid var(--border-hi); border-radius: 2px;
+    max-width: 60%; text-align: right;
+  }
+  .card-eyebrow {
+    position: absolute; bottom: 16px; left: 16px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+    color: var(--text-dim); text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .card-eyebrow .ep-num { color: var(--accent-2); font-weight: 700; }
+  .card-eyebrow .dot { width: 3px; height: 3px; background: var(--muted); border-radius: 50%; }
+
+  .card-body { padding: 24px 24px 20px; flex: 1; display: flex; flex-direction: column; }
+  .card-title {
+    font-family: var(--serif); font-size: 30px; line-height: 1.1;
+    letter-spacing: -0.01em; margin-bottom: 14px;
+  }
+  .card-hook {
+    color: var(--text-dim); line-height: 1.55; margin-bottom: 16px;
+    font-style: italic; font-family: var(--serif); font-size: 17px;
+  }
+  .card-toggle {
+    background: none; border: none; border-top: 1px solid var(--border);
+    padding: 14px 0 0; margin-top: auto;
+    color: var(--accent-2); font-family: var(--mono);
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    cursor: pointer; text-align: left; transition: color 0.2s;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-toggle:hover { color: var(--text); }
+  .card-toggle .arrow { transition: transform 0.3s; display: inline-block; }
+  .card.expanded .card-toggle .arrow { transform: rotate(180deg); }
+
+  .card-details {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card.expanded .card-details { max-height: 1400px; }
+  .card-details-inner {
+    padding: 20px 24px 24px; border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .detail-block { font-size: 14px; line-height: 1.6; color: var(--text-dim); }
+  .detail-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em;
+    color: var(--accent-2); text-transform: uppercase;
+    margin-bottom: 8px; display: block;
+  }
+  .detail-block.demo {
+    background: rgba(255,255,255,0.025); border-left: 2px solid var(--accent-1);
+    padding: 14px 16px; border-radius: 2px;
+  }
+  .detail-block.rationale {
+    color: var(--muted); font-style: italic;
+    font-family: var(--serif); font-size: 15px; line-height: 1.5;
+  }
+  .card-actions { display: flex; gap: 12px; margin-top: 4px; flex-wrap: wrap; }
+  .btn {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 12px 18px;
+    border: 1px solid var(--border-hi); background: transparent;
+    color: var(--text); cursor: pointer; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: all 0.2s; border-radius: 2px;
+  }
+  .btn-primary { background: var(--accent-1); border-color: var(--accent-1); color: white; }
+  .btn-primary:hover { background: var(--accent-2); border-color: var(--accent-2); color: var(--bg-deep); }
+  .btn:hover { border-color: var(--text); }
+  .btn-watched { background: rgba(255,255,255,0.05); color: var(--muted); }
+
+  /* SOURCES */
+  .sources {
+    margin-top: 96px; padding-top: 48px; border-top: 1px solid var(--border);
+  }
+  .sources-title {
+    font-family: var(--serif); font-size: 36px; line-height: 1.1;
+    margin-bottom: 12px; letter-spacing: -0.01em;
+  }
+  .sources-lede {
+    font-family: var(--serif); font-style: italic; font-size: 17px;
+    color: var(--text-dim); margin-bottom: 32px; max-width: 720px;
+  }
+  .sources-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .source-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px; padding: 20px; text-decoration: none; color: inherit;
+    transition: border-color 0.2s, transform 0.2s;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .source-card:hover { border-color: var(--text-dim); transform: translateY(-2px); }
+  .source-card-name {
+    font-family: var(--serif); font-size: 22px; line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .source-card-tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+    color: var(--accent-2); text-transform: uppercase;
+  }
+  .source-card-desc {
+    font-size: 13px; color: var(--text-dim); line-height: 1.55; flex: 1;
+  }
+  .source-card-link {
+    font-family: var(--mono); font-size: 11px; color: var(--text);
+    letter-spacing: 0.05em; word-break: break-all; margin-top: 4px;
+  }
+
+  /* COLOPHON */
+  .colophon {
+    margin-top: 56px; text-align: center;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.3em; color: var(--muted); text-transform: uppercase;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 720px) {
+    .wrap { padding: 32px 20px 64px; }
+    .grid { grid-template-columns: 1fr; gap: 16px; }
+    .card-number { font-size: 140px; }
+    .card-title { font-size: 26px; }
+    .hero-meta { gap: 20px 32px; }
+    .hero { padding-bottom: 40px; margin-bottom: 40px; }
+    .act { grid-template-columns: auto 1fr; gap: 16px; margin-top: 48px; }
+    .act-progress { grid-column: 1 / -1; text-align: left; }
+    .act-num { font-size: 64px; }
+    .act-title { font-size: 26px; }
+  }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .card { animation: fadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) backwards; }
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-eyebrow">
+      <span>Сезон 02 · Полный курс · 4 акта · 21 эпизод</span>
+    </div>
+    <h1>От <em>маятника</em><br />до <span class="silver">транзистора</span>.</h1>
+    <p class="hero-lede">
+      Вся базовая физика по нарастающей: классическая механика, тепло, волны, электричество, кванты, кремний. В конце — Фейнман 1985 года объясняет компьютер, и наш собственный артефакт замыкает кольцо через NAND. Все источники с русской озвучкой: Курсомир, Vert Dider, Побединский, русские каналы про электронику.
+    </p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">Формат<span>21 эпизод, ~9 часов</span></div>
+      <div class="hero-meta-item">Темп<span>свой</span></div>
+      <div class="hero-meta-item">Язык<span>русская озвучка</span></div>
+      <div class="hero-meta-item">Финал<span>транзистор → NAND → компьютер</span></div>
+    </div>
+    <div class="progress">
+      <span class="progress-label">Курс пройден</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-count" id="progressCount">0 / 21</span>
+    </div>
+  </header>
+
+  <!-- ACTS render here -->
+  <main id="acts"></main>
+
+  <!-- SOURCES -->
+  <section class="sources">
+    <h2 class="sources-title">Полные курсы и каналы</h2>
+    <p class="sources-lede">
+      Если какой-то эпизод зацепил — на канал источника можно вернуться и копать дальше. Здесь только то, что гарантированно на русском.
+    </p>
+    <div class="sources-grid" id="sourcesGrid"></div>
+  </section>
+
+  <div class="colophon">Albud · 2026 · собрано вручную</div>
+</div>
+
+<script>
+const ACTS = [
+  {
+    n: 'I',
+    title: 'Классическая физика как зрелище',
+    subtitle: 'Механика, тепло, волны, свет — то, что в школе, но так, как в школе никогда не показывают.',
+    color: '#e8a838',
+  },
+  {
+    n: 'II',
+    title: 'Электричество и магнетизм',
+    subtitle: 'Вторая половина школьной физики на максималках. К концу акта школа исчерпана.',
+    color: '#8b3aff',
+  },
+  {
+    n: 'III',
+    title: 'Квантовый скачок',
+    subtitle: 'Где школа заканчивается насовсем. Атом, фотон, волна-частица, туннель, Паули.',
+    color: '#22d3ee',
+  },
+  {
+    n: 'IV',
+    title: 'Кремний и финал',
+    subtitle: 'Физика становится твоим телефоном. Зоны → кремний → диод → транзистор → NAND → компьютер.',
+    color: '#84cc3a',
+  },
+];
+
+const EPISODES = [
+  // ─── АКТ I ───
+  {
+    id: 'e01', act: 0, number: '01',
+    title: 'Маятник у горла',
+    source: 'Курсомир · Льюин MIT 8.01',
+    duration: '50 мин (демо ~10)',
+    eyebrow: 'Механика · сохранение энергии',
+    accent1: '#c4423a', accent2: '#e8a838', glow: 'rgba(196,66,58,0.18)',
+    hook: '«Если физика врёт — я умер». Льюин отпускает 15-килограммовый шар у самого подбородка.',
+    about: 'Закон сохранения энергии в самой шокирующей форме. Маятник не может вернуться выше точки старта — иначе нарушится сохранение. Льюин это знает и стоит неподвижно. Лекция, в которой физика проверяется собственной шеей. Курсомир перевёл и озвучил весь курс 8.01.',
+    demo: 'Возьми гайку на нитке. Привяжи к гвоздю на уровне глаз. Оттяни нитку с гайкой до самого подбородка. Отпусти. Не двигайся.',
+    rationale: 'Первый эпизод должен стереть «физика = скучные формулы». После маятника всё остальное идёт легче.',
+    url: 'https://www.youtube.com/@kursomir/search?query=%D0%BB%D0%B5%D0%B2%D0%B8%D0%BD',
+    urlNote: 'Канал Курсомир → ищи лекцию по сохранению энергии (#10–11)',
+  },
+  {
+    id: 'e02', act: 0, number: '02',
+    title: 'Падение и параболы',
+    source: 'Курсомир · Льюин MIT 8.01',
+    duration: '~45 мин',
+    eyebrow: 'Механика · кинематика',
+    accent1: '#d97a2c', accent2: '#fbbf24', glow: 'rgba(217,122,44,0.18)',
+    hook: 'Льюин стреляет мячом в подвешенную обезьяну. Обезьяна падает в момент выстрела. Попадёт мяч или нет?',
+    about: 'Знаменитый «monkey-shoot» эксперимент: пушка целится в висящую обезьяну, в момент выстрела обезьяна отпускается и падает. По интуиции — мяч пролетит над. По физике — попадёт всегда. Потому что мяч тоже падает с тем же g. Это то самое g, которое в школе называют «ускорение свободного падения», но в школе из него не делают спектакль.',
+    demo: 'Подбрось мячик вертикально. Засеки время полёта. Раздели пополам — это время подъёма до пика. Высота: h = g·t²/2. Сравни с реальностью.',
+    rationale: 'Кинематика — это не «вычисли формулу», а «угадай, что произойдёт». Льюин превращает её в ставки.',
+    url: 'https://www.youtube.com/@kursomir',
+    urlNote: 'Канал Курсомир → лекции 4–6 курса 8.01',
+  },
+  {
+    id: 'e03', act: 0, number: '03',
+    title: 'Тепло — это движение',
+    source: 'Дмитрий Побединский',
+    duration: '~12 мин',
+    eyebrow: 'Термодинамика · МКТ',
+    accent1: '#dc2626', accent2: '#fcd34d', glow: 'rgba(220,38,38,0.16)',
+    hook: 'Температура — это не «горячо» и «холодно». Это средняя скорость молекул.',
+    about: 'Молекулярно-кинетическая теория одним движением: всё, что мы называем «тепло», — это броуновское молекулярное жужжание. Холодный кубик льда — это просто медленные молекулы. Раскалённая печь — быстрые. Между ними — никакой границы, только разная скорость. Это первый шаг к тому, чтобы перестать делить мир на «вещества» и «энергию».',
+    demo: 'Капни тушь в стакан с холодной водой. Засеки, как долго она расплывается. Повтори с горячей. В горячей быстрее — молекулы воды толкают тушь сильнее. Это броуновское движение, которое ты видишь.',
+    rationale: 'Без МКТ электронам в кристалле потом неоткуда будет взяться. Заодно — мост к статистической физике.',
+    url: 'https://www.youtube.com/@PhysFromPobed/search?query=%D1%82%D0%B5%D0%BC%D0%BF%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%B0',
+    urlNote: 'Канал Побединского → поиск «температура» или «броуновское»',
+  },
+  {
+    id: 'e04', act: 0, number: '04',
+    title: 'Волны интерферируют',
+    source: 'Дмитрий Побединский',
+    duration: '~10 мин',
+    eyebrow: 'Волны · интерференция',
+    accent1: '#0e7c8a', accent2: '#67e8f9', glow: 'rgba(14,124,138,0.18)',
+    hook: 'Две волны могут уничтожить друг друга. Звук + звук = тишина. Это не магия, это арифметика.',
+    about: 'Интерференция: две одинаковые волны, идущие в противофазе, дают ноль. Тот же эффект — почему в наушниках с шумоподавлением тишина. И почему через дифракционную решётку видна радуга. Главное: это базовое свойство любых волн — воды, звука, света. Через эпизод оно станет базовым свойством электронов.',
+    demo: 'Тазик с водой. Постучи пальцами по поверхности в двух точках одновременно. Между точками будут видны линии, где волны гасят друг друга.',
+    rationale: 'Подготавливает к двойной щели. Когда электрон тоже будет интерферировать, аналогия с водой будет уже в руках.',
+    url: 'https://www.youtube.com/@PhysFromPobed/search?query=%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D1%80%D0%B5%D0%BD%D1%86%D0%B8%D1%8F',
+    urlNote: 'Канал Побединского → поиск «интерференция»',
+  },
+  {
+    id: 'e05', act: 0, number: '05',
+    title: 'Свет не замедляется в стекле',
+    source: 'Vert Dider · Veritasium',
+    duration: '~17 мин',
+    eyebrow: 'Оптика · парадокс',
+    accent1: '#f5d022', accent2: '#0e7c8a', glow: 'rgba(245,208,34,0.14)',
+    hook: 'Школа врёт. Свет в стекле летит со скоростью c. То, что выглядит как «замедление» — это интерференция.',
+    about: 'Каждый атом стекла переизлучает свет с микроскопической задержкой. Сумма исходной волны и переизлучённых даёт суммарную волну, которая выглядит медленнее. Сам свет — нет. После этого видео школьная формула n = c/v становится понятнее: это не про скорость фотона, а про эффективную скорость пакета.',
+    demo: 'Налей воду в стакан. Опусти карандаш. Он «ломается» на границе воды. Та же история: переизлучение, интерференция, эффективная скорость пакета.',
+    rationale: 'Финал акта о классической физике должен сломать школьное «знание». Дальше ребёнок сам захочет проверить, что ещё мы понимаем неправильно.',
+    url: 'https://www.youtube.com/@VertDiderScience/search?query=%D1%81%D0%B2%D0%B5%D1%82+%D1%81%D1%82%D0%B5%D0%BA%D0%BB%D0%BE',
+    urlNote: 'Канал Vert Dider → поиск «свет стекло» или «Veritasium свет»',
+  },
+
+  // ─── АКТ II ───
+  {
+    id: 'e06', act: 1, number: '06',
+    title: 'Заряд и поле',
+    source: 'Дмитрий Побединский',
+    duration: '~12 мин',
+    eyebrow: 'Электростатика',
+    accent1: '#7c3aed', accent2: '#c4b5fd', glow: 'rgba(124,58,237,0.18)',
+    hook: 'Заряды толкают друг друга через пустое пространство. Как? Через поле — невидимую штуку, которую можно потрогать только эффектом.',
+    about: 'Что такое заряд и что такое электрическое поле. Поле — это центральная идея всей физики после Фарадея: не «частицы толкают частицы», а «частицы создают поле, поле толкает частицы». Через два эпизода поле окажется тем, через что в проводе течёт энергия — а не через провод.',
+    demo: 'Натри пластиковую расчёску о волосы. Поднеси к тонкой струйке воды из крана. Струя изогнётся.',
+    rationale: 'Без понятия поля невозможно понять следующие три эпизода. И весь акт IV.',
+    url: 'https://www.youtube.com/@PhysFromPobed/search?query=%D0%B7%D0%B0%D1%80%D1%8F%D0%B4',
+    urlNote: 'Канал Побединского → поиск «заряд» или «электрическое поле»',
+  },
+  {
+    id: 'e07', act: 1, number: '07',
+    title: 'Ток — не то, что ты думаешь',
+    source: 'Vert Dider · Veritasium',
+    duration: '~14 мин',
+    eyebrow: 'Электричество · парадокс',
+    accent1: '#0ea5e9', accent2: '#fde047', glow: 'rgba(14,165,233,0.18)',
+    hook: 'Энергия в проводе идёт не по проводу. Она идёт через поле снаружи провода. Школа врёт ещё раз.',
+    about: 'Один из самых обсуждаемых физических роликов последних лет. Деррек Маллер показывает, что классическое «электроны бегут по проводу» — это упрощение, которое разваливается на простом эксперименте: лампочка зажигается раньше, чем электрон успеет добежать. Энергию переносит электромагнитное поле в пространстве между проводами. Школьная картинка тока — это иллюстрация, а не механизм.',
+    demo: 'Нет демо — это эпизод-разворот. После него хочется проверить ВСЁ, что в школе говорили про электричество.',
+    rationale: 'Подросток должен один раз увидеть, что школьный учебник на самом деле упрощает до неузнаваемости. Дальше он будет читать его внимательнее.',
+    url: 'https://www.youtube.com/watch?v=6Hv2GLtnf2c',
+    urlNote: '«Пожалуй, главное заблуждение об электричестве» (Vert Dider, 2021) — прямая ссылка',
+  },
+  {
+    id: 'e08', act: 1, number: '08',
+    title: 'Магнетизм — это релятивистский эффект',
+    source: 'Vert Dider · Veritasium',
+    duration: '~12 мин',
+    eyebrow: 'Магнитное поле · СТО',
+    accent1: '#8b3aff', accent2: '#fde047', glow: 'rgba(139,58,255,0.18)',
+    hook: 'Магнитного поля «как такового» нет. Это электрическое поле, но из движущейся системы отсчёта. Магнит — это специальная теория относительности, которую держат в руке.',
+    about: 'Один из самых поразительных результатов современной физики: магнетизм — это релятивистский эффект, который проявляется на скоростях электронов в проводе (доли мм/с) только потому, что зарядов очень много и они слегка по-разному сжимаются Лоренцем. Veritasium показывает это пошагово. После этого видео магниты становятся не отдельной «магической» силой, а следствием СТО.',
+    demo: 'Возьми два магнита, попробуй сблизить одинаковыми полюсами. Та сила, которую ты чувствуешь, — это электрическое поле из системы отсчёта движущихся электронов.',
+    rationale: 'Это вершина классической ЭМ. После такого ребёнок понимает, что Максвелл и Эйнштейн — не разные эпохи, а одно дело.',
+    url: 'https://www.youtube.com/watch?v=l8VvFJAamkw',
+    urlNote: '«Неожиданное объяснение электромагнетизма» (Vert Dider, 2020) — прямая ссылка',
+  },
+  {
+    id: 'e09', act: 1, number: '09',
+    title: 'Почему магниты притягиваются',
+    source: 'Vert Dider · Серии Фейнмана',
+    duration: '7 мин',
+    eyebrow: 'Метод · что значит «почему»',
+    accent1: '#b8814f', accent2: '#9a7ab0', glow: 'rgba(184,129,79,0.16)',
+    hook: 'Журналист спрашивает «почему магниты притягиваются?». Фейнман отказывается отвечать. И это лучший урок физики за весь сезон.',
+    about: 'Семь минут о том, что значит вопрос «почему». Фейнман объясняет, что каждое объяснение сводит явление к более фундаментальному — и эта цепочка не бесконечна. Не отказ от объяснения, а зрелое понимание границ метода. Vert Dider включает это в проект «Серии Фейнмана».',
+    demo: 'Без демо. Эпизод о том, как думают. Можно посмотреть с родителями и обсудить, что для тебя «нормальное объяснение».',
+    rationale: 'После двух громких разворотов нужна остановка о методе. Фейнман — голос, к которому возвращаются всю жизнь.',
+    url: 'https://www.youtube.com/@VertDiderScience/search?query=%D1%84%D0%B5%D0%B9%D0%BD%D0%BC%D0%B0%D0%BD+%D0%BC%D0%B0%D0%B3%D0%BD%D0%B8%D1%82%D1%8B',
+    urlNote: 'Канал Vert Dider → «Серии Фейнмана» или поиск «Фейнман магниты»',
+  },
+  {
+    id: 'e10', act: 1, number: '10',
+    title: 'Индукция: как магнит делает ток',
+    source: 'Дмитрий Побединский',
+    duration: '~12 мин',
+    eyebrow: 'ЭМ-индукция · Фарадей',
+    accent1: '#06b6d4', accent2: '#fbbf24', glow: 'rgba(6,182,212,0.18)',
+    hook: 'Двигай магнит в катушке — в катушке появится ток. Это и есть электростанция. Это и есть Фарадей.',
+    about: 'Электромагнитная индукция: изменение магнитного потока создаёт ЭДС. Это закон, на котором держится 99% мировой электроэнергии: турбина двигает магниты внутри катушек, в катушках появляется ток, ток идёт в розетку. Побединский разбирает с экспериментами. После этого школьная теплоэлектростанция перестаёт быть абстракцией.',
+    demo: 'Если есть катушка от старого реле и магнит — двигай магнит в катушке, подключи к мультиметру. Увидишь напряжение. Это и есть открытие Фарадея 1831 года.',
+    rationale: 'Замыкаем классическую ЭМ. Дальше — кризис: классическая физика говорит, что атом не может существовать.',
+    url: 'https://www.youtube.com/@PhysFromPobed/search?query=%D0%B8%D0%BD%D0%B4%D1%83%D0%BA%D1%86%D0%B8%D1%8F',
+    urlNote: 'Канал Побединского → поиск «индукция» или «электромагнитная индукция»',
+  },
+
+  // ─── АКТ III ───
+  {
+    id: 'e11', act: 2, number: '11',
+    title: 'Атом, который должен был развалиться',
+    source: 'Дмитрий Побединский',
+    duration: '~10 мин',
+    eyebrow: 'Кризис классики · ультрафиолетовая катастрофа',
+    accent1: '#ef4444', accent2: '#fcd34d', glow: 'rgba(239,68,68,0.18)',
+    hook: 'По классической физике электрон должен упасть на ядро за 10⁻¹¹ секунды и излучить всю свою энергию. Он не падает. Никогда. Это конец классической физики.',
+    about: 'Кризис, который привёл к квантовой механике. По уравнениям Максвелла ускоренный заряд излучает энергию — а электрон в атоме непрерывно ускоряется (он движется по орбите). Значит, он должен потерять энергию за миллиардную долю секунды и упасть на ядро. Реальные атомы стабильны. Что-то фундаментально не так с классической физикой. Это место, где физика поворачивает.',
+    demo: 'Без демо. Эпизод-проблема, на которую отвечает весь следующий акт.',
+    rationale: 'Без этого эпизода квантовая механика выглядит как «учёные с ума сошли». С ним — как единственный возможный ответ.',
+    url: 'https://www.youtube.com/@PhysFromPobed/search?query=%D0%B0%D1%82%D0%BE%D0%BC',
+    urlNote: 'Канал Побединского → поиск «атом» или «модель атома»',
+  },
+  {
+    id: 'e12', act: 2, number: '12',
+    title: 'Фотоэффект: свет — это частицы',
+    source: 'Vert Dider · MinutePhysics',
+    duration: '~5 мин',
+    eyebrow: 'Кванты · фотон',
+    accent1: '#facc15', accent2: '#06b6d4', glow: 'rgba(250,204,21,0.18)',
+    hook: 'Эйнштейн в 1905 году: свет — это пакеты. Не волна, не частица, а пакеты. За это, а не за относительность, он получил Нобелевскую.',
+    about: 'Фотоэлектрический эффект: ультрафиолет выбивает электроны из металла, красный свет — нет. По классической волновой теории — наоборот: красный с большой амплитудой должен выбивать. Эйнштейн предложил радикальное: свет квантуется. Один пакет (фотон) либо имеет энергию выше порога, либо не имеет. Это конец волновой картины света. И начало квантовой механики.',
+    demo: 'Поднеси светодиод с зелёным диодом к карманному солнечному элементу — увидишь напряжение. Поднеси красный — нет (если энергия фотона ниже запрещённой зоны кремния). Это тот же фотоэффект.',
+    rationale: 'Свет = частица. Через эпизод увидим: электрон = волна. Двойственность — рабочий механизм квантовой механики.',
+    url: 'https://www.youtube.com/@VertDiderScience/search?query=%D1%84%D0%BE%D1%82%D0%BE%D1%8D%D1%84%D1%84%D0%B5%D0%BA%D1%82',
+    urlNote: 'Канал Vert Dider → поиск «фотоэффект» или «MinutePhysics свет»',
+  },
+  {
+    id: 'e13', act: 2, number: '13',
+    title: 'Двойная щель — Фейнман',
+    source: 'Vert Dider · Фейнман, Корнелл 1964',
+    duration: '~56 мин',
+    eyebrow: 'Кванты · волна-частица',
+    accent1: '#0891b2', accent2: '#a78bfa', glow: 'rgba(8,145,178,0.18)',
+    hook: 'Один электрон проходит через две щели одновременно. Когда смотришь — перестаёт. Фейнман: «здесь корень тайны квантовой механики».',
+    about: 'Шестая лекция Мессенджеровских чтений Фейнмана 1964 года в Корнелле. Vert Dider её перевёл и озвучил. Фейнман объясняет на доске эксперимент с двойной щелью так, как этого не сделает никто другой: с пулями, водой, и электронами. Электрон ведёт себя как волна, пока на него не смотришь. Это не «странная интерпретация», это эксперимент.',
+    demo: 'Дома не воспроизвести (нужен электронный пучок). Но можно лазерной указкой на тонкую щель — увидишь интерференционные полосы. Это работает потому, что фотоны тоже волна.',
+    rationale: 'Сердцевина квантовой механики. После Фейнмана дальнейшее идёт как следствия одного факта.',
+    url: 'https://www.youtube.com/watch?v=3CIX6QgIVZ0',
+    urlNote: '«Лекция #6. Природа квантовой механики» (Vert Dider) — прямая ссылка',
+  },
+  {
+    id: 'e14', act: 2, number: '14',
+    title: 'Электрон в ящике',
+    source: 'Наш интерактив',
+    duration: '~15 мин',
+    eyebrow: 'Кванты · уровни',
+    accent1: '#10b981', accent2: '#a78bfa', glow: 'rgba(16,185,129,0.18)',
+    hook: 'Поверни ручку — и увидишь, откуда берутся «оболочки атома». Не лекция, а песочница.',
+    about: 'Собственный интерактив. Электрон в одномерной потенциальной яме (бесконечно высокие стены). Волновая функция должна быть нулём на стенках — отсюда автоматически получаются дискретные стоячие волны, как у струны гитары. Это и есть «энергетические уровни». Можно крутить ширину ящика и видеть, как уровни меняются. Это самый прямой путь к интуиции квантовых уровней.',
+    demo: 'Сам интерактив и есть демо. После него — попробуй описать, что общего у гитарной струны и электрона в атоме.',
+    rationale: 'Видео тут не сработает: нужна песочница, где ребёнок крутит параметр и видит, как меняется ответ. Это место для нашего собственного инструмента.',
+    url: '#e14',
+    urlNote: 'Интерактив добавим отдельным файлом (как алгебру делали)',
+  },
+  {
+    id: 'e15', act: 2, number: '15',
+    title: 'Туннелирование: сквозь стену',
+    source: 'Дмитрий Побединский / Vert Dider',
+    duration: '~12 мин',
+    eyebrow: 'Кванты · туннельный эффект',
+    accent1: '#0284c7', accent2: '#fbbf24', glow: 'rgba(2,132,199,0.18)',
+    hook: 'Электрон может пройти сквозь стену, через которую классически пройти не может. На этом работает Солнце. И флэш-память в твоём телефоне.',
+    about: 'Квантовое туннелирование: частица имеет ненулевую вероятность оказаться за потенциальным барьером, даже если у неё не хватает энергии его «перепрыгнуть». Это не магия, это волновое уравнение Шрёдингера. На туннелировании работает: термоядерный синтез в Солнце (протоны должны были бы отталкиваться, но туннелируют), флэш-память (электроны туннелируют через изолятор), сканирующий туннельный микроскоп.',
+    demo: 'Дома не воспроизвести, но можешь представить: волна на воде, ударяющаяся о стенку. Часть энергии проходит сквозь. Электрон делает то же самое.',
+    rationale: 'Прямой мост к Акту IV: туннелирование — основа современной электроники.',
+    url: 'https://www.youtube.com/@PhysFromPobed/search?query=%D1%82%D1%83%D0%BD%D0%BD%D0%B5%D0%BB%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5',
+    urlNote: 'Канал Побединского → поиск «туннелирование» или «квантовый туннель»',
+  },
+  {
+    id: 'e16', act: 2, number: '16',
+    title: 'Принцип Паули и оболочки',
+    source: 'Дмитрий Побединский',
+    duration: '~10 мин',
+    eyebrow: 'Кванты · идентичные частицы',
+    accent1: '#7c3aed', accent2: '#22d3ee', glow: 'rgba(124,58,237,0.18)',
+    hook: 'Два электрона не могут быть в одинаковом состоянии. Это запрет. Из-за него существует химия. И ты.',
+    about: 'Принцип Паули: фермионы (электроны, протоны, нейтроны) не могут занимать одно и то же квантовое состояние. Поэтому в атоме электроны заполняют уровни по одному, образуя оболочки. Из этого следует периодическая таблица. И вся химия. И то, что атомы не схлопываются, когда ты сжимаешь руку в кулак. Это не «свойство», это запрет.',
+    demo: 'Посмотри на таблицу Менделеева. Каждая строка — это новая электронная оболочка. Каждый столбец — атомы с похожими «свободными местами» в верхней оболочке. Вся таблица — это иллюстрация Паули.',
+    rationale: 'Подготовка к зонной теории. Без Паули зоны не образуются.',
+    url: 'https://www.youtube.com/@PhysFromPobed/search?query=%D0%9F%D0%B0%D1%83%D0%BB%D0%B8',
+    urlNote: 'Канал Побединского → поиск «Паули» или «оболочки атома»',
+  },
+
+  // ─── АКТ IV ───
+  {
+    id: 'e17', act: 3, number: '17',
+    title: 'Из атомов в кристалл',
+    source: 'Наш интерактив',
+    duration: '~15 мин',
+    eyebrow: 'Кристалл · зоны',
+    accent1: '#65a30d', accent2: '#facc15', glow: 'rgba(101,163,13,0.18)',
+    hook: 'Когда два атома сближаются — их уровни расщепляются. Когда сближаются миллион — образуются зоны. Здесь решается, проводник вещество или нет.',
+    about: 'Собственный интерактив. Тяни ползунок: «число атомов». От одного атома — дискретные уровни. От двух — каждый уровень расщепляется на пару. От миллиарда — уровни сливаются в зоны. Между зонами — запрещённый промежуток. Ширина этого промежутка решает всё: меньше 0.5 эВ → металл, около 1 эВ → полупроводник, больше 4 эВ → изолятор. Это и есть зонная теория, на пальцах.',
+    demo: 'Сам интерактив. После него — посмотри на таблицу Менделеева. Все элементы, на которые тебя интересуют электроника (Si, Ge, Ga, As, In), стоят в IV колонке или рядом с ней. Это не совпадение.',
+    rationale: 'Без этого эпизода кремний — магия. С ним — последовательная физика.',
+    url: '#e17',
+    urlNote: 'Интерактив добавим отдельным файлом',
+  },
+  {
+    id: 'e18', act: 3, number: '18',
+    title: 'Кремний и легирование',
+    source: 'Русский канал «Полупроводники»',
+    duration: '~12 мин',
+    eyebrow: 'Полупроводник · допирование',
+    accent1: '#16a34a', accent2: '#fde047', glow: 'rgba(22,163,74,0.16)',
+    hook: 'Добавишь 1 атом фосфора на миллион атомов кремния — проводимость вырастет в миллион раз. Это инженерия на уровне атома.',
+    about: 'Собственная проводимость чистого кремния: при комнатной температуре часть электронов перескакивает через запрещённую зону, оставляя «дырку» (отсутствие электрона, ведущее себя как положительный заряд). Допирование: добавление атомов фосфора (5 электронов на внешней оболочке) даёт лишние электроны → n-тип. Атомы бора (3 электрона) — лишние дырки → p-тип. На этом стоит вся современная электроника.',
+    demo: 'Если есть кусок кремниевой пластины (из старого процессора, например) — посмотри на просвет. Чистый кремний прозрачен в инфракрасном, как стекло. Это и есть запрещённая зона ~1.1 эВ — фотон с меньшей энергией просто проходит.',
+    rationale: 'Прямой путь от квантовой физики к материалу. Дальше — переход.',
+    url: 'https://www.youtube.com/watch?v=OMGdSCaMVD0',
+    urlNote: '«Полупроводники. Как работают транзисторы и диоды. Самое понятное объяснение!» — прямая ссылка',
+  },
+  {
+    id: 'e19', act: 3, number: '19',
+    title: 'pn-переход и диод',
+    source: 'Русский канал «Транзистор — это просто»',
+    duration: '~15 мин',
+    eyebrow: 'Диод · pn-переход',
+    accent1: '#0d9488', accent2: '#facc15', glow: 'rgba(13,148,136,0.16)',
+    hook: 'Соедини p-тип и n-тип. Получишь устройство, которое пропускает ток только в одну сторону. Это диод. И первая половина транзистора.',
+    about: 'На границе p и n электроны из n-области диффундируют в p-область, заполняя дырки. Это создаёт область без свободных носителей — запирающий слой. Возникает встроенное напряжение ~0.7 В (для кремния). Прямое смещение сжимает запирающий слой, ток идёт. Обратное смещение расширяет, ток не идёт (почти). Так получается первый полупроводниковый прибор — выпрямитель.',
+    demo: 'Купи дешёвый диод 1N4148 (рубль штука). Подключи к батарейке через светодиод последовательно. Поменяй полярность — увидишь, в одном направлении горит, в обратном нет.',
+    rationale: 'Понимание диода = половина понимания транзистора. Транзистор — это два соединённых перехода.',
+    url: 'https://www.youtube.com/@user-fy3nz6sg2x/search?query=pn+%D0%BF%D0%B5%D1%80%D0%B5%D1%85%D0%BE%D0%B4',
+    urlNote: 'Канал «Транзистор — это просто» → поиск «pn-переход» или «диод»',
+  },
+  {
+    id: 'e20', act: 3, number: '20',
+    title: 'Транзистор: как малое управляет большим',
+    source: 'Русский канал «Транзистор — это просто»',
+    duration: '~15 мин',
+    eyebrow: 'Биполярный транзистор · усиление',
+    accent1: '#15803d', accent2: '#fde047', glow: 'rgba(21,128,61,0.16)',
+    hook: 'Маленький ток в базе управляет большим током в коллекторе. Это усиление. Это вся электроника. Это твой телефон.',
+    about: 'Биполярный n-p-n транзистор: тонкая p-база между n-эмиттером и n-коллектором. Без сигнала на базе ток не идёт — оба перехода работают как встречные диоды. Подаёшь маленькое напряжение на базу — она «открывается», электроны из эмиттера прорываются через тонкую базу в коллектор. На выходе большой ток управляется крошечным базовым. Это и есть усиление, на котором стоят все аудиосистемы, радиоприёмники, и логические затворы.',
+    demo: 'Дешёвый транзистор КТ315 (биполярный n-p-n) + светодиод + резистор + батарейка. Палец на базе — светодиод тускнеет, нет пальца — горит ярко. Можешь буквально руками управлять током.',
+    rationale: 'Это та самая физика, к которой шёл курс. Дальше — что из этого собирается компьютер.',
+    url: 'https://www.youtube.com/watch?v=8n6pZZbCP8w',
+    urlNote: '«ПРИНЦИП РАБОТЫ ТРАНЗИСТОРА (Транзистор — это просто, серия 8)» — прямая ссылка',
+  },
+  {
+    id: 'e21', act: 3, number: '21',
+    title: 'Финал. Транзистор → NAND → компьютер',
+    source: 'Vert Dider · Фейнман 1985 + наш NAND',
+    duration: '~70 мин (лекция) + 15 мин (артефакт)',
+    eyebrow: 'Финал · замыкание курса',
+    accent1: '#d4a32c', accent2: '#22d3ee', glow: 'rgba(212,163,44,0.16)',
+    hook: 'Фейнман в 1985 году собирает всё, через что мы прошли, в одну картину: как из транзисторов получается компьютер. А потом — наш собственный артефакт показывает, что любая компьютерная операция собирается из NAND.',
+    about: 'Две части. Первая — лекция Ричарда Фейнмана 1985 года «Computers from the Inside Out», переведённая и озвученная Vert Dider к их десятилетию. Фейнман объясняет от железа до алгоритмов: транзистор как переключатель, логические затворы, как компьютер вычисляет, и может ли он «думать как человек». Вторая — наш собственный артефакт `nand-universality.jsx`: интерактивная демонстрация того, что любой логический затвор (AND, OR, NOT, XOR, всё что угодно) можно собрать только из NAND. Конец курса.',
+    demo: 'Дома: запусти артефакт про NAND, собери из NAND-ов AND и OR. Поймёшь, что весь твой телефон, через который ты это смотришь, — это огромный пирог из этих штук.',
+    rationale: 'Кольцо замкнулось: физика → транзистор (Фейнман) → логика → компьютер (наш NAND). Дальше — куда захочется самому.',
+    url: 'https://www.youtube.com/watch?v=5SLo22giP5A',
+    urlNote: '«Ричард Фейнман о компьютерах, 1985» (Vert Dider, 2023) — прямая ссылка',
+  },
+];
+
+const SOURCES = [
+  {
+    name: 'Курсомир',
+    tag: 'MIT Льюин 8.01 · озвучка',
+    desc: 'Волонтёрский проект перевода MIT OCW. Полностью озвучили курс Уолтера Льюина 8.01 «Классическая механика» — все лекции с демонстрациями. Это весь Акт I и фундамент дальнейших знаний.',
+    url: 'https://www.youtube.com/@kursomir',
+  },
+  {
+    name: 'Vert Dider',
+    tag: 'Veritasium · Фейнман · MinutePhysics',
+    desc: 'Главная студия русской озвучки научпопа. 136 роликов Veritasium, все 7 Мессенджеровских лекций Фейнмана 1964, 56 MinutePhysics, лекция Фейнмана 1985 о компьютерах. Озвучка, не субтитры. Источник большей части курса.',
+    url: 'https://www.youtube.com/@VertDiderScience',
+  },
+  {
+    name: 'Vert Dider · физика',
+    tag: 'каталог физики',
+    desc: 'Тег «физика» на их сайте. Лекции Фейнмана и космос вынесены в отдельные подразделы. Если зацепит какой-то эпизод — иди сюда искать соседние.',
+    url: 'https://vertdider.tv/tag/%D1%84%D0%B8%D0%B7%D0%B8%D0%BA%D0%B0/',
+  },
+  {
+    name: 'Дмитрий Побединский',
+    tag: 'русский научпоп · 1.2М подписчиков',
+    desc: 'Российский Veritasium. Физик, объясняет от школьных вопросов («почему небо голубое») до квантовой физики и теории струн. Активный канал, новые ролики выходят регулярно. Тебя ждут темы, которых нет в нашем курсе.',
+    url: 'https://www.youtube.com/@PhysFromPobed',
+  },
+  {
+    name: 'Транзистор — это просто',
+    tag: 'электроника · серия 1–8',
+    desc: 'Русский канал-сериал про электронику для начинающих. От тока к транзистору, всё с руками и осциллографом. Если зацепит Акт IV — здесь продолжение в прикладную сторону.',
+    url: 'https://www.youtube.com/watch?v=8n6pZZbCP8w',
+  },
+  {
+    name: 'Феймнан 1985 о компьютерах',
+    tag: 'финал курса',
+    desc: 'Полная лекция Фейнмана 1985 года про устройство компьютера, переведённая Vert Dider к их десятилетию. 70 минут, в одиночку покрывает всё, через что мы прошли. Это финал.',
+    url: 'https://www.youtube.com/watch?v=5SLo22giP5A',
+  },
+];
+
+const STORAGE_KEY = 'physics-course-watched-v1';
+
+function getWatched() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+}
+function setWatched(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+function toggleWatched(id) {
+  const w = getWatched();
+  const i = w.indexOf(id);
+  const willBeWatched = i < 0;
+  if (i >= 0) w.splice(i, 1); else w.push(id);
+  setWatched(w);
+
+  // Targeted DOM update — preserve expansion and avoid re-animation
+  const card = document.querySelector(`[data-id="${id}"]`);
+  if (!card) return;
+  card.classList.toggle('watched', willBeWatched);
+
+  // Update button labels inside this card
+  const watchBtn = card.querySelector('[data-watch]');
+  if (watchBtn) watchBtn.textContent = willBeWatched ? '✓ Просмотрено · отменить' : 'Отметить просмотренным';
+  const toggleLabel = card.querySelector('.card-toggle > span:first-child');
+  if (toggleLabel) toggleLabel.textContent = willBeWatched ? 'Подробнее (просмотрено)' : 'Подробнее';
+
+  // Update overall progress
+  const total = EPISODES.length;
+  const count = w.length;
+  document.getElementById('progressFill').style.width = `${(count/total)*100}%`;
+  document.getElementById('progressCount').textContent = `${count} / ${total}`;
+
+  // Update act-level progress for this card's act
+  const actSection = card.closest('.act-section');
+  if (actSection) {
+    const cards = actSection.querySelectorAll('.card');
+    const watchedHere = Array.from(cards).filter(c => c.classList.contains('watched')).length;
+    const progEl = actSection.querySelector('.act-progress strong');
+    if (progEl) progEl.textContent = `${watchedHere} / ${cards.length}`;
+  }
+}
+
+function renderCard(ep, watched) {
+  const isWatched = watched.includes(ep.id);
+  return `
+    <article class="card${isWatched ? ' watched' : ''}" data-id="${ep.id}"
+      style="--accent-1:${ep.accent1};--accent-2:${ep.accent2};--accent-glow:${ep.glow};">
+      <div class="card-poster">
+        <div class="card-number">${ep.number}</div>
+        <div class="card-source">${ep.source}</div>
+        <div class="card-eyebrow">
+          <span class="ep-num">EP ${ep.number}</span>
+          <span class="dot"></span>
+          <span>${ep.eyebrow}</span>
+          <span class="dot"></span>
+          <span>${ep.duration}</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">${ep.title}</h2>
+        <p class="card-hook">${ep.hook}</p>
+        <button class="card-toggle" data-toggle="${ep.id}">
+          <span>${isWatched ? 'Подробнее (просмотрено)' : 'Подробнее'}</span>
+          <span class="arrow">▼</span>
+        </button>
+      </div>
+      <div class="card-details">
+        <div class="card-details-inner">
+          <div class="detail-block">
+            <span class="detail-label">О чём</span>
+            ${ep.about}
+          </div>
+          <div class="detail-block demo">
+            <span class="detail-label">Дома</span>
+            ${ep.demo}
+          </div>
+          <div class="detail-block rationale">
+            <span class="detail-label">Почему этот эпизод здесь</span>
+            ${ep.rationale}
+          </div>
+          <div class="detail-block">
+            <span class="detail-label">Ссылка</span>
+            <a href="${ep.url}" target="_blank" rel="noopener" style="color:var(--accent-2);text-decoration:none;border-bottom:1px dotted var(--accent-2);">${ep.urlNote}</a>
+          </div>
+          <div class="card-actions">
+            <a class="btn btn-primary" href="${ep.url}" target="_blank" rel="noopener">
+              Открыть →
+            </a>
+            <button class="btn btn-watched" data-watch="${ep.id}">
+              ${isWatched ? '✓ Просмотрено · отменить' : 'Отметить просмотренным'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function render() {
+  const watched = getWatched();
+  const actsEl = document.getElementById('acts');
+  actsEl.innerHTML = ACTS.map((act, idx) => {
+    const acteps = EPISODES.filter(e => e.act === idx);
+    const watchedCount = acteps.filter(e => watched.includes(e.id)).length;
+    return `
+      <section class="act-section">
+        <header class="act" style="--act-color:${act.color};">
+          <div class="act-num">${act.n}</div>
+          <div>
+            <h2 class="act-title">${act.title}</h2>
+            <p class="act-subtitle">${act.subtitle}</p>
+          </div>
+          <div class="act-progress">Акт<br/><strong>${watchedCount} / ${acteps.length}</strong></div>
+        </header>
+        <div class="grid">
+          ${acteps.map(ep => renderCard(ep, watched)).join('')}
+        </div>
+      </section>
+    `;
+  }).join('');
+
+  // Animation delays for cards
+  document.querySelectorAll('.card').forEach((card, i) => {
+    card.style.animationDelay = `${Math.min(i, 12) * 0.04}s`;
+  });
+
+  // Handlers: whole card is clickable; links and watched button bypass the toggle
+  actsEl.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', e => {
+      // Ignore clicks on actual interactive children
+      if (e.target.closest('a')) return;
+      if (e.target.closest('[data-watch]')) return;
+      card.classList.toggle('expanded');
+    });
+  });
+  actsEl.querySelectorAll('[data-watch]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      toggleWatched(btn.dataset.watch);
+    });
+  });
+
+  // Overall progress
+  const total = EPISODES.length;
+  const count = watched.length;
+  document.getElementById('progressFill').style.width = `${(count/total)*100}%`;
+  document.getElementById('progressCount').textContent = `${count} / ${total}`;
+
+  // Sources (only render once)
+  const sourcesEl = document.getElementById('sourcesGrid');
+  if (!sourcesEl.dataset.rendered) {
+    sourcesEl.innerHTML = SOURCES.map(s => `
+      <a class="source-card" href="${s.url}" target="_blank" rel="noopener">
+        <span class="source-card-tag">${s.tag}</span>
+        <h3 class="source-card-name">${s.name}</h3>
+        <p class="source-card-desc">${s.desc}</p>
+        <span class="source-card-link">${s.url.replace('https://', '').replace('www.', '')}</span>
+      </a>
+    `).join('');
+    sourcesEl.dataset.rendered = '1';
+  }
+}
+
+render();
+</script>
+</body>
+</html>
