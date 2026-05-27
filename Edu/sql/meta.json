@@ -6,7 +6,8 @@
     "sql_dashboard.html": {
       "title": "SQL за 10 минут — без воды",
       "description": "Один экран про язык запросов: разница с Excel, почему колоночные БД иногда обгоняют строковые",
-      "tags": ["Edu"]
+      "tags": ["Edu"],
+      "image": "cover.svg"
     }
   }
 }

@@ -45,7 +45,8 @@
         "биология",
         "математика",
         "русский язык"
-      ]
+      ],
+      "image": "cover.svg"
     },
     "trainer-chem-01-element-or-substance.html": {
       "title": "№1 КИМ — Элемент vs простое вещество",

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b2559"/><stop offset=".55" stop-color="#7186ff"/><stop offset="1" stop-color="#83d3c9"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <g fill="none" stroke="#fff8e6" stroke-width="9" stroke-linecap="round" opacity=".68">
+    <path d="M270 310 H610 V520 H940 V330 H1280"/>
+    <path d="M270 650 H610 V520 M940 520 V720 H1280"/>
+  </g>
+  <g fill="#fff8e6" opacity=".85">
+    <rect x="180" y="240" width="180" height="140" rx="28"/>
+    <rect x="180" y="580" width="180" height="140" rx="28"/>
+    <rect x="610" y="445" width="180" height="150" rx="30"/>
+    <rect x="1240" y="260" width="180" height="140" rx="28"/>
+    <rect x="1240" y="650" width="180" height="140" rx="28"/>
+  </g>
+  <g fill="#0c1730" opacity=".22">
+    <circle cx="700" cy="520" r="34"/><circle cx="270" cy="310" r="24"/><circle cx="270" cy="650" r="24"/>
+    <circle cx="1330" cy="330" r="24"/><circle cx="1330" cy="720" r="24"/>
+  </g>
+</svg>
