@@ -90,7 +90,7 @@
   .chip-f .ic{font-size:.95rem;line-height:1}
   .chip-f[data-on="1"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 
-  .stage{position:relative;flex:1 0 auto;margin-top:32px}
+  .stage{position:relative;flex:1 0 auto}
   .hero{position:relative;border-radius:30px;overflow:hidden;cursor:pointer;
     aspect-ratio:16/10;min-height:300px;box-shadow:var(--shadow);
     background:var(--card);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
@@ -488,17 +488,13 @@ async function discover(){
   return items;
 }
 
-let ALL=[], SECTIONS=[], idx=0, previewLoaded=false;
+let ALL=[], SECTIONS=[], VIEW=[], sectionFilter='all', idx=0, previewLoaded=false;
 
 function render(){
   const app=document.getElementById('app');
   app.innerHTML=`
     ${ALL.__fallback?`<div class="fallback-note">GitHub API недоступен или ограничил запросы — показан резервный список. На живом сайте проекты подтянутся автоматически.</div>`:''}
-    ${renderSections()}
-    <div class="strip-wrap">
-      <div class="strip-label">Все проекты <span class="count" id="stripCount"></span></div>
-      <div class="strip" id="strip"></div>
-    </div>
+    ${renderSectionSelector()}
     <div class="stage">
       <div class="hero" id="hero">
         <div class="hero-bg" id="heroBg"></div>
@@ -513,16 +509,42 @@ function render(){
       </div>
       <button class="nav-arrow prev" id="navPrev" aria-label="Назад">‹</button>
       <button class="nav-arrow next" id="navNext" aria-label="Вперёд">›</button>
+    </div>
+    <div class="strip-wrap">
+      <div class="strip-label">${esc(currentSectionName())} <span class="count" id="stripCount"></span></div>
+      <div class="strip" id="strip"></div>
     </div>`;
 
+  app.querySelectorAll('.chip-f').forEach(el=>el.onclick=()=>{sectionFilter=el.dataset.f;applySectionFilter();render();});
   buildStrip();
-  attachProjectCards();
-  setActive(Math.min(idx,Math.max(0,ALL.length-1)),false);
+  setActive(Math.min(idx,Math.max(0,VIEW.length-1)),false);
   document.getElementById('hero').onclick=()=>openSheet(idx);
   document.getElementById('navPrev').onclick=e=>{e.stopPropagation();move(-1);};
   document.getElementById('navNext').onclick=e=>{e.stopPropagation();move(1);};
   attachStripDrag();
   attachHeroSwipe();
+}
+
+function renderSectionSelector(){
+  return `<div class="filters">
+    <div class="chip-f" data-f="all" data-on="${sectionFilter==='all'?1:0}">✦ Все <span style="opacity:.6">${ALL.length}</span></div>
+    ${SECTIONS.map(sec=>{
+      const c=catOf(sec.tags);
+      return `<div class="chip-f" data-f="${esc(sec.key)}" data-on="${sectionFilter===sec.key?1:0}"><span class="ic">${c.icon}</span>${esc(sec.name)} <span style="opacity:.6">${sec.items.length}</span></div>`;
+    }).join('')}
+  </div>`;
+}
+
+function applySectionFilter(){
+  const section=SECTIONS.find(sec=>sec.key===sectionFilter);
+  VIEW=section?section.items.slice():ALL.slice();
+  idx=0;
+}
+
+function currentSectionName(){
+  if(sectionFilter==='all')return'Все проекты';
+  const section=SECTIONS.find(sec=>sec.key===sectionFilter);
+  return section?.name||'Все проекты';
 }
 
 function renderSections(){
@@ -562,8 +584,8 @@ function attachProjectCards(){
 
 function buildStrip(){
   const strip=document.getElementById('strip');
-  document.getElementById('stripCount').textContent=`${ALL.length} ${plural(ALL.length)}`;
-  strip.innerHTML=ALL.map((it,i)=>{
+  document.getElementById('stripCount').textContent=`${VIEW.length} ${plural(VIEW.length)}`;
+  strip.innerHTML=VIEW.map((it,i)=>{
     const c=catOf(it.tags);
     return `<div class="frame" data-i="${i}" style="--fc:${c.c};--fci:${c.ci}">
       <div class="frame-bg"></div>
@@ -581,9 +603,9 @@ function plural(n){const a=Math.abs(n)%100,b=a%10;
   if(a>10&&a<20)return'проектов';if(b>1&&b<5)return'проекта';if(b===1)return'проект';return'проектов';}
 
 function setActive(i,scroll){
-  if(!ALL.length)return;
-  idx=(i+ALL.length)%ALL.length;
-  const it=ALL[idx], c=catOf(it.tags);
+  if(!VIEW.length)return;
+  idx=(i+VIEW.length)%VIEW.length;
+  const it=VIEW[idx], c=catOf(it.tags);
   document.documentElement.style.setProperty('--acc',c.c);
   document.documentElement.style.setProperty('--acc-ink',c.ci);
   document.getElementById('heroTitle').textContent=it.title;
@@ -593,7 +615,6 @@ function setActive(i,scroll){
   if(it.image){bg.style.backgroundImage=`url('${it.image.replace(/'/g,'%27')}')`;bg.classList.add('is-img');wm.style.display='none';}
   else{bg.style.backgroundImage='';bg.classList.remove('is-img');wm.style.display='';wm.textContent=c.icon;}
   document.querySelectorAll('.frame').forEach(f=>f.dataset.on=(+f.dataset.i===idx)?'1':'0');
-  document.querySelectorAll('.project-card').forEach(card=>card.dataset.on=(+card.dataset.i===idx)?'1':'0');
   if(scroll){const af=document.querySelector(`.frame[data-i="${idx}"]`);
     if(af)af.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});}
 }
@@ -602,7 +623,7 @@ function move(d){setActive(idx+d,true);}
 const backdrop=document.getElementById('backdrop'), sheet=document.getElementById('sheet');
 
 function openSheet(i){
-  const it=ALL[i];if(!it)return;
+  const it=VIEW[i];if(!it)return;
   const c=catOf(it.tags);
   document.documentElement.style.setProperty('--acc',c.c);
   document.documentElement.style.setProperty('--acc-ink',c.ci);
@@ -704,6 +725,7 @@ window.addEventListener('resize',()=>{
     document.getElementById('app').innerHTML='<div class="center-msg">Проектов пока нет.</div>';
     return;
   }
+  applySectionFilter();
   render();
 })();
 </script>
