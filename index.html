@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Demo Projects — albud1978</title>
+<title>Demo Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
@@ -299,8 +299,7 @@
 <div class="wrap">
   <div class="topbar">
     <div class="brand">
-      <div class="eyebrow">albud1978</div>
-      <h1>Demo <em>Projects</em></h1>
+      <h1>Demo <em>Portal</em></h1>
     </div>
     <div class="top-actions">
       <button class="theme-btn" id="themeBtn" aria-label="Сменить тему"><span class="ic" id="themeIc">☾</span></button>
@@ -387,12 +386,12 @@ const FALLBACK=[
    desc:'118 элементов, 3D-визуализация орбиталей, диаграмма Ауфбау, температурный режим.',
    tags:['Edu']},
   {path:'Edu/mnist/mnist_explainer.html',folder:'Edu/mnist',file:'mnist_explainer.html',
-   top:'Edu',sectionName:'Edu',sectionDesc:'Образовательные и учебные проекты',sectionTags:['ML','Edu'],groupName:'MNIST',
+   top:'Edu',sectionName:'ML',sectionDesc:'Машинное обучение и компьютерное зрение',sectionTags:['ML'],groupName:'MNIST',
    title:'MNIST Explainer',image:'',
    desc:'Интерактивное объяснение работы нейросети на датасете MNIST.',
    tags:['ML','Edu']},
   {path:'tt-pipeline/dashboard.html',folder:'tt-pipeline',file:'dashboard.html',
-   top:'tt-pipeline',sectionName:'CV Pipeline',sectionDesc:'YOLOv8 Table Tennis — дашборд пайплайна обработки видео',sectionTags:['ML','Edu'],groupName:'CV Pipeline',
+   top:'tt-pipeline',sectionName:'ML',sectionDesc:'Машинное обучение и компьютерное зрение',sectionTags:['ML'],groupName:'CV Pipeline',
    title:'Table Tennis CV',image:'',
    desc:'YOLOv8 Table Tennis — дашборд пайплайна обработки видео, training metrics и FSM rules.',
    tags:['ML','Edu']},
@@ -424,13 +423,14 @@ function catOf(tags){
 function groupSections(items){
   const map=new Map();
   for(const it of items){
-    const key=it.top||it.folder.split('/')[0];
+    const isML=(it.tags||[]).some(t=>String(t).toLowerCase()==='ml');
+    const key=isML?'ML':it.top||it.folder.split('/')[0];
     if(!map.has(key)){
       map.set(key,{
         key,
-        name:it.sectionName||key,
-        desc:it.sectionDesc||'',
-        tags:it.sectionTags||it.tags||[],
+        name:isML?'ML':it.sectionName||key,
+        desc:isML?'Машинное обучение и компьютерное зрение':it.sectionDesc||'',
+        tags:isML?['ML']:it.sectionTags||it.tags||[],
         items:[]
       });
     }
@@ -630,7 +630,7 @@ function openSheet(i){
   document.getElementById('shBadge').textContent=c.icon;
   document.getElementById('shEyebrow').textContent=it.groupName||it.sectionName||c.name;
   document.getElementById('shTitle').textContent=it.title;
-  document.getElementById('shLead').textContent=it.desc||'Интерактивный демо-проект из коллекции albud1978.';
+  document.getElementById('shLead').textContent=it.desc||'Интерактивный демо-проект из коллекции Demo Portal.';
   const href=projectHref(it.path);
   document.getElementById('shOpen').href=href;
   const cover=document.getElementById('shCover');
