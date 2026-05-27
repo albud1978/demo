@@ -74,12 +74,12 @@
     font-variation-settings:'opsz' 80;margin-top:3px}
   .brand h1 em{font-style:italic;color:var(--acc-text);font-weight:500}
   .top-actions{display:flex;align-items:center;gap:9px}
-  .theme-btn,.repo-link{font-size:.82rem;color:var(--dim);text-decoration:none;display:inline-flex;align-items:center;
+  .theme-btn{font-size:.82rem;color:var(--dim);text-decoration:none;display:inline-flex;align-items:center;
     gap:7px;padding:8px 13px;border:1px solid var(--line);border-radius:999px;
     background:color-mix(in srgb,var(--card) 65%, transparent);cursor:pointer;
     transition:border-color .2s,color .2s,background .2s;white-space:nowrap;font-family:inherit}
   .theme-btn{padding:8px 12px}
-  .theme-btn:hover,.repo-link:hover{color:var(--ink);border-color:var(--dim);background:var(--card)}
+  .theme-btn:hover{color:var(--ink);border-color:var(--dim);background:var(--card)}
   .theme-btn .ic{font-size:1rem;line-height:1}
 
   .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
@@ -164,10 +164,42 @@
   .frame[data-on="1"]{border-color:var(--ink);transform:translateY(-5px) scale(1.04);filter:none;
     box-shadow:0 18px 34px -16px rgba(0,0,0,.55)}
 
-  .foot{margin-top:30px;text-align:center;color:var(--dim);font-size:.8rem}
-  .foot a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--line)}
-  .foot code{background:color-mix(in srgb,var(--card) 60%,transparent);border:1px solid var(--line);
-    padding:1px 6px;border-radius:6px;font-size:.92em}
+  .sections{display:flex;flex-direction:column;gap:34px;margin-top:38px}
+  .section-block{position:relative}
+  .section-title{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;padding-bottom:12px;
+    border-bottom:1px solid var(--line)}
+  .section-title .sec-icon{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;
+    justify-content:center;flex:0 0 auto;background:var(--acc-soft);border:1px solid color-mix(in srgb,var(--acc) 26%,transparent)}
+  .section-copy{min-width:0}
+  .sec-name{font-family:'Fraunces',serif;font-size:1.24rem;line-height:1.05;font-weight:600;
+    color:var(--ink);letter-spacing:-.02em}
+  .sec-desc{font-size:.86rem;line-height:1.45;color:var(--dim);margin-top:4px;max-width:760px}
+  .sec-count{margin-left:auto;font-size:.76rem;font-weight:700;color:var(--acc-text);
+    background:var(--acc-soft);border:1px solid color-mix(in srgb,var(--acc) 26%,transparent);
+    border-radius:999px;padding:5px 10px;white-space:nowrap}
+  .section-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .project-card{position:relative;min-height:190px;border:1px solid var(--line-soft);border-radius:20px;
+    padding:18px;text-align:left;color:inherit;background:color-mix(in srgb,var(--card) 86%,transparent);
+    box-shadow:var(--shadow-sm);cursor:pointer;overflow:hidden;font-family:inherit;
+    display:flex;flex-direction:column;gap:12px;transition:transform .18s,border-color .18s,box-shadow .18s,background .18s}
+  .project-card::before{content:"";position:absolute;inset:0;opacity:.14;pointer-events:none;
+    background:radial-gradient(80% 70% at 0% 0%,var(--pc) 0%,transparent 58%)}
+  .project-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--pc) 54%,var(--line));
+    background:var(--card);box-shadow:0 20px 42px -24px var(--pci)}
+  .project-card[data-on="1"]{border-color:color-mix(in srgb,var(--pc) 72%,var(--line));
+    box-shadow:0 18px 36px -24px var(--pci)}
+  .project-card-top{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .project-icon{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+    background:color-mix(in srgb,var(--pc) 16%,var(--card));color:var(--pci);font-size:1.18rem;
+    border:1px solid color-mix(in srgb,var(--pc) 30%,transparent)}
+  .project-action{font-size:.76rem;font-weight:700;color:var(--acc-text);opacity:.85}
+  .project-title{position:relative;z-index:1;font-size:1.03rem;font-weight:700;line-height:1.22;color:var(--ink)}
+  .project-desc{position:relative;z-index:1;font-size:.86rem;line-height:1.48;color:var(--ink-soft);
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .project-tags{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+  .project-tags .tag{font-size:.69rem;font-weight:700;color:var(--ink-soft);background:var(--paper-2);
+    border:1px solid var(--line);padding:3px 8px;border-radius:999px}
+
   .fallback-note{margin:0 auto 16px;max-width:560px;text-align:center;font-size:.8rem;color:var(--acc-text);
     background:var(--acc-soft);border:1px solid color-mix(in srgb,var(--acc) 30%,transparent);
     padding:9px 14px;border-radius:13px}
@@ -229,14 +261,6 @@
   .callout .co-text .tg{display:inline-block;font-size:.74rem;font-weight:600;color:var(--ink-soft);
     background:var(--paper-2);border:1px solid var(--line);padding:3px 9px;border-radius:999px;margin:2px 5px 2px 0}
 
-  .funfact{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;
-    background:var(--acc-soft);border:1px solid color-mix(in srgb,var(--acc) 28%,transparent);
-    border-radius:16px;padding:16px 18px;margin-bottom:6px}
-  .funfact .ff-ic{font-size:1.3rem;line-height:1}
-  .funfact .ff-label{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
-    color:var(--acc-text);margin-bottom:3px}
-  .funfact .ff-text{font-size:.9rem;color:var(--ink-soft);line-height:1.45}
-
   .preview-box{position:relative;width:100%;border-radius:16px;overflow:hidden;border:1px solid var(--line);
     background:repeating-linear-gradient(45deg,var(--paper-2),var(--paper-2) 10px,var(--card) 10px,var(--card) 20px);
     height:300px}
@@ -246,8 +270,7 @@
     color:var(--dim);font-size:.85rem;gap:10px}
 
   .sheet-foot{padding:18px 30px 26px;border-top:1px solid var(--line-soft);display:flex;gap:12px;
-    align-items:center;justify-content:space-between;flex-wrap:wrap}
-  .sheet-foot .path{font-size:.76rem;color:var(--dim);font-family:'Fraunces',serif;font-style:italic}
+    align-items:center;justify-content:flex-end;flex-wrap:wrap}
   .open-btn{display:inline-flex;align-items:center;gap:9px;font-size:.92rem;font-weight:600;
     background:var(--acc-ink);color:#fff;text-decoration:none;padding:13px 22px;border-radius:999px;
     box-shadow:0 14px 26px -12px var(--acc-ink);transition:transform .18s,box-shadow .18s}
@@ -262,6 +285,9 @@
     .brand h1{font-size:1.7rem}
     .hero{border-radius:24px;min-height:360px}
     .hero-cta{top:18px;right:18px}
+    .section-title{align-items:center}
+    .sec-desc{display:none}
+    .section-grid{grid-template-columns:1fr}
     .sheet{width:100vw;max-height:92vh;left:0;top:auto;bottom:0;transform:translateY(100%);
       border-radius:26px 26px 0 0}
     .sheet.show{transform:translateY(0)}
@@ -273,12 +299,11 @@
 <div class="wrap">
   <div class="topbar">
     <div class="brand">
-      <div class="eyebrow">albud1978 · github pages</div>
+      <div class="eyebrow">albud1978</div>
       <h1>Demo <em>Projects</em></h1>
     </div>
     <div class="top-actions">
       <button class="theme-btn" id="themeBtn" aria-label="Сменить тему"><span class="ic" id="themeIc">☾</span></button>
-      <a class="repo-link" href="https://github.com/albud1978/demo">↗ репозиторий</a>
     </div>
   </div>
 
@@ -303,12 +328,6 @@
       <img class="sheet-cover" id="shCover" alt="" hidden>
       <p class="lead" id="shLead"></p>
       <div class="callouts" id="shCallouts"></div>
-      <div class="funfact">
-        <div class="ff-ic">💡</div>
-        <div><div class="ff-label">Как это работает</div>
-          <div class="ff-text" id="shFunfact">Чистый HTML/CSS/JS — открывается прямо в браузере, без установки и сборки.</div>
-        </div>
-      </div>
     </div>
     <div class="panel" data-panel="preview">
       <div class="preview-box" id="previewBox">
@@ -317,7 +336,6 @@
     </div>
   </div>
   <div class="sheet-foot">
-    <span class="path" id="shPath"></span>
     <a class="open-btn" id="shOpen" href="#">Открыть проект <span class="arrow">→</span></a>
   </div>
 </div>
@@ -334,9 +352,7 @@ const EXCLUDED_TOP_FOLDERS=new Set(['unpublished']);
 const CAT={
   ml:   {icon:'🧠',name:'ML',            c:'#8c6bff', ci:'#5b3fd6'},
   data: {icon:'📊',name:'Данные',        c:'#3bb389', ci:'#1d7d5b'},
-  viz:  {icon:'📈',name:'Визуализация',  c:'#e0a93b', ci:'#b07d16'},
   qms:  {icon:'📋',name:'QMS',           c:'#4d86fb', ci:'#2a5bd0'},
-  doc:  {icon:'📄',name:'Документы',     c:'#e0578e', ci:'#b6336a'},
   edu:  {icon:'🎓',name:'Образование',   c:'#2f9e8f', ci:'#167468'},
   oge:  {icon:'✏️',name:'ОГЭ',           c:'#f08a46', ci:'#bd5d1d'},
   'огэ':{icon:'✏️',name:'ОГЭ',           c:'#f08a46', ci:'#bd5d1d'},
@@ -346,37 +362,45 @@ const CAT={
 
 const FALLBACK=[
   {path:'Edu/oge-course/index.html',folder:'Edu/oge-course',file:'index.html',
-   title:'Курс ОГЭ-2026 — открытый бесплатный курс',sectionName:'Курс ОГЭ-2026',image:'',
+   top:'Edu',sectionName:'Edu',sectionDesc:'Образовательные и учебные проекты',sectionTags:['ML','Edu'],groupName:'Курс ОГЭ-2026',
+   title:'Курс ОГЭ-2026 — открытый бесплатный курс',image:'',
    desc:'78 интерактивных тренажёров по химии, биологии, математике и русскому языку. Single-file HTML, работает офлайн.',
    tags:['Edu','огэ','химия','биология','математика','русский язык']},
   {path:'Edu/matrix-calculus-prep/index.html',folder:'Edu/matrix-calculus-prep',file:'index.html',
-   title:'Дорога к матричному исчислению — Том 0 + Том 1',sectionName:'Дорога к матричному исчислению',image:'',
+   top:'Edu',sectionName:'Edu',sectionDesc:'Образовательные и учебные проекты',sectionTags:['ML','Edu'],groupName:'Дорога к матричному исчислению',
+   title:'Дорога к матричному исчислению — Том 0 + Том 1',image:'',
    desc:'Двухтомник: подготовка от школьной алгебры до формулы Эйлера и курс по мотивам MIT 18.S096.',
-   tags:['doc','Edu']},
+   tags:['Edu']},
   {path:'Edu/physics-pendulum-to-transistor/index.html',folder:'Edu/physics-pendulum-to-transistor',file:'index.html',
-   title:'Физика: от маятника до транзистора · 4 сезона',sectionName:'Физика',image:'',
+   top:'Edu',sectionName:'Edu',sectionDesc:'Образовательные и учебные проекты',sectionTags:['ML','Edu'],groupName:'Физика',
+   title:'Физика: от маятника до транзистора · 4 сезона',image:'',
    desc:'Дашборд курса: 21 эпизод, от механики до NAND и компьютера.',
-   tags:['Edu','viz','физика']},
+   tags:['Edu','физика']},
   {path:'Edu/neocortex/neocortex_dashboard.html',folder:'Edu/neocortex',file:'neocortex_dashboard.html',
-   title:'Путешествие по неокортексу',sectionName:'Neocortex',image:'',
+   top:'Edu',sectionName:'Edu',sectionDesc:'Образовательные и учебные проекты',sectionTags:['ML','Edu'],groupName:'Neocortex',
+   title:'Путешествие по неокортексу',image:'',
    desc:'Шесть уровней: доли мозга, 600 колонок, слои L1-L6, путь зрительного сигнала, системы отсчёта и викторина.',
-   tags:['viz','Edu']},
+   tags:['Edu']},
   {path:'Edu/periodic-table/periodic_table.html',folder:'Edu/periodic-table',file:'periodic_table.html',
-   title:'Периодическая таблица — квантовая модель',sectionName:'Periodic Table',image:'',
+   top:'Edu',sectionName:'Edu',sectionDesc:'Образовательные и учебные проекты',sectionTags:['ML','Edu'],groupName:'Periodic Table',
+   title:'Периодическая таблица — квантовая модель',image:'',
    desc:'118 элементов, 3D-визуализация орбиталей, диаграмма Ауфбау, температурный режим.',
-   tags:['viz','Edu']},
+   tags:['Edu']},
   {path:'Edu/mnist/mnist_explainer.html',folder:'Edu/mnist',file:'mnist_explainer.html',
-   title:'MNIST Explainer',sectionName:'MNIST',image:'',
+   top:'Edu',sectionName:'Edu',sectionDesc:'Образовательные и учебные проекты',sectionTags:['ML','Edu'],groupName:'MNIST',
+   title:'MNIST Explainer',image:'',
    desc:'Интерактивное объяснение работы нейросети на датасете MNIST.',
-   tags:['ML','viz']},
+   tags:['ML','Edu']},
   {path:'tt-pipeline/dashboard.html',folder:'tt-pipeline',file:'dashboard.html',
-   title:'Pipeline Dashboard',sectionName:'TT Pipeline',image:'',
+   top:'tt-pipeline',sectionName:'CV Pipeline',sectionDesc:'YOLOv8 Table Tennis — дашборд пайплайна обработки видео',sectionTags:['ML','Edu'],groupName:'CV Pipeline',
+   title:'Table Tennis CV',image:'',
    desc:'YOLOv8 Table Tennis — дашборд пайплайна обработки видео, training metrics и FSM rules.',
-   tags:['ML','viz']},
+   tags:['ML','Edu']},
   {path:'literature/voyna_i_mir.html',folder:'literature',file:'voyna_i_mir.html',
-   title:'Война и мир — интерактивный дашборд',sectionName:'Литература',image:'',
+   top:'literature',sectionName:'Литература',sectionDesc:'Интерактивные дашборды по классической литературе',sectionTags:['Edu'],groupName:'Литература',
+   title:'Война и мир — интерактивный дашборд',image:'',
    desc:'Хроника, граф героев, семьи, философия — визуализация романа Толстого.',
-   tags:['viz','data']}
+   tags:['Edu','data']}
 ];
 
 const esc=s=>{const d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;};
@@ -390,8 +414,29 @@ const resolveImg=(img,folder)=>{
 };
 
 function catOf(tags){
-  if(tags)for(const t of tags){const k=String(t).toLowerCase();if(CAT[k])return {key:k,...CAT[k]};}
+  if(tags)for(const t of tags){
+    const k=String(t).toLowerCase();
+    if(CAT[k])return {key:k,...CAT[k]};
+  }
   return {key:'_',...CAT._};
+}
+
+function groupSections(items){
+  const map=new Map();
+  for(const it of items){
+    const key=it.top||it.folder.split('/')[0];
+    if(!map.has(key)){
+      map.set(key,{
+        key,
+        name:it.sectionName||key,
+        desc:it.sectionDesc||'',
+        tags:it.sectionTags||it.tags||[],
+        items:[]
+      });
+    }
+    map.get(key).items.push(it);
+  }
+  return [...map.values()];
 }
 
 function setTheme(t){
@@ -429,31 +474,26 @@ async function discover(){
       :'';
 
     items.push({
-      path:f.path,folder:f.folder,file:f.file,
+      path:f.path,folder:f.folder,file:f.file,top:f.top,
       title:fileMeta.title||fm?.title||f.file.replace(/\.html$/,'').replace(/[_-]/g,' '),
       desc:fileMeta.description||fm?.description||topMeta?.description||'',
       tags,
-      sectionName:fm?.name||topMeta?.name||f.top,
+      sectionName:topMeta?.name||f.top,
+      sectionDesc:topMeta?.description||'',
+      sectionTags:topMeta?.tags||[],
+      groupName:fm?.name||topMeta?.name||f.top,
       image
     });
   }
   return items;
 }
 
-let ALL=[], VIEW=[], idx=0, filter='all', previewLoaded=false;
+let ALL=[], SECTIONS=[], idx=0, previewLoaded=false;
 
 function render(){
   const app=document.getElementById('app');
-  const cats=[...new Set(ALL.map(i=>catOf(i.tags).key))];
-  const filterHTML=`<div class="filters">
-    <div class="chip-f" data-f="all" data-on="${filter==='all'?1:0}">✦ Все <span style="opacity:.6">${ALL.length}</span></div>
-    ${cats.map(k=>{const c=CAT[k];const n=ALL.filter(i=>catOf(i.tags).key===k).length;
-      return `<div class="chip-f" data-f="${k}" data-on="${filter===k?1:0}"><span class="ic">${c.icon}</span>${esc(c.name)} <span style="opacity:.6">${n}</span></div>`;}).join('')}
-  </div>`;
-
   app.innerHTML=`
     ${ALL.__fallback?`<div class="fallback-note">GitHub API недоступен или ограничил запросы — показан резервный список. На живом сайте проекты подтянутся автоматически.</div>`:''}
-    ${cats.length>1?filterHTML:''}
     <div class="stage">
       <div class="hero" id="hero">
         <div class="hero-bg" id="heroBg"></div>
@@ -473,12 +513,11 @@ function render(){
       <div class="strip-label">Все проекты <span class="count" id="stripCount"></span></div>
       <div class="strip" id="strip"></div>
     </div>
-    <div class="foot">Добавь <code>.html</code> в подпапку репозитория — карточка появится здесь сама.
-      &nbsp;·&nbsp; <a href="https://github.com/albud1978/demo">albud1978/demo</a></div>`;
+    ${renderSections()}`;
 
-  app.querySelectorAll('.chip-f').forEach(el=>el.onclick=()=>{filter=el.dataset.f;applyFilter();render();});
   buildStrip();
-  setActive(Math.min(idx,Math.max(0,VIEW.length-1)),false);
+  attachProjectCards();
+  setActive(Math.min(idx,Math.max(0,ALL.length-1)),false);
   document.getElementById('hero').onclick=()=>openSheet(idx);
   document.getElementById('navPrev').onclick=e=>{e.stopPropagation();move(-1);};
   document.getElementById('navNext').onclick=e=>{e.stopPropagation();move(1);};
@@ -486,12 +525,45 @@ function render(){
   attachHeroSwipe();
 }
 
-function applyFilter(){VIEW=filter==='all'?ALL.slice():ALL.filter(i=>catOf(i.tags).key===filter);idx=0;}
+function renderSections(){
+  return `<div class="sections">${SECTIONS.map(sec=>{
+    const sc=catOf(sec.tags);
+    const cards=sec.items.map(it=>{
+      const i=ALL.indexOf(it), c=catOf(it.tags);
+      return `<button class="project-card" type="button" data-i="${i}" style="--pc:${c.c};--pci:${c.ci}">
+        <div class="project-card-top">
+          <span class="project-icon">${c.icon}</span>
+          <span class="project-action">Разбор →</span>
+        </div>
+        <div class="project-title">${esc(it.title)}</div>
+        ${it.desc?`<div class="project-desc">${esc(it.desc)}</div>`:''}
+        ${it.tags?.length?`<div class="project-tags">${it.tags.slice(0,5).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`:''}
+      </button>`;
+    }).join('');
+    return `<section class="section-block" style="--acc:${sc.c};--acc-ink:${sc.ci}">
+      <div class="section-title">
+        <span class="sec-icon">${sc.icon}</span>
+        <div class="section-copy">
+          <div class="sec-name">${esc(sec.name)}</div>
+          ${sec.desc?`<div class="sec-desc">${esc(sec.desc)}</div>`:''}
+        </div>
+        <span class="sec-count">${sec.items.length}</span>
+      </div>
+      <div class="section-grid">${cards}</div>
+    </section>`;
+  }).join('')}</div>`;
+}
+
+function attachProjectCards(){
+  document.querySelectorAll('.project-card').forEach(card=>{
+    card.onclick=()=>{const i=+card.dataset.i;setActive(i,true);openSheet(i);};
+  });
+}
 
 function buildStrip(){
   const strip=document.getElementById('strip');
-  document.getElementById('stripCount').textContent=`${VIEW.length} ${plural(VIEW.length)}`;
-  strip.innerHTML=VIEW.map((it,i)=>{
+  document.getElementById('stripCount').textContent=`${ALL.length} ${plural(ALL.length)}`;
+  strip.innerHTML=ALL.map((it,i)=>{
     const c=catOf(it.tags);
     return `<div class="frame" data-i="${i}" style="--fc:${c.c};--fci:${c.ci}">
       <div class="frame-bg"></div>
@@ -509,18 +581,19 @@ function plural(n){const a=Math.abs(n)%100,b=a%10;
   if(a>10&&a<20)return'проектов';if(b>1&&b<5)return'проекта';if(b===1)return'проект';return'проектов';}
 
 function setActive(i,scroll){
-  if(!VIEW.length)return;
-  idx=(i+VIEW.length)%VIEW.length;
-  const it=VIEW[idx], c=catOf(it.tags);
+  if(!ALL.length)return;
+  idx=(i+ALL.length)%ALL.length;
+  const it=ALL[idx], c=catOf(it.tags);
   document.documentElement.style.setProperty('--acc',c.c);
   document.documentElement.style.setProperty('--acc-ink',c.ci);
   document.getElementById('heroTitle').textContent=it.title;
-  document.getElementById('heroEye').innerHTML=`${c.icon} ${esc(it.sectionName||c.name)}`;
+  document.getElementById('heroEye').innerHTML=`${c.icon} ${esc(it.groupName||it.sectionName||c.name)}`;
   document.getElementById('heroTags').innerHTML=(it.tags||[]).slice(0,4).map(t=>`<span class="t">${esc(t)}</span>`).join('');
   const bg=document.getElementById('heroBg'), wm=document.getElementById('heroWm');
   if(it.image){bg.style.backgroundImage=`url('${it.image.replace(/'/g,'%27')}')`;bg.classList.add('is-img');wm.style.display='none';}
   else{bg.style.backgroundImage='';bg.classList.remove('is-img');wm.style.display='';wm.textContent=c.icon;}
   document.querySelectorAll('.frame').forEach(f=>f.dataset.on=(+f.dataset.i===idx)?'1':'0');
+  document.querySelectorAll('.project-card').forEach(card=>card.dataset.on=(+card.dataset.i===idx)?'1':'0');
   if(scroll){const af=document.querySelector(`.frame[data-i="${idx}"]`);
     if(af)af.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});}
 }
@@ -529,25 +602,24 @@ function move(d){setActive(idx+d,true);}
 const backdrop=document.getElementById('backdrop'), sheet=document.getElementById('sheet');
 
 function openSheet(i){
-  const it=VIEW[i];if(!it)return;
+  const it=ALL[i];if(!it)return;
   const c=catOf(it.tags);
   document.documentElement.style.setProperty('--acc',c.c);
   document.documentElement.style.setProperty('--acc-ink',c.ci);
   document.getElementById('shBadge').textContent=c.icon;
-  document.getElementById('shEyebrow').textContent=it.sectionName||c.name;
+  document.getElementById('shEyebrow').textContent=it.groupName||it.sectionName||c.name;
   document.getElementById('shTitle').textContent=it.title;
   document.getElementById('shLead').textContent=it.desc||'Интерактивный демо-проект из коллекции albud1978.';
-  document.getElementById('shPath').textContent='/'+it.path;
   const href=projectHref(it.path);
   document.getElementById('shOpen').href=href;
   const cover=document.getElementById('shCover');
   if(it.image){cover.src=it.image;cover.hidden=false;}else{cover.hidden=true;cover.removeAttribute('src');}
 
   const co=[];
-  co.push({l:'Категория',h:`${c.icon} ${esc(it.sectionName||c.name)}`});
+  co.push({l:'Раздел',h:`${c.icon} ${esc(it.sectionName||c.name)}`});
+  if(it.groupName&&it.groupName!==it.sectionName)co.push({l:'Группа',h:esc(it.groupName)});
   if(it.desc)co.push({l:'Что внутри',h:esc(it.desc)});
   if(it.tags&&it.tags.length)co.push({l:'Теги',h:it.tags.map(t=>`<span class="tg">${esc(t)}</span>`).join('')});
-  co.push({l:'Формат',h:'Standalone-страница на GitHub Pages'});
   document.getElementById('shCallouts').innerHTML=co.map(x=>
     `<div class="callout"><span class="dot"></span><div><div class="co-label">${x.l}</div><div class="co-text">${x.h}</div></div></div>`).join('');
 
@@ -627,11 +699,12 @@ window.addEventListener('resize',()=>{
     if(items.length){ALL=items;}
     else{ALL=FALLBACK.slice();ALL.__fallback=true;}
   }catch(e){ALL=FALLBACK.slice();ALL.__fallback=true;}
+  SECTIONS=groupSections(ALL);
   if(!ALL.length){
-    document.getElementById('app').innerHTML='<div class="center-msg">Проектов пока нет.<br>Добавьте .html в подпапку репозитория.</div>';
+    document.getElementById('app').innerHTML='<div class="center-msg">Проектов пока нет.</div>';
     return;
   }
-  applyFilter();render();
+  render();
 })();
 </script>
 </body>

@@ -1,12 +1,18 @@
 {
-  "name": "TT Pipeline",
+  "name": "CV Pipeline",
   "description": "YOLOv8 Table Tennis — дашборд пайплайна обработки видео",
-  "tags": ["ML", "viz"],
+  "tags": [
+    "ML",
+    "Edu"
+  ],
   "files": {
     "dashboard.html": {
-      "title": "Pipeline Dashboard",
+      "title": "Table Tennis CV",
       "description": "Интерактивный дашборд: pipeline, tools, training metrics, FSM rules, file structure",
-      "tags": ["ML", "viz"]
+      "tags": [
+        "ML",
+        "Edu"
+      ]
     }
   }
 }

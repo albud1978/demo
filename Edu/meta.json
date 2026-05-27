@@ -1,5 +1,8 @@
 {
   "name": "Edu",
   "description": "Образовательные и учебные проекты",
-  "tags": ["ML", "viz"]
+  "tags": [
+    "ML",
+    "Edu"
+  ]
 }
