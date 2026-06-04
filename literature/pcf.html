@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Финансы с нуля за 7 дней · по «Принципам корпоративных финансов»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#eef1f5; --paper-2:#ffffff; --paper-3:#e7ecf2;
+  --ink:#0f172a; --ink-soft:#475569; --ink-faint:#94a3b8;
+  --accent:#0d9488; --accent-2:#b45309; --danger:#be123c;
+  --up:#0f766e; --down:#be123c;
+  --line:rgba(15,23,42,.10); --line-strong:rgba(15,23,42,.22);
+  --grid:rgba(13,148,136,.08);
+  --shadow:0 1px 0 rgba(15,23,42,.03), 0 16px 40px -28px rgba(15,23,42,.55);
+}
+html[data-theme="dark"]{
+  --paper:#080b11; --paper-2:#0f141d; --paper-3:#19212e;
+  --ink:#e6edf5; --ink-soft:#93a1b5; --ink-faint:#54607240; --ink-faint:#566173;
+  --accent:#2dd4bf; --accent-2:#f6b545; --danger:#f87171;
+  --up:#34d399; --down:#f87171;
+  --line:rgba(230,237,245,.09); --line-strong:rgba(230,237,245,.18);
+  --grid:rgba(45,212,191,.06);
+  --shadow:0 1px 0 rgba(0,0,0,.4), 0 24px 50px -30px rgba(0,0,0,.92);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif; font-size:17px; line-height:1.6;
+  -webkit-font-smoothing:antialiased; transition:background .4s,color .4s;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:34px 34px; background-attachment:fixed;
+}
+.mono{font-family:'JetBrains Mono',monospace}
+.wrap{max-width:1180px;margin:0 auto;padding:0 26px}
+
+/* header */
+header{padding:50px 0 22px;border-bottom:1px solid var(--line-strong);position:relative;overflow:hidden}
+header::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 80% at 88% -10%,color-mix(in srgb,var(--accent) 13%,transparent),transparent 60%)}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;position:relative;z-index:1}
+.kicker::before{content:'▮ ';opacity:.8}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(34px,6vw,70px);line-height:.96;letter-spacing:-.03em;position:relative;z-index:1}
+h1 em{font-style:normal;color:var(--accent);text-shadow:0 0 30px color-mix(in srgb,var(--accent) 55%,transparent)}
+.sub{font-family:'Inter',sans-serif;font-size:clamp(16px,2.1vw,20px);color:var(--ink-soft);margin-top:18px;max-width:760px;font-weight:300;position:relative;z-index:1}
+.statline{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;position:relative;z-index:1}
+.chip{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--ink-soft);border:1px solid var(--line-strong);border-radius:3px;padding:7px 11px;background:color-mix(in srgb,var(--paper-2) 70%,transparent);text-transform:uppercase}
+.chip b{color:var(--accent);font-weight:700}
+.theme-btn{position:absolute;top:50px;right:26px;z-index:2;background:var(--paper-2);border:1px solid var(--line-strong);color:var(--ink);
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;padding:9px 13px;border-radius:3px;cursor:pointer;text-transform:uppercase;transition:.22s}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 8px 24px -12px var(--accent)}
+
+/* ticker */
+.ticker{border-bottom:1px solid var(--line);background:var(--paper-2);overflow:hidden;white-space:nowrap;position:relative}
+.ticker-track{display:inline-flex;animation:tick 52s linear infinite;will-change:transform}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker-item{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.05em;color:var(--ink-soft);padding:10px 22px;border-right:1px solid var(--line);text-transform:uppercase;flex:0 0 auto}
+.ticker-item b{color:var(--accent);font-weight:700}
+.ticker-item .up{color:var(--up)} .ticker-item .dn{color:var(--down)}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* nav */
+nav{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(11px);border-bottom:1px solid var(--line)}
+.navinner{display:flex;gap:3px;overflow-x:auto;padding:9px 0;scrollbar-width:none}
+.navinner::-webkit-scrollbar{display:none}
+.nav-a{flex:0 0 auto;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-soft);text-decoration:none;padding:8px 13px;border-radius:3px;white-space:nowrap;transition:.18s;border:1px solid transparent}
+.nav-a:hover{color:var(--ink);background:var(--paper-2)}
+.nav-a.active{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.nav-a span{color:var(--accent-2);margin-right:7px}
+
+section{padding:56px 0 14px;border-bottom:1px solid var(--line)}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:10px}
+.sec-no{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);letter-spacing:.08em;flex:0 0 auto}
+.sec-no::before{content:'[ '} .sec-no::after{content:' ]'}
+h2{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(26px,4vw,40px);line-height:1.04;letter-spacing:-.02em}
+.lead{font-size:18px;color:var(--ink-soft);max-width:820px;margin:13px 0 30px;font-weight:300}
+.lead b{color:var(--ink);font-weight:500}
+.lbl-sm{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-2);margin:30px 0 12px;display:block}
+.lbl-sm::before{content:'// '}
+
+/* 7-day pipeline */
+.plan{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin:0 0 34px}
+@media(max-width:820px){.plan{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.plan{grid-template-columns:1fr}}
+.day{position:relative;background:var(--paper-2);border:1px solid var(--line);border-radius:4px;padding:15px 12px 13px;transition:.2s;overflow:hidden}
+.day::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--accent),transparent)}
+.day:hover{border-color:color-mix(in srgb,var(--accent) 60%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 40%,transparent),0 14px 34px -20px var(--accent);transform:translateY(-2px)}
+.day .d{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--accent)}
+.day .dt{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;margin-top:6px;line-height:1.22}
+
+/* journey parts */
+.part{margin-bottom:8px;border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--paper-2);box-shadow:var(--shadow)}
+.part.open{border-color:color-mix(in srgb,var(--accent) 38%,transparent)}
+.part-btn{width:100%;text-align:left;background:transparent;border:none;cursor:pointer;padding:17px 20px;display:flex;align-items:center;gap:15px;color:var(--ink);transition:.2s}
+.part-btn:hover{background:var(--paper-3)}
+.part-day{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.07em;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);background:color-mix(in srgb,var(--accent) 9%,transparent);padding:4px 8px;border-radius:3px;flex:0 0 auto}
+.part-n{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-2);flex:0 0 78px}
+.part-tt{flex:1}
+.part-t{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;line-height:1.1}
+.part-tag{font-size:14px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;font-size:12.5px}
+.part-tog{font-family:'JetBrains Mono',monospace;font-size:20px;color:var(--accent);transition:.3s;flex:0 0 auto}
+.part.open .part-tog{transform:rotate(45deg)}
+.part-body{max-height:0;overflow:hidden;transition:max-height .5s ease}
+.pb-inner{padding:8px 22px 26px}
+.pb-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:28px;align-items:start}
+@media(max-width:780px){.pb-grid{grid-template-columns:1fr}}
+.pb-intro{font-size:16px;color:var(--ink);font-weight:300;margin-bottom:16px}
+.analogy{background:var(--paper);border:1px solid var(--line);border-left:2px solid var(--accent-2);border-radius:0 4px 4px 0;padding:13px 16px;margin-bottom:6px}
+.analogy .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-2);display:block;margin-bottom:6px}
+.analogy .lbl::before{content:'// '}
+.analogy p{font-size:15px;color:var(--ink);margin:0}
+.key{margin-top:20px;padding:15px 16px;background:color-mix(in srgb,var(--accent) 7%,transparent);border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);border-radius:4px}
+.key .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px}
+.key .lbl::before{content:'> '}
+.key p{font-size:15.5px;color:var(--ink);font-weight:500;margin:0}
+.viz-wrap{position:sticky;top:64px}
+.viz-cap{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:center;margin-top:7px;line-height:1.5}
+
+/* SVG viz on graph paper */
+.viz{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:5px;padding:8px;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px}
+.sv-axis{stroke:var(--line-strong);stroke-width:1.3;fill:none}
+.sv-grid{stroke:var(--line);stroke-width:1;fill:none}
+.sv-as{stroke:var(--accent);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.sv-bs{stroke:var(--accent-2);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.sv-inks{stroke:var(--ink-soft);fill:none;stroke-width:2;stroke-linecap:round}
+.sv-a{fill:var(--accent)} .sv-b{fill:var(--accent-2)} .sv-ink{fill:var(--ink-soft)} .sv-faint{fill:var(--ink-faint)}
+.sv-fa{fill:color-mix(in srgb,var(--accent) 26%,transparent)}
+.sv-fb{fill:color-mix(in srgb,var(--accent-2) 26%,transparent)}
+.sv-fa2{fill:color-mix(in srgb,var(--accent) 14%,transparent)}
+.sv-t{fill:var(--ink-soft);font-family:'JetBrains Mono',monospace;font-size:12px}
+.sv-ts{fill:var(--ink-faint);font-family:'JetBrains Mono',monospace;font-size:10.5px}
+.sv-ta{fill:var(--accent);font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700}
+.sv-tb{fill:var(--accent-2);font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700}
+.sv-dash{stroke-dasharray:4 4}
+
+/* chapter data-card tiles */
+.ch-lbl{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-2);margin:26px 0 12px;display:block}
+.ch-lbl::before{content:'// '}
+.nf-row{display:flex;gap:13px;overflow-x:auto;padding:6px 2px 16px;scroll-snap-type:x proximity;scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
+.nf-row::-webkit-scrollbar{height:7px}
+.nf-row::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:4px}
+.nf-row::-webkit-scrollbar-track{background:transparent}
+.nf-tile{flex:0 0 218px;scroll-snap-align:start;background:var(--paper);border:1px solid var(--line);border-radius:5px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;text-align:left;padding:0;color:var(--ink)}
+.nf-tile:hover{transform:translateY(-4px);box-shadow:0 18px 38px -22px var(--accent);border-color:color-mix(in srgb,var(--accent) 55%,transparent);z-index:2}
+.nf-cover{position:relative;height:100px;display:flex;align-items:flex-start;padding:11px 13px;overflow:hidden;border-bottom:1px solid var(--line)}
+.nf-cover::before{content:'';position:absolute;inset:auto 0 0 0;height:62%;opacity:.6;
+  background:repeating-linear-gradient(90deg,transparent 0 11px,color-mix(in srgb,var(--accent) 30%,transparent) 11px 14px,transparent 14px 20px);
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000);mask-image:linear-gradient(180deg,transparent,#000)}
+.cov0{background:linear-gradient(150deg,color-mix(in srgb,var(--accent) 16%,var(--paper-2)),var(--paper-2))}
+.cov1{background:linear-gradient(150deg,color-mix(in srgb,var(--accent-2) 16%,var(--paper-2)),var(--paper-2))}
+.cov2{background:linear-gradient(150deg,color-mix(in srgb,var(--accent) 14%,var(--paper-2)),color-mix(in srgb,var(--accent-2) 9%,var(--paper-2)))}
+.cov3{background:linear-gradient(150deg,color-mix(in srgb,var(--accent-2) 13%,var(--paper-2)),color-mix(in srgb,var(--accent) 13%,var(--paper-2)))}
+.nf-cat{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:var(--ink-soft);text-transform:uppercase;position:relative;z-index:2}
+.nf-bignum{position:absolute;right:9px;bottom:1px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:52px;line-height:1;color:color-mix(in srgb,var(--accent) 36%,transparent);z-index:2}
+.nf-tile.new .nf-cover::after{content:'NEW';position:absolute;top:11px;right:12px;font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;background:var(--accent);color:var(--paper);padding:2px 6px;border-radius:2px;z-index:3}
+.nf-body{padding:12px 13px 14px}
+.nf-t{font-family:'Space Grotesk',sans-serif;font-size:15.5px;font-weight:600;line-height:1.16;margin-bottom:5px}
+.nf-e{font-size:13px;color:var(--ink-soft);font-weight:300;line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.nf-open{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);margin-top:9px;opacity:0;transition:.2s}
+.nf-tile:hover .nf-open{opacity:1}
+
+/* modal */
+.nf-modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:24px;background:color-mix(in srgb,#000 62%,transparent);backdrop-filter:blur(7px)}
+.nf-modal.open{display:flex}
+.nf-card{background:var(--paper);border:1px solid var(--line-strong);border-radius:8px;max-width:660px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 40px 100px -30px rgba(0,0,0,.9);animation:pop .26s ease}
+@keyframes pop{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
+.nf-hero{position:relative;padding:24px 30px 22px;overflow:hidden;border-radius:8px 8px 0 0;border-bottom:1px solid var(--line)}
+.nf-hero::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--accent),transparent)}
+.nf-hero .nf-bignum{font-size:104px;bottom:-22px;right:18px;position:absolute}
+.nf-x{position:absolute;top:14px;right:16px;background:var(--paper-2);border:1px solid var(--line-strong);color:var(--ink);width:34px;height:34px;border-radius:4px;cursor:pointer;font-size:14px;z-index:4;transition:.2s}
+.nf-x:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
+.nf-crumb{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.09em;color:var(--accent);text-transform:uppercase;position:relative;z-index:2}
+.nf-title{font-family:'Space Grotesk',sans-serif;font-size:29px;font-weight:600;line-height:1.07;margin:9px 0 0;position:relative;z-index:2;max-width:82%;letter-spacing:-.01em}
+.nf-sub{font-family:'Inter',sans-serif;font-size:16px;color:var(--ink-soft);margin-top:9px;position:relative;z-index:2;max-width:90%;font-weight:300}
+.nf-content{padding:22px 30px 8px}
+.nf-content p{font-size:16px;color:var(--ink);font-weight:300;margin-bottom:14px;line-height:1.62}
+.nf-ex{background:color-mix(in srgb,var(--accent) 7%,transparent);border:1px solid color-mix(in srgb,var(--accent) 26%,transparent);border-left:2px solid var(--accent);border-radius:0 5px 5px 0;padding:13px 16px;margin-bottom:6px}
+.nf-ex .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:5px}
+.nf-ex .lbl::before{content:'> '}
+.nf-ex p{font-size:15px;color:var(--ink);margin:0;font-weight:400}
+.nf-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px 30px 26px;border-top:1px solid var(--line);margin-top:10px}
+.nf-nav{background:var(--paper-2);border:1px solid var(--line-strong);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:12px;padding:9px 14px;border-radius:4px;cursor:pointer;transition:.2s}
+.nf-nav:hover:not(:disabled){background:var(--accent);color:var(--paper);border-color:var(--accent)}
+.nf-nav:disabled{opacity:.3;cursor:default}
+.nf-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint)}
+@media(max-width:520px){.nf-title{font-size:23px;max-width:100%}.nf-hero,.nf-content,.nf-foot{padding-left:20px;padding-right:20px}.nf-nav{padding:8px 10px;font-size:11px}}
+
+/* analytical cards */
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:1fr 1fr}
+@media(max-width:760px){.g2{grid-template-columns:1fr}}
+.card{background:var(--paper-2);border:1px solid var(--line);border-radius:5px;padding:24px;position:relative;transition:.22s;box-shadow:var(--shadow)}
+.card:hover{border-color:color-mix(in srgb,var(--accent) 40%,transparent);transform:translateY(-2px)}
+.card-n{font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:700;color:color-mix(in srgb,var(--accent) 50%,transparent);line-height:1;position:absolute;top:20px;right:22px}
+.card h3{font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin-bottom:4px;max-width:80%}
+.card .who{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent-2);margin-bottom:13px;text-transform:uppercase}
+.card p{font-size:15.5px;color:var(--ink-soft);font-weight:300;margin-bottom:12px}
+.card p:last-child{margin-bottom:0}
+.nuance{border-left:2px solid var(--accent);padding:11px 0 11px 15px;margin-top:14px;background:color-mix(in srgb,var(--accent) 6%,transparent);border-radius:0 3px 3px 0}
+.nuance .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;display:block;margin-bottom:5px}
+.nuance .lbl::before{content:'// '}
+.nuance p{font-size:14.5px;color:var(--ink);margin:0}
+.danger .card-n{color:color-mix(in srgb,var(--danger) 55%,transparent)}
+.danger .nuance{border-left-color:var(--danger);background:color-mix(in srgb,var(--danger) 6%,transparent)}
+.danger .nuance .lbl{color:var(--danger)}
+blockquote{font-family:'Space Grotesk',sans-serif;font-style:normal;font-size:clamp(19px,3vw,26px);line-height:1.28;color:var(--ink);border-left:2px solid var(--accent-2);padding:6px 0 6px 22px;margin:28px 0;max-width:820px;font-weight:500}
+blockquote cite{display:block;font-family:'JetBrains Mono',monospace;font-style:normal;font-size:12px;color:var(--ink-faint);margin-top:14px;font-weight:400}
+.row{display:flex;gap:16px;padding:17px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row-n{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);flex:0 0 34px;padding-top:3px}
+.row-b h4{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;margin-bottom:4px}
+.row-b p{font-size:15.5px;color:var(--ink-soft);font-weight:300}
+.versus{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;margin:22px 0;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+@media(max-width:680px){.versus{grid-template-columns:1fr}}
+.vs-col{padding:22px}
+.vs-col.a{background:color-mix(in srgb,var(--accent-2) 8%,var(--paper-2))}
+.vs-col.b{background:color-mix(in srgb,var(--accent) 8%,var(--paper-2))}
+.vs-mid{display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--ink-faint);padding:0 8px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+@media(max-width:680px){.vs-mid{border:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px}}
+.vs-col h4{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;margin-bottom:12px}
+.vs-col.a h4{color:var(--accent-2)} .vs-col.b h4{color:var(--accent)}
+.vs-col .big{font-family:'Space Grotesk',sans-serif;font-size:23px;font-weight:600;line-height:1.1;margin-bottom:10px}
+.vs-col p{font-size:14.5px;color:var(--ink-soft);font-weight:300}
+.pivot-box{background:var(--paper-2);border:1px solid var(--line);border-radius:5px;padding:26px;margin-bottom:18px;box-shadow:var(--shadow);position:relative}
+.pivot-box::before{content:'';position:absolute;top:0;left:0;height:2px;width:64px;background:var(--accent)}
+.pivot-box h3{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin-bottom:6px}
+.pivot-box .meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent-2);margin-bottom:14px;text-transform:uppercase}
+.pivot-box p{color:var(--ink-soft);font-weight:300;margin-bottom:11px;font-size:15.5px}
+.pivot-box p:last-child{margin-bottom:0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden;margin:26px 0}
+@media(max-width:680px){.stats{grid-template-columns:1fr 1fr}}
+.stat{background:var(--paper-2);padding:20px 16px;position:relative}
+.stat .v{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;color:var(--accent);line-height:1}
+.stat .l{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-soft);margin-top:9px;line-height:1.45}
+.book{display:flex;gap:15px;padding:16px 0;border-bottom:1px solid var(--line)}
+.book:last-child{border-bottom:none}
+.book-tag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);padding:3px 8px;border-radius:3px;flex:0 0 auto;height:fit-content;margin-top:3px;text-transform:uppercase}
+.book-b h4{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600}
+.book-b .auth{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);margin:2px 0 5px}
+.book-b p{font-size:14.5px;color:var(--ink-soft);font-weight:300}
+.path{background:var(--paper-2);border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;padding:18px 20px;margin-bottom:10px}
+.path h4{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:4px}
+.path p{font-size:15px;color:var(--ink-soft);font-weight:300}
+.path .seq{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--accent);margin-top:8px}
+footer{padding:48px 0 70px;text-align:center}
+footer p{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-faint);line-height:1.85}
+.disc{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-faint);max-width:820px;margin:8px auto 0;line-height:1.7}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .55s,transform .55s}
+.reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<header>
+  <div class="wrap">
+    <button class="theme-btn mono" id="themeBtn">◑ Светлая</button>
+    <div class="kicker">PRINCIPLES OF CORPORATE FINANCE · 14E · BREALEY / MYERS / ALLEN / EDMANS</div>
+    <h1>Финансы <em>с нуля</em><br>за семь дней</h1>
+    <p class="sub">Главный учебник корпоративных финансов — как интерактивная панель данных. Двенадцать частей и тридцать четыре главы простым языком, со схемами и графиками. Плюс аналитический слой: семь идей, десять загадок и тренды 2026 года.</p>
+    <div class="statline">
+      <span class="chip"><b>12</b> частей</span>
+      <span class="chip"><b>34</b> главы</span>
+      <span class="chip"><b>7</b> идей</span>
+      <span class="chip"><b>10</b> загадок</span>
+      <span class="chip"><b>2026</b> data</span>
+      <span class="chip">режим <b>с нуля</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="ticker">
+  <div class="ticker-track" id="ticker">
+    <span class="ticker-item"><b>NPV</b> единственный честный критерий</span>
+    <span class="ticker-item"><b>BETA</b> цена рыночного риска</span>
+    <span class="ticker-item"><b>ДИВЕРСИФИКАЦИЯ</b> бесплатный обед</span>
+    <span class="ticker-item"><b>MM</b> нарезка не меняет пирог</span>
+    <span class="ticker-item"><b>ОПЦИОН</b> право, не обязанность</span>
+    <span class="ticker-item"><b>РЫНОК</b> цена уже всё знает</span>
+    <span class="ticker-item"><b>AGENCY</b> управление чужими деньгами</span>
+    <span class="ticker-item"><b>PRIVATE CREDIT</b> <span class="up">&gt;$2T AUM ↑</span></span>
+    <span class="ticker-item"><b>REFI WALL</b> $620B · 2026–27</span>
+    <span class="ticker-item"><b>AI CAPEX</b> <span class="up">$1.5T / 5Y ↑</span></span>
+    <span class="ticker-item"><b>ESG FUNDS</b> <span class="dn">14 мес. оттока ↓</span></span>
+    <span class="ticker-item"><b>RATES</b> эра «бесплатных денег» позади</span>
+  </div>
+</div>
+
+
+<nav>
+  <div class="wrap navinner" id="nav">
+    <a class="nav-a" href="#course"><span>01</span>Курс с нуля</a>
+    <a class="nav-a" href="#seven"><span>02</span>Семь идей</a>
+    <a class="nav-a" href="#ten"><span>03</span>Десять загадок</a>
+    <a class="nav-a" href="#wisdom"><span>04</span>Скрытое знание</a>
+    <a class="nav-a" href="#pivot"><span>05</span>Поворот издания</a>
+    <a class="nav-a" href="#beyond"><span>06</span>Beyond: тренды</a>
+    <a class="nav-a" href="#next"><span>07</span>Что дальше</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section id="course">
+  <div class="sec-head"><span class="sec-no">01</span><h2>Курс с нуля: маршрут на неделю</h2></div>
+  <p class="lead">Если бы нужно было погрузить человека в финансы за семь дней — вот план. Каждая часть книги встроена в день недели. <b>Нажмите на часть</b>, чтобы развернуть простое объяснение, схему и разбор глав. Начните с первой — она уже открыта.</p>
+  <div class="plan" id="plan"></div>
+  <div id="journey"></div>
+</section>
+
+<section id="seven">
+  <div class="sec-head"><span class="sec-no">02</span><h2>Семь самых важных идей</h2></div>
+  <p class="lead">Для тех, кто прошёл курс и хочет глубже. В финальной главе авторы называют <b>семь идей, на которых стоит вся дисциплина</b> — и каждую сопровождают нюансом, который виден только при чтении.</p>
+  <div class="grid g2" id="seven-grid"></div>
+</section>
+
+<section id="ten">
+  <div class="sec-head"><span class="sec-no">03</span><h2>Десять нерешённых проблем</h2></div>
+  <p class="lead">Редкая интеллектуальная честность: список того, <b>чего финансы до сих пор не знают</b>. Карта фронтира и прививка от ложной уверенности.</p>
+  <div id="ten-list"></div>
+</section>
+
+<section id="wisdom">
+  <div class="sec-head"><span class="sec-no">04</span><h2>Скрытое знание и голос книги</h2></div>
+  <p class="lead">То, ради чего книгу читают, а не «проходят»: контринтуитивные позиции авторов и их узнаваемый ироничный тон.</p>
+  <span class="lbl-sm">Пять правил денежного потока — операционный канон</span>
+  <div class="grid g2" id="rules-grid"></div>
+  <span class="lbl-sm">Контринтуитивные позиции авторов</span>
+  <div class="grid g2" id="contrarian-grid"></div>
+  <span class="lbl-sm">Голос книги</span>
+  <blockquote>«Высокооплачиваемые инвестбанкиры — это всего лишь торговцы подержанными денежными потоками».<cite>— о сути NPV: стоимость будущего потока ищут по ценам похожих требований на рынке капитала</cite></blockquote>
+  <div class="grid g2" id="voice-grid"></div>
+</section>
+
+<section id="pivot">
+  <div class="sec-head"><span class="sec-no">05</span><h2>Поворот 14-го издания: пирог вместо доли</h2></div>
+  <p class="lead">Главное идейное событие издания — приход соавтора <b>Алекса Эдманса</b> и новая глава о стейкхолдер-капитализме из его книги <i>«Grow the Pie»</i>. Меняется ответ на первый вопрос книги — в чём цель корпорации.</p>
+  <div class="versus">
+    <div class="vs-col a"><h4>Мышление дележа</h4><div class="big">Pie-splitting</div><p>Стоимость — фиксированный пирог. Что досталось работникам или обществу — отнято у акционеров. Игра с нулевой суммой.</p></div>
+    <div class="vs-mid">vs</div>
+    <div class="vs-col b"><h4>Мышление роста</h4><div class="big">Pie-growing</div><p>Инвестируя в стейкхолдеров, фирма увеличивает весь пирог — и акционерам достаётся больше в абсолюте.</p></div>
+  </div>
+  <div class="pivot-box"><h3>Перечитывание Фридмана — сюрприз главы</h3><div class="meta">«доктрина Фридмана» искажена</div>
+    <p>Расхожую «доктрину Фридмана» книга опровергает ссылкой на самого Фридмана. Он повторял <b>теорему разделения Фишера</b>: пусть менеджеры максимизируют богатство акционеров, а те сами решают, какую благотворительность финансировать. И прямо писал: максимизация прибыли <b>требует</b> заботы о стейкхолдерах — иначе уйдут клиенты, демотивируются работники, пострадает репутация.</p>
+    <p>Вывод: правило NPV само даёт «зелёный свет» обучению персонала, сервису и снижению энергопотребления — если выгоды превышают издержки.</p></div>
+  <div class="pivot-box"><h3>Enlightened Shareholder Value (ESV) — синтез</h3><div class="meta">ни чистый акционер, ни чистый стейкхолдер не оптимальны</div>
+    <p><b>Просвещённая акционерная стоимость:</b> цель одна — стоимость для акционеров, но её создание <i>требует</i> инвестиций в стейкхолдеров. Они средство, а не самоцель; критерий прежний — положительный ли NPV.</p>
+    <p><b>Где ломается:</b> акционерный примат держится на допущениях (эффекты измеримы, контрактируемы, интернализуемы). Когда они не выполняются (внешние эффекты, неполные контракты), оправдан сдвиг к «ответственному бизнесу» — работать <b>посередине</b>.</p></div>
+  <blockquote>«Подотчётность всем — это подотчётность никому».<cite>— Council of Institutional Investors в ответ на разворот Business Roundtable к стейкхолдер-капитализму (2019)</cite></blockquote>
+</section>
+
+<section id="beyond">
+  <div class="sec-head"><span class="sec-no">06</span><h2>Beyond: куда ведут тренды</h2></div>
+  <p class="lead">Принципы вечны, но 2026 год заострил их по-новому. Как читать сегодняшний ландшафт <b>глазами этой книги</b> — отдельно для корпоративных финансов, отдельно для личных.</p>
+  <div class="stats">
+    <div class="stat"><div class="v">&gt;$2 трлн</div><div class="l">активы частного кредита, 2026; к 2030 — ~$4 трлн</div></div>
+    <div class="stat"><div class="v">$620 млрд</div><div class="l">стена рефинансирования долга в 2026–27</div></div>
+    <div class="stat"><div class="v">$1,5 трлн</div><div class="l">capex гиперскейлеров на ИИ за 5 лет</div></div>
+    <div class="stat"><div class="v">14 мес.</div><div class="l">подряд оттока средств из ESG-фондов к 2026</div></div>
+  </div>
+  <p class="disc">Данные: McKinsey, Moody's, MSCI, IQ-EQ, Harvard Law Forum on Corporate Governance (2026).</p>
+  <div class="grid g2" style="margin-top:30px">
+    <div class="card"><h3 style="max-width:100%">Корпоративные финансы</h3><div class="who">через гл. 9, 17, 24–25, 32</div>
+      <p><b>Сброс стоимости капитала.</b> Эра «бесплатных денег» позади — ставки выше уровней 2010-х. Дисциплина NPV снова в цене: проекты, выживавшие при нулевой ставке, теперь должны зарабатывать настоящую ренту.</p>
+      <p><b>Бум частного кредита.</b> Кредитование ушло из банков к институционалам; asset-backed finance кормит capex на дата-центры под ИИ. Рост дефолтов по leveraged loans в конце 2025 — живой тест глав о кредитном риске и дистрессе.</p>
+      <p><b>Возврат M&A и LBO,</b> но «закон сохранения стоимости» не отменён: слияние ради диверсификации стоимости не создаёт.</p>
+      <div class="nuance"><span class="lbl">нетривиальный вывод</span><p>Ярлык «ESG» отступает, но рамка Эдманса <i>прочнее ярлыка</i>: ESV никогда не зависел от слова «ESG» — «ценность для общества как средство акционерной» переживает политизацию. Европа (CSDDD, ISSB) расходится с США.</p></div></div>
+    <div class="card"><h3 style="max-width:100%">Личные финансы</h3><div class="who">через гл. 7, 12, 15</div>
+      <p><b>Диверсификация — единственный бесплатный обед.</b> Платят только за рыночный риск. Следствие: широкие индексные фонды с низкими издержками; не платить премию за устранимый риск.</p>
+      <p><b>Смирение перед рынком.</b> Десятки аномалий ≠ лёгкие деньги. Настоящие враги доходности — издержки и налоги.</p>
+      <p><b>Поведенческая самозащита.</b> Сверхуверенность, стадность, эффект свежих новостей, погоня за моментумом — знание ловушек из гл. 12 есть риск-менеджмент портфеля.</p>
+      <div class="nuance"><span class="lbl">недооценённый приём</span><p>Хеджирующий портфель: подбирайте активы так, чтобы они <i>страховали ваши личные риски дохода</i>. Не держите много акций своего работодателя — иначе работа и капитал упадут вместе.</p></div></div>
+  </div>
+</section>
+
+<section id="next">
+  <div class="sec-head"><span class="sec-no">07</span><h2>Что читать дальше</h2></div>
+  <p class="lead">Книга — узел, где сходятся семь нобелевских идей. Дальше — к первоисточникам, к прикладной глубине или по маршрутам под конкретную цель.</p>
+  <span class="lbl-sm">Родословная семи идей</span><div id="lineage"></div>
+  <span class="lbl-sm">Смежные и более глубокие книги</span><div id="books"></div>
+  <span class="lbl-sm">Маршруты по цели</span><div id="paths"></div>
+</section>
+
+</div>
+
+<footer><div class="wrap"><p>Учебный разбор · «Principles of Corporate Finance», 14th ed. (Brealey, Myers, Allen, Edmans)<br>
+Содержание — авторская переработка и интерпретация, не воспроизведение текста книги · схемы — оригинальные<br>
+Тренды 2026 сверены с открытыми источниками · светлая / тёмная тема сохраняется локально</p></div></footer>
+
+<div class="nf-modal" id="nfModal">
+  <div class="nf-card" id="nfCard">
+    <div class="nf-hero" id="nfHero">
+      <button class="nf-x" id="nfClose" aria-label="Закрыть">✕</button>
+      <span class="nf-bignum" id="nfNum"></span>
+      <div class="nf-crumb" id="nfCrumb"></div>
+      <h3 class="nf-title" id="nfTitle"></h3>
+      <p class="nf-sub" id="nfSub"></p>
+    </div>
+    <div class="nf-content" id="nfContent"></div>
+    <div class="nf-foot">
+      <button class="nf-nav" id="nfPrev">‹ предыдущая</button>
+      <span class="nf-count" id="nfCount"></span>
+      <button class="nf-nav" id="nfNext">следующая ›</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const root=document.documentElement,tb=document.getElementById('themeBtn');
+function setTheme(t){root.setAttribute('data-theme',t);tb.textContent=t==='dark'?'◑ Светлая':'◐ Тёмная';try{localStorage.setItem('pcf-theme',t)}catch(e){}}
+(function(){let t='light';try{t=localStorage.getItem('pcf-theme')||'dark'}catch(e){}setTheme(t)})();
+tb.onclick=()=>setTheme(root.getAttribute('data-theme')==='dark'?'light':'dark');
+(function(){const tk=document.getElementById('ticker');if(tk)tk.innerHTML+=tk.innerHTML;})();
+
+/* ---- 7-day plan ---- */
+const plan=[
+ ['День 1','Язык денег: стоимость во времени'],
+ ['День 2','Риск и где берётся прибыль'],
+ ['День 3','Где деньги и кто умнее рынка'],
+ ['День 4','Сколько занимать и что отдавать'],
+ ['День 5','Зачем существует фирма'],
+ ['День 6','Гибкость и защита: опционы, долг, риск'],
+ ['День 7','Рост, сделки и итог']
+];
+const planEl=document.getElementById('plan');
+plan.forEach(d=>{const x=document.createElement('div');x.className='day';x.innerHTML=`<div class="d">${d[0]}</div><div class="dt">${d[1]}</div>`;planEl.appendChild(x);});
+
+/* ---- SVG diagrams (theme-aware via classes) ---- */
+const SVG={};
+SVG.value=`<svg class="viz" viewBox="0 0 440 210" xmlns="http://www.w3.org/2000/svg">
+<text class="sv-t" x="14" y="20">Будущие ₽100 «тают» по дороге в сегодня</text>
+<line class="sv-axis" x1="40" y1="170" x2="424" y2="170"/>
+<path class="sv-bs sv-dash" d="M398 40 C300 26 150 26 70 40" marker-end="url(#arrV)"/>
+<defs><marker id="arrV" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" class="sv-b"/></marker></defs>
+<text class="sv-tb" x="150" y="34">← дисконтирование</text>
+<g>
+<rect class="sv-grid sv-dash" x="70" y="60" width="46" height="110"/><rect class="sv-fa" x="70" y="70" width="46" height="100"/><text class="sv-ta" x="73" y="64">₽91</text><text class="sv-ts" x="83" y="186">год 1</text>
+<rect class="sv-grid sv-dash" x="150" y="60" width="46" height="110"/><rect class="sv-fa" x="150" y="79" width="46" height="91"/><text class="sv-ta" x="153" y="73">₽83</text><text class="sv-ts" x="163" y="186">год 2</text>
+<rect class="sv-grid sv-dash" x="230" y="60" width="46" height="110"/><rect class="sv-fa" x="230" y="87" width="46" height="83"/><text class="sv-ta" x="233" y="81">₽75</text><text class="sv-ts" x="243" y="186">год 3</text>
+<rect class="sv-grid sv-dash" x="310" y="60" width="46" height="110"/><rect class="sv-fa" x="310" y="95" width="46" height="75"/><text class="sv-ta" x="313" y="89">₽68</text><text class="sv-ts" x="323" y="186">год 4</text>
+</g>
+<text class="sv-ts" x="368" y="125">пунктир =</text><text class="sv-ts" x="368" y="139">номинал</text></svg>`;
+
+SVG.risk=`<svg class="viz" viewBox="0 0 440 210" xmlns="http://www.w3.org/2000/svg">
+<text class="sv-t" x="14" y="20">Чем больше активов — тем меньше лишнего риска</text>
+<line class="sv-axis" x1="48" y1="40" x2="48" y2="175"/><line class="sv-axis" x1="48" y1="175" x2="424" y2="175"/>
+<line class="sv-bs sv-dash" x1="48" y1="135" x2="424" y2="135"/>
+<path class="sv-fa2" d="M58 58 C150 150 240 134 424 134 L424 135 L58 135 Z"/>
+<path class="sv-as" d="M58 58 C150 150 240 134 424 134"/>
+<text class="sv-a" x="120" y="86">уникальный риск</text><text class="sv-a" x="120" y="101">(исчезает бесплатно)</text>
+<text class="sv-tb" x="236" y="128">рыночный риск — за него платят</text>
+<text class="sv-ts" x="120" y="194">число активов в портфеле →</text>
+<text class="sv-ts" x="8" y="56" transform="rotate(-90 14 110)">риск</text></svg>`;
+
+SVG.budget=`<svg class="viz" viewBox="0 0 440 210" xmlns="http://www.w3.org/2000/svg">
+<text class="sv-t" x="14" y="20">Что сильнее всего двигает NPV проекта</text>
+<line class="sv-axis sv-dash" x1="220" y1="38" x2="220" y2="178"/>
+<text class="sv-ts" x="196" y="196">— NPV —</text>
+<g font-size="11">
+<rect class="sv-fa" x="92" y="48" width="128" height="22"/><rect class="sv-fb" x="220" y="48" width="120" height="22"/><text class="sv-t" x="14" y="63">Цена</text>
+<rect class="sv-fa" x="132" y="80" width="88" height="22"/><rect class="sv-fb" x="220" y="80" width="96" height="22"/><text class="sv-t" x="14" y="95">Объём</text>
+<rect class="sv-fa" x="150" y="112" width="70" height="22"/><rect class="sv-fb" x="220" y="112" width="64" height="22"/><text class="sv-t" x="14" y="127">Издержки</text>
+<rect class="sv-fa" x="186" y="144" width="34" height="22"/><rect class="sv-fb" x="220" y="144" width="40" height="22"/><text class="sv-t" x="14" y="159">Срок</text>
+</g>
+<text class="sv-ta" x="96" y="44">хуже</text><text class="sv-tb" x="300" y="44">лучше</text></svg>`;
+
+SVG.market=`<svg class="viz" viewBox="0 0 440 210" xmlns="http://www.w3.org/2000/svg">
+<text class="sv-t" x="14" y="20">Цена мгновенно впитывает новость</text>
+<line class="sv-axis" x1="46" y1="40" x2="46" y2="175"/><line class="sv-axis" x1="46" y1="175" x2="424" y2="175"/>
+<path class="sv-as" d="M58 130 L210 130 L210 66 L416 66"/>
+<circle class="sv-b" cx="210" cy="66" r="5"/>
+<line class="sv-bs sv-dash" x1="210" y1="40" x2="210" y2="130"/>
+<text class="sv-tb" x="186" y="34">новость</text>
+<path class="sv-bs sv-dash" d="M300 120 C270 110 250 92 235 76" marker-end="url(#arrM)"/>
+<defs><marker id="arrM" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" class="sv-b"/></marker></defs>
+<text class="sv-ts" x="288" y="136">купить тут —</text><text class="sv-ts" x="288" y="150">уже поздно</text>
+<text class="sv-ts" x="100" y="194">время →</text></svg>`;
+
+SVG.capstruct=`<svg class="viz" viewBox="0 0 440 210" xmlns="http://www.w3.org/2000/svg">
+<text class="sv-t" x="14" y="20">Стоимость фирмы и доля долга: есть оптимум</text>
+<line class="sv-axis" x1="48" y1="40" x2="48" y2="175"/><line class="sv-axis" x1="48" y1="175" x2="424" y2="175"/>
+<path class="sv-as" d="M58 150 Q190 58 232 64 Q330 72 412 158"/>
+<line class="sv-bs sv-dash" x1="232" y1="64" x2="232" y2="175"/>
+<circle class="sv-b" cx="232" cy="64" r="5"/>
+<text class="sv-tb" x="206" y="56">оптимум</text>
+<text class="sv-a" x="92" y="92">налоговый</text><text class="sv-a" x="92" y="106">щит ↑</text>
+<text class="sv-ts" x="300" y="104">издержки</text><text class="sv-ts" x="300" y="118">банкротства ↓</text>
+<text class="sv-ts" x="120" y="194">доля долга →</text>
+<text class="sv-ts" x="8" y="56" transform="rotate(-90 14 118)">стоимость</text></svg>`;
+
+SVG.pie=`<svg class="viz" viewBox="0 0 440 210" xmlns="http://www.w3.org/2000/svg">
+<text class="sv-t" x="14" y="20">Можно делить пирог — а можно растить</text>
+<g transform="translate(118 118)">
+<circle class="sv-fa2" r="48"/><circle class="sv-as" r="48" fill="none"/>
+<line class="sv-as" x1="0" y1="0" x2="0" y2="-48"/><line class="sv-as" x1="0" y1="0" x2="42" y2="24"/><line class="sv-as" x1="0" y1="0" x2="-42" y2="24"/>
+<text class="sv-ts" x="-44" y="74">делёж: всем меньше</text></g>
+<text class="sv-ts" x="206" y="122" font-size="16">→</text>
+<g transform="translate(326 112)">
+<circle class="sv-fa" r="66"/><circle class="sv-as" r="66" fill="none"/>
+<line class="sv-as" x1="0" y1="0" x2="0" y2="-66"/><line class="sv-as" x1="0" y1="0" x2="58" y2="33"/><line class="sv-as" x1="0" y1="0" x2="-58" y2="33"/>
+<text class="sv-ta" x="-26" y="-74">+ рост</text><text class="sv-ts" x="-52" y="90">рост: всем больше</text></g></svg>`;
+
+SVG.option=`<svg class="viz" viewBox="0 0 440 210" xmlns="http://www.w3.org/2000/svg">
+<text class="sv-t" x="14" y="20">Опцион: убыток ограничен, прибыль — нет</text>
+<line class="sv-axis" x1="48" y1="40" x2="48" y2="175"/><line class="sv-axis" x1="48" y1="155" x2="424" y2="155"/>
+<path class="sv-as" d="M58 130 L214 130 L404 52"/>
+<line class="sv-bs sv-dash" x1="214" y1="40" x2="214" y2="155"/>
+<text class="sv-tb" x="190" y="34">цена K</text>
+<text class="sv-a" x="92" y="124">не исполняем →</text><text class="sv-a" x="92" y="138">выплата 0</text>
+<text class="sv-a" x="300" y="76">исполняем →</text><text class="sv-a" x="300" y="90">прибыль растёт</text>
+<text class="sv-ts" x="120" y="194">цена актива →</text></svg>`;
+
+SVG.debt=`<svg class="viz" viewBox="0 0 440 210" xmlns="http://www.w3.org/2000/svg">
+<text class="sv-t" x="14" y="20">Кредитор: потолок выплат. Акционер: весь верх</text>
+<line class="sv-axis" x1="48" y1="40" x2="48" y2="175"/><line class="sv-axis" x1="48" y1="155" x2="424" y2="155"/>
+<path class="sv-bs" d="M58 140 L200 58 L416 58"/>
+<path class="sv-as" d="M58 140 L200 140 L416 56"/>
+<line class="sv-grid sv-dash" x1="200" y1="40" x2="200" y2="155"/>
+<text class="sv-tb" x="92" y="92">кредитор</text>
+<text class="sv-ta" x="300" y="98">акционер</text>
+<text class="sv-ts" x="156" y="34">долг погашен</text>
+<text class="sv-ts" x="90" y="194">стоимость активов фирмы →</text></svg>`;
+
+SVG.hedge=`<svg class="viz" viewBox="0 0 440 210" xmlns="http://www.w3.org/2000/svg">
+<text class="sv-t" x="14" y="20">Хедж сглаживает колебания</text>
+<line class="sv-axis" x1="48" y1="40" x2="48" y2="175"/><line class="sv-axis" x1="48" y1="108" x2="424" y2="108"/>
+<path class="sv-inks" d="M58 108 C100 44 140 172 184 108 C228 44 268 172 312 108 C356 44 396 172 416 108"/>
+<path class="sv-as" d="M58 108 C120 96 180 120 244 105 C320 92 380 116 416 108"/>
+<text class="sv-t" x="300" y="62">без хеджа</text>
+<text class="sv-a" x="92" y="148">с хеджем</text>
+<text class="sv-ts" x="120" y="194">время →</text></svg>`;
+
+SVG.cash=`<svg class="viz" viewBox="0 0 440 210" xmlns="http://www.w3.org/2000/svg">
+<text class="sv-t" x="14" y="20">Цикл оборотного капитала</text>
+<defs><marker id="arrC" markerWidth="9" markerHeight="9" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" class="sv-a"/></marker></defs>
+<g transform="translate(220 118)">
+<path class="sv-as" d="M0 -62 A62 62 0 0 1 54 31" marker-end="url(#arrC)"/>
+<path class="sv-as" d="M54 31 A62 62 0 0 1 -54 31" marker-end="url(#arrC)"/>
+<path class="sv-as" d="M-54 31 A62 62 0 0 1 0 -62" marker-end="url(#arrC)"/>
+<g><circle class="sv-fa" cx="0" cy="-62" r="22"/><text class="sv-ta" x="-18" y="-58">Деньги</text></g>
+<g><circle class="sv-fa" cx="54" cy="31" r="22"/><text class="sv-ta" x="40" y="35">Запасы</text></g>
+<g><circle class="sv-fa" cx="-54" cy="31" r="22"/><text class="sv-ta" x="-74" y="35">Дебиторка</text></g>
+<text class="sv-ts" x="-30" y="4">кровоток</text><text class="sv-ts" x="-26" y="18">фирмы</text></g></svg>`;
+
+SVG.mna=`<svg class="viz" viewBox="0 0 440 210" xmlns="http://www.w3.org/2000/svg">
+<text class="sv-t" x="14" y="20">Когда 1 + 1 действительно больше 2</text>
+<line class="sv-axis" x1="48" y1="175" x2="424" y2="175"/>
+<rect class="sv-fa" x="70" y="105" width="40" height="70"/><text class="sv-ts" x="80" y="192">A+B</text>
+<text class="sv-t" x="116" y="100">=</text>
+<text class="sv-ta" x="64" y="96">диверс.</text>
+<rect class="sv-fa" x="250" y="105" width="40" height="70"/>
+<rect class="sv-fb" x="250" y="72" width="40" height="33"/>
+<text class="sv-tb" x="296" y="92">+ синергия</text>
+<text class="sv-ta" x="244" y="62">реальный рост</text>
+<text class="sv-ts" x="256" y="192">A+B+</text>
+<text class="sv-ts" x="150" y="150">сама по себе</text><text class="sv-ts" x="150" y="164">диверсификация</text><text class="sv-ts" x="150" y="178">= 0 стоимости</text></svg>`;
+
+SVG.conclusion=`<svg class="viz" viewBox="0 0 440 210" xmlns="http://www.w3.org/2000/svg">
+<text class="sv-t" x="14" y="20">Карта известного и неизвестного</text>
+<line class="sv-bs sv-dash" x1="220" y1="40" x2="220" y2="180"/>
+<text class="sv-ta" x="40" y="40">что знаем · 7</text><text class="sv-tb" x="270" y="40">чего не знаем · 10</text>
+<g class="sv-a">
+<circle cx="60" cy="70" r="9"/><circle cx="100" cy="70" r="9"/><circle cx="140" cy="70" r="9"/><circle cx="180" cy="70" r="9"/>
+<circle cx="80" cy="110" r="9"/><circle cx="120" cy="110" r="9"/><circle cx="160" cy="110" r="9"/></g>
+<g class="sv-bs" fill="none">
+<circle cx="262" cy="66" r="8"/><circle cx="298" cy="66" r="8"/><circle cx="334" cy="66" r="8"/><circle cx="370" cy="66" r="8"/><circle cx="406" cy="66" r="8"/>
+<circle cx="280" cy="104" r="8"/><circle cx="316" cy="104" r="8"/><circle cx="352" cy="104" r="8"/><circle cx="388" cy="104" r="8"/><circle cx="424" cy="104" r="8"/></g>
+<text class="sv-ts" x="40" y="160">твёрдая земля</text><text class="sv-ts" x="262" y="150">белые пятна фронтира</text></svg>`;
+
+/* ---- journey data (chapters carry detailed comments + examples) ---- */
+const parts=[
+ {day:'День 1',n:'Часть I',t:'Стоимость',tag:'время стоит денег',viz:SVG.value,cap:'Каждый будущий рубль дисконтируется тем сильнее, чем он дальше',
+  intro:`С этого начинаются все финансы: рубль сегодня дороже рубля завтра, потому что сегодняшний можно вложить и заставить работать. Вся книга — про то, как честно переводить будущие деньги в сегодняшние и складывать их.`,
+  analogy:`Вам должны 100 ₽, но через год. Сколько вы готовы взять прямо сейчас, лишь бы не ждать? Скажем, 90. Эта «скидка за ожидание» и есть процентная ставка, а 90 — приведённая стоимость.`,
+  key:'Любое финансовое решение — это вопрос: стоит ли будущая выгода своих сегодняшних денег?',
+  ch:[
+   {n:1,t:'Введение',e:'Зачем фирме финансист и какая у компании цель.',d:`Финансист отвечает всего на два вопроса: во что вложить деньги фирмы (инвестиции) и где их взять (финансирование). Цель, которую защищает книга, — максимизировать стоимость доли владельцев. Звучит эгоистично, но именно она объединяет тысячи разных акционеров (богатых и бедных, осторожных и азартных) в одно понятное требование к менеджеру.`,ex:`Если решение поднимает цену акции, выигрывают все: кто-то продаст и купит дом, кто-то оставит на пенсию — каждый распорядится сам.`},
+   {n:2,t:'Приведённая стоимость',e:'Как «перенести» будущие деньги в сегодня и сложить их (NPV).',d:`Сердце всех финансов. Чтобы сравнить деньги из разных моментов, их приводят к «сегодня», деля на (1 + ставка) за каждый год ожидания. Сумма приведённых притоков минус вложение и есть NPV; положительный означает «проект добавляет стоимость». Здесь же — готовые формулы для регулярных платежей (аннуитет) и вечной ренты (перпетуитет).`,ex:`110 ₽ через год при ставке 10% стоят сегодня 110 ÷ 1,1 = 100 ₽.`},
+   {n:3,t:'Облигации',e:'Самый простой актив — на нём учатся дисконтировать.',d:`Облигация — это заём с заранее известным графиком: купоны каждый год плюс возврат номинала в конце. Её цена — просто сумма этих выплат, приведённых к сегодня. На облигациях удобно увидеть базовые законы: когда ставки растут, цены падают, а чем длиннее бумага, тем сильнее она на это реагирует (дюрация).`,ex:`Поднялись ставки в экономике — и ваша «старая» облигация с низким купоном дешевеет, ведь рядом продают новые, повыгоднее.`},
+   {n:4,t:'Акции',e:'Цена акции = стоимость всех будущих дивидендов; часть — плата за рост.',d:`Акция сложнее облигации: выплаты (дивиденды) не гарантированы и тянутся бесконечно. Базовая модель: цена = сумма всех будущих дивидендов, приведённых к сегодня. Часть цены — это уже работающий бизнес, а часть — ставка на будущий рост (PVGO); у «акций роста» вторая часть огромна и потому они так чувствительны к новостям.`,ex:`Молодая техкомпания почти без прибыли может стоить дорого — почти вся цена это вера в будущий рост.`},
+   {n:5,t:'NPV и другие критерии',e:'Почему «окупаемость» и IRR обманывают, а NPV — нет.',d:`Менеджеры любят простые правила — «окупится за 3 года» или «доходность 15%». Книга вскрывает их ловушки: срок окупаемости игнорирует всё, что после, и риск; IRR (внутренняя доходность) врёт при сравнении проектов разного масштаба и при необычных потоках. NPV свободен от этих болезней — поэтому он главный судья.`,ex:`Проект, окупившийся за 2 года и заглохший на 3-й, проигрывает тому, что окупается за 4 года, а потом 20 лет приносит прибыль.`},
+   {n:6,t:'Правила денежного потока',e:'Пять железных правил, чтобы не считать ерунду.',d:`Прежде чем считать NPV, надо правильно собрать потоки. Пять правил: (1) считать живые деньги, а не бухгалтерскую прибыль; (2) брать только приростное — то, что меняется из-за проекта; (3) не путать реальные и номинальные величины; (4) отделить решение «делать ли проект» от «как его финансировать»; (5) считать после налогов.`,ex:`Уже потраченные на исследование деньги (sunk cost) в расчёт не идут — а вот сданный в аренду цех, который придётся освободить под проект, идёт как упущенная выгода.`}]},
+ {day:'День 2',n:'Часть II',t:'Риск',tag:'за риск платят, но не за всякий',viz:SVG.risk,cap:'Уникальный риск растворяется в портфеле; остаётся рыночный',
+  intro:`Будущее неизвестно, и за неопределённость инвесторы требуют доплату. Но ключевое открытие: часть риска убирается бесплатно — стоит разложить деньги по разным активам. Платят только за тот риск, который убрать нельзя.`,
+  analogy:`Магазин мороженого боится дождливого лета, магазин зонтов — солнечного. Держите оба — и погода вам почти безразлична. Это диверсификация: риски гасят друг друга.`,
+  key:'Уникальный риск каждой компании исчезает в портфеле; оплачивается только рыночный риск (его мера — бета).',
+  ch:[
+   {n:7,t:'Диверсификация и портфель',e:'Складывая разные активы, вы снижаете риск, не жертвуя доходностью.',d:`Складывая активы, которые не ходят синхронно, вы снижаете колебания портфеля, не уменьшая ожидаемую доходность — это и есть «бесплатный обед». Чем слабее активы связаны между собой (корреляция), тем сильнее эффект. Отсюда понятие эффективного портфеля: лучшая доходность при данном уровне риска.`,ex:`20 разных акций колеблются заметно спокойнее, чем любая одна из них по отдельности — при той же средней доходности.`},
+   {n:8,t:'Модель CAPM',e:'Связь риска и требуемой доходности через бету.',d:`Раз уникальный риск убирается диверсификацией, инвестор получает премию только за рыночный риск. Бета измеряет, насколько актив усиливает или гасит движения рынка: бета 1 — как рынок, бета 2 — вдвое резче. Требуемая доходность = безрисковая ставка + бета × премия за рынок. Формула простая и спорная, но незаменимая.`,ex:`Акция с бетой 1,5 при рыночной премии 5% и безрисковой 4% «должна» приносить 4 + 1,5 × 5 = 11,5%.`},
+   {n:9,t:'Риск и стоимость капитала',e:'Как от риска компании перейти к ставке дисконтирования.',d:`Чтобы дисконтировать проект, нужна ставка, отражающая именно его риск. Ставка компании в целом годится для проектов средней рискованности; рискованный проект требует ставки повыше, безопасный — пониже. Здесь же — почему операционный рычаг (доля постоянных издержек) делает бизнес чувствительнее к экономике и поднимает бету.`,ex:`Авиакомпания с огромными постоянными расходами сильнее «штормит» в кризис, чем ремонтная мастерская, — и её проекты дисконтируют жёстче.`}]},
+ {day:'День 2',n:'Часть III',t:'Практика бюджетирования',tag:'откуда вообще берётся прибыль',viz:SVG.budget,cap:'Анализ чувствительности: какая переменная решает судьбу проекта',
+  intro:`Положительный NPV не возникает из таблицы Excel — он берётся из реального преимущества: патента, бренда, масштаба, того, что конкуренты не скопируют. Эта часть — про честную проверку проектов на прочность.`,
+  analogy:`Если в городке уже десять одинаковых кофеен, одиннадцатая вряд ли разбогатеет. А единственная кофейня у вокзала — другое дело. NPV живёт там, где есть защита от конкуренции.`,
+  key:'Прибыль выше нормы (экономическая рента) держится ровно столько, сколько держится ваше преимущество.',
+  ch:[
+   {n:10,t:'Анализ проектов',e:'Сценарии, чувствительность, точка безубыточности.',d:`Один прогноз NPV — это иллюзия точности. Поэтому проект «трясут»: анализ чувствительности (что будет, если цена упадёт на 10%?), сценарии (оптимистичный и пессимистичный), точка безубыточности (при каком объёме выходим в ноль). Цель — понять, от чего на самом деле зависит успех и где спрятан главный риск.`,ex:`Может выясниться, что весь проект держится на одной цифре — цене продажи; тогда именно её и надо проверять до запуска.`},
+   {n:11,t:'Действительно ли NPV положительный',e:'Главный вопрос: какое у нас преимущество и надолго ли его хватит.',d:`Положительный NPV означает, что вы зарабатываете больше, чем требует рынок за такой риск, то есть получаете экономическую ренту. Но в конкуренции рента быстро тает: соседи копируют идею и сбивают прибыль. Поэтому ключевой вопрос проекта — не цифры в таблице, а: какое у нас устойчивое преимущество и сколько лет оно продержится?`,ex:`Патент, сильный бренд или эффект масштаба защищают ренту годами; «просто хорошая идея» — недели, пока её не повторят.`}]},
+ {day:'День 3',n:'Часть IV',t:'Финансирование и рынок',tag:'рынок уже всё знает',viz:SVG.market,cap:'Цена прыгает в момент новости — прибежать позже уже поздно',
+  intro:`Компании берут деньги тремя путями: из своей прибыли, в долг или продавая долю. А цены на бирже мгновенно впитывают любые новости — поэтому стабильно «обыгрывать рынок» почти невозможно.`,
+  analogy:`Хорошая новость о компании вылетает в цену за секунды — как только все её услышали. Прибежать «купить на новости» — всё равно что гнаться за поездом, который уже ушёл.`,
+  key:'Цена уже отражает известное; стабильное преимущество даёт не «инсайт», а дисциплина и низкие издержки.',
+  ch:[
+   {n:12,t:'Эффективные рынки и поведение',e:'Три формы эффективности — и где люди ошибаются систематически.',d:`Если цены мгновенно вбирают всю известную информацию, систематически обыгрывать рынок невозможно — это гипотеза эффективного рынка в трёх «силах»: по прошлым ценам, по всей публичной информации, по любой вообще. Реальность сложнее: люди ошибаются предсказуемо — переоценивают свежие новости, идут за толпой, держатся за убыточные позиции. Поведенческие финансы изучают эти отклонения.`,ex:`«Эффект толпы»: акция растёт, потому что растёт, — пока пузырь не лопнет. Так было с доткомами в 2000-м.`},
+   {n:13,t:'Обзор финансирования',e:'Карта источников денег: прибыль, долг, акции.',d:`Откуда фирма берёт деньги? Чаще всего — из собственной нераспределённой прибыли; затем долг (банки, облигации); и в последнюю очередь — выпуск новых акций. Глава рисует общую карту инструментов и заодно разбирает корни кризиса 2007–09, выросшего из плохо понятых новых бумаг на ипотеке.`,ex:`Порядок предпочтений («иерархия»): сначала свои деньги, потом занять, и только в крайнем случае звать новых совладельцев.`},
+   {n:14,t:'Выпуск ценных бумаг',e:'Как проходит IPO и почему размещения недооценивают.',d:`Когда внутренних денег не хватает, фирма выходит на рынок. IPO — первое публичное размещение; андеррайтер (инвестбанк) помогает оценить и продать бумаги. Любопытный факт: размещения часто специально чуть недооценивают, поэтому акция «выстреливает» в первый день — это плата за снижение риска размещения.`,ex:`Акцию продали по 20, к вечеру первого дня она 26 — «оставленные на столе» деньги и есть цена гарантии, что выпуск разойдётся.`}]},
+ {day:'День 4',n:'Часть V',t:'Выплаты и структура капитала',tag:'как режут пирог стоимости',viz:SVG.capstruct,cap:'Долг тянет стоимость вверх (налоги) и вниз (риск) — есть оптимум',
+  intro:`Прибыль можно отдать акционерам (дивиденды или выкуп акций) или оставить в деле. Финансировать фирму можно своими деньгами или в долг. Базовый результат удивителен: в идеальном мире способ «нарезки» не меняет размер пирога — но в реальном меняет, из-за налогов и риска банкротства.`,
+  analogy:`Пицца не становится больше оттого, что вы режете её на 6 кусков вместо 8. Так и стоимость фирмы сама по себе не растёт от замены акций на долг — пока не вступят налоги (долг даёт скидку) и страх банкротства.`,
+  key:'Сам по себе долг стоимости не создаёт; её создают налоговый щит и дисциплина — пока их не перевесит риск банкротства.',
+  ch:[
+   {n:15,t:'Политика выплат',e:'Дивиденды против выкупа акций; почему спор не закрыт.',d:`Заработав прибыль, фирма решает: отдать акционерам или вложить дальше. Отдать можно дивидендами (регулярно) или выкупом акций (гибче и часто выгоднее по налогам). Спор «что лучше» не закрыт: дивиденды дисциплинируют зрелые компании, выкупы удобны молодым. Главное — не сама форма, а есть ли куда выгодно вложить деньги.`,ex:`Зрелая компания без хороших проектов, копящая кэш, рискует растратить его впустую — высокая выплата заставляет менеджеров быть дисциплинированнее.`},
+   {n:16,t:'Имеет ли значение долг (MM)',e:'Теорема Модильяни–Миллера: в идеальном мире — нет.',d:`Революционный результат Модильяни–Миллера: в идеальном мире (без налогов и банкротств) стоимость фирмы не зависит от того, финансируется она долгом или акциями. Долг повышает доходность на акцию, но ровно настолько же повышает её риск — выгода обнуляется. Это не финал, а отправная точка: раз в идеале неважно — значит, важны именно несовершенства реального мира.`,ex:`Добавили долг — доходность на акцию выросла, но и её «качели» стали резче; инвестор не получил ничего даром.`},
+   {n:17,t:'Сколько занимать',e:'Компромисс: налоговый щит вверх, риск банкротства вниз.',d:`В реальном мире долг даёт налоговый щит (проценты уменьшают налог) — это плюс. Но слишком большой долг повышает риск банкротства и его издержки — это минус. Компромиссная теория: оптимум там, где предельная выгода щита равна предельным издержкам дистресса. Поэтому у стабильных фирм долга больше, у рискованных — меньше.`,ex:`Коммунальной компании со стабильным доходом долг почти не страшен; стартапу с непредсказуемой выручкой большой долг — путь к банкротству.`},
+   {n:18,t:'Финансирование и оценка',e:'Как учесть выгоду долга в оценке: WACC и APV.',d:`Как учесть выгоду долга при оценке проекта? Два способа: WACC — дисконтировать по средневзвешенной стоимости капитала, где долг уже удешевлён налогом; или APV — оценить проект как полностью на свои деньги, а затем отдельно прибавить стоимость налогового щита. Оба метода должны давать близкий ответ.`,ex:`APV нагляднее, когда долг по проекту со временем меняется: вы прямо видите, сколько стоимости добавил именно налоговый щит.`}]},
+ {day:'День 5',n:'Часть VI',t:'Цели и управление',tag:'зачем вообще существует фирма',viz:SVG.pie,cap:'Пирог можно делить (всем меньше) — а можно растить (всем больше)',
+  intro:`Самый человеческий раздел. Менеджеры управляют чужими деньгами — и не всегда в интересах владельцев (агентская проблема). И большой вопрос: фирма работает только на акционеров или на всех, кого затрагивает? Новый соавтор Эдманс предлагает «растить пирог».`,
+  analogy:`Вы наняли управляющего сдавать вашу квартиру. Он может стараться, а может лениться и завышать «расходы на ремонт». Как сделать, чтобы его интересы совпали с вашими? Это и есть агентская проблема — в масштабе корпорации.`,
+  key:'Создавать ценность для общества можно как способ создать ценность для акционеров — если выгоды превышают издержки (снова NPV).',
+  ch:[
+   {n:19,t:'Агентские проблемы и управление',e:'Стимулы, совет директоров, угроза поглощения.',d:`Менеджеры распоряжаются чужими деньгами и могут преследовать свои интересы: раздувать империю, избегать риска, шиковать за счёт фирмы. Корпоративное управление — это набор «поводков»: привязка зарплаты к стоимости акций, независимый совет директоров, угроза враждебного поглощения. Идеального решения нет — есть баланс стимулов и контроля.`,ex:`Опционы на акции в зарплате топ-менеджера — попытка сделать так, чтобы он богател только вместе с акционерами.`},
+   {n:20,t:'Стейкхолдер-капитализм',e:'Забота о стейкхолдерах как способ создать акционерную стоимость (ESV).',d:`Новая глава Эдманса. Должна ли фирма работать только на акционеров — или на всех: работников, клиентов, среду? Ответ книги (ESV, «просвещённая акционерная стоимость»): забота о стейкхолдерах — не благотворительность, а часто лучший способ создать акционерную стоимость, ведь довольные люди и хорошая репутация приносят деньги. Пирог растят, а не делят; критерий решения прежний — NPV.`,ex:`Открыть детсад для сотрудников стоит денег, но если он удержит ценные кадры и поднимет продуктивность — это положительный NPV, а не «доброта в убыток».`,new:true}]},
+ {day:'День 6',n:'Часть VII',t:'Опционы',tag:'право, но не обязанность',viz:SVG.option,cap:'Выплата по опциону: ноль до цены K, дальше — рост',
+  intro:`Опцион — это право (но не обязанность) сделать что-то в будущем по заранее оговорённой цене. За такое право платят: выбор сам по себе ценен — повезёт, воспользуешься; нет — просто откажешься.`,
+  analogy:`Бронь столика с правом бесплатно отменить — это опцион. Вы платите немного (или ничем не рискуете) за право прийти, но не обязаны. В бизнесе так же: право расширить завод, если спрос вырастет, стоит денег.`,
+  key:'Возможность отказаться от плохого и развить хорошее — это актив, и у него есть цена.',
+  ch:[
+   {n:21,t:'Понимание опционов',e:'Что такое колл и пут и из чего складывается их цена.',d:`Опцион даёт право, но не обязанность. Колл — право купить по фиксированной цене (выгоден при росте), пут — право продать (страховка от падения). За право платят премию. Главная идея: убыток ограничен премией, а прибыль может быть большой — именно эта асимметрия и создаёт ценность.`,ex:`Купили колл за 5: если актив взлетел — зарабатываете весь рост; если рухнул — теряете только эти 5.`},
+   {n:22,t:'Оценка опционов',e:'Биномиальный метод и формула Блэка–Шоулза.',d:`Сколько стоит такое право? Биномиальный метод разбивает будущее на «вверх/вниз» и идёт назад во времени. Формула Блэка–Шоулза собирает всё в одно выражение через пять величин: цену актива, цену исполнения, срок, ставку и волатильность. Парадокс: чем выше неопределённость, тем дороже опцион — редкий случай, когда риск повышает ценность.`,ex:`Опцион на «спокойную» акцию стоит дёшево; на «бешено скачущую» — дорого, ведь шанс на крупный выигрыш выше, а низ всё равно ограничен.`},
+   {n:23,t:'Реальные опционы',e:'Гибкость внутри проектов: расширить, отложить, свернуть.',d:`Опционы есть не только на бирже, но и внутри проектов: право расширить производство, если спрос вырастет; отложить запуск; свернуть, если дела плохи. Классический NPV их недооценивает, потому что считает план жёстким. Часто именно гибкость — главная ценность инвестиции, особенно в новых и неопределённых направлениях.`,ex:`Право построить второй завод «если первый взлетит» может стоить дороже самого первого завода.`}]},
+ {day:'День 6',n:'Часть VIII',t:'Долговое финансирование',tag:'обещание, которое могут не сдержать',viz:SVG.debt,cap:'Кредитор получает потолок; весь верх и весь риск низа — у акционера',
+  intro:`Долг — это обещание вернуть фиксированную сумму. Но обещания иногда нарушают: возникает кредитный риск. Кредитор получает ограниченную выгоду, но первым рискует потерять — поэтому форм долга так много, и у каждой свои защитные условия.`,
+  analogy:`Дали другу 1000 ₽ в долг — получите ровно 1000 назад, даже если он разбогатеет. А если разорится — можете не получить ничего. Это и есть асимметрия долга: верх ограничен, низ — нет.`,
+  key:'Кредитор берёт ограниченную доходность в обмен на приоритет — и защищает себя условиями договора (ковенантами).',
+  ch:[
+   {n:24,t:'Кредитный риск',e:'Вероятность дефолта и сколько удастся вернуть.',d:`Долг — это обещание, и его могут нарушить. Кредитор оценивает вероятность дефолта и сколько удастся вернуть (recovery). Изящная идея: владение фирмой с долгом эквивалентно опционам — акционеры будто держат колл на активы, а кредиторы как будто продали пут. Поэтому рискованный долг оценивают теми же инструментами, что и опционы.`,ex:`Чем ближе фирма к банкротству, тем больше её облигации ведут себя как «опцион на выживание», а не как надёжный заём.`},
+   {n:25,t:'Виды долга',e:'От облигаций до гибридов; ковенанты защищают кредитора.',d:`Долг бывает очень разным: обеспеченный и нет, короткий и длинный, с фиксированной и плавающей ставкой, конвертируемый в акции. Чтобы защититься, кредиторы прописывают ковенанты — условия-ограничения (например, «не набирать новый долг сверх лимита»), которые заранее гасят конфликт между акционерами и кредиторами.`,ex:`Ковенант «держать долг ниже 3× прибыли» не даёт владельцам втихаря перегрузить фирму займами и переложить риск на кредитора.`},
+   {n:26,t:'Лизинг',e:'Когда арендовать выгоднее, чем покупать.',d:`Иногда выгоднее не покупать оборудование, а арендовать его (лизинг) — это форма финансирования, очень похожая на долг. Решают всё снова налоги и кому достаётся амортизационный щит: если арендодатель умеет использовать налоговые льготы лучше арендатора, лизинг создаёт общую выгоду, которую стороны делят между собой.`,ex:`Прибыльный лизингодатель «съедает» налоговый щит полностью и делится частью экономии с арендатором через пониженный платёж.`}]},
+ {day:'День 6',n:'Часть IX',t:'Управление рисками',tag:'снижать риск — не самоцель',viz:SVG.hedge,cap:'Хедж сужает амплитуду колебаний вокруг среднего',
+  intro:`Фирмы страхуются от скачков цен, валют и ставок через хеджирование и деривативы. Но важнейшая мысль: цель не «обнулить риск», а добавить стоимость. Иногда риск стоит взять.`,
+  analogy:`Зонт защищает от дождя, но таскать его в ясный день — лишний вес. Хеджирование — это зонт: полезно там, где реально грозит ливень, и бессмысленно «на всякий случай везде».`,
+  key:'Управление риском оправдано, когда оно создаёт стоимость, а не просто уменьшает цифру риска.',
+  ch:[
+   {n:27,t:'Управление рисками',e:'Когда сглаживать колебания цен и ставок выгодно.',d:`Фирма может сглаживать колебания цен, ставок и валют с помощью деривативов (фьючерсы, форварды, свопы) и страховок. Но цель не «обнулить риск» (это невозможно, а порой вредно), а добавить стоимость: например, хедж позволяет спокойно нести больше долга и полнее использовать налоговый щит. Хеджировать стоит то, в чём у вас нет преимущества, а не свой основной бизнес.`,ex:`Авиакомпании хеджируют цену керосина — она не их экспертиза; но не «хеджируют» само умение хорошо возить людей.`},
+   {n:28,t:'Международные финансы',e:'Валютный риск и оценка проектов за рубежом.',d:`Работая за рубежом, фирма сталкивается с валютным риском и разными ставками. Глава вводит «паритеты» — связи между ставками, инфляцией и курсами, которые в теории не дают возникнуть бесплатной прибыли. И показывает, как оценивать зарубежный проект: либо в местной валюте по местной ставке, либо в своей — после конвертации потоков.`,ex:`Высокая ставка в стране обычно сигналит о будущем ослаблении её валюты — иначе все бы просто занимали дёшево там и вкладывали дорого здесь.`}]},
+ {day:'День 7',n:'Часть X',t:'Планирование и оборотный капитал',tag:'кровообращение компании',viz:SVG.cash,cap:'Деньги → запасы → дебиторка → снова деньги: цикл должен крутиться',
+  intro:`Даже прибыльная компания умирает, если в нужный момент нет наличных. Эта часть — про здоровье «кровотока»: как читать отчётность, планировать рост и управлять деньгами, запасами и долгами клиентов.`,
+  analogy:`Вы закупили товар (деньги ушли), продали в рассрочку (ещё не вернулись), а аренду платить уже сейчас. Цикл оборотного капитала — про то, сколько денег «застряло» в этой паузе.`,
+  key:'Прибыль на бумаге и деньги в кассе — разные вещи; компании гибнут от нехватки вторых.',
+  ch:[
+   {n:29,t:'Финансовый анализ',e:'Коэффициенты и формула Дюпона: рентген компании.',d:`Отчётность — это рентген компании. Коэффициенты показывают её здоровье: рентабельность, долговую нагрузку, оборачиваемость, ликвидность. Формула Дюпона красиво раскладывает доходность капитала (ROE) на три рычага — маржу, оборачиваемость активов и леверидж, — показывая, чем именно фирма зарабатывает.`,ex:`Две фирмы с одинаковым ROE: одна берёт высокой маржой (бутик), другая — оборотом (дискаунтер). Дюпон сразу это вскрывает.`},
+   {n:30,t:'Финансовое планирование',e:'Устойчивый темп роста: сколько роста по карману.',d:`Планирование отвечает на вопрос «что будет, если…» и сколько денег понадобится. Ключевое понятие — устойчивый темп роста: как быстро фирма может расти, финансируясь только своей прибылью, без нового капитала. Растёшь быстрее — придётся занимать или выпускать акции; вот здесь планирование и спасает от кассового разрыва.`,ex:`Парадокс: слишком быстрый рост продаж может обанкротить — деньги уходят в запасы и дебиторку быстрее, чем возвращаются.`},
+   {n:31,t:'Оборотный капитал',e:'Деньги, запасы, дебиторка; сколько ликвидности держать.',d:`Оборотный капитал — это деньги, «застрявшие» в текущей деятельности: в запасах и в долгах клиентов (дебиторка) минус то, что вы должны поставщикам. Управлять им — значит не дать деньгам застаиваться, но и не остаться без подушки. Сколько наличности держать — честно нерешённая проблема: мало опасно, много — простаивает без дела.`,ex:`Договориться об отсрочке у поставщиков и ускорить оплату от клиентов — и тот же бизнес высвобождает миллионы «замороженных» денег.`}]},
+ {day:'День 7',n:'Часть XI',t:'Слияния и реструктуризация',tag:'когда 1 + 1 больше 2',viz:SVG.mna,cap:'Диверсификация сама по себе = 0; стоимость даёт реальная синергия',
+  intro:`Компании покупают друг друга в надежде на синергию. Но закон сохранения стоимости предупреждает: просто сложить две фирмы «ради разнообразия» стоимости не создаёт — нужен реальный прирост денежного потока.`,
+  analogy:`Соедините пекарню и кофейню так, что люди берут и хлеб, и кофе за один заход, — целое больше суммы частей. А купить рудник «чтобы не зависеть от одного бизнеса» вы могли бы и сами через свой портфель — бесплатно.`,
+  key:'Слияние создаёт стоимость, только если объединённый денежный поток больше суммы прежних — иначе это иллюзия.',
+  ch:[
+   {n:32,t:'Слияния',e:'Настоящая синергия против иллюзии диверсификации.',d:`Компании покупают друг друга ради синергии — когда вместе они стоят больше, чем порознь (экономия, рост продаж, новые возможности). Но книга предупреждает: купить фирму «ради диверсификации» — пустая трата, ведь акционеры могли бы диверсифицироваться сами через свой портфель, и бесплатно. Настоящая синергия обязана выражаться в дополнительном денежном потоке — иначе платишь премию ни за что.`,ex:`Объединение убирает дублирующие отделы и даёт общий канал продаж — это деньги; «теперь у нас два разных бизнеса» — нет.`},
+   {n:33,t:'Реструктуризация',e:'LBO, выделения, банкротство и Chapter 11.',d:`Фирму можно не только собирать, но и пересобирать: выкуп с плечом (LBO) — покупка на заёмные деньги; выделение части бизнеса (spin-off); банкротство и реорганизация по Chapter 11. Цель — высвободить стоимость, «запертую» в неэффективной структуре, и передать активы лучшим хозяевам.`,ex:`Конгломерат стоит дешевле суммы своих частей — выделение подразделений в отдельные компании раскрывает скрытую стоимость.`}]},
+ {day:'День 7',n:'Часть XII',t:'Заключение',tag:'что мы знаем и чего не знаем',viz:SVG.conclusion,cap:'Семь твёрдых идей и десять открытых вопросов фронтира',
+  intro:`Финал, ради которого стоит дочитать: авторы честно подводят итог — семь идей, на которых стоит вся дисциплина, и десять вопросов, на которые финансы до сих пор не знают ответа.`,
+  analogy:`Хорошая наука знает границы своего знания. Эта глава — карта, где твёрдая земля (что мы знаем) обведена, а за ней начинаются белые пятна.`,
+  key:'Зрелость в финансах — это знать и сильные инструменты, и их пределы (см. разделы 02 и 03).',
+  ch:[
+   {n:34,t:'Заключение',e:'7 главных идей + 10 нерешённых проблем.',d:`Авторы подводят итог честно: семь идей, на которых всё стоит (NPV, диверсификация и CAPM, эффективные рынки, аддитивность стоимости, MM, опционы, агентская теория), и десять вопросов, на которые ответа пока нет. Главный урок зрелости — знать не только мощные инструменты, но и их пределы. Подробный разбор обоих списков — в разделах 02 и 03 этого курса.`,ex:`Финал не пафосный, а ироничный: книга прощается цитатой Гекльберри Финна — «писать больше не о чем, и я этому рад».`}]}
+];
+
+/* flat catalog for the modal */
+const allCh=[];
+parts.forEach(p=>p.ch.forEach(c=>allCh.push(Object.assign({day:p.day,part:p.t,partN:p.n},c))));
+
+const journey=document.getElementById('journey');
+let gi=0;
+parts.forEach((p,i)=>{
+  const d=document.createElement('div');d.className='part';
+  const tiles=p.ch.map(c=>{
+    const ci=gi++;
+    return `<button class="nf-tile${c.new?' new':''}" data-ci="${ci}">
+        <div class="nf-cover cov${c.n%4}"><span class="nf-cat">Глава ${c.n}</span><span class="nf-bignum">${c.n}</span></div>
+        <div class="nf-body"><div class="nf-t">${c.t}</div><div class="nf-e">${c.e}</div><div class="nf-open">Открыть →</div></div>
+      </button>`;
+  }).join('');
+  d.innerHTML=`<button class="part-btn">
+      <span class="part-day">${p.day}</span>
+      <span class="part-n">${p.n}</span>
+      <span class="part-tt"><span class="part-t">${p.t}</span> — <span class="part-tag">${p.tag}</span></span>
+      <span class="part-tog">+</span></button>
+    <div class="part-body"><div class="pb-inner">
+      <div class="pb-grid">
+        <div class="pb-left">
+          <p class="pb-intro">${p.intro}</p>
+          <div class="analogy"><span class="lbl">Простыми словами</span><p>${p.analogy}</p></div>
+        </div>
+        <div class="pb-right"><div class="viz-wrap">${p.viz}<div class="viz-cap">${p.cap}</div></div></div>
+      </div>
+      <span class="ch-lbl">Главы части · нажмите плитку для разбора</span>
+      <div class="nf-row">${tiles}</div>
+      <div class="key"><span class="lbl">Главное за день</span><p>${p.key}</p></div>
+    </div></div>`;
+  const btn=d.querySelector('.part-btn'),body=d.querySelector('.part-body');
+  const setH=()=>{body.style.maxHeight=d.classList.contains('open')?body.scrollHeight+60+'px':'0';};
+  btn.onclick=()=>{d.classList.toggle('open');setH();};
+  d.querySelectorAll('.nf-tile').forEach(t=>t.onclick=e=>{e.stopPropagation();openCh(+t.dataset.ci);});
+  journey.appendChild(d);
+  if(i===0) setTimeout(()=>{d.classList.add('open');setH();},60);
+});
+window.addEventListener('load',()=>document.querySelectorAll('.part.open .part-body').forEach(b=>b.style.maxHeight=b.scrollHeight+60+'px'));
+
+/* ---- modal ---- */
+const M={modal:document.getElementById('nfModal'),hero:document.getElementById('nfHero'),num:document.getElementById('nfNum'),
+  crumb:document.getElementById('nfCrumb'),title:document.getElementById('nfTitle'),sub:document.getElementById('nfSub'),
+  content:document.getElementById('nfContent'),count:document.getElementById('nfCount'),
+  prev:document.getElementById('nfPrev'),next:document.getElementById('nfNext'),card:document.getElementById('nfCard')};
+let nfIdx=0;
+function openCh(i){
+  nfIdx=i;const c=allCh[i];
+  M.hero.className='nf-hero cov'+(c.n%4);
+  M.num.textContent=c.n;
+  M.crumb.textContent=`${c.day} · ${c.partN} — ${c.part}`;
+  M.title.innerHTML=c.t+(c.new?' <span style="font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.1em;background:var(--accent);color:var(--paper);padding:3px 7px;border-radius:3px;vertical-align:middle">НОВАЯ</span>':'');
+  M.sub.textContent=c.e;
+  let html=c.d.split('\n\n').map(par=>`<p>${par}</p>`).join('');
+  if(c.ex) html+=`<div class="nf-ex"><span class="lbl">Пример</span><p>${c.ex}</p></div>`;
+  M.content.innerHTML=html;
+  M.count.textContent=`глава ${i+1} из ${allCh.length}`;
+  M.prev.disabled=i===0;M.next.disabled=i===allCh.length-1;
+  M.modal.classList.add('open');document.body.style.overflow='hidden';M.card.scrollTop=0;
+}
+function closeCh(){M.modal.classList.remove('open');document.body.style.overflow='';}
+document.getElementById('nfClose').onclick=closeCh;
+M.prev.onclick=()=>{if(nfIdx>0)openCh(nfIdx-1);};
+M.next.onclick=()=>{if(nfIdx<allCh.length-1)openCh(nfIdx+1);};
+M.modal.onclick=e=>{if(e.target===M.modal)closeCh();};
+document.addEventListener('keydown',e=>{if(!M.modal.classList.contains('open'))return;
+  if(e.key==='Escape')closeCh();if(e.key==='ArrowLeft')M.prev.click();if(e.key==='ArrowRight')M.next.click();});
+
+/* ---- analytical data ---- */
+const seven=[
+ ['Чистая приведённая стоимость','NPV','Стоимость будущего потока — то, что за эквивалентное по риску требование заплатил бы рынок капитала. Поэтому дисконтируем по альтернативной стоимости капитала.','Глубина не в формуле. NPV позволяет миллионам разных акционеров делегировать фирму одному менеджеру с единственной инструкцией: «максимизируй NPV».'],
+ ['Модель оценки активов','CAPM','Есть риск, который можно диверсифицировать, и который нельзя. Платят только за недиверсифицируемый (рыночный) — его мера бета.','Авторы прямо говорят: «современные финансы — это вовсе не CAPM». Прочна не точная бета, а само деление риска. Лучшую теорию они обещают уже 35 лет.'],
+ ['Эффективность рынков','EMH','Цены отражают доступную информацию (слабая, полусильная, сильная формы) и быстро реагируют на новую.','Это НЕ значит «нет глупых и умных». Это значит: конкуренция жестока, нет денежных машин. За 40+ лет нашли десятки аномалий — но в лёгкие деньги они не переводятся.'],
+ ['Аддитивность стоимости','закон сохранения','Стоимость целого равна сумме стоимостей частей: PV(A+B)=PV(A)+PV(B).','Два следствия-бомбы: слияние ради одной диверсификации стоимости не создаёт; и если закон работает при сложении потоков, он работает при делении — фундамент иррелевантности структуры капитала.'],
+ ['Теория структуры капитала','MM','Теорема Модильяни–Миллера: в идеальных рынках структура капитала не влияет на стоимость. Размер пирога не зависит от нарезки.','MM — не «ответ», а карта: где искать причины, по которым структура всё-таки важна. Налоговый щит и дисциплина — в плюс; издержки дистресса — в минус.'],
+ ['Теория опционов','Black–Scholes','Опцион — право торговать в будущем на условиях, зафиксированных сегодня. Блэк и Шоулз собрали известные переменные в рабочую формулу.','Формула — для простых коллов. Но базовые идеи (риск-нейтральная оценка) работают и там, где формула не применима. Реальные опционы требуют арифметики, но не новых концепций.'],
+ ['Агентская теория','agency','Современная фирма — командная игра менеджеров, работников, акционеров, кредиторов. Их интересы конфликтуют; теория описывает, как фирмы конфликты гасят.','Агентская оптика пронизывает всю книгу: конфликт акционер–кредитор в главах о займах, агентская проблема управляющих — в объяснении пузырей.']
+];
+const sg=document.getElementById('seven-grid');
+seven.forEach((s,i)=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<div class="card-n">${i+1}</div><h3>${s[0]}</h3><div class="who">${s[1]}</div><p>${s[2]}</p><div class="nuance"><span class="lbl">нюанс из чтения</span><p>${s[3]}</p></div>`;sg.appendChild(c);});
+
+const ten=[
+ ['Что определяет риск и стоимость проекта?','Откуда берётся положительный NPV — из экономической ренты. Но почему одни фирмы её зарабатывают, а соседи нет? Общего способа оценить бету проекта нет — это «на глазок».'],
+ ['Риск и доходность — что упустили?','CAPM трудно подтвердить или опровергнуть. Загадка размера и book-to-market (Фама–Френч). CAPM выживает не от отсутствия конкурентов, а от их избытка.'],
+ ['Насколько важны исключения из EMH?','Моментум, недо- и перереакция, пузыри (дотком, Япония). Почему профи не выходят из переоценённых акций? Агентская проблема: «пока играет музыка, надо танцевать».'],
+ ['Менеджмент — забалансовое обязательство?','Закрытые фонды торгуются ниже стоимости портфеля; «нефть на Уолл-стрит дешевле, чем в Техасе». Иногда целое меньше суммы частей — отрицательный PVGO.'],
+ ['Почему успешны новые бумаги и рынки?','Бесконечный поток инноваций. Часть объяснима (налоги, страховка рисков), часть — нет. Сабпрайм не плох по сути, но породил катастрофу.'],
+ ['Как разрешить спор о выплатах?','Дивиденды vs выкупы vs нейтральность. Возможно, вопрос неверный: не «хорошо или плохо», а «когда уместны высокие, когда низкие выплаты».'],
+ ['Какие риски фирме брать?','Меньше риска — не всегда лучше. Смысл риск-менеджмента не в снижении риска, а в добавлении стоимости.'],
+ ['Сколько стоит ликвидность?','Сколько денег фирме «достаточно» — неясно. В private equity премия за неликвидность в 1–2 п.п. меняет оценку радикально. В кризис рынки внезапно «пересыхают».'],
+ ['Чем объяснить волны слияний?','Нужна общая теория волн, а не повод для каждой сделки. Один из ключей — информационные каскады (все идут за первым случайным посетителем).'],
+ ['Почему системы склонны к кризисам?','Райнхарт–Рогофф: кризисам предшествуют кредитные бумы. После краха жильё −35%, акции −55%, выпуск −9%. «Будем надеяться, разберутся с прошлым до того, как постучит следующий».']
+];
+const tl=document.getElementById('ten-list');
+ten.forEach((t,i)=>{const r=document.createElement('div');r.className='row';r.innerHTML=`<div class="row-n">${String(i+1).padStart(2,'0')}</div><div class="row-b"><h4>${t[0]}</h4><p>${t[1]}</p></div>`;tl.appendChild(r);});
+
+const rules=[
+ ['Дисконтируйте потоки, а не прибыль','Прибыль — бухгалтерская абстракция. Стоимость создаёт денежный поток; амортизация и начисления — не деньги.'],
+ ['Только приростные потоки','Игнорируйте невозвратные затраты, но включайте альтернативные издержки и побочные эффекты на другой бизнес.'],
+ ['Согласуйте инфляцию','Реальные потоки — реальной ставкой, номинальные — номинальной. Смешивать нельзя; ошибка тихая и системная.'],
+ ['Разделите инвестиции и финансирование','Сначала оцените проект, как если бы он финансировался капиталом; эффект долга встройте отдельно.'],
+ ['Потоки — после налогов','Налоги реальны. Считайте поток, который остаётся фирме, а не до фискальной руки.']
+];
+const rg=document.getElementById('rules-grid');
+rules.forEach((r,i)=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<div class="card-n">${i+1}</div><h3 style="font-size:19px">${r[0]}</h3><p style="margin-top:10px">${r[1]}</p>`;rg.appendChild(c);});
+
+const contra=[
+ ['«Максимизация прибыли» плохо определена','Прибыль какого года? И как с риском? Можно поднять прибыль сегодня, срезав R&D, и обрушить завтра. Богатство акционеров определено корректно — оно сворачивает все будущие прибыли с учётом времени и риска.'],
+ ['IRR — заряженное ружьё','Меняет знак при кредитовании vs займе, даёт несколько значений при знакопеременных потоках, врёт при взаимоисключающих проектах разного масштаба. NPV надёжнее.'],
+ ['Цель риск-менеджмента — не меньше риска','«Смысл управления рисками не в том, чтобы снизить риск, а в том, чтобы добавить стоимость». Иногда правильный шаг — взять риск.'],
+ ['Спор о выплатах не разрешён — и это честно','Учебник не делает вид, что знает ответ. Дивиденды дисциплинируют зрелые фирмы; выкупы выгоднее молодым. Универсального правила нет.']
+];
+const cg=document.getElementById('contrarian-grid');
+contra.forEach(c=>{const d=document.createElement('div');d.className='card danger';d.innerHTML=`<h3 style="max-width:100%">${c[0]}</h3><div class="nuance"><span class="lbl">позиция авторов</span><p>${c[1]}</p></div>`;cg.appendChild(d);});
+
+const voice=[
+ ['Самоирония длиной в 35 лет','В сноске о CAPM авторы признают: лучшую теорию они предсказывали ещё в первом издании, 35 лет назад. «Рано или поздно мы окажемся правы».'],
+ ['Менеджер, который застрелился бы','Молодой управляющий хвастался, что застрелится, если не будет обыгрывать рынок на 25% в год. «Сегодня мало кто скажет это, не краснея».'],
+ ['Прощание Гекльберри Финна','Книга кончается цитатой Твена: писать больше не о чем, и автор этому рад. Тон сознательно не-академический.'],
+ ['Два ресторана','Волну слияний объясняют притчей: два пустых ресторана, первый гость выбирает монеткой, остальные идут за ним. Каскад рациональных решений рождает иррациональную моду.']
+];
+const vg=document.getElementById('voice-grid');
+voice.forEach(v=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<h3 style="max-width:100%;font-size:19px">${v[0]}</h3><p style="margin-top:10px">${v[1]}</p>`;vg.appendChild(d);});
+
+const lineage=[
+ ['NPV / разделение','Ирвинг Фишер','Теория процента и теорема разделения: инвестрешение отделимо от потребительских предпочтений владельца.'],
+ ['Портфель','Гарри Марковиц','Mean-variance оптимизация; диверсификация как математика, а не интуиция.'],
+ ['CAPM','Шарп · Линтнер · Моссин','Цена рыночного риска через бету; нобелевка Шарпу.'],
+ ['Структура капитала','Модильяни · Миллер','Иррелевантность структуры в идеальном мире — отправная точка теории финансирования.'],
+ ['Эффективность','Юджин Фама','Формализация EMH; позже — модель трёх факторов с Кеннетом Френчем.'],
+ ['Опционы','Блэк · Шоулз · Мертон','Формула оценки опционов и риск-нейтральная оценка; основа деривативной индустрии.'],
+ ['Агентская теория','Дженсен · Меклинг','Фирма как пучок контрактов; агентские издержки между принципалом и агентом.'],
+ ['Поведение','Канеман · Шиллер','Систематические искажения и «иррациональное изобилие» как вызов чистой EMH.'],
+ ['Пирог','Алекс Эдманс','Grow the Pie: рост пирога вместо дележа; идейная ось главы 20.']
+];
+const ln=document.getElementById('lineage');
+lineage.forEach(l=>{const r=document.createElement('div');r.className='book';r.innerHTML=`<span class="book-tag">${l[0]}</span><div class="book-b"><h4>${l[1]}</h4><p>${l[2]}</p></div>`;ln.appendChild(r);});
+
+const books=[
+ ['оценка','Valuation: Measuring & Managing the Value of Companies','Koller, Goedhart, Wessels (McKinsey)','Прикладная глубина по DCF, ROIC и стоимости — продолжение глав 4–6 и 18 на уровне практика.'],
+ ['оценка','Damodaran on Valuation','Aswath Damodaran','Тончайшая работа со ставками, ростом и «трудными» активами; открытые данные и шаблоны.'],
+ ['учебник','Corporate Finance','Berk & DeMarzo','Альтернативный современный канон — второй угол зрения на те же темы.'],
+ ['практика','Analysis for Financial Management','Robert Higgins','Самое прикладное чтение для будущего CFO: устойчивый рост, планирование, диагностика.'],
+ ['инвестор','A Random Walk Down Wall Street','Burton Malkiel','Продолжение главы 12 для частного инвестора: почему индексные фонды побеждают.'],
+ ['инвестор','The Intelligent Investor','Benjamin Graham','Классика дисциплины и «запаса прочности».'],
+ ['риск','Against the Gods: The Remarkable Story of Risk','Peter Bernstein','История идеи риска — фон под главы 7–9.'],
+ ['кризисы','Manias, Panics, and Crashes','Charles Kindleberger','Процитирована в книге; анатомия пузырей — под проблему №10.'],
+ ['кризисы','This Time Is Different','Reinhart & Rogoff','Эмпирика кризисов восьми веков — источник цифр из заключения.'],
+ ['поведение','Thinking, Fast and Slow','Daniel Kahneman','Фундамент поведенческих финансов главы 12.'],
+ ['цель фирмы','Grow the Pie','Alex Edmans','Первоисточник главы 20: ответственный бизнес как способ создавать акционерную стоимость.']
+];
+const bk=document.getElementById('books');
+books.forEach(b=>{const r=document.createElement('div');r.className='book';r.innerHTML=`<span class="book-tag">${b[0]}</span><div class="book-b"><h4>${b[1]}</h4><div class="auth">${b[2]}</div><p>${b[3]}</p></div>`;bk.appendChild(r);});
+
+const paths=[
+ ['Стать финансовым директором','От оценки к управлению капиталом и стоимостью как система.','Higgins → Valuation (McKinsey) → главы 17–20'],
+ ['Грамотный частный инвестор','Защита от себя и от индустрии: издержки, налоги, диверсификация.','глава 7 + 12 → Malkiel → Bogle → Graham'],
+ ['Понять кризисы','Почему системы рушатся и как распознать заранее.','глава 13 + проблема №10 → Kindleberger → Reinhart & Rogoff'],
+ ['Фронтир и поведение','Туда, где учебник честно признаёт незнание.','главы 8 и 12 → Kahneman → Fama–French → проблемы №2 и №3']
+];
+const pt=document.getElementById('paths');
+paths.forEach(p=>{const d=document.createElement('div');d.className='path';d.innerHTML=`<h4>${p[0]}</h4><p>${p[1]}</p><div class="seq">${p[2]}</div>`;pt.appendChild(d);});
+
+/* ---- nav active + reveal ---- */
+const secs=[...document.querySelectorAll('section')],navs=[...document.querySelectorAll('.nav-a')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const id=e.target.id;navs.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));}}),{rootMargin:'-30% 0px -60% 0px'});
+secs.forEach(s=>io.observe(s));
+const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}}),{threshold:.06});
+document.querySelectorAll('.card,.row,.book,.path,.pivot-box,.versus,.stats,.plan,.part').forEach(el=>{el.classList.add('reveal');ro.observe(el)});
+</script>
+</body>
+</html>
