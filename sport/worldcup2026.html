@@ -10,109 +10,117 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0a0f0d; --bg2:#0e1512; --card:#121b17; --card2:#16221c;
-  --line:#1f2e26; --line2:#2a3d32;
-  --ink:#eef5f0; --soft:#a8bbb0; --dim:#6b7f74;
-  --green:#19c37d; --green-dk:#0e8a57; --gold:#f5c542; --red:#ff5d5d;
+  --bg:#f2f6f1; --card:#ffffff; --card2:#f6faf5;
+  --line:#e2eae1; --line2:#c9d8c9;
+  --ink:#17271d; --soft:#46604f; --dim:#7d917f;
+  --green:#149655; --green-dk:#0c6e3d; --gold:#d99a06; --gold-soft:#fdf3da; --red:#e03131;
   --blue:#2563eb;
-  --pitch:linear-gradient(135deg,#0d3b26 0%,#0a2c1d 100%);
+  --shadow:0 8px 24px -12px rgba(23,60,38,.18);
+  --pitch:linear-gradient(135deg,#1d7a47 0%,#10522e 100%);
 }
 html{scroll-behavior:smooth}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
-body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
-  background:radial-gradient(60% 40% at 50% -5%, rgba(25,195,125,.13) 0%, transparent 70%),
-             radial-gradient(40% 30% at 90% 10%, rgba(245,197,66,.07) 0%, transparent 70%)}
-.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:30px 18px 80px}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(55% 35% at 50% -5%, rgba(20,150,85,.10) 0%, transparent 70%)}
+.wrap{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:30px 18px 80px}
 
-/* ===== HERO ===== */
+/* ===== HERO (газон) ===== */
 .hero{position:relative;border-radius:26px;overflow:hidden;background:var(--pitch);
-  border:1px solid var(--line2);padding:46px 34px 38px;margin-bottom:26px;text-align:center}
-.hero::before{content:"";position:absolute;inset:0;opacity:.18;pointer-events:none;
-  background:repeating-linear-gradient(90deg,transparent 0 60px,rgba(255,255,255,.05) 60px 120px)}
+  box-shadow:var(--shadow);padding:44px 34px 36px;margin-bottom:20px;text-align:center;color:#fff}
+.hero::before{content:"";position:absolute;inset:0;opacity:.16;pointer-events:none;
+  background:repeating-linear-gradient(90deg,transparent 0 64px,rgba(255,255,255,.12) 64px 128px)}
 .hero::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:280px;height:280px;border:2px solid rgba(255,255,255,.06);border-radius:50%;pointer-events:none}
-.hero .fifa{font-size:.74rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);font-weight:700}
-.hero h1{font-family:'Russo One',sans-serif;font-size:clamp(1.9rem,6vw,3.4rem);line-height:1.06;margin:10px 0 6px;
-  background:linear-gradient(180deg,#fff 30%,#9be8c4 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero .sub{color:var(--soft);font-size:.95rem;max-width:560px;margin:0 auto}
+  width:300px;height:300px;border:2px solid rgba(255,255,255,.14);border-radius:50%;pointer-events:none}
+.hero .fifa{font-size:.74rem;letter-spacing:.34em;text-transform:uppercase;color:#ffe9b0;font-weight:700}
+.hero h1{font-family:'Russo One',sans-serif;font-size:clamp(1.9rem,6vw,3.3rem);line-height:1.06;margin:10px 0 6px;color:#fff;
+  text-shadow:0 3px 18px rgba(0,0,0,.25)}
+.hero .sub{color:#d8efdf;font-size:.95rem;max-width:560px;margin:0 auto}
 .hero .flags{font-size:1.5rem;letter-spacing:.2em;margin-top:8px}
 .countdown{position:relative;display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap}
-.cd-cell{background:rgba(0,0,0,.35);border:1px solid var(--line2);border-radius:14px;padding:10px 14px;min-width:74px}
-.cd-cell b{display:block;font-family:'Russo One',sans-serif;font-size:1.7rem;color:var(--gold)}
-.cd-cell span{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
-.live-now{display:inline-flex;align-items:center;gap:9px;background:rgba(255,93,93,.15);border:1px solid rgba(255,93,93,.4);
-  color:#ffb3b3;font-weight:700;padding:10px 20px;border-radius:999px;margin-top:20px;font-size:.95rem}
+.cd-cell{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:10px 14px;min-width:74px;backdrop-filter:blur(3px)}
+.cd-cell b{display:block;font-family:'Russo One',sans-serif;font-size:1.7rem;color:#ffd763}
+.cd-cell span{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:#cfe9d8}
+.live-now{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.92);
+  color:var(--red);font-weight:800;padding:10px 20px;border-radius:999px;margin-top:20px;font-size:.95rem}
 .live-dot{width:9px;height:9px;border-radius:50%;background:var(--red);animation:pulse 1.2s infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-.tz-note{position:relative;margin-top:18px;font-size:.8rem;color:var(--dim)}
-.tz-note b{color:var(--green)}
+.tz-note{position:relative;margin-top:18px;font-size:.8rem;color:#bfe3cc}
+.tz-note b{color:#ffd763}
 
-/* ===== BROADCAST ===== */
+/* ===== BROADCAST + STATUS ===== */
 .tv-bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:var(--card);border:1px solid var(--line);
-  border-radius:18px;padding:14px 18px;margin-bottom:26px;font-size:.86rem;color:var(--soft)}
+  border-radius:18px;padding:13px 18px;margin-bottom:10px;font-size:.86rem;color:var(--soft);box-shadow:var(--shadow)}
 .tv-bar .ic{font-size:1.3rem}
-.tv-bar a{color:var(--green);font-weight:700;text-decoration:none;border-bottom:1px dashed var(--green-dk)}
-.tv-bar a:hover{color:#fff}
+.tv-bar a{color:var(--green-dk);font-weight:700;text-decoration:none;border-bottom:1px dashed var(--green)}
+.tv-bar a:hover{color:var(--green)}
+.res-status{font-size:.78rem;color:var(--dim);background:var(--card2);border:1px dashed var(--line2);
+  border-radius:12px;padding:9px 16px;margin-bottom:22px;display:flex;align-items:center;gap:8px}
+.res-status.ok{color:var(--green-dk);border-color:var(--green);background:#eef9f1}
+.res-status.err{color:#9a6a00;border-color:#e4c878;background:var(--gold-soft)}
 
 /* ===== TABS ===== */
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;position:sticky;top:10px;z-index:30;
-  background:rgba(10,15,13,.86);backdrop-filter:blur(10px);padding:8px;border-radius:16px;border:1px solid var(--line)}
+  background:rgba(242,246,241,.92);backdrop-filter:blur(10px);padding:8px;border-radius:16px;border:1px solid var(--line);box-shadow:var(--shadow)}
 .tab{flex:1;min-width:110px;font-family:'Russo One',sans-serif;font-size:.86rem;padding:12px 10px;border-radius:11px;
   border:1px solid transparent;background:transparent;color:var(--dim);cursor:pointer;transition:all .2s;text-align:center}
 .tab:hover{color:var(--soft)}
-.tab.on{background:var(--green-dk);color:#fff;box-shadow:0 6px 18px -6px rgba(25,195,125,.5)}
+.tab.on{background:var(--green-dk);color:#fff;box-shadow:0 6px 16px -6px rgba(12,110,61,.55)}
 .page{display:none;animation:fadeUp .35s}
 .page.on{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
 h2.sec{font-family:'Russo One',sans-serif;font-size:1.25rem;margin:6px 0 16px;display:flex;align-items:center;gap:10px}
-h2.sec .em{font-size:1.3rem}
 .note{font-size:.78rem;color:var(--dim);margin:-8px 0 18px}
 
 /* ===== FILTERS ===== */
 .fbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
 .chip{font-size:.8rem;font-weight:600;padding:8px 14px;border-radius:999px;cursor:pointer;border:1px solid var(--line2);
   background:var(--card);color:var(--soft);transition:all .15s;user-select:none}
-.chip:hover{border-color:var(--green-dk)}
+.chip:hover{border-color:var(--green)}
 .chip.on{background:var(--green-dk);border-color:var(--green-dk);color:#fff}
 .team-sel{margin-left:auto;background:var(--card);color:var(--ink);border:1px solid var(--line2);border-radius:11px;
   padding:9px 12px;font-family:inherit;font-size:.84rem;max-width:230px}
 .next-btn{font-size:.8rem;font-weight:700;padding:9px 16px;border-radius:999px;cursor:pointer;border:none;
-  background:var(--gold);color:#1a1405;font-family:inherit}
+  background:var(--gold);color:#fff;font-family:inherit;box-shadow:0 5px 14px -5px rgba(217,154,6,.6)}
 
 /* ===== MATCH LIST ===== */
-.day-h{font-family:'Russo One',sans-serif;font-size:1rem;color:var(--green);margin:26px 0 12px;display:flex;align-items:center;gap:10px}
-.day-h::after{content:"";flex:1;height:1px;background:var(--line)}
-.day-h .badge-today{font-size:.66rem;background:var(--gold);color:#1a1405;border-radius:999px;padding:3px 10px;letter-spacing:.08em}
+.day-h{font-family:'Russo One',sans-serif;font-size:1rem;color:var(--green-dk);margin:26px 0 12px;display:flex;align-items:center;gap:10px}
+.day-h::after{content:"";flex:1;height:1px;background:var(--line2)}
+.day-h .badge-today{font-size:.66rem;background:var(--gold);color:#fff;border-radius:999px;padding:3px 10px;letter-spacing:.08em}
+.day-h .badge-tmrw{font-size:.66rem;background:var(--green);color:#fff;border-radius:999px;padding:3px 10px;letter-spacing:.08em}
 .mcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin-bottom:12px;
-  display:grid;grid-template-columns:86px 1fr auto;gap:16px;align-items:center;transition:border-color .2s,transform .15s}
+  display:grid;grid-template-columns:86px 1fr auto;gap:16px;align-items:center;box-shadow:var(--shadow);transition:border-color .2s,transform .15s}
 .mcard:hover{border-color:var(--line2);transform:translateY(-1px)}
-.mcard.is-next{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 14px 34px -18px rgba(245,197,66,.45)}
-.mcard.is-live{border-color:var(--red);box-shadow:0 0 0 1px var(--red)}
+.mcard.is-next{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),var(--shadow)}
+.mcard.is-live{border-color:var(--red);box-shadow:0 0 0 1px var(--red),var(--shadow)}
 .m-time{text-align:center}
-.m-time .t{font-family:'Russo One',sans-serif;font-size:1.45rem;color:var(--ink)}
+.m-time .t{font-family:'Russo One',sans-serif;font-size:1.45rem}
 .m-time .s{font-size:.66rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
 .m-time .lbl{display:inline-block;font-size:.62rem;font-weight:800;border-radius:6px;padding:2px 7px;margin-top:5px}
 .lbl.live{background:var(--red);color:#fff;animation:pulse 1.4s infinite}
-.lbl.next{background:var(--gold);color:#1a1405}
+.lbl.next{background:var(--gold);color:#fff}
+.lbl.done{background:var(--line);color:var(--soft)}
 .m-mid{min-width:0}
 .m-teams{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-weight:700;font-size:1.02rem}
 .m-teams .fl{font-size:1.35rem}
 .m-teams .vs{color:var(--dim);font-size:.78rem;font-weight:600}
+.m-teams .sc{font-family:'Russo One',sans-serif;font-size:1.15rem;color:var(--green-dk);
+  background:var(--card2);border:1px solid var(--line2);border-radius:9px;padding:1px 11px}
+.m-teams .sc.live{color:var(--red);border-color:var(--red)}
 .m-meta{font-size:.76rem;color:var(--dim);margin-top:6px}
-.m-meta .grp{color:var(--green);font-weight:700}
+.m-meta .grp{color:var(--green-dk);font-weight:700}
 .predict{margin-top:10px;max-width:430px}
 .p-bar{display:flex;height:7px;border-radius:99px;overflow:hidden;background:var(--line)}
 .p-bar i{display:block;height:100%}
 .p-bar .p1{background:var(--green)}
-.p-bar .px{background:#55687f}
+.p-bar .px{background:#a9b8aa}
 .p-bar .p2{background:var(--gold)}
 .p-leg{display:flex;justify-content:space-between;font-size:.68rem;color:var(--dim);margin-top:4px}
 .p-leg b{color:var(--soft)}
 .m-act{display:flex;flex-direction:column;gap:7px;align-items:stretch}
 .tv-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:.74rem;font-weight:700;
   padding:8px 13px;border-radius:9px;text-decoration:none;white-space:nowrap;transition:filter .15s}
-.tv-btn:hover{filter:brightness(1.18)}
+.tv-btn:hover{filter:brightness(1.12)}
 .tv-okko{background:#5d2ee8;color:#fff}
 .tv-match{background:#c8102e;color:#fff}
 @media(max-width:680px){
@@ -122,63 +130,122 @@ h2.sec .em{font-size:1.3rem}
   .m-time .t{font-size:1.15rem}
 }
 
-/* ===== GROUPS ===== */
-.groups-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px}
-.gcard{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
-.gcard h3{font-family:'Russo One',sans-serif;font-size:.92rem;padding:12px 16px;background:var(--card2);
-  border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
-.gcard h3 .gl{color:var(--gold)}
-.gcard h3 .hint{font-size:.64rem;color:var(--dim);font-family:'Inter',sans-serif;font-weight:600}
-.trow{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
-.trow:last-child{border-bottom:none}
-.trow:hover{background:var(--card2)}
-.trow .fl{font-size:1.3rem;width:28px;text-align:center}
-.trow .nm{flex:1;font-weight:600;font-size:.86rem;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.trow .rk{font-size:.66rem;color:var(--dim);white-space:nowrap}
-.str{width:62px;height:5px;border-radius:99px;background:var(--line);overflow:hidden;flex:0 0 auto}
-.str i{display:block;height:100%;background:linear-gradient(90deg,var(--green-dk),var(--green))}
-.fav-star{cursor:pointer;font-size:1rem;color:var(--line2);transition:color .15s,transform .15s;background:none;border:none;padding:0 2px}
-.fav-star.on{color:var(--gold);transform:scale(1.15)}
-.fav-hint{font-size:.76rem;color:var(--dim);margin-bottom:14px}
-.fav-hint b{color:var(--gold)}
+/* ===== GROUPS (раскрывающиеся карточки-таблицы) ===== */
+.g-legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.76rem;color:var(--dim);margin-bottom:14px;align-items:center}
+.g-legend .sw{display:inline-block;width:22px;height:0;border-top:3px solid var(--green);vertical-align:middle;margin-right:6px;border-radius:2px}
+.g-legend .sw.dash{border-top-style:dashed;border-top-color:var(--gold)}
+.exp-all{margin-left:auto;font-size:.78rem;font-weight:700;padding:8px 16px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line2);background:var(--card);color:var(--soft);font-family:inherit}
+.exp-all:hover{border-color:var(--green)}
+.groups-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.gcard{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);align-self:start}
+.ghead{width:100%;font-family:'Russo One',sans-serif;font-size:.95rem;padding:13px 16px;background:var(--card2);
+  border:none;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;
+  cursor:pointer;color:var(--ink);font-size:.95rem}
+.ghead .gl{color:var(--green-dk)}
+.ghead .car{font-size:.8rem;color:var(--dim);transition:transform .25s;font-family:'Inter',sans-serif;font-weight:600}
+.gcard.open .ghead .car{transform:rotate(180deg)}
+.gtab{width:100%;border-collapse:collapse;font-size:.84rem}
+.gtab th{font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);font-weight:700;
+  padding:8px 8px 6px;text-align:center;border-bottom:1px solid var(--line)}
+.gtab th.l{text-align:left;padding-left:14px}
+.gtab td{padding:8px;text-align:center;border-bottom:1px solid var(--line);color:var(--soft)}
+.gtab td.l{text-align:left;padding-left:14px;color:var(--ink);font-weight:600;white-space:nowrap}
+.gtab td.pts{font-weight:800;color:var(--ink)}
+.gtab tr:nth-child(-n+2) td{background:rgba(20,150,85,.05)}
+.gtab tr.qline td{border-bottom:3px solid var(--green)}
+.gtab tr.tline td{border-bottom:2px dashed var(--gold)}
+.gtab tr:last-child td{border-bottom:none}
+.gtab .fl{font-size:1.15rem;margin-right:7px}
+.gtab .rkk{font-size:.66rem;color:var(--dim);font-weight:500}
+.fav-star{cursor:pointer;font-size:.95rem;color:var(--line2);transition:color .15s,transform .15s;background:none;border:none;padding:0 5px 0 0;vertical-align:middle}
+.fav-star.on{color:var(--gold);transform:scale(1.18)}
+.gmx{display:none;border-top:1px solid var(--line);background:var(--card2)}
+.gcard.open .gmx{display:block;animation:fadeUp .3s}
+.gmx-row{display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:.78rem;border-bottom:1px dashed var(--line)}
+.gmx-row:last-child{border-bottom:none}
+.gmx-row .d{color:var(--dim);width:92px;flex:0 0 auto;font-size:.72rem}
+.gmx-row .t{flex:1;min-width:0;font-weight:600}
+.gmx-row .r{font-family:'Russo One',sans-serif;font-size:.82rem;color:var(--green-dk);white-space:nowrap}
+.gmx-row .r.fut{color:var(--dim);font-family:'Inter',sans-serif;font-weight:600}
 
-/* ===== FORECAST ===== */
-.fc-grid{display:grid;grid-template-columns:1fr;gap:22px}
-.fc-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+/* ===== FORECAST + SIM ===== */
+.fc-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow);margin-bottom:22px}
 .frow{display:grid;grid-template-columns:30px 30px 150px 1fr 56px;gap:10px;align-items:center;padding:7px 0;font-size:.88rem}
 .frow .pos{font-family:'Russo One',sans-serif;color:var(--dim);font-size:.8rem}
 .frow .fl{font-size:1.25rem}
 .frow .nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.frow .bar{height:16px;border-radius:6px;background:var(--line);overflow:hidden}
-.frow .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--green-dk),var(--green));
-  border-radius:6px;animation:grow 1s cubic-bezier(.2,.8,.2,1)}
+.frow .bar{height:16px;border-radius:6px;background:var(--card2);border:1px solid var(--line);overflow:hidden}
+.frow .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--green-dk),var(--green));border-radius:5px;animation:grow 1s cubic-bezier(.2,.8,.2,1)}
 .frow:nth-child(2) .bar i{background:linear-gradient(90deg,#b8901f,var(--gold))}
-.frow .pct{font-family:'Russo One',sans-serif;text-align:right;color:var(--green);font-size:.86rem}
+.frow .pct{font-family:'Russo One',sans-serif;text-align:right;color:var(--green-dk);font-size:.86rem}
 .frow:nth-child(2) .pct{color:var(--gold)}
 @keyframes grow{from{width:0}}
 @media(max-width:560px){.frow{grid-template-columns:24px 26px 96px 1fr 48px;font-size:.78rem}}
-.sim-box{text-align:center;padding:8px 0 2px}
+
+.sim-head{text-align:center;padding:6px 0 2px}
 .sim-btn{font-family:'Russo One',sans-serif;font-size:1rem;padding:15px 34px;border-radius:999px;border:none;cursor:pointer;
-  background:linear-gradient(135deg,var(--green-dk),var(--green));color:#fff;box-shadow:0 12px 30px -10px rgba(25,195,125,.55);
-  transition:transform .15s}
+  background:linear-gradient(135deg,var(--green-dk),var(--green));color:#fff;box-shadow:0 12px 28px -10px rgba(12,110,61,.5);transition:transform .15s}
 .sim-btn:hover{transform:translateY(-2px)}
-.sim-res{margin-top:18px;font-size:1rem;color:var(--soft);min-height:64px}
-.sim-res .champ{font-family:'Russo One',sans-serif;font-size:1.6rem;color:var(--gold);display:block;margin-top:6px;animation:fadeUp .5s}
+.champ-banner{margin:20px auto 6px;max-width:560px;text-align:center;background:var(--gold-soft);border:1px solid #ecd9a0;
+  border-radius:18px;padding:18px 22px;animation:fadeUp .5s}
+.champ-banner .cb-t{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:#9a6a00;font-weight:700}
+.champ-banner .cb-n{font-family:'Russo One',sans-serif;font-size:1.7rem;margin-top:4px}
+.champ-banner .cb-s{font-size:.8rem;color:var(--soft);margin-top:6px}
+
+.sim-sub{font-family:'Russo One',sans-serif;font-size:1rem;color:var(--green-dk);margin:26px 0 12px;display:flex;align-items:center;gap:10px}
+.sim-sub::after{content:"";flex:1;height:1px;background:var(--line2)}
+.sg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:12px}
+.sg-card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;align-self:start}
+.sg-h{width:100%;border:none;background:var(--card2);font-family:'Russo One',sans-serif;font-size:.8rem;padding:9px 12px;
+  display:flex;justify-content:space-between;cursor:pointer;color:var(--ink);border-bottom:1px solid var(--line)}
+.sg-h .car{color:var(--dim);font-family:'Inter',sans-serif;transition:transform .25s}
+.sg-card.open .sg-h .car{transform:rotate(180deg)}
+.sg-row{display:flex;align-items:center;gap:7px;padding:6px 12px;font-size:.78rem;border-bottom:1px solid var(--line)}
+.sg-row .nm{flex:1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sg-row .pp{font-weight:800}
+.sg-row.qline{border-bottom:3px solid var(--green)}
+.sg-row.tline{border-bottom:2px dashed var(--gold)}
+.sg-row:last-child{border-bottom:none}
+.sg-mx{display:none;background:var(--card2);border-top:1px solid var(--line)}
+.sg-card.open .sg-mx{display:block}
+.sg-mx .gmx-row{padding:6px 12px}
+
+/* сетка плей-офф с линиями */
+.bracket-wrap{overflow-x:auto;padding:6px 2px 14px}
+.bracket{display:flex;min-width:1020px;gap:26px}
+.round{display:flex;flex-direction:column;flex:1;min-width:185px}
+.rtitle{text-align:center;font-weight:800;font-size:.7rem;color:var(--dim);margin-bottom:10px;text-transform:uppercase;letter-spacing:.12em}
+.rbody{flex:1;display:flex;flex-direction:column;justify-content:space-around}
+.pair{flex:1;display:flex;flex-direction:column;justify-content:space-around;position:relative}
+.pair::after{content:'';position:absolute;right:-14px;top:25%;bottom:25%;width:2px;background:var(--line2)}
+.round:last-child .pair::after{display:none}
+.bm{position:relative;background:var(--card);border:1px solid var(--line2);border-radius:10px;padding:5px 9px;margin:5px 0;font-size:.76rem;box-shadow:var(--shadow)}
+.round:not(:first-child) .bm::before{content:'';position:absolute;right:100%;top:50%;width:13px;height:2px;background:var(--line2)}
+.bm .br{display:flex;align-items:center;gap:6px;padding:2px 0}
+.bm .br .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--soft)}
+.bm .br.w .nm{font-weight:800;color:var(--ink)}
+.bm .br .gs{font-family:'Russo One',sans-serif;font-size:.78rem;color:var(--dim)}
+.bm .br.w .gs{color:var(--green-dk)}
+.bm .pen{font-size:.62rem;color:var(--gold);font-weight:700}
+.bm.final-bm{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),var(--shadow)}
+.third-line{margin-top:14px;text-align:center;font-size:.82rem;color:var(--soft)}
+.third-line b{color:var(--ink)}
 
 /* ===== PLAYERS ===== */
 .pl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(218px,1fr));gap:14px}
 .pcard{position:relative;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;overflow:hidden;
-  transition:transform .18s,border-color .18s}
+  box-shadow:var(--shadow);transition:transform .18s,border-color .18s}
 .pcard:hover{transform:translateY(-3px);border-color:var(--line2)}
-.pcard::before{content:"";position:absolute;inset:0;opacity:.1;pointer-events:none;
+.pcard::before{content:"";position:absolute;inset:0;opacity:.07;pointer-events:none;
   background:radial-gradient(70% 60% at 100% 0%,var(--green) 0%,transparent 60%)}
 .pcard .rate{position:absolute;top:14px;right:14px;font-family:'Russo One',sans-serif;font-size:1.5rem;color:var(--gold)}
 .pcard .rate small{display:block;font-size:.55rem;letter-spacing:.14em;color:var(--dim);text-align:center}
 .pcard .pfl{font-size:2rem}
 .pcard .pnm{font-weight:800;font-size:1.04rem;margin-top:8px}
 .pcard .pcl{font-size:.76rem;color:var(--dim);margin-top:2px}
-.pcard .ppos{display:inline-block;font-size:.64rem;font-weight:800;letter-spacing:.1em;color:var(--green);
-  border:1px solid var(--green-dk);border-radius:6px;padding:2px 8px;margin-top:10px}
+.pcard .ppos{display:inline-block;font-size:.64rem;font-weight:800;letter-spacing:.1em;color:var(--green-dk);
+  border:1px solid var(--green);border-radius:6px;padding:2px 8px;margin-top:10px}
 .gb-line{margin-top:12px}
 .gb-line .cap{display:flex;justify-content:space-between;font-size:.68rem;color:var(--dim);margin-bottom:4px}
 .gb-line .cap b{color:var(--gold)}
@@ -186,7 +253,7 @@ h2.sec .em{font-size:1.3rem}
 .gb-bar i{display:block;height:100%;background:linear-gradient(90deg,#b8901f,var(--gold));border-radius:99px}
 
 footer{margin-top:46px;text-align:center;font-size:.74rem;color:var(--dim);line-height:1.7}
-footer a{color:var(--green)}
+footer a{color:var(--green-dk)}
 </style>
 </head>
 <body>
@@ -210,6 +277,7 @@ footer a{color:var(--green)}
   <span class="ic">📺</span>
   <span>Все 104 матча в России эксклюзивно показывает <a href="https://matchtv.ru/on-air" target="_blank" rel="noopener">Матч ТВ</a> (бесплатно, эфир + matchtv.ru). В <a href="https://okko.tv/category/sport" target="_blank" rel="noopener">Окко</a> доступна ретрансляция каналов «Матч!» по подписке — кнопки у каждого матча.</span>
 </div>
+<div class="res-status" id="resStatus">🔄 Загружаю результаты матчей…</div>
 
 <div class="tabs" id="tabs">
   <button class="tab on" data-p="matches">⚽ Матчи</button>
@@ -237,36 +305,42 @@ footer a{color:var(--green)}
 
 <!-- ============ GROUPS ============ -->
 <div class="page" data-page="groups">
-  <h2 class="sec"><span class="em">🏟</span>Групповой этап</h2>
-  <div class="fav-hint">Нажми <b>★</b> рядом с командой — её матчи попадут в фильтр «Избранные». В скобках — место в рейтинге ФИФА, полоска — сила команды, % — шанс на титул.</div>
+  <h2 class="sec">🏟 Групповой этап — турнирные таблицы</h2>
+  <div class="g-legend">
+    <span><span class="sw"></span>выход в плей-офф (топ-2)</span>
+    <span><span class="sw dash"></span>возможный выход (8 лучших третьих)</span>
+    <span>★ — в избранное</span>
+    <button class="exp-all" id="expAll">Развернуть все группы</button>
+  </div>
+  <p class="note">Клик по заголовку группы — календарь её матчей со счётом. Таблицы считаются автоматически по загруженным результатам.</p>
   <div class="groups-grid" id="groupsGrid"></div>
 </div>
 
 <!-- ============ FORECAST ============ -->
 <div class="page" data-page="forecast">
-  <h2 class="sec"><span class="em">🔮</span>Кто возьмёт кубок?</h2>
+  <h2 class="sec">🔮 Кто возьмёт кубок?</h2>
   <p class="note">Вероятности на основе котировок букмекеров и рынков предсказаний (Kalshi / Polymarket / Opta) на 10 июня 2026.</p>
-  <div class="fc-grid">
-    <div class="fc-card" id="fcChart"></div>
-    <div class="fc-card sim-box">
-      <h2 class="sec" style="justify-content:center"><span class="em">🎲</span>Симулятор чемпиона</h2>
-      <p class="note" style="text-align:center">Один клик — одна случайная развязка турнира с учётом реальных вероятностей. Спорь с друзьями!</p>
+  <div class="fc-card" id="fcChart"></div>
+  <div class="fc-card">
+    <div class="sim-head">
+      <h2 class="sec" style="justify-content:center">🎲 Симулятор турнира</h2>
+      <p class="note" style="text-align:center">Полный розыгрыш ЧМ: все 72 матча групп, таблицы, 8 лучших третьих и сетка плей-офф до финала.<br>Каждый клик — новая судьба турнира. Спорь с друзьями!</p>
       <button class="sim-btn" id="simBtn">Симулировать турнир</button>
-      <div class="sim-res" id="simRes"></div>
     </div>
+    <div id="simOut"></div>
   </div>
 </div>
 
 <!-- ============ PLAYERS ============ -->
 <div class="page" data-page="players">
-  <h2 class="sec"><span class="em">⭐</span>Звёзды турнира</h2>
+  <h2 class="sec">⭐ Звёзды турнира</h2>
   <p class="note">Рейтинг формы — экспертная оценка сезона-2025/26. Золотая полоска — шанс взять «Золотой мяч» ЧМ по котировкам букмекеров.</p>
   <div class="pl-grid" id="plGrid"></div>
 </div>
 
 <footer>
   Данные: жеребьёвка ФИФА от 05.12.2025, расписание FIFA.com, котировки букмекеров на 10.06.2026.<br>
-  Прогнозы носят развлекательный характер. Сделано для друзей · <a href="../index.html">Demo Portal</a>
+  Результаты подгружаются автоматически. Прогнозы носят развлекательный характер · <a href="../index.html">Demo Portal</a>
 </footer>
 </div>
 
@@ -323,7 +397,7 @@ const T={
   PAN:{n:'Панама',f:'🇵🇦',g:'L',rk:30,st:71,p:0.05,ti:0}
 };
 
-/* [UTC ISO, stage, home, away, stadium, city, match#] — время в UTC */
+/* [UTC ISO, stage, home, away, stadium, city, match#] */
 const M=[
  ['2026-06-11T19:00Z','A','MEX','RSA','Эстадио Ацтека','Мехико',1],
  ['2026-06-12T02:00Z','A','KOR','CZE','Эстадио Акрон','Гвадалахара',2],
@@ -397,7 +471,6 @@ const M=[
  ['2026-06-27T23:30Z','K','COD','UZB','Mercedes-Benz','Атланта',72],
  ['2026-06-28T02:00Z','J','ALG','AUT','Arrowhead Stadium','Канзас-Сити',69],
  ['2026-06-28T02:00Z','J','JOR','ARG','AT&T Stadium','Даллас',70],
- /* 1/16 финала */
  ['2026-06-28T19:00Z','r32','2-е гр. A','2-е гр. B','SoFi Stadium','Лос-Анджелес',73],
  ['2026-06-29T17:00Z','r32','Поб. гр. C','2-е гр. F','NRG Stadium','Хьюстон',76],
  ['2026-06-29T20:30Z','r32','Поб. гр. E','3-е место','Gillette Stadium','Бостон',74],
@@ -414,7 +487,6 @@ const M=[
  ['2026-07-03T18:00Z','r32','2-е гр. D','2-е гр. G','AT&T Stadium','Даллас',88],
  ['2026-07-03T22:00Z','r32','Поб. гр. J','2-е гр. H','Hard Rock Stadium','Майами',86],
  ['2026-07-04T01:30Z','r32','Поб. гр. K','3-е место','Arrowhead Stadium','Канзас-Сити',87],
- /* 1/8 */
  ['2026-07-04T17:00Z','r16','Поб. м73','Поб. м75','NRG Stadium','Хьюстон',90],
  ['2026-07-04T21:00Z','r16','Поб. м74','Поб. м77','Lincoln Financial','Филадельфия',89],
  ['2026-07-05T20:00Z','r16','Поб. м76','Поб. м78','MetLife Stadium','Нью-Йорк',91],
@@ -423,12 +495,10 @@ const M=[
  ['2026-07-07T00:00Z','r16','Поб. м81','Поб. м82','Lumen Field','Сиэтл',94],
  ['2026-07-07T16:00Z','r16','Поб. м86','Поб. м88','Mercedes-Benz','Атланта',95],
  ['2026-07-07T20:00Z','r16','Поб. м85','Поб. м87','BC Place','Ванкувер',96],
- /* 1/4 */
  ['2026-07-09T20:00Z','qf','Поб. м89','Поб. м90','Gillette Stadium','Бостон',97],
  ['2026-07-10T19:00Z','qf','Поб. м93','Поб. м94','SoFi Stadium','Лос-Анджелес',98],
  ['2026-07-11T21:00Z','qf','Поб. м91','Поб. м92','Hard Rock Stadium','Майами',99],
  ['2026-07-12T01:00Z','qf','Поб. м95','Поб. м96','Arrowhead Stadium','Канзас-Сити',100],
- /* SF, бронза, финал */
  ['2026-07-14T19:00Z','sf','Поб. ¼ №97','Поб. ¼ №98','AT&T Stadium','Даллас',101],
  ['2026-07-15T19:00Z','sf','Поб. ¼ №99','Поб. ¼ №100','Mercedes-Benz','Атланта',102],
  ['2026-07-18T21:00Z','fin','Матч за 3-е место','','Hard Rock Stadium','Майами',103],
@@ -457,11 +527,14 @@ const PLAYERS=[
 const STAGE_NAME={r32:'1/16 финала',r16:'1/8 финала',qf:'Четвертьфинал',sf:'Полуфинал',fin:'Финальные матчи'};
 const OKKO='https://okko.tv/category/sport', MATCHTV='https://matchtv.ru/on-air';
 
-/* ================= HELPERS ================= */
+/* ================= STATE / HELPERS ================= */
 const $=s=>document.querySelector(s);
 const esc=s=>{const d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;};
 let FAVS=new Set(); try{FAVS=new Set(JSON.parse(localStorage.getItem('wc26-favs')||'[]'));}catch(e){}
 const saveFavs=()=>{try{localStorage.setItem('wc26-favs',JSON.stringify([...FAVS]));}catch(e){}};
+
+let RESULTS={};   // matchNo -> {hs,as,live}
+let KO_TEAMS={};  // matchNo -> [hCode,aCode] (реальные участники плей-офф из API)
 
 function predict(a,b){
   const pA=1/(1+Math.pow(10,-(T[a].st-T[b].st)/11));
@@ -470,7 +543,12 @@ function predict(a,b){
 }
 const fmtTime=d=>d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
 const fmtDay=d=>d.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'});
+const fmtShort=d=>d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})+' '+fmtTime(d);
 const dayKey=d=>d.toLocaleDateString('ru-RU');
+const koName=no=>{
+  const k=KO_TEAMS[no];
+  return k?[T[k[0]]?(T[k[0]].f+' '+T[k[0]].n):k[0], T[k[1]]?(T[k[1]].f+' '+T[k[1]].n):k[1]]:null;
+};
 
 /* ================= HERO ================= */
 const KICKOFF=new Date('2026-06-11T19:00Z'), FINAL_END=new Date('2026-07-19T22:00Z');
@@ -495,6 +573,61 @@ function renderHero(){
 }
 renderHero(); setInterval(renderHero,1000);
 
+/* ================= АВТОЗАГРУЗКА РЕЗУЛЬТАТОВ ================= */
+async function loadResults(){
+  const el=$('#resStatus');
+  try{
+    const url='https://api.fifa.com/api/v3/calendar/matches?idCompetition=17&from=2026-06-10T00:00:00Z&to=2026-07-21T00:00:00Z&language=en&count=200';
+    const r=await fetch(url);
+    if(!r.ok)throw new Error('http '+r.status);
+    const data=await r.json();
+    let n=0;
+    for(const it of (data.Results||[])){
+      const hc=it.Home&&(it.Home.Abbreviation||it.Home.IdCountry);
+      const ac=it.Away&&(it.Away.Abbreviation||it.Away.IdCountry);
+      const dt=new Date(it.Date).getTime();
+      /* групповые ищем по парам кодов, плей-офф — по времени начала */
+      let m=M.find(x=>x[1].length===1&&((x[2]===hc&&x[3]===ac)||(x[2]===ac&&x[3]===hc)));
+      if(!m)m=M.find(x=>x[1].length>1&&Math.abs(new Date(x[0]).getTime()-dt)<45*60000);
+      if(!m)continue;
+      if(m[1].length>1&&hc&&ac)KO_TEAMS[m[6]]=[hc,ac];
+      const hs=it.Home&&it.Home.Score, as=it.Away&&it.Away.Score;
+      const st=it.MatchStatus; /* 0 — завершён, 3 — идёт */
+      if(hs==null||as==null||st===1)continue;
+      const flip=(m[1].length===1&&m[2]===ac);
+      RESULTS[m[6]]={hs:flip?as:hs, as:flip?hs:as, live:st===3};
+      n++;
+    }
+    el.className='res-status ok';
+    el.innerHTML=n
+      ?`✅ Результаты загружены автоматически: ${n} матч(ей) · обновление каждые 2 мин · ${fmtTime(new Date())}`
+      :'✅ Связь с сервером FIFA есть. Матчи ещё не сыграны — счёт появится здесь автоматически';
+    if(n){renderMatches();renderGroups();}
+  }catch(e){
+    el.className='res-status err';
+    el.innerHTML='⚠️ Результаты сейчас недоступны (нет связи с сервером FIFA) — показаны расписание и прогнозы. Попробую снова через 2 минуты';
+  }
+}
+loadResults(); setInterval(loadResults,120000);
+
+/* ================= ТАБЛИЦЫ ГРУПП ================= */
+function computeStandings(g,res){
+  const rows={};
+  Object.keys(T).filter(k=>T[k].g===g).forEach(k=>rows[k]={k,pl:0,w:0,d:0,l:0,gf:0,ga:0,pts:0});
+  for(const m of M){
+    if(m[1]!==g)continue;
+    const r=res[m[6]];
+    if(!r||r.hs==null||r.live)continue;
+    const A=rows[m[2]],B=rows[m[3]];
+    A.pl++;B.pl++;A.gf+=r.hs;A.ga+=r.as;B.gf+=r.as;B.ga+=r.hs;
+    if(r.hs>r.as){A.w++;B.l++;A.pts+=3;}
+    else if(r.hs<r.as){B.w++;A.l++;B.pts+=3;}
+    else{A.d++;B.d++;A.pts++;B.pts++;}
+  }
+  return Object.values(rows).sort((a,b)=>
+    b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga)||b.gf-a.gf||T[a.k].rk-T[b.k].rk);
+}
+
 /* ================= MATCHES ================= */
 let stageFilter='all', teamFilter='';
 
@@ -511,33 +644,38 @@ function renderMatches(){
   const now=new Date(), list=$('#matchList');
   const vis=M.filter(matchVisible);
   if(!vis.length){list.innerHTML='<p class="note" style="margin-top:20px">Нет матчей по выбранному фильтру. Отметь команды звёздочкой ★ на вкладке «Группы».</p>';return;}
-  const nextM=M.find(m=>new Date(m[0])>now);
+  const nextM=M.find(m=>new Date(m[0])>now && !RESULTS[m[6]]);
   let html='', lastDay='';
   for(const m of vis){
     const [iso,st,h,a,stad,city,no]=m;
-    const dt=new Date(iso), isGroup=st.length===1;
+    const dt=new Date(iso), isGroup=st.length===1, res=RESULTS[no];
     const dk=dayKey(dt);
     if(dk!==lastDay){
       lastDay=dk;
       const today=dayKey(now)===dk, tmrw=dayKey(new Date(now.getTime()+864e5))===dk;
-      html+=`<div class="day-h">${esc(fmtDay(dt))}${today?'<span class="badge-today">сегодня</span>':tmrw?'<span class="badge-today" style="background:var(--green);color:#06251a">завтра</span>':''}</div>`;
+      html+=`<div class="day-h">${esc(fmtDay(dt))}${today?'<span class="badge-today">сегодня</span>':tmrw?'<span class="badge-tmrw">завтра</span>':''}</div>`;
     }
-    const live=now>=dt && now<new Date(dt.getTime()+125*60000);
+    const live=res?res.live:(now>=dt && now<new Date(dt.getTime()+125*60000));
+    const done=res&&!res.live;
     const isNext=nextM===m;
     let teams, meta, pred='';
+    const score=res?`<span class="sc${res.live?' live':''}">${res.hs} : ${res.as}</span>`:'<span class="vs">vs</span>';
     if(isGroup){
-      const p=predict(h,a);
-      teams=`<span class="fl">${T[h].f}</span> ${esc(T[h].n)} <span class="vs">vs</span> ${esc(T[a].n)} <span class="fl">${T[a].f}</span>`;
+      teams=`<span class="fl">${T[h].f}</span> ${esc(T[h].n)} ${score} ${esc(T[a].n)} <span class="fl">${T[a].f}</span>`;
       meta=`<span class="grp">Группа ${st}</span> · матч №${no} · ${esc(stad)}, ${esc(city)}`;
-      pred=`<div class="predict"><div class="p-bar"><i class="p1" style="width:${p.h}%"></i><i class="px" style="width:${p.d}%"></i><i class="p2" style="width:${p.a}%"></i></div>
-        <div class="p-leg"><span>П1 <b>${p.h}%</b></span><span>Х <b>${p.d}%</b></span><span>П2 <b>${p.a}%</b></span></div></div>`;
+      if(!done){
+        const p=predict(h,a);
+        pred=`<div class="predict"><div class="p-bar"><i class="p1" style="width:${p.h}%"></i><i class="px" style="width:${p.d}%"></i><i class="p2" style="width:${p.a}%"></i></div>
+          <div class="p-leg"><span>П1 <b>${p.h}%</b></span><span>Х <b>${p.d}%</b></span><span>П2 <b>${p.a}%</b></span></div></div>`;
+      }
     }else{
-      teams=a?`🏆 ${esc(h)} <span class="vs">vs</span> ${esc(a)}`:`🏆 ${esc(h)}`;
+      const real=koName(no);
+      teams=real?`🏆 ${real[0]} ${score} ${real[1]}`:(a?`🏆 ${esc(h)} <span class="vs">vs</span> ${esc(a)}`:`🏆 ${esc(h)}`);
       meta=`<span class="grp">${STAGE_NAME[st]||''}</span> · матч №${no} · ${esc(stad)}, ${esc(city)}`;
     }
     html+=`<div class="mcard${isNext?' is-next':''}${live?' is-live':''}">
       <div class="m-time"><div class="t">${fmtTime(dt)}</div><div class="s">ваше время</div>
-        ${live?'<span class="lbl live">LIVE</span>':isNext?'<span class="lbl next">ближайший</span>':''}</div>
+        ${live?'<span class="lbl live">LIVE</span>':done?'<span class="lbl done">завершён</span>':isNext?'<span class="lbl next">ближайший</span>':''}</div>
       <div class="m-mid"><div class="m-teams">${teams}</div><div class="m-meta">${meta}</div>${pred}</div>
       <div class="m-act">
         <a class="tv-btn tv-okko" href="${OKKO}" target="_blank" rel="noopener">▶ Окко</a>
@@ -562,47 +700,78 @@ $('#nextBtn').onclick=()=>{
   stageFilter='all';teamFilter='';sel.value='';
   document.querySelectorAll('#stageChips .chip').forEach(x=>x.classList.toggle('on',x.dataset.st==='all'));
   renderMatches();
-  setTimeout(()=>{const el=document.querySelector('.mcard.is-next')||document.querySelector('.mcard.is-live');
+  setTimeout(()=>{const el=document.querySelector('.mcard.is-live')||document.querySelector('.mcard.is-next');
     if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},60);
 };
 
-/* ================= GROUPS ================= */
-function renderGroups(){
-  const groups={};
-  for(const [k,t] of Object.entries(T)){(groups[t.g]=groups[t.g]||[]).push(k);}
-  $('#groupsGrid').innerHTML=Object.keys(groups).sort().map(g=>{
-    const rows=groups[g].sort((a,b)=>T[a].rk-T[b].rk).map(k=>{
-      const t=T[k];
-      return `<div class="trow" data-team="${k}">
-        <button class="fav-star${FAVS.has(k)?' on':''}" data-fav="${k}" title="В избранное">★</button>
-        <span class="fl">${t.f}</span>
-        <span class="nm">${esc(t.n)}${t.ti?' <span style="color:var(--gold);font-size:.7rem">'+'🏆'.repeat(Math.min(t.ti,5))+'</span>':''}</span>
-        <span class="rk">#${t.rk}</span>
-        <span class="str"><i style="width:${t.st}%"></i></span>
-        <span class="rk" style="color:${t.p>=5?'var(--gold)':'var(--dim)'}">${t.p>=0.1?t.p+'%':'<0.1%'}</span>
-      </div>`;
-    }).join('');
-    return `<div class="gcard"><h3><span>Группа <span class="gl">${g}</span></span><span class="hint">рейтинг · сила · шанс на титул</span></h3>${rows}</div>`;
+/* ================= GROUPS (раскрывающиеся таблицы) ================= */
+let openGroups=new Set();
+
+function groupMatchesHTML(g,res){
+  return M.filter(m=>m[1]===g).sort((a,b)=>new Date(a[0])-new Date(b[0])).map(m=>{
+    const r=res[m[6]], dt=new Date(m[0]);
+    return `<div class="gmx-row">
+      <span class="d">${fmtShort(dt)}</span>
+      <span class="t">${T[m[2]].f} ${esc(T[m[2]].n)} — ${esc(T[m[3]].n)} ${T[m[3]].f}</span>
+      <span class="r${r?'':' fut'}">${r?`${r.hs}:${r.as}${r.live?' ⏱':''}`:'— : —'}</span>
+    </div>`;
   }).join('');
-  document.querySelectorAll('[data-fav]').forEach(b=>b.onclick=e=>{
+}
+
+function renderGroups(){
+  const grid=$('#groupsGrid');
+  const letters=[...new Set(Object.values(T).map(t=>t.g))].sort();
+  grid.innerHTML=letters.map(g=>{
+    const stand=computeStandings(g,RESULTS);
+    const hasRes=stand.some(r=>r.pl>0);
+    const rows=stand.map((r,i)=>{
+      const t=T[r.k];
+      const cls=i===1?'qline':i===2?'tline':'';
+      return `<tr class="${cls}">
+        <td style="color:var(--dim)">${i+1}</td>
+        <td class="l"><button class="fav-star${FAVS.has(r.k)?' on':''}" data-fav="${r.k}" title="В избранное">★</button><span class="fl">${t.f}</span>${esc(t.n)} <span class="rkk">#${t.rk}</span></td>
+        <td>${r.pl}</td><td>${r.w}</td><td>${r.d}</td><td>${r.l}</td>
+        <td>${r.gf}–${r.ga}</td><td class="pts">${r.pts}</td>
+        <td style="color:${t.p>=5?'var(--gold)':'var(--dim)'};font-size:.72rem">${t.p>=0.1?t.p+'%':'—'}</td>
+      </tr>`;
+    }).join('');
+    return `<div class="gcard${openGroups.has(g)?' open':''}" data-g="${g}">
+      <button class="ghead" data-gh="${g}"><span>Группа <span class="gl">${g}</span>${hasRes?'':' <span style="font-size:.62rem;color:var(--dim);font-family:Inter">— до старта</span>'}</span><span class="car">▼ матчи</span></button>
+      <table class="gtab">
+        <thead><tr><th>#</th><th class="l">Команда</th><th>И</th><th>В</th><th>Н</th><th>П</th><th>Мячи</th><th>О</th><th>🏆</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="gmx">${groupMatchesHTML(g,RESULTS)}</div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('[data-gh]').forEach(b=>b.onclick=()=>{
+    const g=b.dataset.gh;
+    openGroups.has(g)?openGroups.delete(g):openGroups.add(g);
+    b.closest('.gcard').classList.toggle('open');
+  });
+  grid.querySelectorAll('[data-fav]').forEach(b=>b.onclick=e=>{
     e.stopPropagation();
     const k=b.dataset.fav;
     FAVS.has(k)?FAVS.delete(k):FAVS.add(k);
     saveFavs();b.classList.toggle('on');renderMatches();
   });
-  document.querySelectorAll('.trow').forEach(r=>r.onclick=()=>{
-    sel.value=r.dataset.team;teamFilter=r.dataset.team;
-    document.querySelector('.tab[data-p="matches"]').click();
-    renderMatches();window.scrollTo({top:0,behavior:'smooth'});
-  });
 }
 renderGroups();
+
+$('#expAll').onclick=()=>{
+  const letters=[...new Set(Object.values(T).map(t=>t.g))];
+  const allOpen=openGroups.size===letters.length;
+  openGroups=allOpen?new Set():new Set(letters);
+  $('#expAll').textContent=allOpen?'Развернуть все группы':'Свернуть все группы';
+  renderGroups();
+};
 
 /* ================= FORECAST ================= */
 function renderForecast(){
   const top=Object.entries(T).filter(([,t])=>t.p>=0.4).sort((a,b)=>b[1].p-a[1].p).slice(0,14);
   const max=top[0][1].p;
-  $('#fcChart').innerHTML=`<h2 class="sec" style="margin-top:0"><span class="em">📈</span>Вероятность победы в турнире</h2>`+
+  $('#fcChart').innerHTML=`<h2 class="sec" style="margin-top:0">📈 Вероятность победы в турнире</h2>`+
     top.map(([k,t],i)=>`<div class="frow">
       <span class="pos">${i+1}</span><span class="fl">${t.f}</span><span class="nm">${esc(t.n)}</span>
       <span class="bar"><i style="width:${Math.round(t.p/max*100)}%"></i></span>
@@ -611,16 +780,155 @@ function renderForecast(){
 }
 renderForecast();
 
-$('#simBtn').onclick=()=>{
-  const pool=Object.entries(T).map(([k,t])=>[k,Math.max(t.p,.05)]);
-  const total=pool.reduce((s,[,p])=>s+p,0);
-  let r=Math.random()*total, champ=pool[0][0];
-  for(const [k,p] of pool){r-=p;if(r<=0){champ=k;break;}}
-  const t=T[champ];
-  const lines=['Финальный свисток на «МетЛайф»…','5 июля, четвертьфиналы отгремели…','Серия пенальти решила всё…','104 матча позади…','Драма в дополнительное время…'];
-  $('#simRes').innerHTML=`${lines[Math.floor(Math.random()*lines.length)]}
-    <span class="champ">${t.f} ${esc(t.n)} — чемпион мира 2026!</span>`;
-};
+/* ================= СИМУЛЯТОР ТУРНИРА (до каждого матча) ================= */
+function poisson(l){let L=Math.exp(-l),k=0,p=1;do{k++;p*=Math.random();}while(p>L);return k-1;}
+function simScore(a,b){
+  const diff=T[a].st-T[b].st;
+  const la=Math.max(.25,1.35+diff*.055), lb=Math.max(.25,1.35-diff*.055);
+  return [Math.min(poisson(la),6),Math.min(poisson(lb),6)];
+}
+function simKOMatch(a,b){
+  let [x,y]=simScore(a,b), pen=false;
+  if(x===y){
+    pen=true;
+    const pA=1/(1+Math.pow(10,-(T[a].st-T[b].st)/11));
+    if(Math.random()<pA)x++;else y++;
+  }
+  return {hs:x,as:y,pen,w:x>y?a:b};
+}
+
+/* слоты 1/16: победители (W), вторые (R) и лучшие третьи по официальной сетке */
+const R32_SLOTS=[
+  {no:73,h:['R','A'],a:['R','B']},
+  {no:74,h:['W','E'],a:['3',['A','B','C','D','F']]},
+  {no:75,h:['W','F'],a:['R','C']},
+  {no:76,h:['W','C'],a:['R','F']},
+  {no:77,h:['W','I'],a:['3',['C','D','F','G','H']]},
+  {no:78,h:['R','E'],a:['R','I']},
+  {no:79,h:['W','A'],a:['3',['C','E','F','H','I']]},
+  {no:80,h:['W','L'],a:['3',['E','H','I','J','K']]},
+  {no:81,h:['W','D'],a:['3',['B','E','F','I','J']]},
+  {no:82,h:['W','G'],a:['3',['A','E','H','I','J']]},
+  {no:83,h:['R','K'],a:['R','L']},
+  {no:84,h:['W','H'],a:['R','J']},
+  {no:85,h:['W','B'],a:['3',['E','F','G','I','J']]},
+  {no:86,h:['W','J'],a:['R','H']},
+  {no:87,h:['W','K'],a:['3',['D','E','I','J','L']]},
+  {no:88,h:['R','D'],a:['R','G']}
+];
+const R16_PAIRS=[[89,[74,77]],[90,[73,75]],[91,[76,78]],[92,[79,80]],[93,[83,84]],[94,[81,82]],[95,[86,88]],[96,[85,87]]];
+const QF_PAIRS=[[97,[89,90]],[98,[93,94]],[99,[91,92]],[100,[95,96]]];
+const SF_PAIRS=[[101,[97,98]],[102,[99,100]]];
+/* порядок отображения сетки сверху вниз (по дереву финала) */
+const VIEW_R32=[[74,77],[73,75],[83,84],[81,82],[76,78],[79,80],[86,88],[85,87]];
+const VIEW_R16=[[89,90],[93,94],[91,92],[95,96]];
+const VIEW_QF=[[97,98],[99,100]];
+
+function simulateTournament(){
+  /* 1. группы: все 72 матча */
+  const res={};
+  for(const m of M){ if(m[1].length===1) res[m[6]]={hs:0,as:0}; }
+  for(const m of M){
+    if(m[1].length!==1)continue;
+    const [hs,as]=simScore(m[2],m[3]);
+    res[m[6]]={hs,as};
+  }
+  const letters=[...new Set(Object.values(T).map(t=>t.g))].sort();
+  const stand={}, W={}, R={}, thirds=[];
+  for(const g of letters){
+    const s=computeStandings(g,res);
+    stand[g]=s; W[g]=s[0].k; R[g]=s[1].k;
+    thirds.push(s[2]);
+  }
+  /* 2. восемь лучших третьих */
+  thirds.sort((a,b)=>b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga)||b.gf-a.gf);
+  const qual3=thirds.slice(0,8).map(x=>x.k);
+  const used=new Set();
+  const pick3=allowed=>{
+    let c=qual3.find(k=>!used.has(k)&&allowed.includes(T[k].g));
+    if(!c)c=qual3.find(k=>!used.has(k));
+    used.add(c);return c;
+  };
+  /* 3. плей-офф */
+  const ko={};
+  const resolve=side=>side[0]==='W'?W[side[1]]:side[0]==='R'?R[side[1]]:pick3(side[1]);
+  for(const s of R32_SLOTS){
+    const h=resolve(s.h), a=resolve(s.a);
+    ko[s.no]={h,a,...simKOMatch(h,a)};
+  }
+  const playRound=pairs=>{
+    for(const [no,[m1,m2]] of pairs){
+      const h=ko[m1].w, a=ko[m2].w;
+      ko[no]={h,a,...simKOMatch(h,a)};
+    }
+  };
+  playRound(R16_PAIRS); playRound(QF_PAIRS); playRound(SF_PAIRS);
+  const f={h:ko[101].w,a:ko[102].w};
+  ko[104]={...f,...simKOMatch(f.h,f.a)};
+  const l1=ko[101].h===ko[101].w?ko[101].a:ko[101].h;
+  const l2=ko[102].h===ko[102].w?ko[102].a:ko[102].h;
+  ko[103]={h:l1,a:l2,...simKOMatch(l1,l2)};
+  return {res,stand,ko,champ:ko[104].w};
+}
+
+function bmHTML(x,final){
+  const row=(k,gs,isW,pen)=>`<div class="br${isW?' w':''}">
+    <span>${T[k].f}</span><span class="nm">${esc(T[k].n)}</span>
+    <span class="gs">${gs}${pen&&isW?'<span class="pen"> п</span>':''}</span></div>`;
+  return `<div class="bm${final?' final-bm':''}">
+    ${row(x.h,x.hs,x.w===x.h,x.pen)}
+    ${row(x.a,x.as,x.w===x.a,x.pen)}
+  </div>`;
+}
+
+function renderSim(){
+  const S=simulateTournament();
+  const c=T[S.champ];
+  let html=`<div class="champ-banner">
+    <div class="cb-t">Чемпион мира — 2026</div>
+    <div class="cb-n">${c.f} ${esc(c.n)}</div>
+    <div class="cb-s">Финал: ${T[S.ko[104].h].f} ${esc(T[S.ko[104].h].n)} ${S.ko[104].hs}:${S.ko[104].as}${S.ko[104].pen?' (пен.)':''} ${esc(T[S.ko[104].a].n)} ${T[S.ko[104].a].f} · МетЛайф, Нью-Йорк</div>
+  </div>`;
+
+  /* групповой этап */
+  html+=`<div class="sim-sub">Групповой этап — итоговые таблицы (клик — счёт всех матчей)</div><div class="sg-grid">`;
+  const letters=Object.keys(S.stand).sort();
+  for(const g of letters){
+    const rows=S.stand[g].map((r,i)=>{
+      const cls=i===1?'qline':i===2?'tline':'';
+      return `<div class="sg-row ${cls}" style="${i>2?'opacity:.55':''}">
+        <span style="color:var(--dim);width:12px">${i+1}</span>
+        <span>${T[r.k].f}</span><span class="nm">${esc(T[r.k].n)}</span>
+        <span style="color:var(--dim);font-size:.7rem">${r.gf}–${r.ga}</span>
+        <span class="pp">${r.pts}</span>
+      </div>`;
+    }).join('');
+    const mx=M.filter(m=>m[1]===g).sort((a,b)=>new Date(a[0])-new Date(b[0])).map(m=>{
+      const r=S.res[m[6]];
+      return `<div class="gmx-row"><span class="t">${T[m[2]].f} ${esc(T[m[2]].n)} — ${esc(T[m[3]].n)} ${T[m[3]].f}</span><span class="r">${r.hs}:${r.as}</span></div>`;
+    }).join('');
+    html+=`<div class="sg-card"><button class="sg-h"><span>Группа ${g}</span><span class="car">▼</span></button>${rows}<div class="sg-mx">${mx}</div></div>`;
+  }
+  html+=`</div>`;
+
+  /* сетка плей-офф */
+  const col=(title,pairs)=>`<div class="round"><div class="rtitle">${title}</div><div class="rbody">${
+    pairs.map(p=>`<div class="pair">${p.map(no=>bmHTML(S.ko[no])).join('')}</div>`).join('')
+  }</div></div>`;
+  html+=`<div class="sim-sub">Сетка плей-офф</div>
+  <div class="bracket-wrap"><div class="bracket">
+    ${col('1/16 финала',VIEW_R32)}
+    ${col('1/8 финала',VIEW_R16)}
+    ${col('1/4 финала',VIEW_QF)}
+    ${col('Полуфиналы',[[101,102]])}
+    <div class="round"><div class="rtitle">Финал · 19 июля</div><div class="rbody"><div class="pair">${bmHTML(S.ko[104],true)}</div></div></div>
+  </div></div>
+  <div class="third-line">🥉 Матч за 3-е место: <b>${T[S.ko[103].h].f} ${esc(T[S.ko[103].h].n)} ${S.ko[103].hs}:${S.ko[103].as}${S.ko[103].pen?' (пен.)':''} ${esc(T[S.ko[103].a].n)} ${T[S.ko[103].a].f}</b></div>`;
+
+  $('#simOut').innerHTML=html;
+  document.querySelectorAll('#simOut .sg-h').forEach(b=>b.onclick=()=>b.closest('.sg-card').classList.toggle('open'));
+}
+$('#simBtn').onclick=renderSim;
 
 /* ================= PLAYERS ================= */
 $('#plGrid').innerHTML=PLAYERS.map(p=>{
