@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ЧМ-2026 — интерактивный дашборд</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0f0d; --bg2:#0e1512; --card:#121b17; --card2:#16221c;
+  --line:#1f2e26; --line2:#2a3d32;
+  --ink:#eef5f0; --soft:#a8bbb0; --dim:#6b7f74;
+  --green:#19c37d; --green-dk:#0e8a57; --gold:#f5c542; --red:#ff5d5d;
+  --blue:#2563eb;
+  --pitch:linear-gradient(135deg,#0d3b26 0%,#0a2c1d 100%);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background:radial-gradient(60% 40% at 50% -5%, rgba(25,195,125,.13) 0%, transparent 70%),
+             radial-gradient(40% 30% at 90% 10%, rgba(245,197,66,.07) 0%, transparent 70%)}
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:30px 18px 80px}
+
+/* ===== HERO ===== */
+.hero{position:relative;border-radius:26px;overflow:hidden;background:var(--pitch);
+  border:1px solid var(--line2);padding:46px 34px 38px;margin-bottom:26px;text-align:center}
+.hero::before{content:"";position:absolute;inset:0;opacity:.18;pointer-events:none;
+  background:repeating-linear-gradient(90deg,transparent 0 60px,rgba(255,255,255,.05) 60px 120px)}
+.hero::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:280px;height:280px;border:2px solid rgba(255,255,255,.06);border-radius:50%;pointer-events:none}
+.hero .fifa{font-size:.74rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.hero h1{font-family:'Russo One',sans-serif;font-size:clamp(1.9rem,6vw,3.4rem);line-height:1.06;margin:10px 0 6px;
+  background:linear-gradient(180deg,#fff 30%,#9be8c4 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{color:var(--soft);font-size:.95rem;max-width:560px;margin:0 auto}
+.hero .flags{font-size:1.5rem;letter-spacing:.2em;margin-top:8px}
+.countdown{position:relative;display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+.cd-cell{background:rgba(0,0,0,.35);border:1px solid var(--line2);border-radius:14px;padding:10px 14px;min-width:74px}
+.cd-cell b{display:block;font-family:'Russo One',sans-serif;font-size:1.7rem;color:var(--gold)}
+.cd-cell span{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
+.live-now{display:inline-flex;align-items:center;gap:9px;background:rgba(255,93,93,.15);border:1px solid rgba(255,93,93,.4);
+  color:#ffb3b3;font-weight:700;padding:10px 20px;border-radius:999px;margin-top:20px;font-size:.95rem}
+.live-dot{width:9px;height:9px;border-radius:50%;background:var(--red);animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.tz-note{position:relative;margin-top:18px;font-size:.8rem;color:var(--dim)}
+.tz-note b{color:var(--green)}
+
+/* ===== BROADCAST ===== */
+.tv-bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:var(--card);border:1px solid var(--line);
+  border-radius:18px;padding:14px 18px;margin-bottom:26px;font-size:.86rem;color:var(--soft)}
+.tv-bar .ic{font-size:1.3rem}
+.tv-bar a{color:var(--green);font-weight:700;text-decoration:none;border-bottom:1px dashed var(--green-dk)}
+.tv-bar a:hover{color:#fff}
+
+/* ===== TABS ===== */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;position:sticky;top:10px;z-index:30;
+  background:rgba(10,15,13,.86);backdrop-filter:blur(10px);padding:8px;border-radius:16px;border:1px solid var(--line)}
+.tab{flex:1;min-width:110px;font-family:'Russo One',sans-serif;font-size:.86rem;padding:12px 10px;border-radius:11px;
+  border:1px solid transparent;background:transparent;color:var(--dim);cursor:pointer;transition:all .2s;text-align:center}
+.tab:hover{color:var(--soft)}
+.tab.on{background:var(--green-dk);color:#fff;box-shadow:0 6px 18px -6px rgba(25,195,125,.5)}
+.page{display:none;animation:fadeUp .35s}
+.page.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+h2.sec{font-family:'Russo One',sans-serif;font-size:1.25rem;margin:6px 0 16px;display:flex;align-items:center;gap:10px}
+h2.sec .em{font-size:1.3rem}
+.note{font-size:.78rem;color:var(--dim);margin:-8px 0 18px}
+
+/* ===== FILTERS ===== */
+.fbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.chip{font-size:.8rem;font-weight:600;padding:8px 14px;border-radius:999px;cursor:pointer;border:1px solid var(--line2);
+  background:var(--card);color:var(--soft);transition:all .15s;user-select:none}
+.chip:hover{border-color:var(--green-dk)}
+.chip.on{background:var(--green-dk);border-color:var(--green-dk);color:#fff}
+.team-sel{margin-left:auto;background:var(--card);color:var(--ink);border:1px solid var(--line2);border-radius:11px;
+  padding:9px 12px;font-family:inherit;font-size:.84rem;max-width:230px}
+.next-btn{font-size:.8rem;font-weight:700;padding:9px 16px;border-radius:999px;cursor:pointer;border:none;
+  background:var(--gold);color:#1a1405;font-family:inherit}
+
+/* ===== MATCH LIST ===== */
+.day-h{font-family:'Russo One',sans-serif;font-size:1rem;color:var(--green);margin:26px 0 12px;display:flex;align-items:center;gap:10px}
+.day-h::after{content:"";flex:1;height:1px;background:var(--line)}
+.day-h .badge-today{font-size:.66rem;background:var(--gold);color:#1a1405;border-radius:999px;padding:3px 10px;letter-spacing:.08em}
+.mcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin-bottom:12px;
+  display:grid;grid-template-columns:86px 1fr auto;gap:16px;align-items:center;transition:border-color .2s,transform .15s}
+.mcard:hover{border-color:var(--line2);transform:translateY(-1px)}
+.mcard.is-next{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 14px 34px -18px rgba(245,197,66,.45)}
+.mcard.is-live{border-color:var(--red);box-shadow:0 0 0 1px var(--red)}
+.m-time{text-align:center}
+.m-time .t{font-family:'Russo One',sans-serif;font-size:1.45rem;color:var(--ink)}
+.m-time .s{font-size:.66rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+.m-time .lbl{display:inline-block;font-size:.62rem;font-weight:800;border-radius:6px;padding:2px 7px;margin-top:5px}
+.lbl.live{background:var(--red);color:#fff;animation:pulse 1.4s infinite}
+.lbl.next{background:var(--gold);color:#1a1405}
+.m-mid{min-width:0}
+.m-teams{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-weight:700;font-size:1.02rem}
+.m-teams .fl{font-size:1.35rem}
+.m-teams .vs{color:var(--dim);font-size:.78rem;font-weight:600}
+.m-meta{font-size:.76rem;color:var(--dim);margin-top:6px}
+.m-meta .grp{color:var(--green);font-weight:700}
+.predict{margin-top:10px;max-width:430px}
+.p-bar{display:flex;height:7px;border-radius:99px;overflow:hidden;background:var(--line)}
+.p-bar i{display:block;height:100%}
+.p-bar .p1{background:var(--green)}
+.p-bar .px{background:#55687f}
+.p-bar .p2{background:var(--gold)}
+.p-leg{display:flex;justify-content:space-between;font-size:.68rem;color:var(--dim);margin-top:4px}
+.p-leg b{color:var(--soft)}
+.m-act{display:flex;flex-direction:column;gap:7px;align-items:stretch}
+.tv-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:.74rem;font-weight:700;
+  padding:8px 13px;border-radius:9px;text-decoration:none;white-space:nowrap;transition:filter .15s}
+.tv-btn:hover{filter:brightness(1.18)}
+.tv-okko{background:#5d2ee8;color:#fff}
+.tv-match{background:#c8102e;color:#fff}
+@media(max-width:680px){
+  .mcard{grid-template-columns:64px 1fr}
+  .m-act{grid-column:1/-1;flex-direction:row}
+  .tv-btn{flex:1}
+  .m-time .t{font-size:1.15rem}
+}
+
+/* ===== GROUPS ===== */
+.groups-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px}
+.gcard{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.gcard h3{font-family:'Russo One',sans-serif;font-size:.92rem;padding:12px 16px;background:var(--card2);
+  border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.gcard h3 .gl{color:var(--gold)}
+.gcard h3 .hint{font-size:.64rem;color:var(--dim);font-family:'Inter',sans-serif;font-weight:600}
+.trow{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
+.trow:last-child{border-bottom:none}
+.trow:hover{background:var(--card2)}
+.trow .fl{font-size:1.3rem;width:28px;text-align:center}
+.trow .nm{flex:1;font-weight:600;font-size:.86rem;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trow .rk{font-size:.66rem;color:var(--dim);white-space:nowrap}
+.str{width:62px;height:5px;border-radius:99px;background:var(--line);overflow:hidden;flex:0 0 auto}
+.str i{display:block;height:100%;background:linear-gradient(90deg,var(--green-dk),var(--green))}
+.fav-star{cursor:pointer;font-size:1rem;color:var(--line2);transition:color .15s,transform .15s;background:none;border:none;padding:0 2px}
+.fav-star.on{color:var(--gold);transform:scale(1.15)}
+.fav-hint{font-size:.76rem;color:var(--dim);margin-bottom:14px}
+.fav-hint b{color:var(--gold)}
+
+/* ===== FORECAST ===== */
+.fc-grid{display:grid;grid-template-columns:1fr;gap:22px}
+.fc-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+.frow{display:grid;grid-template-columns:30px 30px 150px 1fr 56px;gap:10px;align-items:center;padding:7px 0;font-size:.88rem}
+.frow .pos{font-family:'Russo One',sans-serif;color:var(--dim);font-size:.8rem}
+.frow .fl{font-size:1.25rem}
+.frow .nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.frow .bar{height:16px;border-radius:6px;background:var(--line);overflow:hidden}
+.frow .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--green-dk),var(--green));
+  border-radius:6px;animation:grow 1s cubic-bezier(.2,.8,.2,1)}
+.frow:nth-child(2) .bar i{background:linear-gradient(90deg,#b8901f,var(--gold))}
+.frow .pct{font-family:'Russo One',sans-serif;text-align:right;color:var(--green);font-size:.86rem}
+.frow:nth-child(2) .pct{color:var(--gold)}
+@keyframes grow{from{width:0}}
+@media(max-width:560px){.frow{grid-template-columns:24px 26px 96px 1fr 48px;font-size:.78rem}}
+.sim-box{text-align:center;padding:8px 0 2px}
+.sim-btn{font-family:'Russo One',sans-serif;font-size:1rem;padding:15px 34px;border-radius:999px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--green-dk),var(--green));color:#fff;box-shadow:0 12px 30px -10px rgba(25,195,125,.55);
+  transition:transform .15s}
+.sim-btn:hover{transform:translateY(-2px)}
+.sim-res{margin-top:18px;font-size:1rem;color:var(--soft);min-height:64px}
+.sim-res .champ{font-family:'Russo One',sans-serif;font-size:1.6rem;color:var(--gold);display:block;margin-top:6px;animation:fadeUp .5s}
+
+/* ===== PLAYERS ===== */
+.pl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(218px,1fr));gap:14px}
+.pcard{position:relative;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;overflow:hidden;
+  transition:transform .18s,border-color .18s}
+.pcard:hover{transform:translateY(-3px);border-color:var(--line2)}
+.pcard::before{content:"";position:absolute;inset:0;opacity:.1;pointer-events:none;
+  background:radial-gradient(70% 60% at 100% 0%,var(--green) 0%,transparent 60%)}
+.pcard .rate{position:absolute;top:14px;right:14px;font-family:'Russo One',sans-serif;font-size:1.5rem;color:var(--gold)}
+.pcard .rate small{display:block;font-size:.55rem;letter-spacing:.14em;color:var(--dim);text-align:center}
+.pcard .pfl{font-size:2rem}
+.pcard .pnm{font-weight:800;font-size:1.04rem;margin-top:8px}
+.pcard .pcl{font-size:.76rem;color:var(--dim);margin-top:2px}
+.pcard .ppos{display:inline-block;font-size:.64rem;font-weight:800;letter-spacing:.1em;color:var(--green);
+  border:1px solid var(--green-dk);border-radius:6px;padding:2px 8px;margin-top:10px}
+.gb-line{margin-top:12px}
+.gb-line .cap{display:flex;justify-content:space-between;font-size:.68rem;color:var(--dim);margin-bottom:4px}
+.gb-line .cap b{color:var(--gold)}
+.gb-bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.gb-bar i{display:block;height:100%;background:linear-gradient(90deg,#b8901f,var(--gold));border-radius:99px}
+
+footer{margin-top:46px;text-align:center;font-size:.74rem;color:var(--dim);line-height:1.7}
+footer a{color:var(--green)}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px">
+<a onclick="if(history.length>1){history.back()}else{location.href='../index.html'}" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;cursor:pointer;transition:background .2s" title="Назад">&#8592;</a>
+<a href="../index.html" style="width:40px;height:40px;border-radius:50%;background:var(--blue,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:18px;transition:background .2s" title="На главную">&#8962;</a>
+</div>
+
+<div class="wrap">
+
+<div class="hero">
+  <div class="fifa">FIFA World Cup 2026</div>
+  <h1>Чемпионат мира<br>по футболу</h1>
+  <div class="flags">🇺🇸 🇲🇽 🇨🇦</div>
+  <p class="sub" style="margin-top:10px">48 сборных · 104 матча · 16 стадионов · 11 июня — 19 июля 2026</p>
+  <div id="heroDyn"></div>
+  <div class="tz-note">⏰ Всё время матчей показано в вашем часовом поясе: <b id="tzName">—</b></div>
+</div>
+
+<div class="tv-bar">
+  <span class="ic">📺</span>
+  <span>Все 104 матча в России эксклюзивно показывает <a href="https://matchtv.ru/on-air" target="_blank" rel="noopener">Матч ТВ</a> (бесплатно, эфир + matchtv.ru). В <a href="https://okko.tv/category/sport" target="_blank" rel="noopener">Окко</a> доступна ретрансляция каналов «Матч!» по подписке — кнопки у каждого матча.</span>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab on" data-p="matches">⚽ Матчи</button>
+  <button class="tab" data-p="groups">🏟 Группы</button>
+  <button class="tab" data-p="forecast">🔮 Прогнозы</button>
+  <button class="tab" data-p="players">⭐ Игроки</button>
+</div>
+
+<!-- ============ MATCHES ============ -->
+<div class="page on" data-page="matches">
+  <div class="fbar" id="stageChips">
+    <span class="chip on" data-st="all">Все</span>
+    <span class="chip" data-st="group">Группы</span>
+    <span class="chip" data-st="r32">1/16</span>
+    <span class="chip" data-st="r16">1/8</span>
+    <span class="chip" data-st="qf">1/4</span>
+    <span class="chip" data-st="sf">Полуфиналы</span>
+    <span class="chip" data-st="fin">Финалы</span>
+    <span class="chip" data-st="fav">★ Избранные</span>
+    <select class="team-sel" id="teamSel"><option value="">Все команды…</option></select>
+    <button class="next-btn" id="nextBtn">⚡ Ближайший матч</button>
+  </div>
+  <div id="matchList"></div>
+</div>
+
+<!-- ============ GROUPS ============ -->
+<div class="page" data-page="groups">
+  <h2 class="sec"><span class="em">🏟</span>Групповой этап</h2>
+  <div class="fav-hint">Нажми <b>★</b> рядом с командой — её матчи попадут в фильтр «Избранные». В скобках — место в рейтинге ФИФА, полоска — сила команды, % — шанс на титул.</div>
+  <div class="groups-grid" id="groupsGrid"></div>
+</div>
+
+<!-- ============ FORECAST ============ -->
+<div class="page" data-page="forecast">
+  <h2 class="sec"><span class="em">🔮</span>Кто возьмёт кубок?</h2>
+  <p class="note">Вероятности на основе котировок букмекеров и рынков предсказаний (Kalshi / Polymarket / Opta) на 10 июня 2026.</p>
+  <div class="fc-grid">
+    <div class="fc-card" id="fcChart"></div>
+    <div class="fc-card sim-box">
+      <h2 class="sec" style="justify-content:center"><span class="em">🎲</span>Симулятор чемпиона</h2>
+      <p class="note" style="text-align:center">Один клик — одна случайная развязка турнира с учётом реальных вероятностей. Спорь с друзьями!</p>
+      <button class="sim-btn" id="simBtn">Симулировать турнир</button>
+      <div class="sim-res" id="simRes"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PLAYERS ============ -->
+<div class="page" data-page="players">
+  <h2 class="sec"><span class="em">⭐</span>Звёзды турнира</h2>
+  <p class="note">Рейтинг формы — экспертная оценка сезона-2025/26. Золотая полоска — шанс взять «Золотой мяч» ЧМ по котировкам букмекеров.</p>
+  <div class="pl-grid" id="plGrid"></div>
+</div>
+
+<footer>
+  Данные: жеребьёвка ФИФА от 05.12.2025, расписание FIFA.com, котировки букмекеров на 10.06.2026.<br>
+  Прогнозы носят развлекательный характер. Сделано для друзей · <a href="../index.html">Demo Portal</a>
+</footer>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const T={
+  MEX:{n:'Мексика',f:'🇲🇽',g:'A',rk:15,st:80,p:1.4,ti:0},
+  RSA:{n:'ЮАР',f:'🇿🇦',g:'A',rk:61,st:72,p:0.1,ti:0},
+  KOR:{n:'Юж. Корея',f:'🇰🇷',g:'A',rk:22,st:78,p:0.2,ti:0},
+  CZE:{n:'Чехия',f:'🇨🇿',g:'A',rk:44,st:77,p:0.3,ti:0},
+  CAN:{n:'Канада',f:'🇨🇦',g:'B',rk:28,st:77,p:0.4,ti:0},
+  SUI:{n:'Швейцария',f:'🇨🇭',g:'B',rk:17,st:80,p:1.5,ti:0},
+  QAT:{n:'Катар',f:'🇶🇦',g:'B',rk:53,st:72,p:0.1,ti:0},
+  BIH:{n:'Босния и Герц.',f:'🇧🇦',g:'B',rk:70,st:75,p:0.3,ti:0},
+  BRA:{n:'Бразилия',f:'🇧🇷',g:'C',rk:5,st:90,p:7.9,ti:5},
+  MAR:{n:'Марокко',f:'🇲🇦',g:'C',rk:11,st:84,p:1.8,ti:0},
+  HAI:{n:'Гаити',f:'🇭🇹',g:'C',rk:84,st:67,p:0.05,ti:0},
+  SCO:{n:'Шотландия',f:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',g:'C',rk:38,st:76,p:0.4,ti:0},
+  USA:{n:'США',f:'🇺🇸',g:'D',rk:14,st:81,p:2.0,ti:0},
+  PAR:{n:'Парагвай',f:'🇵🇾',g:'D',rk:39,st:76,p:0.4,ti:0},
+  AUS:{n:'Австралия',f:'🇦🇺',g:'D',rk:26,st:76,p:0.2,ti:0},
+  TUR:{n:'Турция',f:'🇹🇷',g:'D',rk:25,st:79,p:1.2,ti:0},
+  GER:{n:'Германия',f:'🇩🇪',g:'E',rk:9,st:88,p:6.7,ti:4},
+  CUW:{n:'Кюрасао',f:'🇨🇼',g:'E',rk:82,st:67,p:0.05,ti:0},
+  CIV:{n:'Кот-д’Ивуар',f:'🇨🇮',g:'E',rk:42,st:78,p:0.5,ti:0},
+  ECU:{n:'Эквадор',f:'🇪🇨',g:'E',rk:23,st:79,p:0.9,ti:0},
+  NED:{n:'Нидерланды',f:'🇳🇱',g:'F',rk:7,st:88,p:5.6,ti:0},
+  JPN:{n:'Япония',f:'🇯🇵',g:'F',rk:18,st:82,p:2.8,ti:0},
+  TUN:{n:'Тунис',f:'🇹🇳',g:'F',rk:40,st:74,p:0.1,ti:0},
+  SWE:{n:'Швеция',f:'🇸🇪',g:'F',rk:36,st:77,p:0.6,ti:0},
+  BEL:{n:'Бельгия',f:'🇧🇪',g:'G',rk:8,st:86,p:4.3,ti:0},
+  EGY:{n:'Египет',f:'🇪🇬',g:'G',rk:34,st:76,p:0.3,ti:0},
+  IRN:{n:'Иран',f:'🇮🇷',g:'G',rk:21,st:76,p:0.1,ti:0},
+  NZL:{n:'Нов. Зеландия',f:'🇳🇿',g:'G',rk:86,st:69,p:0.05,ti:0},
+  ESP:{n:'Испания',f:'🇪🇸',g:'H',rk:1,st:94,p:16.5,ti:1},
+  CPV:{n:'Кабо-Верде',f:'🇨🇻',g:'H',rk:68,st:68,p:0.05,ti:0},
+  KSA:{n:'Сауд. Аравия',f:'🇸🇦',g:'H',rk:59,st:72,p:0.05,ti:0},
+  URU:{n:'Уругвай',f:'🇺🇾',g:'H',rk:16,st:83,p:1.8,ti:2},
+  FRA:{n:'Франция',f:'🇫🇷',g:'I',rk:3,st:93,p:16.1,ti:2},
+  SEN:{n:'Сенегал',f:'🇸🇳',g:'I',rk:19,st:80,p:1.0,ti:0},
+  NOR:{n:'Норвегия',f:'🇳🇴',g:'I',rk:29,st:82,p:2.9,ti:0},
+  IRQ:{n:'Ирак',f:'🇮🇶',g:'I',rk:58,st:70,p:0.05,ti:0},
+  ARG:{n:'Аргентина',f:'🇦🇷',g:'J',rk:2,st:91,p:8.9,ti:3},
+  ALG:{n:'Алжир',f:'🇩🇿',g:'J',rk:35,st:76,p:0.3,ti:0},
+  AUT:{n:'Австрия',f:'🇦🇹',g:'J',rk:24,st:79,p:0.8,ti:0},
+  JOR:{n:'Иордания',f:'🇯🇴',g:'J',rk:64,st:69,p:0.05,ti:0},
+  POR:{n:'Португалия',f:'🇵🇹',g:'K',rk:6,st:90,p:10.0,ti:0},
+  UZB:{n:'Узбекистан',f:'🇺🇿',g:'K',rk:55,st:71,p:0.05,ti:0},
+  COL:{n:'Колумбия',f:'🇨🇴',g:'K',rk:13,st:84,p:2.4,ti:0},
+  COD:{n:'ДР Конго',f:'🇨🇩',g:'K',rk:56,st:73,p:0.05,ti:0},
+  ENG:{n:'Англия',f:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',g:'L',rk:4,st:91,p:10.5,ti:1},
+  CRO:{n:'Хорватия',f:'🇭🇷',g:'L',rk:10,st:84,p:1.3,ti:0},
+  GHA:{n:'Гана',f:'🇬🇭',g:'L',rk:73,st:75,p:0.2,ti:0},
+  PAN:{n:'Панама',f:'🇵🇦',g:'L',rk:30,st:71,p:0.05,ti:0}
+};
+
+/* [UTC ISO, stage, home, away, stadium, city, match#] — время в UTC */
+const M=[
+ ['2026-06-11T19:00Z','A','MEX','RSA','Эстадио Ацтека','Мехико',1],
+ ['2026-06-12T02:00Z','A','KOR','CZE','Эстадио Акрон','Гвадалахара',2],
+ ['2026-06-12T19:00Z','B','CAN','BIH','BMO Field','Торонто',3],
+ ['2026-06-13T01:00Z','D','USA','PAR','SoFi Stadium','Лос-Анджелес',4],
+ ['2026-06-13T19:00Z','B','QAT','SUI','Levi’s Stadium','Сан-Франциско',8],
+ ['2026-06-13T22:00Z','C','BRA','MAR','MetLife Stadium','Нью-Йорк',7],
+ ['2026-06-14T01:00Z','C','HAI','SCO','Gillette Stadium','Бостон',5],
+ ['2026-06-14T04:00Z','D','AUS','TUR','BC Place','Ванкувер',6],
+ ['2026-06-14T17:00Z','E','GER','CUW','NRG Stadium','Хьюстон',10],
+ ['2026-06-14T20:00Z','F','NED','JPN','AT&T Stadium','Даллас',11],
+ ['2026-06-14T23:00Z','E','CIV','ECU','Lincoln Financial','Филадельфия',9],
+ ['2026-06-15T02:00Z','F','SWE','TUN','Эстадио BBVA','Монтеррей',12],
+ ['2026-06-15T16:00Z','H','ESP','CPV','Mercedes-Benz','Атланта',14],
+ ['2026-06-15T19:00Z','G','BEL','EGY','Lumen Field','Сиэтл',16],
+ ['2026-06-15T22:00Z','H','KSA','URU','Hard Rock Stadium','Майами',13],
+ ['2026-06-16T01:00Z','G','IRN','NZL','SoFi Stadium','Лос-Анджелес',15],
+ ['2026-06-16T19:00Z','I','FRA','SEN','MetLife Stadium','Нью-Йорк',17],
+ ['2026-06-16T22:00Z','I','IRQ','NOR','Gillette Stadium','Бостон',18],
+ ['2026-06-17T01:00Z','J','ARG','ALG','Arrowhead Stadium','Канзас-Сити',19],
+ ['2026-06-17T04:00Z','J','AUT','JOR','Levi’s Stadium','Сан-Франциско',20],
+ ['2026-06-17T17:00Z','K','POR','COD','NRG Stadium','Хьюстон',23],
+ ['2026-06-17T20:00Z','L','ENG','CRO','AT&T Stadium','Даллас',22],
+ ['2026-06-17T23:00Z','L','GHA','PAN','BMO Field','Торонто',21],
+ ['2026-06-18T02:00Z','K','UZB','COL','Эстадио Ацтека','Мехико',24],
+ ['2026-06-18T16:00Z','A','CZE','RSA','Mercedes-Benz','Атланта',25],
+ ['2026-06-18T19:00Z','B','SUI','BIH','SoFi Stadium','Лос-Анджелес',26],
+ ['2026-06-18T22:00Z','B','CAN','QAT','BC Place','Ванкувер',27],
+ ['2026-06-19T01:00Z','A','MEX','KOR','Эстадио Акрон','Гвадалахара',28],
+ ['2026-06-19T19:00Z','D','USA','AUS','Lumen Field','Сиэтл',32],
+ ['2026-06-19T22:00Z','C','SCO','MAR','Gillette Stadium','Бостон',30],
+ ['2026-06-20T01:00Z','C','BRA','HAI','Lincoln Financial','Филадельфия',29],
+ ['2026-06-20T03:00Z','D','TUR','PAR','Levi’s Stadium','Сан-Франциско',31],
+ ['2026-06-20T17:00Z','F','NED','SWE','NRG Stadium','Хьюстон',35],
+ ['2026-06-20T20:00Z','E','GER','CIV','BMO Field','Торонто',33],
+ ['2026-06-21T00:00Z','E','ECU','CUW','Arrowhead Stadium','Канзас-Сити',34],
+ ['2026-06-21T04:00Z','F','TUN','JPN','Эстадио BBVA','Монтеррей',36],
+ ['2026-06-21T16:00Z','H','ESP','KSA','Mercedes-Benz','Атланта',38],
+ ['2026-06-21T19:00Z','G','BEL','IRN','SoFi Stadium','Лос-Анджелес',39],
+ ['2026-06-21T22:00Z','H','URU','CPV','Hard Rock Stadium','Майами',37],
+ ['2026-06-22T01:00Z','G','NZL','EGY','BC Place','Ванкувер',40],
+ ['2026-06-22T17:00Z','J','ARG','AUT','AT&T Stadium','Даллас',43],
+ ['2026-06-22T21:00Z','I','FRA','IRQ','Lincoln Financial','Филадельфия',42],
+ ['2026-06-23T00:00Z','I','NOR','SEN','MetLife Stadium','Нью-Йорк',41],
+ ['2026-06-23T03:00Z','J','JOR','ALG','Levi’s Stadium','Сан-Франциско',44],
+ ['2026-06-23T17:00Z','K','POR','UZB','NRG Stadium','Хьюстон',47],
+ ['2026-06-23T20:00Z','L','ENG','GHA','Gillette Stadium','Бостон',45],
+ ['2026-06-23T23:00Z','L','PAN','CRO','BMO Field','Торонто',46],
+ ['2026-06-24T02:00Z','K','COL','COD','Эстадио Акрон','Гвадалахара',48],
+ ['2026-06-24T19:00Z','B','SUI','CAN','BC Place','Ванкувер',51],
+ ['2026-06-24T19:00Z','B','BIH','QAT','Lumen Field','Сиэтл',52],
+ ['2026-06-24T22:00Z','C','SCO','BRA','Hard Rock Stadium','Майами',49],
+ ['2026-06-24T22:00Z','C','MAR','HAI','Mercedes-Benz','Атланта',50],
+ ['2026-06-25T01:00Z','A','CZE','MEX','Эстадио Ацтека','Мехико',53],
+ ['2026-06-25T01:00Z','A','RSA','KOR','Эстадио BBVA','Монтеррей',54],
+ ['2026-06-25T20:00Z','E','CUW','CIV','Lincoln Financial','Филадельфия',55],
+ ['2026-06-25T20:00Z','E','ECU','GER','MetLife Stadium','Нью-Йорк',56],
+ ['2026-06-25T23:00Z','F','JPN','SWE','AT&T Stadium','Даллас',57],
+ ['2026-06-25T23:00Z','F','TUN','NED','Arrowhead Stadium','Канзас-Сити',58],
+ ['2026-06-26T02:00Z','D','TUR','USA','SoFi Stadium','Лос-Анджелес',59],
+ ['2026-06-26T02:00Z','D','PAR','AUS','Levi’s Stadium','Сан-Франциско',60],
+ ['2026-06-26T19:00Z','I','NOR','FRA','Gillette Stadium','Бостон',61],
+ ['2026-06-26T19:00Z','I','SEN','IRQ','BMO Field','Торонто',62],
+ ['2026-06-27T00:00Z','H','CPV','KSA','NRG Stadium','Хьюстон',65],
+ ['2026-06-27T00:00Z','H','URU','ESP','Эстадио Акрон','Гвадалахара',66],
+ ['2026-06-27T03:00Z','G','EGY','IRN','Lumen Field','Сиэтл',63],
+ ['2026-06-27T03:00Z','G','NZL','BEL','BC Place','Ванкувер',64],
+ ['2026-06-27T21:00Z','L','PAN','ENG','MetLife Stadium','Нью-Йорк',67],
+ ['2026-06-27T21:00Z','L','CRO','GHA','Lincoln Financial','Филадельфия',68],
+ ['2026-06-27T23:30Z','K','COL','POR','Hard Rock Stadium','Майами',71],
+ ['2026-06-27T23:30Z','K','COD','UZB','Mercedes-Benz','Атланта',72],
+ ['2026-06-28T02:00Z','J','ALG','AUT','Arrowhead Stadium','Канзас-Сити',69],
+ ['2026-06-28T02:00Z','J','JOR','ARG','AT&T Stadium','Даллас',70],
+ /* 1/16 финала */
+ ['2026-06-28T19:00Z','r32','2-е гр. A','2-е гр. B','SoFi Stadium','Лос-Анджелес',73],
+ ['2026-06-29T17:00Z','r32','Поб. гр. C','2-е гр. F','NRG Stadium','Хьюстон',76],
+ ['2026-06-29T20:30Z','r32','Поб. гр. E','3-е место','Gillette Stadium','Бостон',74],
+ ['2026-06-30T01:00Z','r32','Поб. гр. F','2-е гр. C','Эстадио BBVA','Монтеррей',75],
+ ['2026-06-30T17:00Z','r32','2-е гр. E','2-е гр. I','AT&T Stadium','Даллас',78],
+ ['2026-06-30T21:00Z','r32','Поб. гр. I','3-е место','MetLife Stadium','Нью-Йорк',77],
+ ['2026-07-01T01:00Z','r32','Поб. гр. A','3-е место','Эстадио Ацтека','Мехико',79],
+ ['2026-07-01T16:00Z','r32','Поб. гр. L','3-е место','Mercedes-Benz','Атланта',80],
+ ['2026-07-01T20:00Z','r32','Поб. гр. G','3-е место','Lumen Field','Сиэтл',82],
+ ['2026-07-02T00:00Z','r32','Поб. гр. D','3-е место','Levi’s Stadium','Сан-Франциско',81],
+ ['2026-07-02T19:00Z','r32','Поб. гр. H','2-е гр. J','SoFi Stadium','Лос-Анджелес',84],
+ ['2026-07-02T23:00Z','r32','2-е гр. K','2-е гр. L','BMO Field','Торонто',83],
+ ['2026-07-03T03:00Z','r32','Поб. гр. B','3-е место','BC Place','Ванкувер',85],
+ ['2026-07-03T18:00Z','r32','2-е гр. D','2-е гр. G','AT&T Stadium','Даллас',88],
+ ['2026-07-03T22:00Z','r32','Поб. гр. J','2-е гр. H','Hard Rock Stadium','Майами',86],
+ ['2026-07-04T01:30Z','r32','Поб. гр. K','3-е место','Arrowhead Stadium','Канзас-Сити',87],
+ /* 1/8 */
+ ['2026-07-04T17:00Z','r16','Поб. м73','Поб. м75','NRG Stadium','Хьюстон',90],
+ ['2026-07-04T21:00Z','r16','Поб. м74','Поб. м77','Lincoln Financial','Филадельфия',89],
+ ['2026-07-05T20:00Z','r16','Поб. м76','Поб. м78','MetLife Stadium','Нью-Йорк',91],
+ ['2026-07-06T00:00Z','r16','Поб. м79','Поб. м80','Эстадио Ацтека','Мехико',92],
+ ['2026-07-06T19:00Z','r16','Поб. м83','Поб. м84','AT&T Stadium','Даллас',93],
+ ['2026-07-07T00:00Z','r16','Поб. м81','Поб. м82','Lumen Field','Сиэтл',94],
+ ['2026-07-07T16:00Z','r16','Поб. м86','Поб. м88','Mercedes-Benz','Атланта',95],
+ ['2026-07-07T20:00Z','r16','Поб. м85','Поб. м87','BC Place','Ванкувер',96],
+ /* 1/4 */
+ ['2026-07-09T20:00Z','qf','Поб. м89','Поб. м90','Gillette Stadium','Бостон',97],
+ ['2026-07-10T19:00Z','qf','Поб. м93','Поб. м94','SoFi Stadium','Лос-Анджелес',98],
+ ['2026-07-11T21:00Z','qf','Поб. м91','Поб. м92','Hard Rock Stadium','Майами',99],
+ ['2026-07-12T01:00Z','qf','Поб. м95','Поб. м96','Arrowhead Stadium','Канзас-Сити',100],
+ /* SF, бронза, финал */
+ ['2026-07-14T19:00Z','sf','Поб. ¼ №97','Поб. ¼ №98','AT&T Stadium','Даллас',101],
+ ['2026-07-15T19:00Z','sf','Поб. ¼ №99','Поб. ¼ №100','Mercedes-Benz','Атланта',102],
+ ['2026-07-18T21:00Z','fin','Матч за 3-е место','','Hard Rock Stadium','Майами',103],
+ ['2026-07-19T19:00Z','fin','ФИНАЛ','','MetLife Stadium','Нью-Йорк',104]
+];
+
+const PLAYERS=[
+ {n:'Ламин Ямаль',c:'ESP',cl:'Барселона',pos:'RW',rt:94,gb:13.3},
+ {n:'Килиан Мбаппе',c:'FRA',cl:'Реал Мадрид',pos:'ST',rt:93,gb:9.1},
+ {n:'Харри Кейн',c:'ENG',cl:'Бавария',pos:'ST',rt:93,gb:12.5},
+ {n:'Усман Дембеле',c:'FRA',cl:'ПСЖ',pos:'RW',rt:92,gb:3.8},
+ {n:'Эрлинг Холанн',c:'NOR',cl:'Ман Сити',pos:'ST',rt:92,gb:3.8},
+ {n:'Майкл Олисе',c:'FRA',cl:'Бавария',pos:'RW',rt:91,gb:9.1},
+ {n:'Родри',c:'ESP',cl:'Ман Сити',pos:'CDM',rt:91,gb:3.8},
+ {n:'Джуд Беллингем',c:'ENG',cl:'Реал Мадрид',pos:'CAM',rt:90,gb:3.8},
+ {n:'Лионель Месси',c:'ARG',cl:'Интер Майами',pos:'CAM',rt:90,gb:9.1},
+ {n:'Педри',c:'ESP',cl:'Барселона',pos:'CM',rt:90,gb:3.8},
+ {n:'Винисиус Жуниор',c:'BRA',cl:'Реал Мадрид',pos:'LW',rt:90,gb:4.8},
+ {n:'Рафинья',c:'BRA',cl:'Барселона',pos:'LW',rt:89,gb:4.8},
+ {n:'Витинья',c:'POR',cl:'ПСЖ',pos:'CM',rt:89,gb:3.8},
+ {n:'Бруну Фернандеш',c:'POR',cl:'Ман Юнайтед',pos:'CAM',rt:88,gb:5.3},
+ {n:'Деклан Райс',c:'ENG',cl:'Арсенал',pos:'CDM',rt:88,gb:3.8},
+ {n:'Райан Шерки',c:'FRA',cl:'Ман Сити',pos:'CAM',rt:87,gb:3.8}
+];
+
+const STAGE_NAME={r32:'1/16 финала',r16:'1/8 финала',qf:'Четвертьфинал',sf:'Полуфинал',fin:'Финальные матчи'};
+const OKKO='https://okko.tv/category/sport', MATCHTV='https://matchtv.ru/on-air';
+
+/* ================= HELPERS ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>{const d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;};
+let FAVS=new Set(); try{FAVS=new Set(JSON.parse(localStorage.getItem('wc26-favs')||'[]'));}catch(e){}
+const saveFavs=()=>{try{localStorage.setItem('wc26-favs',JSON.stringify([...FAVS]));}catch(e){}};
+
+function predict(a,b){
+  const pA=1/(1+Math.pow(10,-(T[a].st-T[b].st)/11));
+  const draw=Math.max(.14,.30-Math.abs(T[a].st-T[b].st)*.008);
+  return {h:Math.round(pA*(1-draw)*100), d:Math.round(draw*100), a:Math.max(1,Math.round((1-pA)*(1-draw)*100))};
+}
+const fmtTime=d=>d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+const fmtDay=d=>d.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'});
+const dayKey=d=>d.toLocaleDateString('ru-RU');
+
+/* ================= HERO ================= */
+const KICKOFF=new Date('2026-06-11T19:00Z'), FINAL_END=new Date('2026-07-19T22:00Z');
+$('#tzName').textContent=Intl.DateTimeFormat().resolvedOptions().timeZone.replace('_',' ')+' (UTC'+(()=>{const o=-new Date().getTimezoneOffset()/60;return (o>=0?'+':'')+o;})()+')';
+
+function renderHero(){
+  const now=new Date(), el=$('#heroDyn');
+  if(now<KICKOFF){
+    let s=Math.floor((KICKOFF-now)/1000);
+    const d=Math.floor(s/86400);s%=86400;const h=Math.floor(s/3600);s%=3600;const m=Math.floor(s/60);s%=60;
+    el.innerHTML=`<div class="countdown">
+      <div class="cd-cell"><b>${d}</b><span>дней</span></div>
+      <div class="cd-cell"><b>${h}</b><span>часов</span></div>
+      <div class="cd-cell"><b>${m}</b><span>минут</span></div>
+      <div class="cd-cell"><b>${String(s).padStart(2,'0')}</b><span>секунд</span></div>
+    </div><div class="tz-note" style="margin-top:14px">до стартового свистка: Мексика 🇲🇽 — ЮАР 🇿🇦, «Ацтека»</div>`;
+  }else if(now<FINAL_END){
+    el.innerHTML=`<div><span class="live-now"><span class="live-dot"></span>Турнир идёт прямо сейчас!</span></div>`;
+  }else{
+    el.innerHTML=`<div class="tz-note" style="margin-top:16px">Турнир завершён 🏆</div>`;
+  }
+}
+renderHero(); setInterval(renderHero,1000);
+
+/* ================= MATCHES ================= */
+let stageFilter='all', teamFilter='';
+
+function matchVisible(m){
+  const [,st,h,a]=m, isGroup=st.length===1;
+  if(teamFilter && h!==teamFilter && a!==teamFilter) return false;
+  if(stageFilter==='all') return true;
+  if(stageFilter==='group') return isGroup;
+  if(stageFilter==='fav') return isGroup && (FAVS.has(h)||FAVS.has(a));
+  return st===stageFilter;
+}
+
+function renderMatches(){
+  const now=new Date(), list=$('#matchList');
+  const vis=M.filter(matchVisible);
+  if(!vis.length){list.innerHTML='<p class="note" style="margin-top:20px">Нет матчей по выбранному фильтру. Отметь команды звёздочкой ★ на вкладке «Группы».</p>';return;}
+  const nextM=M.find(m=>new Date(m[0])>now);
+  let html='', lastDay='';
+  for(const m of vis){
+    const [iso,st,h,a,stad,city,no]=m;
+    const dt=new Date(iso), isGroup=st.length===1;
+    const dk=dayKey(dt);
+    if(dk!==lastDay){
+      lastDay=dk;
+      const today=dayKey(now)===dk, tmrw=dayKey(new Date(now.getTime()+864e5))===dk;
+      html+=`<div class="day-h">${esc(fmtDay(dt))}${today?'<span class="badge-today">сегодня</span>':tmrw?'<span class="badge-today" style="background:var(--green);color:#06251a">завтра</span>':''}</div>`;
+    }
+    const live=now>=dt && now<new Date(dt.getTime()+125*60000);
+    const isNext=nextM===m;
+    let teams, meta, pred='';
+    if(isGroup){
+      const p=predict(h,a);
+      teams=`<span class="fl">${T[h].f}</span> ${esc(T[h].n)} <span class="vs">vs</span> ${esc(T[a].n)} <span class="fl">${T[a].f}</span>`;
+      meta=`<span class="grp">Группа ${st}</span> · матч №${no} · ${esc(stad)}, ${esc(city)}`;
+      pred=`<div class="predict"><div class="p-bar"><i class="p1" style="width:${p.h}%"></i><i class="px" style="width:${p.d}%"></i><i class="p2" style="width:${p.a}%"></i></div>
+        <div class="p-leg"><span>П1 <b>${p.h}%</b></span><span>Х <b>${p.d}%</b></span><span>П2 <b>${p.a}%</b></span></div></div>`;
+    }else{
+      teams=a?`🏆 ${esc(h)} <span class="vs">vs</span> ${esc(a)}`:`🏆 ${esc(h)}`;
+      meta=`<span class="grp">${STAGE_NAME[st]||''}</span> · матч №${no} · ${esc(stad)}, ${esc(city)}`;
+    }
+    html+=`<div class="mcard${isNext?' is-next':''}${live?' is-live':''}">
+      <div class="m-time"><div class="t">${fmtTime(dt)}</div><div class="s">ваше время</div>
+        ${live?'<span class="lbl live">LIVE</span>':isNext?'<span class="lbl next">ближайший</span>':''}</div>
+      <div class="m-mid"><div class="m-teams">${teams}</div><div class="m-meta">${meta}</div>${pred}</div>
+      <div class="m-act">
+        <a class="tv-btn tv-okko" href="${OKKO}" target="_blank" rel="noopener">▶ Окко</a>
+        <a class="tv-btn tv-match" href="${MATCHTV}" target="_blank" rel="noopener">📺 Матч ТВ</a>
+      </div>
+    </div>`;
+  }
+  list.innerHTML=html;
+}
+
+document.querySelectorAll('#stageChips .chip').forEach(c=>c.onclick=()=>{
+  stageFilter=c.dataset.st;
+  document.querySelectorAll('#stageChips .chip').forEach(x=>x.classList.toggle('on',x===c));
+  renderMatches();
+});
+const sel=$('#teamSel');
+Object.entries(T).sort((a,b)=>a[1].n.localeCompare(b[1].n,'ru')).forEach(([k,t])=>{
+  const o=document.createElement('option');o.value=k;o.textContent=`${t.f} ${t.n}`;sel.appendChild(o);
+});
+sel.onchange=()=>{teamFilter=sel.value;renderMatches();};
+$('#nextBtn').onclick=()=>{
+  stageFilter='all';teamFilter='';sel.value='';
+  document.querySelectorAll('#stageChips .chip').forEach(x=>x.classList.toggle('on',x.dataset.st==='all'));
+  renderMatches();
+  setTimeout(()=>{const el=document.querySelector('.mcard.is-next')||document.querySelector('.mcard.is-live');
+    if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},60);
+};
+
+/* ================= GROUPS ================= */
+function renderGroups(){
+  const groups={};
+  for(const [k,t] of Object.entries(T)){(groups[t.g]=groups[t.g]||[]).push(k);}
+  $('#groupsGrid').innerHTML=Object.keys(groups).sort().map(g=>{
+    const rows=groups[g].sort((a,b)=>T[a].rk-T[b].rk).map(k=>{
+      const t=T[k];
+      return `<div class="trow" data-team="${k}">
+        <button class="fav-star${FAVS.has(k)?' on':''}" data-fav="${k}" title="В избранное">★</button>
+        <span class="fl">${t.f}</span>
+        <span class="nm">${esc(t.n)}${t.ti?' <span style="color:var(--gold);font-size:.7rem">'+'🏆'.repeat(Math.min(t.ti,5))+'</span>':''}</span>
+        <span class="rk">#${t.rk}</span>
+        <span class="str"><i style="width:${t.st}%"></i></span>
+        <span class="rk" style="color:${t.p>=5?'var(--gold)':'var(--dim)'}">${t.p>=0.1?t.p+'%':'<0.1%'}</span>
+      </div>`;
+    }).join('');
+    return `<div class="gcard"><h3><span>Группа <span class="gl">${g}</span></span><span class="hint">рейтинг · сила · шанс на титул</span></h3>${rows}</div>`;
+  }).join('');
+  document.querySelectorAll('[data-fav]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
+    const k=b.dataset.fav;
+    FAVS.has(k)?FAVS.delete(k):FAVS.add(k);
+    saveFavs();b.classList.toggle('on');renderMatches();
+  });
+  document.querySelectorAll('.trow').forEach(r=>r.onclick=()=>{
+    sel.value=r.dataset.team;teamFilter=r.dataset.team;
+    document.querySelector('.tab[data-p="matches"]').click();
+    renderMatches();window.scrollTo({top:0,behavior:'smooth'});
+  });
+}
+renderGroups();
+
+/* ================= FORECAST ================= */
+function renderForecast(){
+  const top=Object.entries(T).filter(([,t])=>t.p>=0.4).sort((a,b)=>b[1].p-a[1].p).slice(0,14);
+  const max=top[0][1].p;
+  $('#fcChart').innerHTML=`<h2 class="sec" style="margin-top:0"><span class="em">📈</span>Вероятность победы в турнире</h2>`+
+    top.map(([k,t],i)=>`<div class="frow">
+      <span class="pos">${i+1}</span><span class="fl">${t.f}</span><span class="nm">${esc(t.n)}</span>
+      <span class="bar"><i style="width:${Math.round(t.p/max*100)}%"></i></span>
+      <span class="pct">${t.p}%</span>
+    </div>`).join('');
+}
+renderForecast();
+
+$('#simBtn').onclick=()=>{
+  const pool=Object.entries(T).map(([k,t])=>[k,Math.max(t.p,.05)]);
+  const total=pool.reduce((s,[,p])=>s+p,0);
+  let r=Math.random()*total, champ=pool[0][0];
+  for(const [k,p] of pool){r-=p;if(r<=0){champ=k;break;}}
+  const t=T[champ];
+  const lines=['Финальный свисток на «МетЛайф»…','5 июля, четвертьфиналы отгремели…','Серия пенальти решила всё…','104 матча позади…','Драма в дополнительное время…'];
+  $('#simRes').innerHTML=`${lines[Math.floor(Math.random()*lines.length)]}
+    <span class="champ">${t.f} ${esc(t.n)} — чемпион мира 2026!</span>`;
+};
+
+/* ================= PLAYERS ================= */
+$('#plGrid').innerHTML=PLAYERS.map(p=>{
+  const t=T[p.c];
+  return `<div class="pcard">
+    <div class="rate">${p.rt}<small>рейтинг</small></div>
+    <div class="pfl">${t.f}</div>
+    <div class="pnm">${esc(p.n)}</div>
+    <div class="pcl">${esc(t.n)} · ${esc(p.cl)}</div>
+    <span class="ppos">${p.pos}</span>
+    <div class="gb-line">
+      <div class="cap"><span>«Золотой мяч» ЧМ</span><b>${p.gb}%</b></div>
+      <div class="gb-bar"><i style="width:${Math.round(p.gb/13.3*100)}%"></i></div>
+    </div>
+  </div>`;
+}).join('');
+
+/* ================= TABS ================= */
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.dataset.page===t.dataset.p));
+});
+
+renderMatches();
+setInterval(renderMatches,60000);
+</script>
+</body>
+</html>
