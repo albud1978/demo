@@ -421,7 +421,27 @@ const FALLBACK=[
    top:'Edu',sectionName:'Edu',sectionDesc:'Образовательные и учебные проекты',sectionTags:['ML','Edu'],groupName:'Корпоративные финансы',
    title:'Финансы с нуля за 7 дней',image:'',
    desc:'«Принципы корпоративных финансов» как интерактивная панель: 12 частей, 34 главы, 7 идей и тренды 2026.',
-   tags:['Edu','data']}
+   tags:['Edu','data']},
+  {path:'Edu/sql/sql_dashboard.html',folder:'Edu/sql',file:'sql_dashboard.html',
+   top:'Edu',sectionName:'Edu',sectionDesc:'Образовательные и учебные проекты',sectionTags:['ML','Edu'],groupName:'SQL за 10 минут',
+   title:'SQL за 10 минут — без воды',image:'Edu/sql/cover.svg',
+   desc:'Один экран про язык запросов: разница с Excel, почему колоночные БД иногда обгоняют строковые.',
+   tags:['Edu']},
+  {path:'Edu/origin-of-life/origin_of_life.html',folder:'Edu/origin-of-life',file:'origin_of_life.html',
+   top:'Edu',sectionName:'Edu',sectionDesc:'Образовательные и учебные проекты',sectionTags:['ML','Edu'],groupName:'Origin of Life',
+   title:'От звёздной пыли к ДНК',image:'Edu/origin-of-life/cover.svg',
+   desc:'Семь этапов химической эволюции: 13,8 млрд лет от водорода до LUCA, ключевые гипотезы и элементы.',
+   tags:['Edu']},
+  {path:'Infra/nas_data_flow.html',folder:'Infra',file:'nas_data_flow.html',
+   top:'Infra',sectionName:'Infra',sectionDesc:'Инфраструктура и архитектура',sectionTags:['infra'],groupName:'Infra',
+   title:'NAS Data Flow — Multi-OS Backup',image:'Infra/cover.svg',
+   desc:'Архитектура бэкапов Apple + Linux + Windows → NAS.',
+   tags:['infra','Edu']},
+  {path:'sport/worldcup2026.html',folder:'sport',file:'worldcup2026.html',
+   top:'sport',sectionName:'Спорт',sectionDesc:'Спортивные дашборды: расписания, статистика, прогнозы',sectionTags:['data','viz'],groupName:'Спорт',
+   title:'ЧМ-2026 — интерактивный дашборд',image:'',
+   desc:'Все 104 матча, локальное время, автозагрузка результатов, таблицы групп, прогнозы и полный симулятор турнира.',
+   tags:['data','viz']}
 ];
 
 const esc=s=>{const d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;};
@@ -539,7 +559,6 @@ let ALL=[], SECTIONS=[], VIEW=[], sectionFilter='all', idx=0, previewLoaded=fals
 function render(){
   const app=document.getElementById('app');
   app.innerHTML=`
-    ${ALL.__fallback?`<div class="fallback-note">GitHub API недоступен или ограничил запросы — показан резервный список. На живом сайте проекты подтянутся автоматически.</div>`:''}
     ${renderSectionSelector()}
     <div class="stage">
       <div class="hero" id="hero">
@@ -763,18 +782,24 @@ window.addEventListener('resize',()=>{
 });
 
 (async function(){
-  try{
-    const items=await discover();
-    if(items.length){ALL=items;}
-    else{ALL=FALLBACK.slice();ALL.__fallback=true;}
-  }catch(e){ALL=FALLBACK.slice();ALL.__fallback=true;}
+  /* Локальный каталог отображается сразу и не зависит от лимитов GitHub API. */
+  ALL=FALLBACK.slice();
   SECTIONS=groupSections(ALL);
-  if(!ALL.length){
-    document.getElementById('app').innerHTML='<div class="center-msg">Проектов пока нет.</div>';
-    return;
-  }
   applySectionFilter();
   render();
+
+  /* API только обновляет каталог, если доступен. При ошибке уже показан полный локальный список. */
+  try{
+    const items=await discover();
+    if(items.length){
+      ALL=items;
+      SECTIONS=groupSections(ALL);
+      applySectionFilter();
+      render();
+    }
+  }catch(e){
+    console.info('GitHub API недоступен — используется локальный каталог проектов.');
+  }
 })();
 </script>
 </body>
